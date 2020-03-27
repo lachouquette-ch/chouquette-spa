@@ -10,7 +10,7 @@ export default {
   props: {
     datetime: {
       required: true,
-      type: Date
+      type: [Date, String]
     },
     format: {
       type: String,

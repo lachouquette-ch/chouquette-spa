@@ -8,6 +8,12 @@ export const getters = {
   },
   author: (state) => {
     return state.post._embedded.author[0]
+  },
+  categories: (state) => {
+    return state.post._embedded['wp:term'][0]
+  },
+  tags: (state) => {
+    return state.post._embedded['wp:term'][1]
   }
 }
 
