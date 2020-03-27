@@ -1,0 +1,13 @@
+.stop-align {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+span.target {
+  display: block;
+  position: relative;
+  visibility: hidden;
+
+  top: -1 * ($header-height + $covid-banner-height + 5px);
+}

@@ -1,0 +1,59 @@
+// Global
+$theme-baseurl: "/wp-content/themes/chouquette";
+
+// Colors
+$chouquette-yellow: rgb(248, 239, 40);
+$chouquette-light-grey: rgb(215, 215, 215);
+$chouquette-grey: rgb(114, 114, 114);
+$chouquette-dark-grey: rgb(53, 53, 53);
+$chouquette-darker-grey: rgb(41, 41, 41);
+
+// Theme colors
+$primary: $chouquette-yellow;
+$secondary: $chouquette-grey;
+// add new theme colors
+$theme-colors: (
+    "white": white,
+    "yellow": $chouquette-yellow,
+    "black": black
+);
+
+// Navbar
+$navbar-light-color: white;
+$navbar-light-hover-color: $chouquette-yellow;
+$navbar-light-active-color: white;
+$navbar-light-disabled-color: $chouquette-yellow;
+
+// Constants
+$header-height: 80px;
+$covid-banner-height: 70px;
+
+// Dropdowns
+$dropdown-link-hover-color: $chouquette-yellow;
+
+// Fonts
+$font-family-base: 'Lato', sans-serif;
+$font-family-brand: 'heading_pro_bold', cursive;
+$font-family-heading: 'Lobster Two', cursive;
+
+// Card
+$card-spacer-x: 1rem;
+
+// Links
+$link-color: $chouquette-yellow;
+$link-hover-decoration: none;
+
+// Custom breakpoints
+$custom-breakpoints: (
+        xxl: 1600px
+) !default;
+
+// Forms
+$input-placeholder-color: #495057;
+
+// Tooltips
+$tooltip-bg: $chouquette-yellow;
+$tooltip-color: black;
+
+// Single post
+$hidden-content-handle-btn-height: 32px;
