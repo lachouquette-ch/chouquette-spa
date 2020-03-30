@@ -6,7 +6,7 @@ export const state = () => ({
   headerCategories: [],
 
   footer: null,
-  footerCategories: []
+  footerPages: []
 })
 
 export const actions = {
@@ -38,8 +38,8 @@ export const mutations = {
   },
   setFooter(state, menu) {
     state.footer = menu
-    state.footerCategories = menu.items.filter(({ object }) => {
-      return object === 'category'
+    state.footerPages = menu.items.filter(({ object }) => {
+      return object === 'page'
     })
   }
 }

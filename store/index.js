@@ -7,8 +7,7 @@ export const actions = {
     // fetch menus
     await dispatch('menus/fetchAll')
     // fetch categories
-    const menuCategories = [...state.menus.headerCategories, ...state.menus.footerCategories]
-    const menuCategoryIds = menuCategories.map(({ object_id }) => object_id)
+    const menuCategoryIds = state.menus.headerCategories.map(({ object_id }) => object_id)
     const categories = await dispatch('categories/fetchMany', menuCategoryIds)
     // fetch medias
     const logoIds = categories.flatMap((category) => Object.values(category.acf.logos))

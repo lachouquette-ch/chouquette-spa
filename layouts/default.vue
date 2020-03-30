@@ -5,15 +5,17 @@
     </LayoutHeaderCovid>
     <LayoutHeader></LayoutHeader>
     <nuxt />
+    <LayoutFooter></LayoutFooter>
   </div>
 </template>
 
 <script>
 import LayoutHeaderCovid from '../components/LayoutHeaderCovid'
 import LayoutHeader from '../components/LayoutHeader'
+import LayoutFooter from '../components/LayoutFooter'
 
 export default {
-  components: { LayoutHeader, LayoutHeaderCovid }
+  components: { LayoutHeader, LayoutFooter, LayoutHeaderCovid }
 }
 </script>
 

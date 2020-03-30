@@ -12,7 +12,7 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <a class="navbar-brand mx-auto" href="/">La Chouquette</a>
+      <nuxt-link to="/" class="navbar-brand mx-auto">La Chouquette</nuxt-link>
 
       <div id="navbarChouquette" class="collapse navbar-collapse">
         <form action="/" class="d-md-none mb-2">
@@ -60,7 +60,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import CategoryLogo from '../components/CategoryLogo'
 
 export default {
@@ -69,9 +68,6 @@ export default {
     return {
       categories: []
     }
-  },
-  computed: {
-    ...mapState('categories', ['headerCategories'])
   },
   async created() {
     this.categories = await Promise.all(
