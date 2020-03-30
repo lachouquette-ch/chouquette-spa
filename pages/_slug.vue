@@ -33,7 +33,9 @@
       <div class="post-content-title">
         <h1 class="mr-2 mb-4">{{ post.title.rendered }}</h1>
       </div>
+      <!-- eslint-disable vue/no-v-html -->
       <main class="post-content-text" v-html="post.content.rendered"></main>
+      <!-- eslint-enable -->
     </div>
 
     <div class="post-author container">
@@ -60,18 +62,25 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-import WPMedia from '../components/WPMedia'
+import { mapState } from 'vuex'
+import WPMedia from '../components/WpMedia'
 import MomentDateTime from '../components/MomentDateTime'
 
 export default {
   components: { WPMedia, MomentDateTime },
   async fetch({ store, params }) {
+    // fetch all menus
+    // await store.dispatch('menus/fetchAll')
     await store.dispatch('posts/fetchPost', params.slug)
   },
   computed: {
-    ...mapState('posts', ['post']),
-    ...mapGetters('posts', ['featuredMedia', 'author', 'categories', 'tags']),
+    ...mapState('posts', {
+      post: (state) => state.post,
+      featuredMedia: (state) => state.post._embedded['wp:featuredmedia'][0],
+      author: (state) => state.post._embedded.author[0],
+      categories: (state) => state.post._embedded['wp:term'][0],
+      tags: (state) => state.post._embedded['wp:term'][1]
+    }),
     authorAvatar() {
       return Object.entries(this.author.avatar_urls).pop()[1]
     }
