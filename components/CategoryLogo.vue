@@ -1,5 +1,5 @@
 <template>
-  <WpMedia v-if="media" :media="media" size="thumbnail" no-src-set="true" width="30" height="30"></WpMedia>
+  <WpMedia v-if="media" :media="media" size="thumbnail" :no-src-set="true" width="30" height="30"></WpMedia>
 </template>
 
 <script>
