@@ -71,7 +71,7 @@ export default {
   async fetch({ store, params }) {
     // fetch all menus
     // await store.dispatch('menus/fetchAll')
-    await store.dispatch('posts/fetchPost', params.slug)
+    await store.dispatch('posts/fetchBySlug', params.slug)
   },
   computed: {
     ...mapState('posts', {

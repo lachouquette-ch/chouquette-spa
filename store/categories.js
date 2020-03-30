@@ -6,14 +6,14 @@ export const actions = {
   async fetchMany({ commit, state }, ids) {
     const idList = ids.join(',')
     const categories = await this.$axios.$get(
-      `https://uat.lachouquette.ch/wp-json/wp/v2/categories/?include=${idList}&context=embed`
+      `https://uat.lachouquette.ch/wp-json/wp/v2/categories/?include=${idList}&per_page=${ids.length}&context=embed`
     )
     commit('setCategories', categories)
     return categories
   },
-  async getSingle({ commit, state }, id) {
-    if (state[id]) {
-      return Promise.resolve(state[id])
+  async get({ commit, state }, id) {
+    if (state.all[id]) {
+      return Promise.resolve(state.all[id])
     } else {
       const category = await this.$axios.$get(
         `https://uat.lachouquette.ch/wp-json/wp/v2/categories/${id}?context=embed`

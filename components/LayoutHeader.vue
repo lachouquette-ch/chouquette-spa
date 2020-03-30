@@ -71,13 +71,12 @@ export default {
     }
   },
   computed: {
-    // ...mapState('menus', ['headerCategories'])
+    ...mapState('categories', ['headerCategories'])
   },
   async created() {
-    const [headerMenu] = await this.$store.dispatch('menus/fetchAll')
     this.categories = await Promise.all(
-      headerMenu.items.map(({ object_id }) => {
-        return this.$store.dispatch('categories/getSingle', object_id)
+      this.$store.state.menus.headerCategories.map(({ object_id }) => {
+        return this.$store.dispatch('categories/get', object_id)
       })
     )
   }
