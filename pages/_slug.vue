@@ -93,6 +93,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep {
+  a {
+    color: $chouquette-grey;
+    text-decoration: underline;
+
+    @include hover-focus-active() {
+      color: $chouquette-dark-grey;
+    }
+  }
+}
+
 .cq-single-post-fiches {
   height: calc(100vh - #{$header-height} - #{$covid-banner-height});
   width: 350px;
@@ -183,12 +194,6 @@ export default {
   &::-webkit-scrollbar-thumb {
     box-shadow: inset 0 0 6px rgba($chouquette-grey, 0.3);
     background-color: $chouquette-grey;
-  }
-}
-
-.post-content {
-  a {
-    @extend .link-secondary !optional;
   }
 }
 
