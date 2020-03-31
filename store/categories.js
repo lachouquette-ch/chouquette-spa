@@ -1,13 +1,12 @@
+import CategoryAPI from '~/api/wordpress/categories'
+
 export const state = () => ({
   all: {}
 })
 
 export const actions = {
   async fetchMany({ commit, state }, ids) {
-    const idList = ids.join(',')
-    const categories = await this.$axios.$get(
-      `${process.env.wpAPIBaseUrl}/categories/?include=${idList}&per_page=${ids.length}&context=embed`
-    )
+    const categories = await CategoryAPI.getByIds(ids)
     commit('setCategories', categories)
     return categories
   },
@@ -15,9 +14,7 @@ export const actions = {
     if (state.all[id]) {
       return Promise.resolve(state.all[id])
     } else {
-      const category = await this.$axios.$get(
-        `${process.env.wpAPIBaseUrl}/categories/${id}?context=embed`
-      )
+      const category = await CategoryAPI.getById(id)
       commit('setCategory', category)
       return category
     }

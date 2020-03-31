@@ -1,13 +1,12 @@
+import MediaAPI from '~/api/wordpress/media'
+
 export const state = () => ({
   all: {}
 })
 
 export const actions = {
   async fetchMany({ commit, state }, ids) {
-    const idList = ids.join(',')
-    const mediaList = await this.$axios.$get(
-      `${process.env.wpAPIBaseUrl}/media/?include=${idList}&per_page=${ids.length}&context=embed`
-    )
+    const mediaList = await MediaAPI.getByIds(ids)
     commit('setMediaList', mediaList)
     return mediaList
   },
@@ -15,7 +14,7 @@ export const actions = {
     if (state.all[id]) {
       return Promise.resolve(state.all[id])
     } else {
-      const media = await this.$axios.$get(`${process.env.wpAPIBaseUrl}/media/${id}?context=embed`)
+      const media = await MediaAPI.getById(id)
       commit('setMedia', media)
       return media
     }

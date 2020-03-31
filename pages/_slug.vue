@@ -70,7 +70,6 @@ export default {
   components: { WPMedia, MomentDateTime },
   async fetch({ store, params }) {
     // fetch all menus
-    // await store.dispatch('menus/fetchAll')
     await store.dispatch('posts/fetchBySlug', params.slug)
   },
   head() {
