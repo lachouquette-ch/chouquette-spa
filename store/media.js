@@ -5,27 +5,27 @@ export const state = () => ({
 })
 
 export const actions = {
-  async fetchMany({ commit, state }, ids) {
+  async fetchByIds({ commit, state }, ids) {
     const mediaList = await MediaAPI.getByIds(ids)
-    commit('setMediaList', mediaList)
+    commit('SET_MEDIA_LIST', mediaList)
     return mediaList
   },
-  async get({ commit, state }, id) {
+  async fetchById({ commit, state }, id) {
     if (state.all[id]) {
       return Promise.resolve(state.all[id])
     } else {
       const media = await MediaAPI.getById(id)
-      commit('setMedia', media)
+      commit('SET_MEDIA', media)
       return media
     }
   }
 }
 
 export const mutations = {
-  setMediaList(state, mediaList) {
+  SET_MEDIA_LIST(state, mediaList) {
     mediaList.forEach((media) => (state.all[media.id] = media))
   },
-  setMedia(state, media) {
+  SET_MEDIA(state, media) {
     state.all[media.id] = media
   }
 }

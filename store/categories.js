@@ -5,27 +5,27 @@ export const state = () => ({
 })
 
 export const actions = {
-  async fetchMany({ commit, state }, ids) {
+  async fetchByIds({ commit, state }, ids) {
     const categories = await CategoryAPI.getByIds(ids)
-    commit('setCategories', categories)
+    commit('SET_CATEGORIES', categories)
     return categories
   },
-  async get({ commit, state }, id) {
+  async fetchById({ commit, state }, id) {
     if (state.all[id]) {
       return Promise.resolve(state.all[id])
     } else {
       const category = await CategoryAPI.getById(id)
-      commit('setCategory', category)
+      commit('SET_CATEGORY', category)
       return category
     }
   }
 }
 
 export const mutations = {
-  setCategories(state, categories) {
+  SET_CATEGORIES(state, categories) {
     categories.forEach((category) => (state.all[category.id] = category))
   },
-  setCategory(state, category) {
+  SET_CATEGORY(state, category) {
     state.all[category.id] = category
   }
 }

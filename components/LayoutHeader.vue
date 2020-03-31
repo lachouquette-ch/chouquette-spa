@@ -73,7 +73,7 @@ export default {
   async created() {
     this.categories = await Promise.all(
       this.$store.state.menus.headerCategories.map(({ object_id }) => {
-        return this.$store.dispatch('categories/get', object_id)
+        return this.$store.dispatch('categories/fetchById', object_id)
       })
     )
   }
