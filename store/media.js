@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import MediaAPI from '~/api/wordpress/media'
 
 export const state = () => ({
@@ -5,10 +6,12 @@ export const state = () => ({
 })
 
 export const actions = {
-  async fetchByIds({ commit, state }, ids) {
-    const mediaList = await MediaAPI.getByIds(ids)
-    commit('SET_MEDIA_LIST', mediaList)
-    return mediaList
+  async fetchByIds({ commit, state, dispatch }, ids) {
+    const unknownMediaIds = _.difference(ids, Object.keys(state.all))
+    const newMediaList = await MediaAPI.getByIds(unknownMediaIds)
+    commit('SET_MEDIA_LIST', newMediaList)
+
+    return ids.map((id) => state.all[id])
   },
   async fetchById({ commit, state }, id) {
     if (state.all[id]) {
