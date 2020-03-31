@@ -13,8 +13,8 @@
       <div class="post-header-meta">
         <span>par {{ author.name }}</span>
         <span>
-          publié le <MomentDateTime :datetime="post.date"></MomentDateTime> (màj le
-          <MomentDateTime :datetime="post.modified"></MomentDateTime>)
+          publié le <AppDateTime :datetime="post.date"></AppDateTime> (màj le
+          <AppDateTime :datetime="post.modified"></AppDateTime>)
         </span>
         <span>
           dans
@@ -63,11 +63,11 @@
 
 <script>
 import WPMedia from '../components/WpMedia'
-import MomentDateTime from '../components/MomentDateTime'
+import AppDateTime from '../components/AppDateTime'
 import PostAPI from '../api/wordpress/posts'
 
 export default {
-  components: { WPMedia, MomentDateTime },
+  components: { AppDateTime, WPMedia },
   async asyncData({ params }) {
     const post = await PostAPI.getBySlug(params.slug)
     const featuredMedia = post._embedded['wp:featuredmedia'][0]
