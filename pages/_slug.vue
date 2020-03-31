@@ -62,31 +62,31 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import WPMedia from '../components/WpMedia'
 import MomentDateTime from '../components/MomentDateTime'
+import PostAPI from '../api/wordpress/posts'
 
 export default {
   components: { WPMedia, MomentDateTime },
-  async fetch({ store, params }) {
-    // fetch all menus
-    await store.dispatch('posts/fetchBySlug', params.slug)
+  async asyncData({ params }) {
+    const post = await PostAPI.getBySlug(params.slug)
+    const featuredMedia = post._embedded['wp:featuredmedia'][0]
+    const author = post._embedded.author[0]
+    const categories = post._embedded['wp:term'][0]
+    const tags = post._embedded['wp:term'][1]
+    const authorAvatar = Object.entries(author.avatar_urls).pop()[1]
+    return {
+      post,
+      featuredMedia,
+      author,
+      categories,
+      tags,
+      authorAvatar
+    }
   },
   head() {
     return {
       link: [{ rel: 'stylesheet', href: `${process.env.wpBaseUrl}/wp-includes/css/dist/block-library/style.min.css` }]
-    }
-  },
-  computed: {
-    ...mapState('posts', {
-      post: (state) => state.post,
-      featuredMedia: (state) => state.post._embedded['wp:featuredmedia'][0],
-      author: (state) => state.post._embedded.author[0],
-      categories: (state) => state.post._embedded['wp:term'][0],
-      tags: (state) => state.post._embedded['wp:term'][1]
-    }),
-    authorAvatar() {
-      return Object.entries(this.author.avatar_urls).pop()[1]
     }
   }
 }
