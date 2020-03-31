@@ -1,4 +1,11 @@
+require('dotenv').config()
+
 export default {
+  env: {
+    wpBaseUrl: process.env.WP_URL,
+    wpAPIBaseUrl: process.env.WP_URL + '/wp-json/wp/v2',
+    wpAPIMenuUrl: process.env.WP_URL + '/wp-json/menus/v1'
+  },
   mode: 'universal',
   /*
    ** Headers of the page

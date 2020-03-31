@@ -73,6 +73,11 @@ export default {
     // await store.dispatch('menus/fetchAll')
     await store.dispatch('posts/fetchBySlug', params.slug)
   },
+  head() {
+    return {
+      link: [{ rel: 'stylesheet', href: `${process.env.wpBaseUrl}/wp-includes/css/dist/block-library/style.min.css` }]
+    }
+  },
   computed: {
     ...mapState('posts', {
       post: (state) => state.post,
@@ -84,11 +89,7 @@ export default {
     authorAvatar() {
       return Object.entries(this.author.avatar_urls).pop()[1]
     }
-  },
-  head() {
-    // Set Meta Tags for this Page
   }
-  // and more functionality to discover
 }
 </script>
 

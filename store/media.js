@@ -6,7 +6,7 @@ export const actions = {
   async fetchMany({ commit, state }, ids) {
     const idList = ids.join(',')
     const mediaList = await this.$axios.$get(
-      `https://uat.lachouquette.ch/wp-json/wp/v2/media/?include=${idList}&per_page=${ids.length}&context=embed`
+      `${process.env.wpAPIBaseUrl}/media/?include=${idList}&per_page=${ids.length}&context=embed`
     )
     commit('setMediaList', mediaList)
     return mediaList
@@ -15,7 +15,7 @@ export const actions = {
     if (state.all[id]) {
       return Promise.resolve(state.all[id])
     } else {
-      const media = await this.$axios.$get(`https://uat.lachouquette.ch/wp-json/wp/v2/media/${id}?context=embed`)
+      const media = await this.$axios.$get(`${process.env.wpAPIBaseUrl}/media/${id}?context=embed`)
       commit('setMedia', media)
       return media
     }

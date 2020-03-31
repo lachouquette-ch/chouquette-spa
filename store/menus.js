@@ -12,11 +12,11 @@ export const state = () => ({
 export const actions = {
   async fetchAll({ state, commit, getters, dispatch }) {
     // fetch all menus
-    const rawMenus = await this.$axios.$get('https://uat.lachouquette.ch/wp-json/menus/v1/menus/')
+    const rawMenus = await this.$axios.$get(process.env.wpAPIMenuUrl + '/menus/')
     // build menu with all dependencies
     const menus = await Promise.all(
       rawMenus.map((rawMenu) =>
-        this.$axios.$get(`https://uat.lachouquette.ch/wp-json/menus/v1/menus/${rawMenu.term_id}`)
+        this.$axios.$get(`${process.env.wpAPIMenuUrl}/menus/${rawMenu.term_id}`)
       )
     )
 

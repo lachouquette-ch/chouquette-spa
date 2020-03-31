@@ -6,7 +6,7 @@ export const actions = {
   async fetchMany({ commit, state }, ids) {
     const idList = ids.join(',')
     const categories = await this.$axios.$get(
-      `https://uat.lachouquette.ch/wp-json/wp/v2/categories/?include=${idList}&per_page=${ids.length}&context=embed`
+      `${process.env.wpAPIBaseUrl}/categories/?include=${idList}&per_page=${ids.length}&context=embed`
     )
     commit('setCategories', categories)
     return categories
@@ -16,7 +16,7 @@ export const actions = {
       return Promise.resolve(state.all[id])
     } else {
       const category = await this.$axios.$get(
-        `https://uat.lachouquette.ch/wp-json/wp/v2/categories/${id}?context=embed`
+        `${process.env.wpAPIBaseUrl}/categories/${id}?context=embed`
       )
       commit('setCategory', category)
       return category

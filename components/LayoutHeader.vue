@@ -49,7 +49,7 @@
           <a href="#" title="Newsletter" data-toggle="modal" data-target="#newsletterModal"
             ><i class="far fa-envelope ml-3"></i
           ></a>
-          <a href="https://lachouquette.ch/feed/atom/" title="RSS" target="_blank"><i class="fas fa-rss ml-3"></i></a>
+          <a :href="`${baseURL}/feed/atom/`" title="RSS" target="_blank"><i class="fas fa-rss ml-3"></i></a>
           <a href="#" title="Recherche" class="d-none d-md-inline-block" data-toggle="modal" data-target="#searchModal"
             ><i class="fas fa-search ml-3"></i
           ></a>
@@ -66,6 +66,7 @@ export default {
   components: { CategoryLogo },
   data() {
     return {
+      baseURL: process.env.wpBaseUrl,
       categories: []
     }
   },
