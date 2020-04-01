@@ -44,8 +44,6 @@ export default {
    ** Nuxt.js modules
    */
   modules: [
-    // Doc: https://axios.nuxtjs.org/usage
-    '@nuxtjs/axios',
     // Doc: https://github.com/nuxt-community/style-resources-module/blob/master/README.md
     '@nuxtjs/style-resources'
   ],
@@ -57,11 +55,6 @@ export default {
       './node_modules/bootstrap/scss/_mixins.scss'
     ]
   },
-  /*
-   ** Axios module configuration
-   ** See https://axios.nuxtjs.org/options
-   */
-  axios: {},
   /*
    ** Build configuration
    */
