@@ -11,9 +11,7 @@
       />
       <div class="post-header-meta">
         <span>par {{ author.name }}</span>
-        <span>
-          publié le <AppDateTime :datetime="post.date" /> (màj le <AppDateTime :datetime="post.modified" />)
-        </span>
+        <span> publié le {{ post.date | momentDateTime }} (màj le {{ post.modified | momentDateTime }}) </span>
         <span>
           dans
           <a v-for="category in categories" :key="category.id" :href="category.link" :title="category.name"
@@ -60,7 +58,6 @@
 
 <script>
 import WPMedia from '../components/WpMedia'
-import AppDateTime from '../components/AppDateTime'
 import PostCard from '../components/PostCard'
 import AppSwiper from '../components/AppSwiper'
 import PostShare from '../components/PostShare'
@@ -68,7 +65,7 @@ import PostShare from '../components/PostShare'
 import PostAPI from '../api/wordpress/posts'
 
 export default {
-  components: { AppDateTime, WPMedia, PostCard, AppSwiper, PostShare },
+  components: { WPMedia, PostCard, AppSwiper, PostShare },
   async asyncData({ params }) {
     const post = await PostAPI.getBySlug(params.slug)
     const featuredMedia = post._embedded['wp:featuredmedia'][0]
