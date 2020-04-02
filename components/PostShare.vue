@@ -48,16 +48,20 @@ export default {
       type: Object
     }
   },
+  data() {
+    return {
+      shareApiAvailable: false,
+      currentPage: ''
+    }
+  },
   computed: {
-    shareApiAvailable() {
-      return typeof navigator.share === 'function'
-    },
-    currentPage() {
-      return window.location.href
-    },
     escapedTitle() {
       return he.decode(this.post.title.rendered)
     }
+  },
+  mounted() {
+    this.shareApiAvailable = typeof navigator.share === 'function'
+    this.currentPage = window.location.href
   },
   methods: {
     shareWith(title, text, url) {

@@ -19,9 +19,7 @@
           </a>
         </span>
       </div>
-      <client-only>
-        <PostShare :post="post" class="post-header-sn-share" />
-      </client-only>
+      <PostShare :post="post" class="post-header-sn-share" />
     </div>
 
     <div class="post-content container pt-4">

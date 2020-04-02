@@ -61,9 +61,10 @@
 
 <script>
 import CategoryLogo from '../components/CategoryLogo'
+import AppModal from '../components/AppModal'
 
 export default {
-  components: { CategoryLogo },
+  components: { CategoryLogo, AppModal },
   data() {
     return {
       baseURL: process.env.wpBaseUrl,
