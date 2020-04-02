@@ -26,11 +26,9 @@
 
     <div class="post-content container pt-4">
       <div class="post-content-title">
-        <h1 class="mr-2 mb-4">{{ post.title.rendered }}</h1>
+        <h1 class="mr-2 mb-4">{{ escapedTitle }}</h1>
       </div>
-      <!-- eslint-disable vue/no-v-html -->
-      <main class="post-content-text" v-html="post.content.rendered"></main>
-      <!-- eslint-enable -->
+      <main class="post-content-text">{{ escapedContent }}</main>
     </div>
 
     <div class="post-author container">
@@ -57,6 +55,8 @@
 </template>
 
 <script>
+import he from 'he'
+
 import WPMedia from '../components/WpMedia'
 import PostCard from '../components/PostCard'
 import AppSwiper from '../components/AppSwiper'
@@ -90,6 +90,14 @@ export default {
       tags,
       authorAvatar,
       similarPosts
+    }
+  },
+  computed: {
+    escapedContent() {
+      return he.decode(this.post.content.rendered)
+    },
+    escapedTitle() {
+      return he.decode(this.post.title.rendered)
     }
   },
   head() {

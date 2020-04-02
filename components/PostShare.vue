@@ -5,7 +5,7 @@
       <a
         class="text-primary"
         title="Autres"
-        @click.prevent="shareWith('Article de la Chouquette', post.title.rendered, currentPage)"
+        @click.prevent="shareWith('Article de la Chouquette', escapedTitle, currentPage)"
         ><i class="fas fa-share-alt-square"></i
       ></a>
     </template>
@@ -22,7 +22,7 @@
         style="color: #38A1F3"
         title="Twitter"
         target="_blank"
-        :href="`https://twitter.com/share?text=${post.title.rendered}&url=${encodeURI(currentPage)}`"
+        :href="`https://twitter.com/share?text=${escapedTitle}&url=${encodeURI(currentPage)}`"
         ><i class="fab fa-twitter-square"></i
       ></a>
       <a style="color: #25d366" title="Whatsapp" target="_blank" :href="`https://wa.me/?text=${encodeURI(currentPage)}`"
@@ -31,7 +31,7 @@
       <a
         style="color: #b7b7b7"
         title="Email"
-        :href="`mailto:?subject=${post.title.rendered}&amp;body=Je te partage cet article ${currentPage}`"
+        :href="`mailto:?subject=${escapedTitle}&amp;body=Je te partage cet article ${currentPage}`"
         ><i class="fas fa-envelope-square"></i
       ></a>
     </template>
@@ -39,6 +39,8 @@
 </template>
 
 <script>
+import he from 'he'
+
 export default {
   props: {
     post: {
@@ -47,8 +49,15 @@ export default {
     }
   },
   computed: {
-    shareApiAvailable: () => typeof navigator.share === 'function',
-    currentPage: () => window.location.href
+    shareApiAvailable() {
+      return typeof navigator.share === 'function'
+    },
+    currentPage() {
+      return window.location.href
+    },
+    escapedTitle() {
+      return he.decode(this.post.title.rendered)
+    }
   },
   methods: {
     shareWith(title, text, url) {
