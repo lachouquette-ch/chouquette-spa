@@ -57,7 +57,9 @@
 
     <div class="cq-single-post-similar container mt-5">
       <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
-      <PostCard v-for="similarPost in similarPosts" :key="similarPost.id" :post="similarPost" />
+      <AppSwiper>
+        <PostCard v-for="similarPost in similarPosts" :key="similarPost.id" :post="similarPost" class="swiper-slide" />
+      </AppSwiper>
     </div>
   </article>
 </template>
@@ -66,11 +68,12 @@
 import WPMedia from '../components/WpMedia'
 import AppDateTime from '../components/AppDateTime'
 import PostCard from '../components/PostCard'
+import AppSwiper from '../components/AppSwiper'
 
 import PostAPI from '../api/wordpress/posts'
 
 export default {
-  components: { AppDateTime, WPMedia, PostCard },
+  components: { AppDateTime, WPMedia, PostCard, AppSwiper },
   async asyncData({ params }) {
     const post = await PostAPI.getBySlug(params.slug)
     const featuredMedia = post._embedded['wp:featuredmedia'][0]

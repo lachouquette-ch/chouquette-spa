@@ -1,0 +1,65 @@
+<template>
+  <div>
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+        <slot></slot>
+      </div>
+      <div class="swiper-button-next swiper-button-black"></div>
+      <div class="swiper-button-prev swiper-button-black"></div>
+    </div>
+  </div>
+</template>
+
+<script>
+import $ from 'jquery'
+import Swiper from 'swiper'
+
+export default {
+  name: 'AppSwiper',
+  mounted() {
+    $(function() {
+      const swiper = new Swiper('.swiper-container', {
+        grabCursor: true,
+        centeredSlides: true,
+        loop: true,
+        slidesPerView: 1,
+        spaceBetween: 10,
+        autoplay: {
+          delay: 3000,
+          disableOnInteraction: false
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
+        },
+        // Responsive breakpoints (based on bootstrap breakpoints)
+        breakpointsInverse: true,
+        breakpoints: {
+          576: {
+            slidesPerView: 2,
+            spaceBetween: 10
+          },
+          768: {
+            slidesPerView: 2,
+            spaceBetween: 20
+          },
+          992: {
+            slidesPerView: 3,
+            spaceBetween: 30
+          },
+          1200: {
+            slidesPerView: 4,
+            spaceBetween: 30
+          }
+        }
+      })
+    })
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.swiper-button-black {
+  color: $black;
+}
+</style>
