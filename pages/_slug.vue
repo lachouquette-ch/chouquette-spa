@@ -5,7 +5,6 @@
       <img
         :alt="author.name"
         :src="authorAvatar"
-        srcset="https://lachouquette.ch/wp-content/wphb-cache/gravatar/c48/c481bcfd3703afe5904b58370a618101x300.jpg 2x"
         class="post-header-author-img rounded-circle"
         height="150"
         width="150"
@@ -41,12 +40,9 @@
     <div class="post-author container">
       <div class="border shadow-sm text-center position-relative">
         <img
-          alt="Val"
-          src="https://uat.lachouquette.ch/wp-content/wphb-cache/gravatar/c48/c481bcfd3703afe5904b58370a618101x150.jpg"
-          srcset="
-            https://uat.lachouquette.ch/wp-content/wphb-cache/gravatar/c48/c481bcfd3703afe5904b58370a618101x300.jpg 2x
-          "
-          class="avatar avatar-150 photo cq-single-post-header-author-img rounded-circle"
+          :alt="author.name"
+          :src="authorAvatar"
+          class="post-header-author-img rounded-circle"
           height="150"
           width="150"
         />
@@ -231,7 +227,7 @@ export default {
   position: absolute;
   bottom: -55px;
   left: 20px;
-  border: 5px solid $white;
+  border: 5px solid $chouquette-yellow;
   z-index: 100;
 }
 
