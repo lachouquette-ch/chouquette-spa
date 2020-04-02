@@ -14,14 +14,25 @@ class AbstractEndpoint {
     }
   }
 
+  get(...args) {
+    return this.axios.$get.apply(this, args)
+  }
+
   getBySlug(slug) {
-    const URI = `/?slug=${slug}&_embed=true`
-    return this.axios.$get(URI).then((posts) => posts[0])
+    const params = {
+      slug,
+      _embed: true
+    }
+    return this.axios.$get('/', { params }).then((posts) => posts[0])
   }
 
   getByIds(ids) {
-    const URI = `/?include=${ids.join(',')}&per_page=${ids.length}&_embed=true`
-    return this.axios.$get(URI)
+    const params = {
+      include: ids,
+      per_page: ids.length,
+      _embed: true
+    }
+    return this.axios.$get('/', { params })
   }
 
   getById(id) {

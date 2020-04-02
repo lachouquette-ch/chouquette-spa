@@ -55,8 +55,9 @@
       </div>
     </div>
 
-    <div class="post-similar container mt-5">
+    <div class="cq-single-post-similar container mt-5">
       <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
+      <PostCard v-for="similarPost in similarPosts" :key="similarPost.id" :post="similarPost" />
     </div>
   </article>
 </template>
@@ -64,10 +65,12 @@
 <script>
 import WPMedia from '../components/WpMedia'
 import AppDateTime from '../components/AppDateTime'
+import PostCard from '../components/PostCard'
+
 import PostAPI from '../api/wordpress/posts'
 
 export default {
-  components: { AppDateTime, WPMedia },
+  components: { AppDateTime, WPMedia, PostCard },
   async asyncData({ params }) {
     const post = await PostAPI.getBySlug(params.slug)
     const featuredMedia = post._embedded['wp:featuredmedia'][0]
@@ -75,13 +78,23 @@ export default {
     const categories = post._embedded['wp:term'][0]
     const tags = post._embedded['wp:term'][1]
     const authorAvatar = Object.entries(author.avatar_urls).pop()[1]
+
+    const similarPosts = await PostAPI.get('/', {
+      params: {
+        tags: post.tags,
+        exclude: post.id,
+        per_page: 6
+      }
+    })
+
     return {
       post,
       featuredMedia,
       author,
       categories,
       tags,
-      authorAvatar
+      authorAvatar,
+      similarPosts
     }
   },
   head() {
