@@ -1,7 +1,7 @@
 <template>
   <article :id="post.id">
     <div class="post-header container p-0">
-      <WPMedia :media="featuredMedia" class="post-header-img"></WPMedia>
+      <WPMedia :media="featuredMedia" class="post-header-img" />
       <img
         :alt="author.name"
         :src="authorAvatar"
@@ -12,8 +12,7 @@
       <div class="post-header-meta">
         <span>par {{ author.name }}</span>
         <span>
-          publié le <AppDateTime :datetime="post.date"></AppDateTime> (màj le
-          <AppDateTime :datetime="post.modified"></AppDateTime>)
+          publié le <AppDateTime :datetime="post.date" /> (màj le <AppDateTime :datetime="post.modified" />)
         </span>
         <span>
           dans
@@ -22,10 +21,9 @@
           </a>
         </span>
       </div>
-      <div id="share" class="post-header-sn-share">
-        Partage cet article
-        <a title="Autres" class="text-primary"><i class="fas fa-share-alt-square"></i></a>
-      </div>
+      <client-only>
+        <PostShare :post="post" class="post-header-sn-share" />
+      </client-only>
     </div>
 
     <div class="post-content container pt-4">
@@ -65,11 +63,12 @@ import WPMedia from '../components/WpMedia'
 import AppDateTime from '../components/AppDateTime'
 import PostCard from '../components/PostCard'
 import AppSwiper from '../components/AppSwiper'
+import PostShare from '../components/PostShare'
 
 import PostAPI from '../api/wordpress/posts'
 
 export default {
-  components: { AppDateTime, WPMedia, PostCard, AppSwiper },
+  components: { AppDateTime, WPMedia, PostCard, AppSwiper, PostShare },
   async asyncData({ params }) {
     const post = await PostAPI.getBySlug(params.slug)
     const featuredMedia = post._embedded['wp:featuredmedia'][0]
@@ -249,11 +248,6 @@ export default {
   position: absolute;
   bottom: calc(-2rem - 15px);
   right: 0;
-
-  > a {
-    font-size: 2rem;
-    margin: 0 3px;
-  }
 }
 
 .post-content-title {
