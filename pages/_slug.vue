@@ -26,7 +26,7 @@
       <div class="post-content-title">
         <h1 class="mr-2 mb-4">{{ escapedTitle }}</h1>
       </div>
-      <main class="post-content-text">{{ escapedContent }}</main>
+      <main class="post-content-text" v-html="post.content.rendered" />
     </div>
 
     <div class="post-author container">
@@ -91,9 +91,6 @@ export default {
     }
   },
   computed: {
-    escapedContent() {
-      return he.decode(this.post.content.rendered)
-    },
     escapedTitle() {
       return he.decode(this.post.title.rendered)
     }
