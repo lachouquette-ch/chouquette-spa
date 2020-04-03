@@ -1,5 +1,35 @@
 <template>
   <header class="header-menu">
+    <AppModal title="Rejoins notre newsletter" :show="showNewsletterModal" @close="showNewsletterModal = false">
+      <VueMailchimpSubscribe
+        url="https://unechouquettealausanne.us8.list-manage.com/subscribe/post-json"
+        user-id="570ea90f4cbc136c450fe880a"
+        list-id="26f7afd6a2"
+        @error="onMailchimpSubscriptionError"
+        @success="onMailchimpSubscriptionSuccess"
+      >
+        <template v-slot="{ subscribe, setEmail, error, success, loading }">
+          <form @submit.prevent="subscribe">
+            <div class="input-group">
+              <input
+                type="email"
+                placeholder="Ton email"
+                class="required email form-control"
+                autofocus
+                @input="setEmail($event.target.value)"
+              />
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-primary">Je m'inscris</button>
+              </div>
+            </div>
+            <div v-if="error">{{ error }}</div>
+            <div v-if="success">Yay!</div>
+            <div v-if="loading">Loading…</div>
+          </form>
+        </template>
+      </VueMailchimpSubscribe>
+    </AppModal>
+
     <nav class="navbar fixed-top navbar-chouquette-light navbar-expand-md">
       <button
         class="navbar-toggler"
@@ -46,9 +76,7 @@
           <a href="https://www.instagram.com/lachouquettelausanne" title="Instagram" target="_blank"
             ><i class="fab fa-instagram ml-3"></i
           ></a>
-          <a href="#" title="Newsletter" data-toggle="modal" data-target="#newsletterModal"
-            ><i class="far fa-envelope ml-3"></i
-          ></a>
+          <a href="#" title="Newsletter" @click.prevent="openNewsletter"><i class="far fa-envelope ml-3"></i></a>
           <a :href="`${baseURL}/feed/atom/`" title="RSS" target="_blank"><i class="fas fa-rss ml-3"></i></a>
           <a href="#" title="Recherche" class="d-none d-md-inline-block" data-toggle="modal" data-target="#searchModal"
             ><i class="fas fa-search ml-3"></i
@@ -60,15 +88,18 @@
 </template>
 
 <script>
+import VueMailchimpSubscribe from 'vue-mailchimp-subscribe'
 import CategoryLogo from './CategoryLogo'
+import AppModal from './AppModal'
 
 export default {
-  components: { CategoryLogo },
+  components: { AppModal, CategoryLogo, VueMailchimpSubscribe },
   data() {
     return {
       baseURL: process.env.wpBaseUrl,
       categories: [],
-      searchText: ''
+      searchText: '',
+      showNewsletterModal: false
     }
   },
   async created() {
@@ -81,6 +112,15 @@ export default {
   methods: {
     search() {
       this.$router.push({ path: '/search', query: { s: this.searchText } })
+    },
+    openNewsletter() {
+      this.showNewsletterModal = true
+    },
+    onMailchimpSubscriptionError() {
+      // handle error
+    },
+    onMailchimpSubscriptionSuccess() {
+      // handle success
     }
   }
 }

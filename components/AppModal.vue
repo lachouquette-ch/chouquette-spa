@@ -1,6 +1,6 @@
 <template>
   <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 id="modalLabel" class="modal-title">{{ title }}</h5>
@@ -54,4 +54,18 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.modal {
+  color: $white;
+
+  .close {
+    color: $chouquette-yellow;
+    opacity: 1;
+    text-shadow: none;
+  }
+
+  .modal-content {
+    background-color: rgba($black, 0.8);
+  }
+}
+</style>
