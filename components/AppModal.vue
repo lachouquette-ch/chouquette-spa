@@ -23,7 +23,6 @@
 
 <script>
 export default {
-  name: 'AppModal',
   props: {
     title: {
       type: String,

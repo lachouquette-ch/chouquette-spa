@@ -1,3 +1,4 @@
+// TODO use @nuxtjs/axios instead. Maybe using https://axios.nuxtjs.org/extend.html
 import axios from 'axios'
 
 class AbstractEndpoint {

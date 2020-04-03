@@ -60,8 +60,8 @@
 </template>
 
 <script>
-import CategoryLogo from '../components/CategoryLogo'
-import AppModal from '../components/AppModal'
+import CategoryLogo from './CategoryLogo'
+import AppModal from './AppModal'
 
 export default {
   components: { CategoryLogo, AppModal },
