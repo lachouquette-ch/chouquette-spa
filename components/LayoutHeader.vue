@@ -1,6 +1,6 @@
 <template>
   <header class="header-menu">
-    <AppModal title="Rejoins notre newsletter" :show="showNewsletterModal" @close="showNewsletterModal = false">
+    <AppModal title="Rejoins notre newsletter" :show="showNewsletterModal" @close="closeNewsletterModal">
       <VueMailchimpSubscribe
         url="https://unechouquettealausanne.us8.list-manage.com/subscribe/post-json"
         user-id="570ea90f4cbc136c450fe880a"
@@ -8,7 +8,7 @@
         @error="onMailchimpSubscriptionError"
         @success="onMailchimpSubscriptionSuccess"
       >
-        <template v-slot="{ subscribe, setEmail, error, success, loading }">
+        <template v-slot="{ subscribe, setEmail }">
           <form @submit.prevent="subscribe">
             <div class="input-group">
               <input
@@ -22,9 +22,6 @@
                 <button type="submit" class="btn btn-primary">Je m'inscris</button>
               </div>
             </div>
-            <div v-if="error">{{ error }}</div>
-            <div v-if="success">Yay!</div>
-            <div v-if="loading">Loading…</div>
           </form>
         </template>
       </VueMailchimpSubscribe>
@@ -113,14 +110,19 @@ export default {
     search() {
       this.$router.push({ path: '/search', query: { s: this.searchText } })
     },
+    closeNewsletterModal() {
+      this.showNewsletterModal = false
+    },
     openNewsletter() {
       this.showNewsletterModal = true
     },
-    onMailchimpSubscriptionError() {
-      // handle error
+    onMailchimpSubscriptionError(errorMessage) {
+      this.$store.dispatch('alerts/addAction', { type: 'danger', message: errorMessage })
+      this.closeNewsletterModal()
     },
     onMailchimpSubscriptionSuccess() {
-      // handle success
+      this.$store.dispatch('alerts/addAction', { type: 'success', message: "Tu t'es bien inscris : merci !" })
+      this.closeNewsletterModal()
     }
   }
 }

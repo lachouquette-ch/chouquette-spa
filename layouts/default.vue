@@ -1,11 +1,12 @@
 <template>
   <div>
+    <AppAlert />
     <LayoutHeaderCovid>
       Page spéciale COVID-19
     </LayoutHeaderCovid>
-    <LayoutHeader></LayoutHeader>
+    <LayoutHeader />
     <nuxt />
-    <LayoutFooter></LayoutFooter>
+    <LayoutFooter />
   </div>
 </template>
 
@@ -13,9 +14,10 @@
 import LayoutHeaderCovid from '../components/LayoutHeaderCovid'
 import LayoutHeader from '../components/LayoutHeader'
 import LayoutFooter from '../components/LayoutFooter'
+import AppAlert from '../components/AppAlert'
 
 export default {
-  components: { LayoutHeader, LayoutFooter, LayoutHeaderCovid }
+  components: { AppAlert, LayoutHeader, LayoutFooter, LayoutHeaderCovid }
 }
 </script>
 

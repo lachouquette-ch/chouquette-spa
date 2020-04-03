@@ -1,0 +1,36 @@
+<template>
+  <div class="app-alert fixed-top">
+    <div v-for="alert in alerts" :key="alert.message" :type="alert.type">
+      <AppAlertSingle v-for="alert in alerts" :key="alert.message" :type="alert.type">
+        <span v-html="alert.message" />
+      </AppAlertSingle>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapState } from 'vuex'
+import AppAlertSingle from './AppAlertSingle'
+
+export default {
+  components: { AppAlertSingle },
+  computed: {
+    ...mapState('alerts', {
+      alerts: 'all'
+    })
+  },
+  mounted() {
+    const Alert = require('bootstrap/js/dist/alert')
+    this.alert = new Alert(this.$el)
+  },
+  beforeDestroy() {
+    this.modal.dispose()
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+.app-alert {
+  z-index: $zindex-popover;
+}
+</style>
