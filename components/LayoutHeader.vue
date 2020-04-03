@@ -15,15 +15,15 @@
       <nuxt-link to="/" class="navbar-brand mx-auto">La Chouquette</nuxt-link>
 
       <div id="navbarChouquette" class="collapse navbar-collapse">
-        <form action="/" class="d-md-none mb-2">
+        <form class="d-md-none mb-2" @submit.prevent="search">
           <div class="input-group input-group-sm">
             <input
+              v-model="searchText"
               class="form-control"
               type="search"
-              name="s"
               placeholder="Recherche"
-              aria-label="Search"
-              required=""
+              aria-label="Rechercher"
+              required
             />
             <div class="input-group-append">
               <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i></button>
@@ -61,14 +61,14 @@
 
 <script>
 import CategoryLogo from './CategoryLogo'
-import AppModal from './AppModal'
 
 export default {
-  components: { CategoryLogo, AppModal },
+  components: { CategoryLogo },
   data() {
     return {
       baseURL: process.env.wpBaseUrl,
-      categories: []
+      categories: [],
+      searchText: ''
     }
   },
   async created() {
@@ -77,6 +77,11 @@ export default {
         return this.$store.dispatch('categories/fetchById', object_id)
       })
     )
+  },
+  methods: {
+    search() {
+      this.$router.push({ path: '/search', query: { s: this.searchText } })
+    }
   }
 }
 </script>
