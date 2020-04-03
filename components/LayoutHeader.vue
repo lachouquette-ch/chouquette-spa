@@ -27,6 +27,25 @@
       </VueMailchimpSubscribe>
     </AppModal>
 
+    <AppModal title="Tu cherches quelque chose ?" :show="showSearchModal" @close="closeSearchModal">
+      <form @submit.prevent="search(searchText)">
+        <div class="input-group">
+          <input
+            v-model="searchText"
+            class="form-control"
+            type="search"
+            placeholder="Dis-moi tout..."
+            aria-label="Rechercher"
+            autofocus
+            required
+          />
+          <div class="input-group-append">
+            <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+          </div>
+        </div>
+      </form>
+    </AppModal>
+
     <nav class="navbar fixed-top navbar-chouquette-light navbar-expand-md">
       <button
         class="navbar-toggler"
@@ -42,7 +61,7 @@
       <nuxt-link to="/" class="navbar-brand mx-auto">La Chouquette</nuxt-link>
 
       <div id="navbarChouquette" class="collapse navbar-collapse">
-        <form class="d-md-none mb-2" @submit.prevent="search">
+        <form class="d-md-none mb-2" @submit.prevent="search(searchText)">
           <div class="input-group input-group-sm">
             <input
               v-model="searchText"
@@ -75,7 +94,7 @@
           ></a>
           <a href="#" title="Newsletter" @click.prevent="openNewsletter"><i class="far fa-envelope ml-3"></i></a>
           <a :href="`${baseURL}/feed/atom/`" title="RSS" target="_blank"><i class="fas fa-rss ml-3"></i></a>
-          <a href="#" title="Recherche" class="d-none d-md-inline-block" data-toggle="modal" data-target="#searchModal"
+          <a href="#" title="Recherche" class="d-none d-md-inline-block" @click.prevent="openSearchModal"
             ><i class="fas fa-search ml-3"></i
           ></a>
         </div>
@@ -96,7 +115,8 @@ export default {
       baseURL: process.env.wpBaseUrl,
       categories: [],
       searchText: '',
-      showNewsletterModal: false
+      showNewsletterModal: false,
+      showSearchModal: false
     }
   },
   async created() {
@@ -107,14 +127,20 @@ export default {
     )
   },
   methods: {
-    search() {
-      this.$router.push({ path: '/search', query: { s: this.searchText } })
+    search(text) {
+      this.$router.push({ path: '/search', query: { s: text } })
+    },
+    openNewsletter() {
+      this.showNewsletterModal = true
     },
     closeNewsletterModal() {
       this.showNewsletterModal = false
     },
-    openNewsletter() {
-      this.showNewsletterModal = true
+    openSearchModal() {
+      this.showSearchModal = true
+    },
+    closeSearchModal() {
+      this.showSearchModal = false
     },
     onMailchimpSubscriptionError(errorMessage) {
       this.$store.dispatch('alerts/addAction', { type: 'danger', message: errorMessage })
