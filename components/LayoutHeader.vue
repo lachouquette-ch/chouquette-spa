@@ -121,7 +121,7 @@ export default {
       this.closeNewsletterModal()
     },
     onMailchimpSubscriptionSuccess() {
-      this.$store.dispatch('alerts/addAction', { type: 'success', message: "Tu t'es bien inscris : merci !" })
+      this.$store.dispatch('alerts/addAction', { type: 'success', message: "Tu t'es bien inscris, merci !" })
       this.closeNewsletterModal()
     }
   }

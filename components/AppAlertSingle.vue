@@ -17,6 +17,10 @@ export default {
         // The value must match one (subset) of alert types https://getbootstrap.com/docs/4.3/components/alerts/
         return ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark'].includes(value)
       }
+    },
+    timeout: {
+      type: Number,
+      default: 3000
     }
   },
   computed: {
@@ -27,6 +31,7 @@ export default {
   mounted() {
     const Alert = require('bootstrap/js/dist/alert')
     this.alert = new Alert(this.$el)
+    setTimeout(() => this.close(), this.timeout)
   },
   beforeDestroy() {
     this.close()
