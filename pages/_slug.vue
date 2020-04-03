@@ -226,7 +226,7 @@ export default {
   position: absolute;
   bottom: -55px;
   left: 20px;
-  border: 5px solid $chouquette-yellow;
+  border: 5px solid $white;
   z-index: 100;
 }
 
