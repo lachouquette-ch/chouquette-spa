@@ -33,14 +33,10 @@ export default {
     this.alert = new Alert(this.$el)
     setTimeout(() => this.close(), this.timeout)
   },
-  beforeDestroy() {
-    this.close()
-  },
   methods: {
     close() {
       this.alert.close()
-      this.alert.dispose()
-      this.$emit('close')
+      this.$emit('close', this)
     }
   }
 }
