@@ -64,11 +64,12 @@ import PostAPI from '../api/wordpress/posts'
 
 export default {
   components: { WPMedia, PostCard, AppSwiper, PostShare },
-  async asyncData({ params }) {
+  async asyncData({ params, store }) {
     const post = await PostAPI.getBySlug(params.slug)
     const featuredMedia = post._embedded['wp:featuredmedia'][0]
     const author = post._embedded.author[0]
-    const categories = post._embedded['wp:term'][0]
+    // TODO rendering fiches categories instead of post ?
+    const categories = await store.dispatch('categories/fetchByIds', post.top_categories)
     const tags = post._embedded['wp:term'][1]
     const authorAvatar = Object.entries(author.avatar_urls).pop()[1]
 
@@ -104,17 +105,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep {
-  a {
-    color: $chouquette-grey;
-    text-decoration: underline;
-
-    @include hover-focus-active() {
-      color: $chouquette-dark-grey;
-    }
-  }
-}
-
 .cq-single-post-fiches {
   height: calc(100vh - #{$header-height} - #{$covid-banner-height});
   width: 350px;
@@ -259,6 +249,15 @@ export default {
 // NEW STYLE (using only gutenberg without formating in backoffice)
 
 ::v-deep .post-content-text {
+  a {
+    color: $chouquette-grey;
+    text-decoration: underline;
+
+    @include hover-focus-active() {
+      color: $chouquette-dark-grey;
+    }
+  }
+
   .wp-block-image {
     margin: 1.5rem auto;
 
