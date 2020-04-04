@@ -54,6 +54,7 @@
 
 <script>
 import he from 'he'
+import _ from 'lodash'
 
 import WPMedia from '../components/WpMedia'
 import PostCard from '../components/PostCard'
@@ -66,13 +67,14 @@ export default {
   components: { WPMedia, PostCard, AppSwiper, PostShare },
   async asyncData({ params, store }) {
     const post = await PostAPI.getBySlug(params.slug)
+
+    // helper fields
     const featuredMedia = post._embedded['wp:featuredmedia'][0]
     const author = post._embedded.author[0]
-    // TODO rendering fiches categories instead of post ?
-    const categories = await store.dispatch('categories/fetchByIds', post.top_categories)
     const tags = post._embedded['wp:term'][1]
     const authorAvatar = Object.entries(author.avatar_urls).pop()[1]
 
+    // fetch similar posts
     const similarPosts = await PostAPI.get('/', {
       params: {
         tags: post.tags,
@@ -80,6 +82,15 @@ export default {
         per_page: 6
       }
     })
+
+    // flatten and uniq all categories related to this post, fiches, ...
+    const similarPostCategoryIds = similarPosts.flatMap((post) => post.top_categories)
+    const postRelatedCategoryIds = _.uniq([...post.top_categories, ...similarPostCategoryIds])
+    // fetch all those categories at ONCE !
+    await store.dispatch('categories/fetchByIds', postRelatedCategoryIds)
+
+    // TODO rendering fiches categories instead of post ?
+    const categories = await store.dispatch('categories/fetchByIds', post.top_categories)
 
     return {
       post,

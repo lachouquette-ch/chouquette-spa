@@ -3,12 +3,7 @@
     <nuxt-link :to="{ path: `/${post.slug}` }" :title="escapedTitle" class="text-decoration-none">
       <div class="post-card-picture" :style="`background-image: url('${post.featured_img}')`">
         <div class="rounded-circle float-left post-card-category">
-          <img
-            src="https://uat.lachouquette.ch/wp-content/uploads/2019/04/Shopping_noir-150x150.png"
-            alt="Mode, déco, épicerie, web"
-            title="Shopping"
-            class=""
-          />
+          <CategoryLogo :category="topCategory" color="black" />
         </div>
       </div>
       <div class="post-card-caption d-flex text-center justify-content-center align-items-center">
@@ -20,18 +15,28 @@
 
 <script>
 import he from 'he'
+import CategoryLogo from './CategoryLogo'
 
 export default {
+  components: { CategoryLogo },
   props: {
     post: {
       required: true,
       type: Object
     }
   },
+  data() {
+    return {
+      topCategory: null
+    }
+  },
   computed: {
     escapedTitle() {
       return he.decode(this.post.title.rendered)
     }
+  },
+  async created() {
+    this.topCategory = await this.$store.dispatch('categories/fetchById', this.post.top_categories[0])
   }
 }
 </script>
