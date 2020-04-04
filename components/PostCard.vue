@@ -1,9 +1,9 @@
 <template>
   <article class="post-card post-card-chouquettise">
     <nuxt-link :to="{ path: `/${post.slug}` }" :title="escapedTitle" class="text-decoration-none">
-      <div class="post-card-picture" :style="`background-image: url('${post.featured_img}')`">
+      <div class="post-card-picture" :style="postCardBackground">
         <div class="rounded-circle float-left post-card-category">
-          <CategoryLogo :category="topCategory" color="black" />
+          <CategoryLogo v-if="topCategory" :category="topCategory" color="black" />
         </div>
       </div>
       <div class="post-card-caption d-flex text-center justify-content-center align-items-center">
@@ -27,16 +27,27 @@ export default {
   },
   data() {
     return {
-      topCategory: null
+      topCategory: null,
+      featuredMedia: null
     }
   },
   computed: {
     escapedTitle() {
       return he.decode(this.post.title.rendered)
+    },
+    postCardBackground() {
+      if (this.featuredMedia) {
+        return {
+          'background-image': `url('${this.featuredMedia.media_details.sizes.medium.source_url}')`
+        }
+      } else {
+        return {}
+      }
     }
   },
   async created() {
     this.topCategory = await this.$store.dispatch('categories/fetchById', this.post.top_categories[0])
+    this.featuredMedia = await this.$store.dispatch('media/fetchById', this.post.featured_media)
   }
 }
 </script>
