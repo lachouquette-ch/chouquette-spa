@@ -19,13 +19,6 @@ export default {
       alerts: 'all'
     })
   },
-  mounted() {
-    const Alert = require('bootstrap/js/dist/alert')
-    this.alert = new Alert(this.$el)
-  },
-  beforeDestroy() {
-    this.modal.dispose()
-  },
   methods: {
     removeAlert(alert) {
       this.$store.dispatch('alerts/removeAction', alert)

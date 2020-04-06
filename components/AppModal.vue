@@ -41,9 +41,10 @@ export default {
   mounted() {
     const Modal = require('bootstrap/js/dist/modal')
     this.modal = new Modal(this.$el)
-  },
-  beforeDestroy() {
-    this.modal.dispose()
+
+    this.$once('hook:beforeDestroy', function() {
+      this.modal.dispose()
+    })
   },
   methods: {
     close() {

@@ -32,9 +32,10 @@ export default {
     const Alert = require('bootstrap/js/dist/alert')
     this.alert = new Alert(this.$el)
     setTimeout(() => this.close(), this.timeout)
-  },
-  beforeDestroy() {
-    this.alert.dispose()
+
+    this.$once('hook:beforeDestroy', function() {
+      this.alert.dispose()
+    })
   },
   methods: {
     close() {

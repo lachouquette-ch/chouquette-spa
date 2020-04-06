@@ -12,9 +12,6 @@
 import Swiper from 'swiper'
 
 export default {
-  beforeDestroy() {
-    this.swiper.destroy()
-  },
   mounted() {
     this.swiper = new Swiper(this.$el, {
       grabCursor: true,
@@ -50,6 +47,10 @@ export default {
           spaceBetween: 30
         }
       }
+    })
+
+    this.$once('hook:beforeDestroy', function() {
+      this.swiper.destroy()
     })
   }
 }
