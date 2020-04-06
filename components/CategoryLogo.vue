@@ -1,6 +1,6 @@
 <template>
   <div v-if="media">
-    <WpMedia v-if="media" :media="media" size="thumbnail" :no-src-set="true" width="30" height="30"></WpMedia>
+    <WpMedia :media="media" size="thumbnail" :no-src-set="true" width="30" height="30"></WpMedia>
   </div>
 </template>
 

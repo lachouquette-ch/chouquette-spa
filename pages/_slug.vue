@@ -1,7 +1,7 @@
 <template>
-  <article :id="post.id">
+  <article v-if="post" :id="post.id">
     <div class="post-header container p-0">
-      <WPMedia :media="featuredMedia" class="post-header-img" />
+      <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
       <img
         :alt="author.name"
         :src="authorAvatar"
@@ -29,7 +29,7 @@
       <main class="post-content-text" v-html="post.content.rendered" />
     </div>
 
-    <div class="post-author container">
+    <div class="post-author container mb-5">
       <div class="border shadow-sm text-center position-relative">
         <img
           :alt="author.name"
@@ -43,9 +43,9 @@
       </div>
     </div>
 
-    <div class="cq-single-post-similar container mt-5">
+    <div v-show="isSimilarPostsShown" class="cq-single-post-similar container mt-5">
       <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
-      <PostCardSwiper :posts="similarPosts" />
+      <PostCardSwiper v-if="similarPosts" :posts="similarPosts" @init="isSimilarPostsShown = true" />
     </div>
   </article>
 </template>
@@ -63,6 +63,7 @@ export default {
   components: { WPMedia, PostCardSwiper, PostShare },
   data() {
     return {
+      isSimilarPostsShown: false,
       post: null,
       featuredMedia: null,
       author: null,

@@ -72,6 +72,7 @@ export default {
       this.initedPostCount++
       if (this.initedPostCount === this.posts.length) {
         this.swiper.init()
+        this.$emit('init')
       }
     }
   }
