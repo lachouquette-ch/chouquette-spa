@@ -47,20 +47,29 @@
       <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
       <PostCardSwiper v-if="similarPosts" :posts="similarPosts" @init="isSimilarPostsShown = true" />
     </div>
+
+    <div class="post-comments container mt-5">
+      <h3 class="mb-3 text-center">{{ comments.length }} commentaire(s)</h3>
+      <ol class="comment-list">
+        <PostComment v-for="comment in rootLevelComments" :key="comment.id" :comment="comment" :comments="comments" />
+      </ol>
+      <h3 class="mb-3 text-center">Laisse-nous un petit mot</h3>
+    </div>
   </article>
 </template>
 
 <script>
 import he from 'he'
 
+import PostAPI from '../api/wordpress/posts'
+
 import WPMedia from '../components/WpMedia'
 import PostCardSwiper from '../components/PostCardSwiper'
 import PostShare from '../components/PostShare'
-
-import PostAPI from '../api/wordpress/posts'
+import PostComment from '../components/PostComment'
 
 export default {
-  components: { WPMedia, PostCardSwiper, PostShare },
+  components: { PostComment, WPMedia, PostCardSwiper, PostShare },
   data() {
     return {
       isSimilarPostsShown: false,
@@ -70,7 +79,9 @@ export default {
       tags: [],
       authorAvatar: null,
       categories: [],
-      similarPosts: []
+      similarPosts: [],
+      comments: [],
+      rootLevelComments: []
     }
   },
   computed: {
@@ -86,6 +97,9 @@ export default {
     this.author = this.post._embedded.author[0]
     this.tags = this.post._embedded['wp:term'][1]
     this.authorAvatar = Object.entries(this.author.avatar_urls).pop()[1]
+    this.comments = this.post._embedded.replies[0].reverse()
+    this.rootLevelComments = this.comments.filter(({ parent }) => parent === 0)
+
     this.categories = await this.$store.dispatch('categories/fetchByIds', this.post.top_categories)
 
     // fetch similar posts
@@ -435,55 +449,10 @@ export default {
   }
 }
 
-.cq-single-post-comments {
+.post-comments {
   h3 {
     font-family: $font-family-heading;
     font-size: $h1-font-size;
-  }
-
-  a {
-    @extend .link-secondary !optional;
-  }
-
-  // no list bullets
-  ol,
-  ul {
-    list-style-type: none;
-  }
-
-  .comment-list {
-    padding: 0;
-  }
-
-  .comment {
-    margin-bottom: 0.5rem;
-  }
-
-  .comment-body {
-    margin-bottom: 1rem;
-  }
-
-  .comment-meta {
-    .comment-author {
-      img {
-        @extend .rounded-circle !optional;
-        margin-right: 0.5rem;
-      }
-    }
-
-    .comment-metadata {
-      a {
-        text-decoration: none;
-      }
-    }
-
-    .comment-content {
-      margin-top: 0.5rem;
-
-      > p {
-        margin: 0;
-      }
-    }
   }
 }
 </style>
