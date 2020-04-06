@@ -31,7 +31,7 @@ export default {
   async created() {
     const mediaId = this.category.acf.logos[`logo_${this.color}`]
     this.media = await this.$store.dispatch('media/fetchById', mediaId)
-    this.$emit('init', mediaId)
+    this.$emit('init')
   }
 }
 </script>

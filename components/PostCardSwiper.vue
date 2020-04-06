@@ -1,7 +1,7 @@
 <template>
   <div class="swiper-container">
     <div class="swiper-wrapper">
-      <slot></slot>
+      <PostCard v-for="post in posts" :key="post.id" :post="post" class="swiper-slide" @init="update(post)" />
     </div>
     <div class="swiper-button-next swiper-button-black"></div>
     <div class="swiper-button-prev swiper-button-black"></div>
@@ -10,10 +10,24 @@
 
 <script>
 import Swiper from 'swiper'
+import PostCard from './PostCard'
 
 export default {
+  components: { PostCard },
+  props: {
+    posts: {
+      type: Array,
+      required: true
+    }
+  },
+  data() {
+    return {
+      initedPostCount: 0
+    }
+  },
   mounted() {
     this.swiper = new Swiper(this.$el, {
+      init: false,
       grabCursor: true,
       centeredSlides: true,
       loop: true,
@@ -52,6 +66,14 @@ export default {
     this.$once('hook:beforeDestroy', function() {
       this.swiper.destroy()
     })
+  },
+  methods: {
+    update(element) {
+      this.initedPostCount++
+      if (this.initedPostCount === this.posts.length) {
+        this.swiper.init()
+      }
+    }
   }
 }
 </script>

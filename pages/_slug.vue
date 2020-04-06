@@ -45,9 +45,7 @@
 
     <div class="cq-single-post-similar container mt-5">
       <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
-      <AppSwiper>
-        <PostCard v-for="similarPost in similarPosts" :key="similarPost.id" :post="similarPost" class="swiper-slide" />
-      </AppSwiper>
+      <PostCardSwiper :posts="similarPosts" />
     </div>
   </article>
 </template>
@@ -57,14 +55,13 @@ import he from 'he'
 import _ from 'lodash'
 
 import WPMedia from '../components/WpMedia'
-import PostCard from '../components/PostCard'
-import AppSwiper from '../components/AppSwiper'
+import PostCardSwiper from '../components/PostCardSwiper'
 import PostShare from '../components/PostShare'
 
 import PostAPI from '../api/wordpress/posts'
 
 export default {
-  components: { WPMedia, PostCard, AppSwiper, PostShare },
+  components: { WPMedia, PostCardSwiper, PostShare },
   async asyncData({ params, store }) {
     const post = await PostAPI.getBySlug(params.slug)
 

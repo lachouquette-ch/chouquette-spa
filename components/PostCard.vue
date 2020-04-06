@@ -7,6 +7,7 @@
           :category="topCategory"
           color="black"
           class="rounded-circle float-left post-card-category"
+          @init="dispatchInit"
         />
       </div>
       <div class="post-card-caption d-flex text-center justify-content-center align-items-center">
@@ -31,7 +32,8 @@ export default {
   data() {
     return {
       topCategory: null,
-      featuredMedia: null
+      featuredMedia: null,
+      categoryLogoInit: false
     }
   },
   computed: {
@@ -51,6 +53,17 @@ export default {
   async created() {
     this.topCategory = await this.$store.dispatch('categories/fetchById', this.post.top_categories[0])
     this.featuredMedia = await this.$store.dispatch('media/fetchById', this.post.featured_media)
+  },
+  methods: {
+    /**
+     * Wait for all async data before emitting init event
+     *
+     * @returns {Promise<void>}
+     */
+    async dispatchInit() {
+      await Promise.all([this.topCategory, this.featuredMedia])
+      this.$emit('init')
+    }
   }
 }
 </script>
