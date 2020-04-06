@@ -1,5 +1,5 @@
 <template>
-  <div class="swiper-container">
+  <div class="swiper-container py-2">
     <div class="swiper-wrapper">
       <PostCard v-for="post in posts" :key="post.id" :post="post" class="swiper-slide" @init="update(post)" />
     </div>
