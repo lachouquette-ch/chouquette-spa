@@ -52,7 +52,6 @@
 
 <script>
 import he from 'he'
-import _ from 'lodash'
 
 import WPMedia from '../components/WpMedia'
 import PostCardSwiper from '../components/PostCardSwiper'
@@ -62,47 +61,40 @@ import PostAPI from '../api/wordpress/posts'
 
 export default {
   components: { WPMedia, PostCardSwiper, PostShare },
-  async asyncData({ params, store }) {
-    const post = await PostAPI.getBySlug(params.slug)
-
-    // helper fields
-    const featuredMedia = post._embedded['wp:featuredmedia'][0]
-    const author = post._embedded.author[0]
-    const tags = post._embedded['wp:term'][1]
-    const authorAvatar = Object.entries(author.avatar_urls).pop()[1]
-
-    // fetch similar posts
-    const similarPosts = await PostAPI.get('/', {
-      params: {
-        tags: post.tags,
-        exclude: post.id,
-        per_page: 6
-      }
-    })
-
-    // flatten and uniq all categories related to this post, fiches, ...
-    const similarPostCategoryIds = similarPosts.flatMap((post) => post.top_categories)
-    const postRelatedCategoryIds = _.uniq([...post.top_categories, ...similarPostCategoryIds])
-    // fetch all those categories at ONCE !
-    await store.dispatch('categories/fetchByIds', postRelatedCategoryIds)
-
-    // TODO rendering fiches categories instead of post ?
-    const categories = await store.dispatch('categories/fetchByIds', post.top_categories)
-
+  data() {
     return {
-      post,
-      featuredMedia,
-      author,
-      categories,
-      tags,
-      authorAvatar,
-      similarPosts
+      post: null,
+      featuredMedia: null,
+      author: null,
+      tags: [],
+      authorAvatar: null,
+      categories: [],
+      similarPosts: []
     }
   },
   computed: {
     escapedTitle() {
       return he.decode(this.post.title.rendered)
     }
+  },
+  async created() {
+    this.post = await PostAPI.getBySlug(this.$route.params.slug)
+
+    // helper fields
+    this.featuredMedia = this.post._embedded['wp:featuredmedia'][0]
+    this.author = this.post._embedded.author[0]
+    this.tags = this.post._embedded['wp:term'][1]
+    this.authorAvatar = Object.entries(this.author.avatar_urls).pop()[1]
+    this.categories = await this.$store.dispatch('categories/fetchByIds', this.post.top_categories)
+
+    // fetch similar posts
+    this.similarPosts = await PostAPI.get('/', {
+      params: {
+        tags: this.post.tags,
+        exclude: this.post.id,
+        per_page: 6
+      }
+    })
   },
   head() {
     return {
