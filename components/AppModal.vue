@@ -43,7 +43,6 @@ export default {
     this.modal = new Modal(this.$el)
   },
   beforeDestroy() {
-    this.modal.close()
     this.modal.dispose()
   },
   methods: {

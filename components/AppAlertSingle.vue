@@ -33,6 +33,9 @@ export default {
     this.alert = new Alert(this.$el)
     setTimeout(() => this.close(), this.timeout)
   },
+  beforeDestroy() {
+    this.alert.dispose()
+  },
   methods: {
     close() {
       this.alert.close()
