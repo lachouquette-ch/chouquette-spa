@@ -1,5 +1,7 @@
 <template>
-  <WpMedia v-if="media" :media="media" size="thumbnail" :no-src-set="true" width="30" height="30"></WpMedia>
+  <div v-if="media">
+    <WpMedia v-if="media" :media="media" size="thumbnail" :no-src-set="true" width="30" height="30"></WpMedia>
+  </div>
 </template>
 
 <script>
@@ -29,6 +31,7 @@ export default {
   async created() {
     const mediaId = this.category.acf.logos[`logo_${this.color}`]
     this.media = await this.$store.dispatch('media/fetchById', mediaId)
+    this.$emit('init', mediaId)
   }
 }
 </script>

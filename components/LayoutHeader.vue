@@ -79,7 +79,7 @@
         <ul v-for="category in categories" :key="category.id" class="navbar-nav mr-auto">
           <li class="nav-item">
             <nuxt-link :to="{ path: `/category/${category.slug}` }" :title="category.description" class="nav-link">
-              <CategoryLogo :category="category" color="white" class="nav-logo ml-lg-3 mr-2"></CategoryLogo>
+              <CategoryLogo :category="category" color="white" class="d-inline nav-logo ml-lg-3 mr-2"></CategoryLogo>
               {{ category.name }}
             </nuxt-link>
           </li>
