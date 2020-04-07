@@ -57,89 +57,87 @@
           <PostComment :comment="comment" :comments="comments" />
         </li>
       </ol>
-      <h3 class="mb-3 text-center">Laisse-nous un petit mot</h3>
-      <div id="respond" class="comment-respond">
-        <form class="comment-form" @submit.prevent="postComment">
-          <p class="comment-notes">Ton email ne sera pas publié. Les champs obligatoires sont indiqués avec *</p>
-          <div class="form-group">
-            <label for="comment">Commentaire *</label>
-            <textarea
-              id="comment"
-              v-model="formComment.comment"
+      <h3 class="my-4 text-center">Laisse-nous un petit mot</h3>
+      <form class="comment-form" @submit.prevent="postComment">
+        <p class="comment-notes">Ton email ne sera pas publié. Les champs obligatoires sont indiqués avec *</p>
+        <div class="form-group">
+          <label for="comment">Commentaire *</label>
+          <textarea
+            id="comment"
+            v-model="formComment.comment"
+            class="form-control"
+            :class="{ 'is-invalid': $v.formComment.comment.$error }"
+            rows="5"
+            aria-required="true"
+            @blur="$v.formComment.comment.$touch"
+          ></textarea>
+          <div v-if="!$v.formComment.comment.required" class="invalid-feedback">
+            Il faut un contenu à ton commentaire
+          </div>
+          <div v-if="!$v.formComment.comment.minText" class="invalid-feedback">
+            Ton commentaire doit avoir un minimum de contenu
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-4 col-form-label" for="author">Nom *</label>
+          <div class="col-sm-8">
+            <input
+              id="author"
+              v-model.trim="formComment.name"
               class="form-control"
-              :class="{ 'is-invalid': $v.formComment.comment.$error }"
-              rows="5"
+              :class="{ 'is-invalid': $v.formComment.name.$error }"
+              type="text"
               aria-required="true"
-              @blur="$v.formComment.comment.$touch"
-            ></textarea>
-            <div v-if="!$v.formComment.comment.required" class="invalid-feedback">
-              Il faut un contenu à ton commentaire
-            </div>
-            <div v-if="!$v.formComment.comment.minText" class="invalid-feedback">
-              Ton commentaire doit avoir un minimum de contenu
+              @blur="$v.formComment.name.$touch"
+            />
+            <div v-if="!$v.formComment.name.required" class="invalid-feedback">
+              Merci de nous indiquer ton ptit nom
             </div>
           </div>
-          <div class="form-group row">
-            <label class="col-sm-4 col-form-label" for="author">Nom *</label>
-            <div class="col-sm-8">
-              <input
-                id="author"
-                v-model.trim="formComment.name"
-                class="form-control"
-                :class="{ 'is-invalid': $v.formComment.name.$error }"
-                type="text"
-                aria-required="true"
-                @blur="$v.formComment.name.$touch"
-              />
-              <div v-if="!$v.formComment.name.required" class="invalid-feedback">
-                Merci de nous indiquer ton ptit nom
-              </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-4 col-form-label" for="email">Adresse de messagerie *</label>
+          <div class="col-sm-8">
+            <input
+              id="email"
+              v-model.trim="formComment.email"
+              class="form-control"
+              :class="{ 'is-invalid': $v.formComment.email.$error }"
+              type="email"
+              aria-required="true"
+              @blur="$v.formComment.email.$touch"
+            />
+            <div v-if="!$v.formComment.email.required" class="invalid-feedback">
+              Merci de nous indiquer ton ptit nom
+            </div>
+            <div v-if="!$v.formComment.email.email" class="invalid-feedback">
+              Ton email doit être valide
             </div>
           </div>
-          <div class="form-group row">
-            <label class="col-sm-4 col-form-label" for="email">Adresse de messagerie *</label>
-            <div class="col-sm-8">
-              <input
-                id="email"
-                v-model.trim="formComment.email"
-                class="form-control"
-                :class="{ 'is-invalid': $v.formComment.email.$error }"
-                type="email"
-                aria-required="true"
-                @blur="$v.formComment.email.$touch"
-              />
-              <div v-if="!$v.formComment.email.required" class="invalid-feedback">
-                Merci de nous indiquer ton ptit nom
-              </div>
-              <div v-if="!$v.formComment.email.email" class="invalid-feedback">
-                Ton email doit être valide
-              </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-4 col-form-label" for="url">Site web</label>
+          <div class="col-sm-8">
+            <input
+              id="url"
+              v-model.trim="formComment.webSite"
+              class="form-control"
+              :class="{ 'is-invalid': $v.formComment.webSite.$error }"
+              name="url"
+              type="text"
+              value=""
+              size="30"
+              @blur="$v.formComment.webSite.$touch"
+            />
+            <div v-if="!$v.formComment.webSite.url" class="invalid-feedback">
+              Ton Site web doit être une adresse valide
             </div>
           </div>
-          <div class="form-group row">
-            <label class="col-sm-4 col-form-label" for="url">Site web</label>
-            <div class="col-sm-8">
-              <input
-                id="url"
-                v-model.trim="formComment.webSite"
-                class="form-control"
-                :class="{ 'is-invalid': $v.formComment.webSite.$error }"
-                name="url"
-                type="text"
-                value=""
-                size="30"
-                @blur="$v.formComment.webSite.$touch"
-              />
-              <div v-if="!$v.formComment.webSite.url" class="invalid-feedback">
-                Ton Site web doit être une adresse valide
-              </div>
-            </div>
-          </div>
-          <div class="form-submit">
-            <input id="submit" type="submit" class="btn btn-primary" value="Poster mon commentaire" />
-          </div>
-        </form>
-      </div>
+        </div>
+        <div class="form-submit">
+          <input id="submit" type="submit" class="btn btn-primary" value="Poster mon commentaire" />
+        </div>
+      </form>
     </div>
   </article>
 </template>
@@ -247,7 +245,13 @@ export default {
           content: this.formComment.comment,
           recaptcha: token
         })
-          .then((result) => this.$store.dispatch('alerts/addAction', { type: 'success', message: result.data }))
+          .then((result) =>
+            this.$store.dispatch('alerts/addAction', {
+              type: 'success',
+              message:
+                'Ton commentaire nous est bien parvenu : merci :-). Il sera visible dès validation de notre part.'
+            })
+          )
           .catch((error) =>
             this.$store.dispatch('alerts/addAction', { type: 'danger', message: error.response.data.message })
           )
