@@ -3,7 +3,7 @@
     <header>
       <div>
         <WpAvatar
-          size="32"
+          :size="32"
           :avatar-urls="comment.author_avatar_urls"
           :alt="comment.author_name"
           class="rounded-circle"

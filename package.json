@@ -22,7 +22,8 @@
     "nuxt": "^2.0.0",
     "popper.js": "^1.16.1",
     "swiper": "^5.3.6",
-    "vue-mailchimp-subscribe": "^1.1.0"
+    "vue-mailchimp-subscribe": "^1.1.0",
+    "vuelidate": "^0.7.5"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^2.0.0",

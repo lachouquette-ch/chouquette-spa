@@ -32,7 +32,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~plugins/filters.js', { src: '~/plugins/bootstrap.js', mode: 'client' }],
+  plugins: ['~/plugins/vuelidate.js', { src: '~/plugins/bootstrap.js', mode: 'client' }],
   /*
    ** Nuxt.js dev-modules
    */

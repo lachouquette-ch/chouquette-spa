@@ -10,7 +10,11 @@
       />
       <div class="post-header-meta">
         <span>par {{ author.name }}</span>
-        <span> publié le {{ post.date | momentDateTime }} (màj le {{ post.modified | momentDateTime }}) </span>
+        <span>
+          publié le <time :datetime="post.date">{{ postCreatedDate }}</time> (màj le
+          <time :datetime="post.modified">{{ postModifiedDate }}</time
+          >)
+        </span>
         <span>
           dans
           <a v-for="category in categories" :key="category.id" :href="category.link" :title="category.name"
@@ -119,6 +123,8 @@
 
 <script>
 import he from 'he'
+import moment from 'moment'
+import { required, email, url, minLength } from 'vuelidate/lib/validators'
 
 import PostAPI from '../api/wordpress/posts'
 
@@ -153,6 +159,12 @@ export default {
   computed: {
     escapedTitle() {
       return he.decode(this.post.title.rendered)
+    },
+    postCreatedDate() {
+      return moment(this.post.date).format('DD/MM/YY')
+    },
+    postModifiedDate() {
+      return moment(this.post.date).format('DD/MM/YY')
     }
   },
   async created() {
