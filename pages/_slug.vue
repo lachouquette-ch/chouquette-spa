@@ -3,7 +3,7 @@
     <header class="post-header container p-0 mb-6">
       <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
       <WpAvatar
-        size="150"
+        :size="150"
         :avatar-urls="authorAvatar"
         :alt="author.name"
         class="post-header-author-img rounded-circle"
@@ -31,7 +31,7 @@
     <div class="post-author container my-5">
       <div class="border shadow-sm text-center position-relative">
         <WpAvatar
-          size="150"
+          :size="150"
           :avatar-urls="authorAvatar"
           :alt="author.name"
           class="post-header-author-img rounded-circle"
@@ -54,6 +54,65 @@
         </li>
       </ol>
       <h3 class="mb-3 text-center">Laisse-nous un petit mot</h3>
+      <div id="respond" class="comment-respond">
+        <form class="comment-form" @submit.prevent="postComment">
+          <p class="comment-notes">Ton email ne sera pas publié. Les champs obligatoires sont indiqués avec *</p>
+          <div class="form-group">
+            <label for="comment">Commentaire *</label>
+            <textarea
+              id="comment"
+              v-model="formComment.comment"
+              class="form-control"
+              rows="5"
+              aria-required="true"
+              required
+            ></textarea>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label" for="author">Nom *</label>
+            <div class="col-sm-8">
+              <input
+                id="author"
+                v-model="formComment.name"
+                class="form-control"
+                type="text"
+                aria-required="true"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label" for="email">Adresse de messagerie *</label>
+            <div class="col-sm-8">
+              <input
+                id="email"
+                v-model="formComment.email"
+                class="form-control"
+                type="email"
+                aria-required="true"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-sm-4 col-form-label" for="url">Site web</label>
+            <div class="col-sm-8">
+              <input
+                id="url"
+                v-model="formComment.webSite"
+                class="form-control"
+                name="url"
+                type="text"
+                value=""
+                size="30"
+              />
+            </div>
+          </div>
+          <div class="form-submit">
+            <input id="submit" type="submit" class="btn btn-primary" value="Poster mon commentaire" />
+          </div>
+        </form>
+      </div>
     </div>
   </article>
 </template>
@@ -82,7 +141,13 @@ export default {
       categories: [],
       similarPosts: [],
       comments: [],
-      rootLevelComments: []
+      rootLevelComments: [],
+      formComment: {
+        name: null,
+        email: null,
+        webSite: null,
+        comment: null
+      }
     }
   },
   computed: {
