@@ -76,7 +76,10 @@
       </div>
     </div>
     <div class="form-submit">
-      <input id="submit" type="submit" class="btn btn-primary" value="Poster mon commentaire" />
+      <button class="btn btn-primary" type="submit" :disabled="loading">
+        <span v-show="loading" class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+        Poster mon commentaire
+      </button>
     </div>
   </form>
 </template>
@@ -90,6 +93,10 @@ export default {
     post: {
       type: Object,
       required: true
+    },
+    parent: {
+      type: Object,
+      default: null
     }
   },
   data() {
@@ -99,13 +106,15 @@ export default {
         email: null,
         webSite: null,
         comment: null
-      }
+      },
+      loading: false
     }
   },
   methods: {
     async postComment() {
       this.$v.formComment.$touch()
       if (!this.$v.formComment.$invalid) {
+        this.loading = true
         // Get recaptcha token
         await this.$recaptchaLoaded()
         // Execute reCAPTCHA with action "login".
@@ -113,6 +122,7 @@ export default {
 
         CommentAPI.postComment({
           post: this.post.id,
+          parent: this.parent ? this.parent.id : null,
           author_name: this.formComment.name,
           author_email: this.formComment.email,
           content: this.formComment.comment,
@@ -128,6 +138,7 @@ export default {
           .catch((error) =>
             this.$store.dispatch('alerts/addAction', { type: 'danger', message: error.response.data.message })
           )
+          .finally(() => (this.loading = false))
       }
     }
   },
