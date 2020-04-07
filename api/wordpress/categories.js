@@ -1,3 +1,3 @@
-import EndPointFactory from './repository'
+import WordpressEndpoint from './wordpressEndpoint'
 
-export default EndPointFactory.create('categories')
+export default new WordpressEndpoint('categories')

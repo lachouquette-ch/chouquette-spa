@@ -1,11 +1,7 @@
 // TODO use @nuxtjs/axios instead. Maybe using https://axios.nuxtjs.org/extend.html
 import axios from 'axios'
 
-class AbstractEndpoint {
-  static create(resource) {
-    return new AbstractEndpoint(resource)
-  }
-
+class WordpressEndpoint {
   constructor(resource) {
     this.axios = axios.create({
       baseURL: `${process.env.wpBaseUrl}/wp-json/wp/v2/${resource}`
@@ -42,4 +38,4 @@ class AbstractEndpoint {
   }
 }
 
-export default AbstractEndpoint
+export default WordpressEndpoint

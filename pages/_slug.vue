@@ -150,6 +150,7 @@ import moment from 'moment'
 import { required, email, url, minLength } from 'vuelidate/lib/validators'
 
 import PostAPI from '../api/wordpress/posts'
+import CommentAPI from '../api/wordpress/comments'
 
 import WPMedia from '../components/WpMedia'
 import PostCardSwiper from '../components/PostCardSwiper'
@@ -229,6 +230,18 @@ export default {
         per_page: 6
       }
     })
+  },
+  methods: {
+    postComment() {
+      this.$v.formComment.$touch()
+      if (!this.$v.formComment.$invalid) {
+        CommentAPI.postComment(this.formComment)
+          .then((result) => this.$store.dispatch('alerts/addAction', { type: 'success', message: result.data }))
+          .catch((error) =>
+            this.$store.dispatch('alerts/addAction', { type: 'danger', message: error.response.data.message })
+          )
+      }
+    }
   },
   head() {
     return {
