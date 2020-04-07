@@ -2,7 +2,8 @@ require('dotenv').config()
 
 export default {
   env: {
-    wpBaseUrl: process.env.WP_URL
+    wpBaseUrl: process.env.WP_URL,
+    recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY
   },
   mode: 'universal',
   /*
@@ -32,7 +33,11 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/vuelidate.js', { src: '~/plugins/bootstrap.js', mode: 'client' }],
+  plugins: [
+    { src: '~/plugins/vuelidate.js', mode: 'client' },
+    { src: '~/plugins/vuerecaptchav3.js', mode: 'client' },
+    { src: '~/plugins/bootstrap.js', mode: 'client' }
+  ],
   /*
    ** Nuxt.js dev-modules
    */

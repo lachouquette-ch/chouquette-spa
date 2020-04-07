@@ -232,10 +232,21 @@ export default {
     })
   },
   methods: {
-    postComment() {
+    async postComment() {
       this.$v.formComment.$touch()
       if (!this.$v.formComment.$invalid) {
-        CommentAPI.postComment(this.formComment)
+        // Get recaptcha token
+        await this.$recaptchaLoaded()
+        // Execute reCAPTCHA with action "login".
+        const token = await this.$recaptcha('comment')
+
+        CommentAPI.postComment({
+          post: this.post.id,
+          author_name: this.formComment.name,
+          author_email: this.formComment.email,
+          content: this.formComment.comment,
+          recaptcha: token
+        })
           .then((result) => this.$store.dispatch('alerts/addAction', { type: 'success', message: result.data }))
           .catch((error) =>
             this.$store.dispatch('alerts/addAction', { type: 'danger', message: error.response.data.message })
