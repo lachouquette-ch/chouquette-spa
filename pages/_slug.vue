@@ -1,6 +1,6 @@
 <template>
   <article v-if="post" :id="post.id">
-    <div class="post-header container p-0">
+    <header class="post-header container p-0 mb-6">
       <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
       <WpAvatar
         size="150"
@@ -19,16 +19,16 @@
         </span>
       </div>
       <PostShare :post="post" class="post-header-sn-share" />
-    </div>
+    </header>
 
-    <div class="post-content container pt-4">
+    <div class="post-content container mb-5">
       <div class="post-content-title">
         <h1 class="mr-2 mb-4">{{ escapedTitle }}</h1>
       </div>
       <main class="post-content-text" v-html="post.content.rendered" />
     </div>
 
-    <div class="post-author container mb-5">
+    <div class="post-author container my-5">
       <div class="border shadow-sm text-center position-relative">
         <WpAvatar
           size="150"
@@ -41,15 +41,17 @@
       </div>
     </div>
 
-    <div v-show="isSimilarPostsShown" class="cq-single-post-similar container mt-5">
+    <div v-show="isSimilarPostsShown" class="cq-single-post-similar container my-5">
       <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
       <PostCardSwiper v-if="similarPosts" :posts="similarPosts" @init="isSimilarPostsShown = true" />
     </div>
 
-    <div class="post-comments container mt-5">
+    <div class="post-comments container my-5">
       <h3 class="mb-3 text-center">{{ comments.length }} commentaire(s)</h3>
       <ol class="comment-list">
-        <PostComment v-for="comment in rootLevelComments" :key="comment.id" :comment="comment" :comments="comments" />
+        <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
+          <PostComment :comment="comment" :comments="comments" />
+        </li>
       </ol>
       <h3 class="mb-3 text-center">Laisse-nous un petit mot</h3>
     </div>
@@ -454,49 +456,14 @@ export default {
     font-size: $h1-font-size;
   }
 
-  a {
-    @extend .link-secondary !optional;
+  ol {
+    padding-left: 20px;
   }
 
   // no list bullets
   ol,
   ul {
     list-style-type: none;
-  }
-
-  .comment-list {
-    padding: 0;
-  }
-
-  .comment {
-    margin-bottom: 0.5rem;
-  }
-
-  .comment-body {
-    margin-bottom: 1rem;
-  }
-
-  .comment-meta {
-    .comment-author {
-      img {
-        @extend .rounded-circle !optional;
-        margin-right: 0.5rem;
-      }
-    }
-
-    .comment-metadata {
-      a {
-        text-decoration: none;
-      }
-    }
-
-    .comment-content {
-      margin-top: 0.5rem;
-
-      > p {
-        margin: 0;
-      }
-    }
   }
 }
 </style>

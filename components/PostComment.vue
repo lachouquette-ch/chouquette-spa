@@ -1,28 +1,28 @@
 <template>
-  <li class="comment odd alt thread-odd thread-alt depth-1 parent">
-    <article id="div-comment-12534" class="comment-body">
-      <footer class="comment-meta">
-        <div class="comment-author">
-          <WpAvatar
-            size="32"
-            :avatar-urls="comment.author_avatar_urls"
-            :alt="comment.author_name"
-            class="avatar avatar-32 photo rounded-circle"
-          />
-          <b class="fn">{{ comment.author_name }}</b> <span class="says">dit&nbsp;:</span>
-        </div>
-        <div class="comment-metadata">
-          <time :datetime="comment.date">Le {{ commentDate }}</time>
-        </div>
-      </footer>
-      <div class="comment-content">
-        <p v-html="comment.content.rendered"></p>
+  <article>
+    <header>
+      <div>
+        <WpAvatar
+          size="32"
+          :avatar-urls="comment.author_avatar_urls"
+          :alt="comment.author_name"
+          class="rounded-circle"
+        />
+        <b class="ml-2">{{ comment.author_name }}</b> <span class="says">dit&nbsp;:</span>
       </div>
-    </article>
-    <ul v-if="children" class="children">
-      <PostComment v-for="child in children" :key="child.id" :comment="child" :comments="comments" />
-    </ul>
-  </li>
+      <div class="comment-metadata">
+        <time :datetime="comment.date">Le {{ commentDate }}</time>
+      </div>
+    </header>
+    <section>
+      <p v-html="comment.content.rendered"></p>
+    </section>
+    <section>
+      <ul v-if="children" class="comment-children">
+        <PostComment v-for="child in children" :key="child.id" :comment="child" :comments="comments" />
+      </ul>
+    </section>
+  </article>
 </template>
 
 <script>
@@ -55,4 +55,13 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.comment-metadata {
+  color: $chouquette-grey;
+  font-style: italic;
+}
+
+.comment-children {
+  border-left: 2px solid $chouquette-darker-grey;
+}
+</style>
