@@ -2,12 +2,18 @@
   <li class="comment odd alt thread-odd thread-alt depth-1 parent">
     <article id="div-comment-12534" class="comment-body">
       <footer class="comment-meta">
-        <div class="comment-author rounded-circle">
-          <img alt="" :src="comment.author_avatar_urls['24']" class="avatar avatar-32 photo" height="32" width="32" />
+        <div class="comment-author">
+          <img
+            alt=""
+            :src="comment.author_avatar_urls['24']"
+            class="avatar avatar-32 photo rounded-circle"
+            height="32"
+            width="32"
+          />
           <b class="fn">{{ comment.author_name }}</b> <span class="says">dit&nbsp;:</span>
         </div>
         <div class="comment-metadata">
-          <time :datetime="comment.date">{{ comment.date }}</time>
+          <time :datetime="comment.date">Le {{ commentDate }}</time>
         </div>
       </footer>
       <div class="comment-content">
@@ -21,6 +27,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: 'PostComment',
   props: {
@@ -36,54 +44,12 @@ export default {
   computed: {
     children() {
       return this.comments.filter(({ parent }) => parent === this.comment.id)
+    },
+    commentDate() {
+      return moment(this.comment.date).locale('fr-CH').format('dddd DD MMMM YYYY à k:mm')
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-a {
-  @extend .link-secondary !optional;
-}
-
-// no list bullets
-ol,
-ul {
-  list-style-type: none;
-}
-
-.comment-list {
-  padding: 0;
-}
-
-.comment {
-  margin-bottom: 0.5rem;
-}
-
-.comment-body {
-  margin-bottom: 1rem;
-}
-
-.comment-meta {
-  .comment-author {
-    img {
-      @extend .rounded-circle !optional;
-      margin-right: 0.5rem;
-    }
-  }
-
-  .comment-metadata {
-    a {
-      text-decoration: none;
-    }
-  }
-
-  .comment-content {
-    margin-top: 0.5rem;
-
-    > p {
-      margin: 0;
-    }
-  }
-}
-</style>
+<style scoped></style>

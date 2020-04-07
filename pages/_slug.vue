@@ -449,10 +449,55 @@ export default {
   }
 }
 
-.post-comments {
+::v-deep .post-comments {
   h3 {
     font-family: $font-family-heading;
     font-size: $h1-font-size;
+  }
+
+  a {
+    @extend .link-secondary !optional;
+  }
+
+  // no list bullets
+  ol,
+  ul {
+    list-style-type: none;
+  }
+
+  .comment-list {
+    padding: 0;
+  }
+
+  .comment {
+    margin-bottom: 0.5rem;
+  }
+
+  .comment-body {
+    margin-bottom: 1rem;
+  }
+
+  .comment-meta {
+    .comment-author {
+      img {
+        @extend .rounded-circle !optional;
+        margin-right: 0.5rem;
+      }
+    }
+
+    .comment-metadata {
+      a {
+        text-decoration: none;
+      }
+    }
+
+    .comment-content {
+      margin-top: 0.5rem;
+
+      > p {
+        margin: 0;
+      }
+    }
   }
 }
 </style>
