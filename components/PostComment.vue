@@ -3,12 +3,11 @@
     <article id="div-comment-12534" class="comment-body">
       <footer class="comment-meta">
         <div class="comment-author">
-          <img
-            alt=""
-            :src="comment.author_avatar_urls['24']"
+          <WpAvatar
+            size="32"
+            :avatar-urls="comment.author_avatar_urls"
+            :alt="comment.author_name"
             class="avatar avatar-32 photo rounded-circle"
-            height="32"
-            width="32"
           />
           <b class="fn">{{ comment.author_name }}</b> <span class="says">dit&nbsp;:</span>
         </div>
@@ -28,9 +27,11 @@
 
 <script>
 import moment from 'moment'
+import WpAvatar from './WpAvatar'
 
 export default {
   name: 'PostComment',
+  components: { WpAvatar },
   props: {
     comment: {
       type: Object,
@@ -46,7 +47,9 @@ export default {
       return this.comments.filter(({ parent }) => parent === this.comment.id)
     },
     commentDate() {
-      return moment(this.comment.date).locale('fr-CH').format('dddd DD MMMM YYYY à k:mm')
+      return moment(this.comment.date)
+        .locale('fr-CH')
+        .format('dddd DD MMMM YYYY à k:mm')
     }
   }
 }

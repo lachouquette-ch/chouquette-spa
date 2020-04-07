@@ -2,12 +2,11 @@
   <article v-if="post" :id="post.id">
     <div class="post-header container p-0">
       <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
-      <img
+      <WpAvatar
+        size="150"
+        :avatar-urls="authorAvatar"
         :alt="author.name"
-        :src="authorAvatar"
         class="post-header-author-img rounded-circle"
-        height="150"
-        width="150"
       />
       <div class="post-header-meta">
         <span>par {{ author.name }}</span>
@@ -31,12 +30,11 @@
 
     <div class="post-author container mb-5">
       <div class="border shadow-sm text-center position-relative">
-        <img
+        <WpAvatar
+          size="150"
+          :avatar-urls="authorAvatar"
           :alt="author.name"
-          :src="authorAvatar"
           class="post-header-author-img rounded-circle"
-          height="150"
-          width="150"
         />
         <h5 class="mt-3 mb-4">{{ author.name }}</h5>
         <p class="px-2 pb-1">{{ author.description }}</p>
@@ -67,9 +65,10 @@ import WPMedia from '../components/WpMedia'
 import PostCardSwiper from '../components/PostCardSwiper'
 import PostShare from '../components/PostShare'
 import PostComment from '../components/PostComment'
+import WpAvatar from '../components/WpAvatar'
 
 export default {
-  components: { PostComment, WPMedia, PostCardSwiper, PostShare },
+  components: { WpAvatar, PostComment, WPMedia, PostCardSwiper, PostShare },
   data() {
     return {
       isSimilarPostsShown: false,
@@ -96,7 +95,7 @@ export default {
     this.featuredMedia = this.post._embedded['wp:featuredmedia'][0]
     this.author = this.post._embedded.author[0]
     this.tags = this.post._embedded['wp:term'][1]
-    this.authorAvatar = Object.entries(this.author.avatar_urls).pop()[1]
+    this.authorAvatar = this.author.avatar_urls
     this.comments = this.post._embedded.replies[0].reverse()
     this.rootLevelComments = this.comments.filter(({ parent }) => parent === 0)
 
