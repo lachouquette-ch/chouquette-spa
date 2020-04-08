@@ -3,8 +3,8 @@
     <div class="swiper-wrapper">
       <PostCard v-for="post in posts" :key="post.id" :post="post" class="swiper-slide" @init="update(post)" />
     </div>
-    <div class="swiper-button-next swiper-button-black"></div>
-    <div class="swiper-button-prev swiper-button-black"></div>
+    <div class="swiper-button-next swiper-button-yellow"></div>
+    <div class="swiper-button-prev swiper-button-yellow"></div>
   </div>
 </template>
 
@@ -80,7 +80,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.swiper-button-black {
-  color: $black;
+.swiper-button-yellow {
+  color: $chouquette-yellow;
 }
 </style>

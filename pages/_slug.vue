@@ -17,9 +17,10 @@
         </span>
         <span>
           dans
-          <a v-for="category in categories" :key="category.id" :href="category.link" :title="category.name"
-            >{{ category.name }}
-          </a>
+          <span v-for="(category, index) in categories" :key="category.id">
+            <a :href="category.link" :title="category.name">{{ category.name }}</a>
+            <span v-if="index != categories.length - 1">, </span>
+          </span>
         </span>
       </div>
       <PostShare :post="post" class="post-header-sn-share" />
@@ -280,7 +281,6 @@ export default {
 ::v-deep .post-content-text {
   a {
     color: $chouquette-grey;
-    text-decoration: underline;
 
     @include hover-focus-active() {
       color: $chouquette-dark-grey;
