@@ -11,8 +11,8 @@ class WordpressEndpoint {
     }
   }
 
-  get(...args) {
-    return this.axios.$get.apply(this, args)
+  get(params) {
+    return this.axios.$get('/', { params })
   }
 
   getBySlug(slug) {

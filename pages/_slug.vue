@@ -69,6 +69,7 @@ import he from 'he'
 import moment from 'moment'
 
 import PostAPI from '../api/wordpress/posts'
+import CommentAPI from '../api/wordpress/comments'
 
 import WPMedia from '../components/WpMedia'
 import PostCardSwiper from '../components/PostCardSwiper'
@@ -112,7 +113,8 @@ export default {
     this.author = this.post._embedded.author[0]
     this.tags = this.post._embedded['wp:term'][1]
     this.authorAvatar = this.author.avatar_urls
-    this.comments = this.post._embedded.replies[0].reverse()
+
+    this.comments = await CommentAPI.getByPost(this.post.id)
     this.rootLevelComments = this.comments.filter(({ parent }) => parent === 0)
 
     this.categories = await this.$store.dispatch('categories/fetchByIds', this.post.top_categories)
