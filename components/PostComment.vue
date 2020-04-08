@@ -1,5 +1,5 @@
 <template>
-  <article>
+  <article class="my-3">
     <header>
       <div>
         <WpAvatar
@@ -14,12 +14,20 @@
         <time :datetime="comment.date">Le {{ commentDate }}</time>
       </div>
     </header>
+    <section class="comment-content" v-html="comment.content.rendered" />
     <section>
-      <p v-html="comment.content.rendered"></p>
+      <a href="" class="text-chouquette-grey" @click.prevent="toggleReplyToComment">{{ replyLinkText }}</a>
+      <PostCommentReply
+        v-show="replyToComment"
+        :post="post"
+        :parent="comment.id"
+        class="border border-chouquette-light rounded p-3 mt-2"
+        @done="toggleReplyToComment"
+      />
     </section>
     <section>
       <ul v-if="children" class="comment-children">
-        <PostComment v-for="child in children" :key="child.id" :comment="child" :comments="comments" />
+        <PostComment v-for="child in children" :key="child.id" :post="post" :comment="child" :comments="comments" />
       </ul>
     </section>
   </article>
@@ -28,11 +36,16 @@
 <script>
 import moment from 'moment'
 import WpAvatar from './WpAvatar'
+import PostCommentReply from './PostCommentReply'
 
 export default {
   name: 'PostComment',
-  components: { WpAvatar },
+  components: { PostCommentReply, WpAvatar },
   props: {
+    post: {
+      type: Number,
+      required: true
+    },
     comment: {
       type: Object,
       required: true
@@ -40,6 +53,11 @@ export default {
     comments: {
       type: Array,
       required: true
+    }
+  },
+  data() {
+    return {
+      replyToComment: false
     }
   },
   computed: {
@@ -50,6 +68,14 @@ export default {
       return moment(this.comment.date)
         .locale('fr-CH')
         .format('dddd DD MMMM YYYY à k:mm')
+    },
+    replyLinkText() {
+      return this.replyToComment ? 'Cacher ma réponse à ce commentaire' : 'Répondre à ce commentaire'
+    }
+  },
+  methods: {
+    toggleReplyToComment() {
+      this.replyToComment = !this.replyToComment
     }
   }
 }
@@ -63,5 +89,11 @@ export default {
 
 .comment-children {
   border-left: 2px solid $chouquette-darker-grey;
+}
+
+::v-deep .comment-content {
+  > p {
+    margin-bottom: 0.25rem;
+  }
 }
 </style>

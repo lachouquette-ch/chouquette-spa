@@ -52,13 +52,13 @@
 
     <div class="post-comments container my-5">
       <h3 class="mb-3 text-center">{{ comments.length }} commentaire(s)</h3>
-      <ol class="comment-list">
+      <ol class="comment-list p-0">
         <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
-          <PostComment :comment="comment" :comments="comments" />
+          <PostComment :post="post.id" :comment="comment" :comments="comments" />
         </li>
       </ol>
       <h3 class="my-4 text-center">Laisse-nous un petit mot</h3>
-      <PostCommentReply :post="post" />
+      <PostCommentReply :post="post.id" />
     </div>
   </article>
 </template>

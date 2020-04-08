@@ -1,6 +1,5 @@
 <template>
   <form class="comment-form" @submit.prevent="postComment">
-    <p class="comment-notes">Ton email ne sera pas publié. Les champs obligatoires sont indiqués avec *</p>
     <div class="form-group">
       <label :for="`comment${_uid}`">Commentaire *</label>
       <textarea
@@ -37,7 +36,12 @@
       </div>
     </div>
     <div class="form-group row">
-      <label class="col-sm-4 col-form-label" :for="`email${_uid}`">Adresse de messagerie *</label>
+      <div class="col-sm-4">
+        <label class="col-form-label" :for="`email${_uid}`">Adresse de messagerie *</label>
+        <small class="form-text text-muted">
+          Ton email ne sera pas publié. Parle de Chouquette !
+        </small>
+      </div>
       <div class="col-sm-8">
         <input
           :id="`email${_uid}`"
@@ -91,11 +95,11 @@ import CommentAPI from '../api/wordpress/comments'
 export default {
   props: {
     post: {
-      type: Object,
+      type: Number,
       required: true
     },
     parent: {
-      type: Object,
+      type: Number,
       default: null
     }
   },
@@ -121,20 +125,26 @@ export default {
         const token = await this.$recaptcha('comment')
 
         CommentAPI.postComment({
-          post: this.post.id,
-          parent: this.parent ? this.parent.id : null,
+          post: this.post,
+          parent: this.parent,
           author_name: this.formComment.name,
           author_email: this.formComment.email,
           content: this.formComment.comment,
           recaptcha: token
         })
-          .then((result) =>
+          .then((result) => {
             this.$store.dispatch('alerts/addAction', {
               type: 'success',
               message:
                 'Ton commentaire nous est bien parvenu : merci :-). Il sera visible dès validation de notre part.'
             })
-          )
+
+            // clear form
+            this.formComment.comment = null
+            this.$v.formComment.$reset()
+
+            this.$emit('done')
+          })
           .catch((error) =>
             this.$store.dispatch('alerts/addAction', { type: 'danger', message: error.response.data.message })
           )

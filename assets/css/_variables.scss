@@ -1,6 +1,3 @@
-// Global
-$theme-baseurl: "/wp-content/themes/chouquette";
-
 // Colors
 $chouquette-yellow: rgb(248, 239, 40);
 $chouquette-light-grey: rgb(215, 215, 215);
@@ -14,7 +11,10 @@ $secondary: $chouquette-grey;
 // add new theme colors
 $theme-colors: (
     "white": white,
-    "yellow": $chouquette-yellow,
+    "chouquette-yellow": $chouquette-yellow,
+    "chouquette-grey": $chouquette-grey,
+    "chouquette-dark": $chouquette-dark-grey,
+    "chouquette-light": $chouquette-light-grey,
     "black": black
 );
 
@@ -40,8 +40,9 @@ $font-family-heading: 'Lobster Two', cursive;
 $card-spacer-x: 1rem;
 
 // Links
-$link-color: $chouquette-yellow;
-$link-hover-decoration: none;
+$link-color: $chouquette-grey;
+$link-decoration: underline;
+$link-hover-decoration: underline;
 
 // Custom breakpoints
 $custom-breakpoints: (
