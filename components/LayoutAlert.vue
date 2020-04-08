@@ -1,19 +1,19 @@
 <template>
-  <div class="app-alert fixed-top">
+  <div class="layout-alert fixed-top">
     <div v-for="alert in alerts" :key="alert.message" :type="alert.type">
-      <AppAlertSingle v-for="alert in alerts" :key="alert.message" :type="alert.type" @close="removeAlert(alert)">
+      <LayoutAlertSingle v-for="alert in alerts" :key="alert.message" :type="alert.type" @close="removeAlert(alert)">
         <span v-html="alert.message" />
-      </AppAlertSingle>
+      </LayoutAlertSingle>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import AppAlertSingle from './AppAlertSingle'
+import LayoutAlertSingle from './LayoutAlertSingle'
 
 export default {
-  components: { AppAlertSingle },
+  components: { LayoutAlertSingle },
   computed: {
     ...mapState('alerts', {
       alerts: 'all'
@@ -28,7 +28,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.app-alert {
+.layout-alert {
   z-index: $zindex-popover;
 }
 </style>

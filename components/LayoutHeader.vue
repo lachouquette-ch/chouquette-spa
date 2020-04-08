@@ -3,8 +3,8 @@
     <AppModal title="Rejoins notre newsletter" :show="showNewsletterModal" @close="closeNewsletterModal">
       <VueMailchimpSubscribe
         url="https://unechouquettealausanne.us8.list-manage.com/subscribe/post-json"
-        user-id="570ea90f4cbc136c450fe880a"
-        list-id="26f7afd6a2"
+        :user-id="mailChimpUserId"
+        :list-id="mailChimpListId"
         @error="onMailchimpSubscriptionError"
         @success="onMailchimpSubscriptionSuccess"
       >
@@ -58,7 +58,7 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <nuxt-link to="/" class="navbar-brand mx-auto">La Chouquette</nuxt-link>
+      <nuxt-link to="/" class="navbar-brand mx-auto text-decoration-none">La Chouquette</nuxt-link>
 
       <div id="navbarChouquette" class="collapse navbar-collapse">
         <form class="d-md-none mb-2" @submit.prevent="search(searchText)">
@@ -78,7 +78,7 @@
         </form>
         <ul v-for="category in categories" :key="category.id" class="navbar-nav mr-auto">
           <li class="nav-item">
-            <nuxt-link :to="{ path: `/category/${category.slug}` }" :title="category.description" class="nav-link">
+            <nuxt-link :to="{ path: `/category/${category.slug}` }" :title="category.description" class="nav-link text-decoration-none">
               <CategoryLogo :category="category" color="white" class="d-inline nav-logo ml-lg-3 mr-2"></CategoryLogo>
               {{ category.name }}
             </nuxt-link>
@@ -113,6 +113,8 @@ export default {
   data() {
     return {
       baseURL: process.env.wpBaseUrl,
+      mailChimpUserId: process.env.mailChimpUserId,
+      mailChimpListId: process.env.mailChimpListId,
       categories: [],
       searchText: '',
       showNewsletterModal: false,

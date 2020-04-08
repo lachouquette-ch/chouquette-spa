@@ -3,7 +3,9 @@ require('dotenv').config()
 export default {
   env: {
     wpBaseUrl: process.env.WP_URL,
-    recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY
+    recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
+    mailChimpUserId: process.env.MAILCHIMP_USER_ID,
+    mailChimpListId: process.env.MAILCHIMP_LIST_ID
   },
   mode: 'universal',
   /*

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AppAlert />
+    <LayoutAlert />
     <LayoutHeaderCovid>
       Page spéciale COVID-19
     </LayoutHeaderCovid>
@@ -14,10 +14,10 @@
 import LayoutHeaderCovid from '../components/LayoutHeaderCovid'
 import LayoutHeader from '../components/LayoutHeader'
 import LayoutFooter from '../components/LayoutFooter'
-import AppAlert from '../components/AppAlert'
+import LayoutAlert from '../components/LayoutAlert'
 
 export default {
-  components: { AppAlert, LayoutHeader, LayoutFooter, LayoutHeaderCovid }
+  components: { LayoutAlert, LayoutHeader, LayoutFooter, LayoutHeaderCovid }
 }
 </script>
 
