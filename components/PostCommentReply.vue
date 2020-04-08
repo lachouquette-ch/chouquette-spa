@@ -2,9 +2,9 @@
   <form class="comment-form" @submit.prevent="postComment">
     <p class="comment-notes">Ton email ne sera pas publié. Les champs obligatoires sont indiqués avec *</p>
     <div class="form-group">
-      <label for="comment">Commentaire *</label>
+      <label :for="`comment${_uid}`">Commentaire *</label>
       <textarea
-        id="comment"
+        :id="`comment${_uid}`"
         v-model="formComment.comment"
         class="form-control"
         :class="{ 'is-invalid': $v.formComment.comment.$error }"
@@ -20,10 +20,10 @@
       </div>
     </div>
     <div class="form-group row">
-      <label class="col-sm-4 col-form-label" for="author">Nom *</label>
+      <label class="col-sm-4 col-form-label" :for="`author${_uid}`">Nom *</label>
       <div class="col-sm-8">
         <input
-          id="author"
+          :id="`author${_uid}`"
           v-model.trim="formComment.name"
           class="form-control"
           :class="{ 'is-invalid': $v.formComment.name.$error }"
@@ -37,10 +37,10 @@
       </div>
     </div>
     <div class="form-group row">
-      <label class="col-sm-4 col-form-label" for="email">Adresse de messagerie *</label>
+      <label class="col-sm-4 col-form-label" :for="`email${_uid}`">Adresse de messagerie *</label>
       <div class="col-sm-8">
         <input
-          id="email"
+          :id="`email${_uid}`"
           v-model.trim="formComment.email"
           class="form-control"
           :class="{ 'is-invalid': $v.formComment.email.$error }"
@@ -57,10 +57,10 @@
       </div>
     </div>
     <div class="form-group row">
-      <label class="col-sm-4 col-form-label" for="url">Site web</label>
+      <label class="col-sm-4 col-form-label" :for="`url${_uid}`">Site web</label>
       <div class="col-sm-8">
         <input
-          id="url"
+          :id="`url${_uid}`"
           v-model.trim="formComment.webSite"
           class="form-control"
           :class="{ 'is-invalid': $v.formComment.webSite.$error }"
