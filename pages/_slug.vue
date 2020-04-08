@@ -2,18 +2,25 @@
   <div>
     <nav class="d-none d-md-block bg-darker-grey post-sidebar">
       <div class="text-center bg-yellow p-2"><h2 class="h5 m-0 font-weight-bold">Fiches</h2></div>
-      <a href="" class="fiche-thumb btn btn-yellow media text-left text-decoration-none m-2 position-relative">
-        <img
+      <a
+        v-if="fiche"
+        href=""
+        class="fiche-thumb btn btn-yellow media text-left text-decoration-none m-2 position-relative"
+      >
+        <WPMedia
+          v-if="ficheFeaturedMedia"
+          :media="ficheFeaturedMedia"
+          size="thumbnail"
           class="fiche-img rounded mr-3"
-          src="https://lachouquette.ch/wp-content/uploads/2019/11/Noir_et_Fleurs-768x768.jpg"
-          alt="Generic placeholder image"
           height="48"
           width="48"
         />
         <div class="media-body text-black">
-          <h3 class="mb-1 h6">Boutique n° 28</h3>
+          <h3 class="mb-1 h6">{{ fiche.title.rendered }}</h3>
           <span class="font-italic small">
-            Mode, Test, Toto, Pipou
+            <span v-for="(ficheCategory, index) in ficheCategories" :key="ficheCategory.id"
+              >{{ ficheCategory.name }}<span v-if="index != ficheCategories.length - 1">, </span></span
+            >
           </span>
         </div>
         <span class="fiche-link"><i class="fas fa-external-link-alt"></i></span>
@@ -93,6 +100,8 @@ import moment from 'moment'
 
 import PostAPI from '../api/wordpress/posts'
 import CommentAPI from '../api/wordpress/comments'
+import FicheAPI from '../api/wordpress/fiches'
+import CategoryAPI from '../api/wordpress/categories'
 
 import WPMedia from '../components/WpMedia'
 import PostCardSwiper from '../components/PostCardSwiper'
@@ -114,7 +123,10 @@ export default {
       categories: [],
       similarPosts: [],
       comments: [],
-      rootLevelComments: []
+      rootLevelComments: [],
+      fiche: null,
+      ficheFeaturedMedia: null,
+      ficheCategories: []
     }
   },
   computed: {
@@ -150,6 +162,11 @@ export default {
         per_page: 6
       }
     })
+
+    // fetch linked fiches
+    this.fiche = await FicheAPI.getByIds(this.post.meta.link_fiche).then((fiches) => fiches[0])
+    this.ficheFeaturedMedia = this.fiche._embedded['wp:featuredmedia'][0]
+    this.ficheCategories = await CategoryAPI.getByIds(this.fiche.categories)
   },
   head() {
     return {
