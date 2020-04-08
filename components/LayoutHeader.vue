@@ -1,5 +1,5 @@
 <template>
-  <header class="header-menu">
+  <div>
     <AppModal title="Rejoins notre newsletter" :show="showNewsletterModal" @close="closeNewsletterModal">
       <VueMailchimpSubscribe
         url="https://unechouquettealausanne.us8.list-manage.com/subscribe/post-json"
@@ -78,7 +78,11 @@
         </form>
         <ul v-for="category in categories" :key="category.id" class="navbar-nav mr-auto">
           <li class="nav-item">
-            <nuxt-link :to="{ path: `/category/${category.slug}` }" :title="category.description" class="nav-link text-decoration-none">
+            <nuxt-link
+              :to="{ path: `/category/${category.slug}` }"
+              :title="category.description"
+              class="nav-link text-decoration-none"
+            >
               <CategoryLogo :category="category" color="white" class="d-inline nav-logo ml-lg-3 mr-2"></CategoryLogo>
               {{ category.name }}
             </nuxt-link>
@@ -100,7 +104,7 @@
         </div>
       </div>
     </nav>
-  </header>
+  </div>
 </template>
 
 <script>
@@ -157,46 +161,41 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.header-menu {
-  margin-top: calc(#{$header-height} + #{$covid-banner-height}); // corresp. navbar height
+.navbar-chouquette-light {
+  top: $covid-banner-height;
+  background-color: $chouquette-darker-grey;
 
-  .navbar-chouquette-light {
-    top: $covid-banner-height !important;
+  .navbar-brand {
+    line-height: $header-height;
+    font-family: $font-family-brand;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 2.5rem;
 
-    background-color: $chouquette-darker-grey;
-
-    .navbar-brand {
-      line-height: $header-height;
-      font-family: $font-family-brand;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      font-size: 2.5rem;
-
-      @include media-breakpoint-down(lg) {
-        font-size: 2rem;
-      }
+    @include media-breakpoint-down(lg) {
+      font-size: 2rem;
     }
+  }
 
-    .navbar-nav {
-      margin: auto;
-    }
+  .navbar-nav {
+    margin: auto;
+  }
 
-    .nav-item {
-      i {
-        font-size: 1.25rem;
-      }
-
-      .nav-link-text {
-        // hide text since it breaks header display
-        @include media-breakpoint-between(md, lg) {
-          display: none;
-        }
-      }
-    }
-
-    .navbar-sn {
+  .nav-item {
+    i {
       font-size: 1.25rem;
     }
+
+    .nav-link-text {
+      // hide text since it breaks header display
+      @include media-breakpoint-between(md, lg) {
+        display: none;
+      }
+    }
+  }
+
+  .navbar-sn {
+    font-size: 1.25rem;
   }
 }
 </style>

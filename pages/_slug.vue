@@ -1,67 +1,90 @@
 <template>
-  <article v-if="post" :id="post.id">
-    <header class="post-header container p-0 mb-6">
-      <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
-      <WpAvatar
-        :size="150"
-        :avatar-urls="authorAvatar"
-        :alt="author.name"
-        class="post-header-author-img rounded-circle"
-      />
-      <div class="post-header-meta">
-        <span>par {{ author.name }}</span>
-        <span>
-          publié le <time :datetime="post.date">{{ postCreatedDate }}</time> (màj le
-          <time :datetime="post.modified">{{ postModifiedDate }}</time
-          >)
-        </span>
-        <span>
-          dans
-          <span v-for="(category, index) in categories" :key="category.id">
-            <a :href="category.link" :title="category.name">{{ category.name }}</a>
-            <span v-if="index != categories.length - 1">, </span>
-          </span>
-        </span>
-      </div>
-      <PostShare :post="post" class="post-header-sn-share" />
-    </header>
-
-    <div class="post-content container mb-5">
-      <div class="post-content-title">
-        <h1 class="mr-2 mb-4">{{ escapedTitle }}</h1>
-      </div>
-      <main class="post-content-text" v-html="post.content.rendered" />
-    </div>
-
-    <div class="post-author container my-5">
-      <div class="border shadow-sm text-center position-relative">
-        <WpAvatar
-          :size="150"
-          :avatar-urls="authorAvatar"
-          :alt="author.name"
-          class="post-header-author-img rounded-circle"
+  <div>
+    <nav class="d-none d-md-block bg-darker-grey post-sidebar">
+      <div class="text-center bg-yellow p-2"><h2 class="h5 m-0 font-weight-bold">Fiches</h2></div>
+      <a href="" class="fiche-thumb btn btn-yellow media text-left text-decoration-none m-2 position-relative">
+        <img
+          class="fiche-img rounded mr-3"
+          src="https://lachouquette.ch/wp-content/uploads/2019/11/Noir_et_Fleurs-768x768.jpg"
+          alt="Generic placeholder image"
+          height="48"
+          width="48"
         />
-        <h5 class="mt-3 mb-4">{{ author.name }}</h5>
-        <p class="px-2 pb-1">{{ author.description }}</p>
-      </div>
-    </div>
+        <div class="media-body text-black">
+          <h3 class="mb-1 h6">Boutique n° 28</h3>
+          <span class="font-italic small">
+            Mode, Test, Toto, Pipou
+          </span>
+        </div>
+        <span class="fiche-link"><i class="fas fa-external-link-alt"></i></span>
+      </a>
+    </nav>
+    <main role="main" class="px-4">
+      <article v-if="post" :id="post.id">
+        <header class="post-header container p-0 mb-6">
+          <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
+          <WpAvatar
+            :size="150"
+            :avatar-urls="authorAvatar"
+            :alt="author.name"
+            class="post-header-author-img rounded-circle"
+          />
+          <div class="post-header-meta">
+            <span>par {{ author.name }}</span>
+            <span>
+              publié le <time :datetime="post.date">{{ postCreatedDate }}</time> (màj le
+              <time :datetime="post.modified">{{ postModifiedDate }}</time
+              >)
+            </span>
+            <span>
+              dans
+              <span v-for="(category, index) in categories" :key="category.id">
+                <a :href="category.link" :title="category.name">{{ category.name }}</a>
+                <span v-if="index != categories.length - 1">, </span>
+              </span>
+            </span>
+          </div>
+          <PostShare :post="post" class="post-header-sn-share" />
+        </header>
 
-    <div v-show="isSimilarPostsShown" class="cq-single-post-similar container my-5">
-      <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
-      <PostCardSwiper v-if="similarPosts" :posts="similarPosts" @init="isSimilarPostsShown = true" />
-    </div>
+        <section class="post-content container mb-5">
+          <div class="post-content-title">
+            <h1 class="mr-2 mb-4">{{ escapedTitle }}</h1>
+          </div>
+          <main class="post-content-text" v-html="post.content.rendered" />
+        </section>
 
-    <div class="post-comments container my-5">
-      <h3 class="mb-3 text-center">{{ comments.length }} commentaire(s)</h3>
-      <ol class="comment-list p-0">
-        <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
-          <PostComment :post="post.id" :comment="comment" :comments="comments" />
-        </li>
-      </ol>
-      <h3 class="my-4 text-center">Laisse-nous un petit mot</h3>
-      <PostCommentReply :post="post.id" />
-    </div>
-  </article>
+        <section class="post-author container my-5">
+          <div class="border shadow-sm text-center position-relative">
+            <WpAvatar
+              :size="150"
+              :avatar-urls="authorAvatar"
+              :alt="author.name"
+              class="post-header-author-img rounded-circle"
+            />
+            <h5 class="mt-3 mb-4">{{ author.name }}</h5>
+            <p class="px-2 pb-1">{{ author.description }}</p>
+          </div>
+        </section>
+
+        <section v-show="isSimilarPostsShown" class="cq-single-post-similar container my-5">
+          <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
+          <PostCardSwiper v-if="similarPosts" :posts="similarPosts" @init="isSimilarPostsShown = true" />
+        </section>
+
+        <section class="post-comments container my-5">
+          <h3 class="mb-3 text-center">{{ comments.length }} commentaire(s)</h3>
+          <ol class="comment-list p-0">
+            <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
+              <PostComment :post="post.id" :comment="comment" :comments="comments" />
+            </li>
+          </ol>
+          <h3 class="my-4 text-center">Laisse-nous un petit mot</h3>
+          <PostCommentReply :post="post.id" />
+        </section>
+      </article>
+    </main>
+  </div>
 </template>
 
 <script>
@@ -137,6 +160,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.post-sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  padding: $header-height + $covid-banner-height 0 0;
+  width: 300px;
+  border-right: 5px solid $chouquette-yellow;
+}
+
+.fiche-img {
+  object-fit: cover;
+  border: 2px solid $white;
+}
+
+.fiche-link {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+}
+
+main[role='main'] {
+  margin-left: 300px;
+}
+
 .cq-single-post-fiches {
   height: calc(100vh - #{$header-height} - #{$covid-banner-height});
   width: 350px;

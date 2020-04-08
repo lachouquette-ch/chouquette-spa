@@ -11,11 +11,12 @@ $secondary: $chouquette-grey;
 // add new theme colors
 $theme-colors: (
     "white": white,
-    "chouquette-yellow": $chouquette-yellow,
-    "chouquette-grey": $chouquette-grey,
-    "chouquette-dark": $chouquette-dark-grey,
-    "chouquette-light": $chouquette-light-grey,
-    "black": black
+    "black": black,
+    "yellow": $chouquette-yellow,
+    "light-grey": $chouquette-light-grey,
+    "grey": $chouquette-grey,
+    "dark-grey": $chouquette-dark-grey,
+    "darker-grey": $chouquette-darker-grey
 );
 
 // Navbar
