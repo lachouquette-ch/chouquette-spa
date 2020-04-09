@@ -118,9 +118,9 @@
                   </li>
                   <li class="list-group-item">
                     <label class="mb-0">Horaires :</label>
-                    <div class="dropup d-inline-block fiche-planning">
+                    <div class="fiche-planning dropup d-inline-block">
                       <a
-                        id="planning18647"
+                        :id="`planning${_uid}`"
                         role="button"
                         data-toggle="dropdown"
                         aria-haspopup="true"
@@ -128,7 +128,7 @@
                         class="link-secondary link-no-decoration dropdown-toggle"
                         >6h - 19h</a
                       >
-                      <div aria-labelledby="planning18647" class="dropdown-menu">
+                      <div :aria-labelledby="`planning${_uid}`" class="dropdown-menu">
                         <ul>
                           <li><label class="mb-0">Lundi</label> 6h - 19h</li>
                           <li><label class="mb-0">Mardi</label> 6h - 19h</li>
@@ -184,6 +184,12 @@ import $ from 'jquery'
 
 export default {
   mounted() {
+    // enable dropdown menu
+    require('bootstrap/js/dist/dropdown')
+    this.fichePlanningDropdown = $(this.$el)
+      .find('.fiche-planning')
+      .first()
+
     // handle fiche heights
     $(this.$el)
       .find('.fiche')
@@ -223,6 +229,8 @@ export default {
         fiche.find('.fiche-back').css('transform', 'rotateY(0deg)')
         fiche.find('.fiche-front').css('transform', 'rotateY(180deg)')
       } else {
+        // hide dropdown
+        this.fichePlanningDropdown.dropdown('hide')
         fiche.find('.fiche-back').css('transform', 'rotateY(180deg)')
         fiche.find('.fiche-front').css('transform', 'rotateY(0deg)')
       }
