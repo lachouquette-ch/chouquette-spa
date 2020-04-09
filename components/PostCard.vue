@@ -79,7 +79,7 @@ export default {
   font-size: $h5-font-size;
 
   background-color: $white;
-  box-shadow: 0 4px 6px rgba($black, 0.3);
+  box-shadow: $box-shadow;
 
   > a {
     color: $black;
@@ -99,7 +99,7 @@ export default {
 
 .post-card-category {
   background-color: $white;
-  box-shadow: -1px -1px 3px rgba($black, 0.3);
+  box-shadow: $box-shadow;
   padding: 0.75rem;
 
   position: absolute;
