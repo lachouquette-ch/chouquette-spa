@@ -1,12 +1,31 @@
 <template>
-  <div>
-    <nav v-if="fiches" class="d-none d-md-block bg-darker-grey post-sidebar">
-      <div class="post-sidebar-header text-center p-2">
+  <div class="post">
+    <nav v-show="sidebarShown" v-if="fiches" class="post-sidebar bg-darker-grey">
+      <div class="post-sidebar-header d-none d-md-block text-center p-2">
         <h2 class="post-sidebar-title h5 m-0 text-white">Cités dans l'article :</h2>
       </div>
-      <FicheThumbnail v-for="fiche in fiches" :key="fiche.id" :fiche="fiche" class="m-2 position-relative" />
+      <div>
+        <FicheThumbnail
+          v-for="fiche in fiches"
+          :key="fiche.id"
+          :fiche="fiche"
+          class="my-2 mx-3 mx-md-2 position-relative"
+        />
+      </div>
     </nav>
-    <main role="main" class="px-4">
+    <div class="post-sidebar-toggle d-md-none btn-group btn-group-toggle" data-toggle="buttons">
+      <label
+        class="btn btn-sm btn-primary"
+        :class="{ active: !sidebarShown }"
+        @click="sidebarShown = false"
+      >
+        <input id="option1" type="radio" name="options" checked />Article
+      </label>
+      <label class="btn btn-sm btn-primary" :class="{ active: sidebarShown }" @click="sidebarShown = true">
+        <input id="option2" type="radio" name="options" />Fiches
+      </label>
+    </div>
+    <main role="main" class="px-md-4">
       <article v-if="post" :id="post.id">
         <header class="post-header container p-0 mb-6">
           <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
@@ -95,6 +114,8 @@ export default {
   data() {
     return {
       isSimilarPostsShown: false,
+      sidebarShown: true,
+
       post: null,
       featuredMedia: null,
       author: null,
@@ -154,138 +175,56 @@ export default {
 
 <style lang="scss" scoped>
 main[role='main'] {
-  margin-left: 300px;
+  @include media-breakpoint-up(md) {
+    margin-left: 300px;
+  }
 }
 
 .post-sidebar {
+  padding: $header-height + $covid-banner-height 0 0;
+
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
-  z-index: $zindex-fixed;
-  padding: $header-height + $covid-banner-height 0 0;
-  width: 300px;
-  border-right: 5px solid $chouquette-yellow;
-
+  width: 100%;
+  z-index: $zindex-sticky;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
 
-  // style scrollbar
-  &::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 6px rgba($chouquette-grey, 0.3);
-    background-color: $chouquette-light-grey;
+  @include media-breakpoint-up(md) {
+    width: 300px;
+    border-right: 5px solid $chouquette-yellow;
+
+    -webkit-overflow-scrolling: touch;
+
+    // style scrollbar
+    &::-webkit-scrollbar-track {
+      box-shadow: inset 0 0 6px rgba($chouquette-grey, 0.3);
+      background-color: $chouquette-light-grey;
+    }
+
+    &::-webkit-scrollbar {
+      width: 12px;
+      background-color: #f5f5f5;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      box-shadow: inset 0 0 6px rgba($chouquette-grey, 0.3);
+      background-color: $chouquette-grey;
+    }
   }
-
-  &::-webkit-scrollbar {
-    width: 12px;
-    background-color: #f5f5f5;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    box-shadow: inset 0 0 6px rgba($chouquette-grey, 0.3);
-    background-color: $chouquette-grey;
-  }
-}
-
-.post-sidebar-header {
-  //border-top: 3px solid $white;
-}
-
-.post-sidebar-title {
-  //letter-spacing: 3px;
-}
-
-.cq-single-post-fiches {
-  height: calc(100vh - #{$header-height} - #{$covid-banner-height});
-  width: 350px;
-  background-color: $chouquette-light-grey;
-
-  position: fixed;
-  top: $header-height + $covid-banner-height;
-  left: -350px + 5px; // border
-  z-index: $zindex-fixed;
-
-  border-right: 5px solid $chouquette-yellow;
 
   @include media-breakpoint-down(sm) {
-    width: 100vw;
-    left: -100vw;
-
-    border-right: none;
-  }
-
-  button {
-    border-radius: unset;
-  }
-
-  transition: left 0.5s;
-
-  &.open {
-    left: 0;
+    padding-bottom: 40px;
   }
 }
 
-.cq-single-post-fiches-btn {
-  height: 48px;
-  width: 190px;
-
-  position: absolute;
-  right: -5px; // border
-  bottom: calc(50% - 95px);
-
-  transform: rotate(90deg);
-  transform-origin: bottom right;
-}
-
-.cq-single-post-fiches-btn-sm {
-  height: $hidden-content-handle-btn-height;
-  width: 150px;
-
-  position: absolute;
-  top: 0;
-  right: 0;
-
-  transition: right 1s;
-}
-
-.cq-single-post-fiches.open > .cq-single-post-fiches-btn-sm {
-  width: 100%;
-
-  position: relative;
-  right: auto !important;
-}
-
-.cq-single-post-fiches-wrapper {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-
-  height: calc(100vh - #{$header-height} - #{$covid-banner-height});
-
-  @include media-breakpoint-down(md) {
-    height: calc(100vh - #{$header-height} - #{$hidden-content-handle-btn-height} - #{$covid-banner-height}); // button
-  }
-
-  background-color: $white;
-
-  article {
-    margin: auto; // center articles
-  }
-
-  // style scrollbar
-  &::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 6px rgba($chouquette-grey, 0.3);
-    background-color: $chouquette-light-grey;
-  }
-
-  &::-webkit-scrollbar {
-    width: 12px;
-    background-color: #f5f5f5;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    box-shadow: inset 0 0 6px rgba($chouquette-grey, 0.3);
-    background-color: $chouquette-grey;
-  }
+.post-sidebar-toggle {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: $zindex-sticky + 1;
 }
 
 .post-header {
