@@ -211,9 +211,7 @@ export default {
         // add mouse gesture
         const Hammer = require('hammerjs')
         const mc = new Hammer(element)
-        mc.on('swipeleft swiperight', function() {
-          this.ficheFlip(element)
-        })
+        mc.on('swipeleft swiperight', () => this.ficheFlip(element))
       })
   },
   methods: {
