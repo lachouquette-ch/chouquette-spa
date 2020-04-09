@@ -1,6 +1,6 @@
 <template>
   <main role="main" class="container-fluid layout-content mx-auto">
-    <article class="fiche fiche.highlight fiche-flip fiche-chouquettise" style="height: 600px">
+    <article class="fiche fiche-highlight fiche-flip fiche-chouquettise" style="height: 600px">
       <div class="fiche-container">
         <div class="fiche-front">
           <div class="card">
@@ -8,7 +8,7 @@
               class="card-header p-2"
               style="background-image: url('http://chouquette.test/wp-content/uploads/2018/10/L.Buet-5-768x512.jpg');"
             >
-              <div class="fiche-category-icon bg-white rounded-circle">
+              <div class="fiche-category-icon bg-yellow rounded-circle">
                 <img
                   src="http://chouquette.test/wp-content/uploads/2019/06/sur-le-pouce_black-e1561470507805-150x150.png"
                   alt=""
@@ -20,7 +20,7 @@
             </div>
             <div class="card-body d-flex flex-column position-relative">
               <h2 class="card-title text-center h4">Maison Buet - Succursale Haldimand</h2>
-              <p class="fiche-content card-text">
+              <p class="card-text">
                 Et si on te disait que la Maison BUET est en passe de devenir une institution ? Accueil souriant et
                 produits artisanaux d’excellentes qualités élaborés dans leur laboratoire lausannois (fait rare). Pains,
                 chocolats, sandwiches, pâtisseries... 100% maison, 100% gourmand !
@@ -561,6 +561,14 @@ export default {}
   }
 }
 
+.fiche-category-icon {
+  padding: 0.75rem;
+
+  position: absolute;
+  top: 5px;
+  left: 5px;
+}
+
 .card-header {
   height: 200px;
   max-height: 25vh;
@@ -571,12 +579,14 @@ export default {}
   background-repeat: no-repeat;
 }
 
-.fiche-category-icon {
-  padding: 0.75rem;
+.card-title {
+  font-family: $font-family-heading;
+}
 
-  position: absolute;
-  top: 5px;
-  left: 5px;
+.card-text {
+  a {
+    color: $secondary;
+  }
 }
 
 a.fiche-social {
@@ -592,13 +602,6 @@ a.fiche-social {
 
   @include hover-focus-active {
     background-color: $chouquette-yellow;
-    border-color: $chouquette-yellow !important;
-  }
-}
-
-.fiche-content {
-  a {
-    color: $secondary;
   }
 }
 
@@ -630,7 +633,8 @@ a.fiche-social {
 
 .fiche-report {
   position: absolute;
-  right: 5px;
+  top: 7px;
+  right: 7px;
 
   font-size: $font-size-base;
 
@@ -643,10 +647,5 @@ a.fiche-social {
 }
 .fiche-back .fiche-report {
   bottom: 5px;
-}
-
-// special treatment to chouquettise
-.fiche-chouquettise .fiche-category-icon {
-  background-color: $chouquette-yellow;
 }
 </style>
