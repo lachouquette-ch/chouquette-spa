@@ -1,30 +1,10 @@
 <template>
   <div>
-    <nav class="d-none d-md-block bg-darker-grey post-sidebar">
-      <div class="text-center bg-yellow p-2"><h2 class="h5 m-0 font-weight-bold">Fiches</h2></div>
-      <a
-        v-if="fiche"
-        href=""
-        class="fiche-thumb btn btn-yellow media text-left text-decoration-none m-2 position-relative"
-      >
-        <WPMedia
-          v-if="ficheFeaturedMedia"
-          :media="ficheFeaturedMedia"
-          size="thumbnail"
-          class="fiche-img rounded mr-3"
-          height="48"
-          width="48"
-        />
-        <div class="media-body text-black">
-          <h3 class="mb-1 h6">{{ fiche.title.rendered }}</h3>
-          <span class="font-italic small">
-            <span v-for="(ficheCategory, index) in ficheCategories" :key="ficheCategory.id"
-              >{{ ficheCategory.name }}<span v-if="index != ficheCategories.length - 1">, </span></span
-            >
-          </span>
-        </div>
-        <span class="fiche-link"><i class="fas fa-external-link-alt"></i></span>
-      </a>
+    <nav v-if="fiches" class="d-none d-md-block bg-darker-grey post-sidebar">
+      <div class="post-sidebar-header text-center p-2">
+        <h2 class="post-sidebar-title h5 m-0 text-white">Cités dans l'article :</h2>
+      </div>
+      <FicheThumbnail v-for="fiche in fiches" :key="fiche.id" :fiche="fiche" class="m-2 position-relative" />
     </nav>
     <main role="main" class="px-4">
       <article v-if="post" :id="post.id">
@@ -101,7 +81,6 @@ import moment from 'moment'
 import PostAPI from '../api/wordpress/posts'
 import CommentAPI from '../api/wordpress/comments'
 import FicheAPI from '../api/wordpress/fiches'
-import CategoryAPI from '../api/wordpress/categories'
 
 import WPMedia from '../components/WpMedia'
 import PostCardSwiper from '../components/PostCardSwiper'
@@ -109,9 +88,10 @@ import PostShare from '../components/PostShare'
 import PostComment from '../components/PostComment'
 import WpAvatar from '../components/WpAvatar'
 import PostCommentReply from '../components/PostCommentReply'
+import FicheThumbnail from '../components/FicheThumbnail'
 
 export default {
-  components: { PostCommentReply, WpAvatar, PostComment, WPMedia, PostCardSwiper, PostShare },
+  components: { FicheThumbnail, PostCommentReply, WpAvatar, PostComment, WPMedia, PostCardSwiper, PostShare },
   data() {
     return {
       isSimilarPostsShown: false,
@@ -124,9 +104,7 @@ export default {
       similarPosts: [],
       comments: [],
       rootLevelComments: [],
-      fiche: null,
-      ficheFeaturedMedia: null,
-      ficheCategories: []
+      fiches: []
     }
   },
   computed: {
@@ -164,9 +142,7 @@ export default {
     })
 
     // fetch linked fiches
-    this.fiche = await FicheAPI.getByIds(this.post.meta.link_fiche).then((fiches) => fiches[0])
-    this.ficheFeaturedMedia = this.fiche._embedded['wp:featuredmedia'][0]
-    this.ficheCategories = await CategoryAPI.getByIds(this.fiche.categories)
+    this.fiches = await FicheAPI.getByIds(this.post.meta.link_fiche)
   },
   head() {
     return {
@@ -177,30 +153,46 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+main[role='main'] {
+  margin-left: 300px;
+}
+
 .post-sidebar {
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
-  z-index: 100;
+  z-index: $zindex-fixed;
   padding: $header-height + $covid-banner-height 0 0;
   width: 300px;
   border-right: 5px solid $chouquette-yellow;
+
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  // style scrollbar
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba($chouquette-grey, 0.3);
+    background-color: $chouquette-light-grey;
+  }
+
+  &::-webkit-scrollbar {
+    width: 12px;
+    background-color: #f5f5f5;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 6px rgba($chouquette-grey, 0.3);
+    background-color: $chouquette-grey;
+  }
 }
 
-.fiche-img {
-  object-fit: cover;
-  border: 2px solid $white;
+.post-sidebar-header {
+  //border-top: 3px solid $white;
 }
 
-.fiche-link {
-  position: absolute;
-  right: 0.5rem;
-  bottom: 0.5rem;
-}
-
-main[role='main'] {
-  margin-left: 300px;
+.post-sidebar-title {
+  //letter-spacing: 3px;
 }
 
 .cq-single-post-fiches {
