@@ -1,6 +1,6 @@
 <template>
   <div class="post">
-    <nav v-show="sidebarShown" v-if="fiches" class="post-sidebar bg-darker-grey">
+    <nav v-show="sidebarShown" v-if="fiches" class="post-sidebar layout-content bg-darker-grey">
       <div class="post-sidebar-header d-none d-md-block text-center p-2">
         <h2 class="post-sidebar-title h5 m-0 text-white">Cités dans l'article :</h2>
       </div>
@@ -25,7 +25,7 @@
         <input id="option2" type="radio" name="options" />Fiches
       </label>
     </div>
-    <main role="main" class="px-md-4">
+    <main role="main" class="post-main layout-content px-md-4">
       <article v-if="post" :id="post.id">
         <header class="post-header container p-0 mb-6">
           <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
@@ -174,15 +174,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-main[role='main'] {
+.post-main {
   @include media-breakpoint-up(md) {
     margin-left: 300px;
   }
 }
 
 .post-sidebar {
-  padding: $header-height + $covid-banner-height 0 0;
-
   position: fixed;
   top: 0;
   bottom: 0;
