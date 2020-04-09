@@ -84,63 +84,61 @@
         </div>
         <div class="fiche-back mx-5">
           <div class="card" style="height: 580px;">
-            <div class="fiche-header fiche-map" style="position: relative; overflow: hidden;"></div>
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item">
-                <a href="tel: 021 323 09 91" title="Téléphone" target="_blank" class="link-secondary link-no-decoration"
-                  ><i class="fas fa-phone"></i> 021 323 09 91
-                </a>
-              </li>
-              <li class="list-group-item">
-                <a
-                  href="http://maisonbuet.ch"
-                  title="Site Internet"
-                  target="_blank"
-                  class="link-secondary link-no-decoration"
-                  ><i class="fas fa-globe"></i> http://maisonbuet.ch
-                </a>
-              </li>
-              <li class="list-group-item">
-                <a
-                  href="mailto:info@maisonbuet.ch?body=%0A---%0AEnvoy%C3%A9%20depuis%20http://chouquette.test"
-                  title="Email"
-                  target="_blank"
-                  class="link-secondary link-no-decoration"
-                  ><i class="fas fa-at"></i> info@maisonbuet.ch
-                </a>
-              </li>
-              <li class="list-group-item">
-                <label class="mb-0">Prix :</label> <span class="fiche-price fiche-price-selected">$$$</span
-                ><span class="fiche-price">$$</span>
-              </li>
-              <li class="list-group-item">
-                <label class="mb-0">Horaires :</label>
-                <div class="dropup d-inline-block fiche-planning">
+            <div class="card-header"></div>
+            <div class="card-body position-relative p-0">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <a href="tel: 021 323 09 91" title="Téléphone" target="_blank" class="text-decoration-none"
+                    ><i class="fas fa-phone"></i> 021 323 09 91
+                  </a>
+                </li>
+                <li class="list-group-item">
+                  <a href="http://maisonbuet.ch" title="Site Internet" target="_blank" class="text-decoration-none"
+                    ><i class="fas fa-globe"></i> http://maisonbuet.ch
+                  </a>
+                </li>
+                <li class="list-group-item">
                   <a
-                    id="planning18647"
-                    role="button"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                    class="link-secondary link-no-decoration dropdown-toggle"
-                    >6h - 19h</a
-                  >
-                  <div aria-labelledby="planning18647" class="dropdown-menu">
-                    <ul>
-                      <li><label class="mb-0">Lundi</label> 6h - 19h</li>
-                      <li><label class="mb-0">Mardi</label> 6h - 19h</li>
-                      <li><label class="mb-0">Mercredi</label> 6h - 19h</li>
-                      <li><label class="mb-0">Jeudi</label> 6h - 19h</li>
-                      <li><label class="mb-0">Vendredi</label> 6h - 19h</li>
-                      <li><label class="mb-0">Samedi</label> 6h - 18h00</li>
-                      <li><label class="mb-0">Dimanche</label> Fermé</li>
-                    </ul>
+                    href="mailto:info@maisonbuet.ch?body=%0A---%0AEnvoy%C3%A9%20depuis%20http://chouquette.test"
+                    title="Email"
+                    target="_blank"
+                    class="text-decoration-none"
+                    ><i class="fas fa-at"></i> info@maisonbuet.ch
+                  </a>
+                </li>
+                <li class="list-group-item">
+                  <label class="mb-0">Prix :</label> <span class="fiche-price fiche-price-selected">$$$</span
+                  ><span class="fiche-price">$$</span>
+                </li>
+                <li class="list-group-item">
+                  <label class="mb-0">Horaires :</label>
+                  <div class="dropup d-inline-block fiche-planning">
+                    <a
+                      id="planning18647"
+                      role="button"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false"
+                      class="link-secondary link-no-decoration dropdown-toggle"
+                      >6h - 19h</a
+                    >
+                    <div aria-labelledby="planning18647" class="dropdown-menu">
+                      <ul>
+                        <li><label class="mb-0">Lundi</label> 6h - 19h</li>
+                        <li><label class="mb-0">Mardi</label> 6h - 19h</li>
+                        <li><label class="mb-0">Mercredi</label> 6h - 19h</li>
+                        <li><label class="mb-0">Jeudi</label> 6h - 19h</li>
+                        <li><label class="mb-0">Vendredi</label> 6h - 19h</li>
+                        <li><label class="mb-0">Samedi</label> 6h - 18h00</li>
+                        <li><label class="mb-0">Dimanche</label> Fermé</li>
+                      </ul>
+                    </div>
                   </div>
-                </div>
-              </li>
-            </ul>
-            <div class="card-body position-relative">
-              <span>Plats à emporter, Service de livraison</span>
+                </li>
+              </ul>
+              <div class="card-text p-3">
+                <span>Plats à emporter, Service de livraison</span>
+              </div>
               <a
                 href="#"
                 title="Reporter une précision ou erreur sur la fiche"
@@ -171,7 +169,44 @@
 </template>
 
 <script>
-export default {}
+import $ from 'jquery'
+
+export default {
+  mounted() {
+    // handle fiche heights
+    $(this.$el)
+      .find('.fiche')
+      .each((index, element) => {
+        // compute each fiche height
+        const frontHeight = $(element)
+          .find('.fiche-front .card')
+          .height()
+        const backHeight = $(element)
+          .find('.fiche-back .card')
+          .height()
+
+        if (frontHeight > backHeight) {
+          $(element).height(frontHeight)
+          $(element)
+            .find('.fiche-back .card')
+            .height(frontHeight)
+        } else {
+          $(element).height(backHeight)
+          $(element)
+            .find('.fiche-front .card')
+            .height(backHeight)
+        }
+
+        // add mouse gesture
+        const Hammer = require('hammerjs')
+        const mc = new Hammer(element)
+        mc.on('swipeleft swiperight', function() {
+          console.log('flip')
+          // self.ficheFlip(element)
+        })
+      })
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -255,7 +290,7 @@ export default {}
   }
 }
 
-a.fiche-social {
+.fiche-social {
   display: inline-block;
   width: 35px;
   height: 35px;
