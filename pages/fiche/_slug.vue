@@ -4,7 +4,7 @@
     <main role="main">
       <article class="fiche fiche-highlight fiche-flip fiche-chouquettise">
         <div class="fiche-container d-flex justify-content-center">
-          <div class="fiche-front mx-5">
+          <div class="fiche-front mx-md-5">
             <div class="card">
               <div
                 class="card-header p-2"
@@ -78,13 +78,17 @@
                   class="btn btn-outline-secondary"
                   ><i class="far fa-newspaper"></i
                 ></a>
-                <a href="#" title="Plus de détails (retourner la fiche)" class="d-md-none btn btn-secondary float-right"
+                <a
+                  href=""
+                  title="Plus de détails (retourner la fiche)"
+                  class="d-md-none btn btn-secondary float-right"
+                  @click.prevent="ficheFlip($event.target)"
                   ><i class="fas fa-plus"></i
                 ></a>
               </div>
             </div>
           </div>
-          <div class="fiche-back mx-5">
+          <div class="fiche-back mx-md-5">
             <div class="card" style="height: 580px;">
               <div class="card-header"></div>
               <div class="card-body position-relative p-0">
@@ -159,7 +163,11 @@
                   class="btn btn-outline-secondary"
                   ><i class="far fa-newspaper"></i
                 ></a>
-                <a href="#" title="Plus de détails (retourner la fiche)" class="d-md-none btn btn-secondary float-right"
+                <a
+                  href=""
+                  title="Plus de détails (retourner la fiche)"
+                  class="d-md-none btn btn-secondary float-right"
+                  @click.prevent="ficheFlip($event.target)"
                   ><i class="fas fa-plus"></i
                 ></a>
               </div>
@@ -204,10 +212,24 @@ export default {
         const Hammer = require('hammerjs')
         const mc = new Hammer(element)
         mc.on('swipeleft swiperight', function() {
-          console.log('flip')
-          // self.ficheFlip(element)
+          this.ficheFlip(element)
         })
       })
+  },
+  methods: {
+    ficheFlip(element) {
+      const fiche = $(element).hasClass('fiche') ? $(element) : $(element).parents('.fiche')
+
+      // flip card
+      if (!fiche.hasClass('flipped')) {
+        fiche.find('.fiche-back').css('transform', 'rotateY(0deg)')
+        fiche.find('.fiche-front').css('transform', 'rotateY(180deg)')
+      } else {
+        fiche.find('.fiche-back').css('transform', 'rotateY(180deg)')
+        fiche.find('.fiche-front').css('transform', 'rotateY(0deg)')
+      }
+      fiche.toggleClass('flipped')
+    }
   }
 }
 </script>
@@ -263,7 +285,6 @@ export default {
 
   @include media-breakpoint-down(sm) {
     width: 100%;
-    margin: 0 1rem;
   }
 
   .card-footer {
