@@ -1,8 +1,8 @@
 <template>
-  <div class="fiche-page layout-content container-fluid mx-auto">
-    <h1 class="text-center my-4">Maison Buet – Succursale Haldimand</h1>
+  <div v-if="fiche" class="fiche-page layout-content container-fluid mx-auto">
+    <h1 class="text-center my-4">{{ escapedTitle }}</h1>
     <main role="main">
-      <article class="fiche fiche-highlight fiche-flip fiche-chouquettise">
+      <article class="fiche fiche-flip fiche-chouquettise">
         <div class="fiche-container d-flex justify-content-center">
           <div class="fiche-front mx-md-5">
             <div class="card">
@@ -21,16 +21,12 @@
                 </div>
               </div>
               <div class="card-body d-flex flex-column position-relative">
-                <h2 class="card-title text-center h4">Maison Buet - Succursale Haldimand</h2>
-                <p class="card-text">
-                  Et si on te disait que la Maison BUET est en passe de devenir une institution ? Accueil souriant et
-                  produits artisanaux d’excellentes qualités élaborés dans leur laboratoire lausannois (fait rare).
-                  Pains, chocolats, sandwiches, pâtisseries... 100% maison, 100% gourmand !
-                </p>
-                <div class="card-text d-flex justify-content-around mt-auto">
+                <h2 class="card-title text-center h4">{{ escapedTitle }}</h2>
+                <p class="card-text" v-html="fiche.content.rendered" />
+                <div v-if="fiche.info.chouquettise" class="card-text d-flex justify-content-around mt-auto">
                   <a
-                    href="tel: 021 323 09 91"
-                    title="Téléphoner"
+                    :href="`tel: ${fiche.info.telephone}`"
+                    :title="fiche.info.telephone"
                     target="_blank"
                     class="fiche-social border border-secondary rounded-circle"
                     ><i class="fas fa-phone"></i
@@ -46,14 +42,14 @@
                     ><i class="far fa-envelope"></i
                   ></a>
                   <a
-                    href="https://www.facebook.com/maisonbuet"
+                    :href="fiche.info.sn_facebook"
                     title="Facebook"
                     target="_blank"
                     class="fiche-social border border-secondary rounded-circle"
                     ><i class="fab fa-facebook-f"></i
                   ></a>
                   <a
-                    href="https://www.instagram.com/maisonbuet/"
+                    :href="fiche.info.sn_instagram"
                     title="Instagram"
                     target="_blank"
                     class="fiche-social border border-secondary rounded-circle"
@@ -94,27 +90,32 @@
               <div class="card-body position-relative p-0">
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item">
-                    <a href="tel: 021 323 09 91" title="Téléphone" target="_blank" class="text-decoration-none"
-                      ><i class="fas fa-phone"></i> 021 323 09 91
+                    <a
+                      :href="`tel: ${fiche.info.telephone}`"
+                      title="Téléphone"
+                      target="_blank"
+                      class="text-decoration-none"
+                      ><i class="fas fa-phone"></i>{{ fiche.info.telephone }}
                     </a>
                   </li>
                   <li class="list-group-item">
-                    <a href="http://maisonbuet.ch" title="Site Internet" target="_blank" class="text-decoration-none"
-                      ><i class="fas fa-globe"></i> http://maisonbuet.ch
+                    <a :href="fiche.info.website" title="Site Internet" target="_blank" class="text-decoration-none"
+                      ><i class="fas fa-globe"></i>{{ fiche.info.website }}
                     </a>
                   </li>
                   <li class="list-group-item">
                     <a
-                      href="mailto:info@maisonbuet.ch?body=%0A---%0AEnvoy%C3%A9%20depuis%20http://chouquette.test"
+                      :href="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
                       title="Email"
                       target="_blank"
                       class="text-decoration-none"
-                      ><i class="fas fa-at"></i> info@maisonbuet.ch
+                      ><i class="fas fa-at"></i>{{ fiche.info.mail }}
                     </a>
                   </li>
                   <li class="list-group-item">
-                    <label class="mb-0">Prix :</label> <span class="fiche-price fiche-price-selected">$$$</span
-                    ><span class="fiche-price">$$</span>
+                    <label class="mb-0">Prix :</label>
+                    <span class="fiche-price fiche-price-selected">{{ fichePrice[0] }}</span
+                    ><span class="fiche-price">{{ fichePrice[1] }}</span>
                   </li>
                   <li class="list-group-item">
                     <label class="mb-0">Horaires :</label>
@@ -126,17 +127,17 @@
                         aria-haspopup="true"
                         aria-expanded="false"
                         class="link-secondary link-no-decoration dropdown-toggle"
-                        >6h - 19h</a
+                        >{{ getOpening() }} ({{ currentDayOfWeek }})</a
                       >
                       <div :aria-labelledby="`planning${_uid}`" class="dropdown-menu">
                         <ul>
-                          <li><label class="mb-0">Lundi</label> 6h - 19h</li>
-                          <li><label class="mb-0">Mardi</label> 6h - 19h</li>
-                          <li><label class="mb-0">Mercredi</label> 6h - 19h</li>
-                          <li><label class="mb-0">Jeudi</label> 6h - 19h</li>
-                          <li><label class="mb-0">Vendredi</label> 6h - 19h</li>
-                          <li><label class="mb-0">Samedi</label> 6h - 18h00</li>
-                          <li><label class="mb-0">Dimanche</label> Fermé</li>
+                          <li><label class="mb-0">Lundi</label>{{ getOpening(1) }}</li>
+                          <li><label class="mb-0">Mardi</label>{{ getOpening(2) }}</li>
+                          <li><label class="mb-0">Mercredi</label>{{ getOpening(3) }}</li>
+                          <li><label class="mb-0">Jeudi</label>{{ getOpening(4) }}</li>
+                          <li><label class="mb-0">Vendredi</label>{{ getOpening(5) }}</li>
+                          <li><label class="mb-0">Samedi</label>{{ getOpening(6) }}</li>
+                          <li><label class="mb-0">Dimanche</label>{{ getOpening(0) }}</li>
                         </ul>
                       </div>
                     </div>
@@ -180,9 +181,37 @@
 </template>
 
 <script>
+import he from 'he'
 import $ from 'jquery'
+import moment from 'moment'
+
+import FicheAPI from '../../api/wordpress/fiches'
 
 export default {
+  data() {
+    return {
+      fiche: null
+    }
+  },
+  computed: {
+    escapedTitle() {
+      return he.decode(this.fiche.title.rendered)
+    },
+    currentURL() {
+      return window.location.host
+    },
+    fichePrice() {
+      return ['$'.repeat(this.fiche.info.cost), '$'.repeat(5 - this.fiche.info.cost)]
+    },
+    currentDayOfWeek() {
+      return moment()
+        .locale('fr-CH')
+        .format('dddd')
+    }
+  },
+  async created() {
+    this.fiche = await FicheAPI.getBySlug(this.$route.params.slug)
+  },
   mounted() {
     // enable dropdown menu
     require('bootstrap/js/dist/dropdown')
@@ -235,6 +264,10 @@ export default {
         fiche.find('.fiche-front').css('transform', 'rotateY(0deg)')
       }
       fiche.toggleClass('flipped')
+    },
+    getOpening(dayOfWeek = new Date().getDay()) {
+      const opening = this.fiche.info.openings[dayOfWeek]
+      return opening.includes('closed') ? 'Fermé' : opening
     }
   }
 }
