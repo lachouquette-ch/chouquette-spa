@@ -44,11 +44,12 @@ export default {
       return this.media_detail.source_url
     },
     srcSet() {
-      return Object.entries(this.media.media_details.sizes)
-        .map(([_, sizeData]) => {
-          return `${sizeData.source_url} ${sizeData.width}w`
-        })
-        .join(', ')
+      if (!this.noSrcSet)
+        return Object.entries(this.media.media_details.sizes)
+          .map(([_, sizeData]) => {
+            return `${sizeData.source_url} ${sizeData.width}w`
+          })
+          .join(', ')
     }
   },
   created() {

@@ -6,11 +6,17 @@
         <div class="fiche-container d-flex justify-content-center">
           <div class="fiche-front mx-md-5">
             <div class="card">
-              <div
-                class="card-header p-2"
-                style="background-image: url('http://chouquette.test/wp-content/uploads/2018/10/L.Buet-5-768x512.jpg');"
-              >
-                <div class="fiche-category-icon bg-yellow rounded-circle">
+              <div class="card-header p-0">
+                <WpMedia
+                  :media="featuredMedia"
+                  size="medium_large"
+                  :no-src-set="true"
+                  class="fiche-image"
+                />
+                <span
+                  class="fiche-category-icon rounded-circle"
+                  :class="fiche.info.chouquettise ? 'bg-yellow' : 'bg-white'"
+                >
                   <img
                     src="http://chouquette.test/wp-content/uploads/2019/06/sur-le-pouce_black-e1561470507805-150x150.png"
                     alt=""
@@ -18,7 +24,7 @@
                     width="35"
                     height="35"
                   />
-                </div>
+                </span>
               </div>
               <div class="card-body d-flex flex-column position-relative">
                 <h2 class="card-title text-center h4">{{ escapedTitle }}</h2>
@@ -88,7 +94,7 @@
             <div class="card" style="height: 580px;">
               <div class="card-header"></div>
               <div class="card-body position-relative p-0">
-                <ul class="list-group list-group-flush">
+                <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
                   <li class="list-group-item">
                     <a
                       :href="`tel: ${fiche.info.telephone}`"
@@ -186,11 +192,14 @@ import $ from 'jquery'
 import moment from 'moment'
 
 import FicheAPI from '../../api/wordpress/fiches'
+import WpMedia from '../../components/WpMedia'
 
 export default {
+  components: { WpMedia },
   data() {
     return {
-      fiche: null
+      fiche: null,
+      featuredMedia: null
     }
   },
   computed: {
@@ -211,6 +220,7 @@ export default {
   },
   async created() {
     this.fiche = await FicheAPI.getBySlug(this.$route.params.slug)
+    this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
   },
   mounted() {
     // enable dropdown menu
@@ -329,6 +339,15 @@ export default {
   .card-footer {
     height: 64px;
   }
+}
+
+.fiche-image {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+
+  object-fit: cover;
 }
 
 .fiche-category-icon {
