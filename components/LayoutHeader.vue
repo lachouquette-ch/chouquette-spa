@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import VueMailchimpSubscribe from 'vue-mailchimp-subscribe'
+import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-subscribe'
 import CategoryLogo from './CategoryLogo'
 import AppModal from './AppModal'
 

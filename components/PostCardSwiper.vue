@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import Swiper from 'swiper'
+import Swiper from 'swiper/js/swiper.min'
 import PostCard from './PostCard'
 
 export default {

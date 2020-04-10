@@ -1,4 +1,5 @@
 require('dotenv').config()
+const path = require('path')
 
 export default {
   env: {
@@ -69,6 +70,18 @@ export default {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
+    extend(config, ctx) {
+      config.module.rules.push({
+        test: /\.js$/,
+        include: [
+          path.resolve(__dirname, 'node_modules/query-string'),
+          path.resolve(__dirname, 'node_modules/strict-uri-encode'),
+          path.resolve(__dirname, 'node_modules/split-on-first')
+        ],
+        use: {
+          loader: 'babel-loader'
+        }
+      })
+    }
   }
 }
