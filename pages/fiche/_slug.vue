@@ -96,12 +96,12 @@
                       title="Téléphone"
                       target="_blank"
                       class="text-decoration-none"
-                      ><i class="fas fa-phone"></i>{{ fiche.info.telephone }}
+                      ><i class="fas fa-phone"></i> {{ fiche.info.telephone }}
                     </a>
                   </li>
                   <li class="list-group-item">
                     <a :href="fiche.info.website" title="Site Internet" target="_blank" class="text-decoration-none"
-                      ><i class="fas fa-globe"></i>{{ fiche.info.website }}
+                      ><i class="fas fa-globe"></i> {{ fiche.info.website }}
                     </a>
                   </li>
                   <li class="list-group-item">
@@ -110,7 +110,7 @@
                       title="Email"
                       target="_blank"
                       class="text-decoration-none"
-                      ><i class="fas fa-at"></i>{{ fiche.info.mail }}
+                      ><i class="fas fa-at"></i> {{ fiche.info.mail }}
                     </a>
                   </li>
                   <li class="list-group-item">
@@ -223,6 +223,7 @@ export default {
     this.fiche = await FicheAPI.getBySlug(this.$route.params.slug)
     this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
     this.criteria = await CriteriaAPI.getForFiche(this.fiche.id)
+    this.resizeFiche()
   },
   mounted() {
     // enable dropdown menu
@@ -230,38 +231,39 @@ export default {
     this.fichePlanningDropdown = $(this.$el)
       .find('.fiche-planning')
       .first()
-
-    // handle fiche heights
-    $(this.$el)
-      .find('.fiche')
-      .each((index, element) => {
-        // compute each fiche height
-        const frontHeight = $(element)
-          .find('.fiche-front .card')
-          .height()
-        const backHeight = $(element)
-          .find('.fiche-back .card')
-          .height()
-
-        if (frontHeight > backHeight) {
-          $(element).height(frontHeight)
-          $(element)
-            .find('.fiche-back .card')
-            .height(frontHeight)
-        } else {
-          $(element).height(backHeight)
-          $(element)
-            .find('.fiche-front .card')
-            .height(backHeight)
-        }
-
-        // add mouse gesture
-        const Hammer = require('hammerjs')
-        const mc = new Hammer(element)
-        mc.on('swipeleft swiperight', () => this.ficheFlip(element))
-      })
   },
   methods: {
+    resizeFiche() {
+      // handle fiche heights
+      $(this.$el)
+        .find('.fiche')
+        .each((index, element) => {
+          // compute each fiche height
+          const frontHeight = $(element)
+            .find('.fiche-front .card')
+            .height()
+          const backHeight = $(element)
+            .find('.fiche-back .card')
+            .height()
+
+          if (frontHeight > backHeight) {
+            $(element).height(frontHeight)
+            $(element)
+              .find('.fiche-back .card')
+              .height(frontHeight)
+          } else {
+            $(element).height(backHeight)
+            $(element)
+              .find('.fiche-front .card')
+              .height(backHeight)
+          }
+
+          // add mouse gesture
+          const Hammer = require('hammerjs')
+          const mc = new Hammer(element)
+          mc.on('swipeleft swiperight', () => this.ficheFlip(element))
+        })
+    },
     ficheFlip(element) {
       const fiche = $(element).hasClass('fiche') ? $(element) : $(element).parents('.fiche')
 
@@ -279,7 +281,7 @@ export default {
     },
     getOpening(dayOfWeek = new Date().getDay()) {
       const opening = this.fiche.info.openings[dayOfWeek]
-      return opening.includes('closed') ? 'Fermé' : opening
+      return opening.includes('closed') ? 'fermé' : opening
     }
   }
 }
