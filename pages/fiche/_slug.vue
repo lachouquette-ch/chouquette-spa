@@ -7,12 +7,7 @@
           <div class="fiche-front mx-md-5">
             <div class="card">
               <div class="card-header p-0">
-                <WpMedia
-                  :media="featuredMedia"
-                  size="medium_large"
-                  :no-src-set="true"
-                  class="fiche-image"
-                />
+                <WpMedia :media="featuredMedia" size="medium_large" :no-src-set="true" class="fiche-image" />
                 <span
                   class="fiche-category-icon rounded-circle"
                   :class="fiche.info.chouquettise ? 'bg-yellow' : 'bg-white'"
@@ -150,7 +145,7 @@
                   </li>
                 </ul>
                 <div class="card-text p-3">
-                  <span>Plats à emporter, Service de livraison</span>
+                  <span v-if="criteria">{{ criteriaList }}</span>
                 </div>
                 <a
                   href="#"
@@ -192,6 +187,7 @@ import $ from 'jquery'
 import moment from 'moment'
 
 import FicheAPI from '../../api/wordpress/fiches'
+import CriteriaAPI from '../../api/wordpress/chouquette/criteria'
 import WpMedia from '../../components/WpMedia'
 
 export default {
@@ -199,7 +195,8 @@ export default {
   data() {
     return {
       fiche: null,
-      featuredMedia: null
+      featuredMedia: null,
+      criteria: null
     }
   },
   computed: {
@@ -216,11 +213,16 @@ export default {
       return moment()
         .locale('fr-CH')
         .format('dddd')
+    },
+    criteriaList() {
+      const allCriteria = this.criteria.flatMap(({ values }) => values)
+      return allCriteria.map(({ name }) => name).join(', ')
     }
   },
   async created() {
     this.fiche = await FicheAPI.getBySlug(this.$route.params.slug)
     this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
+    this.criteria = await CriteriaAPI.getForFiche(this.fiche.id)
   },
   mounted() {
     // enable dropdown menu
