@@ -67,21 +67,10 @@ export default {
    ** Build configuration
    */
   build: {
-    /*
-     ** You can extend webpack config here
-     */
-    extend(config, ctx) {
-      config.module.rules.push({
-        test: /\.js$/,
-        include: [
-          path.resolve(__dirname, 'node_modules/query-string'),
-          path.resolve(__dirname, 'node_modules/strict-uri-encode'),
-          path.resolve(__dirname, 'node_modules/split-on-first')
-        ],
-        use: {
-          loader: 'babel-loader'
-        }
-      })
-    }
+    transpile: [
+      ({ isClient }) => isClient && 'query-string',
+      ({ isClient }) => isClient && 'split-on-first',
+      ({ isClient }) => isClient && 'strict-uri-encode'
+    ]
   }
 }
