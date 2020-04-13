@@ -186,8 +186,6 @@ import he from 'he'
 import $ from 'jquery'
 import moment from 'moment'
 
-import FicheAPI from '../../api/wordpress/fiches'
-import CriteriaAPI from '../../api/wordpress/chouquette/criteria'
 import WpMedia from '../../components/WpMedia'
 
 export default {
@@ -220,9 +218,9 @@ export default {
     }
   },
   async created() {
-    this.fiche = await FicheAPI.getBySlug(this.$route.params.slug)
+    this.fiche = await this.$wpAPI.wp.fiches.getBySlug(this.$route.params.slug)
     this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
-    this.criteria = await CriteriaAPI.getForFiche(this.fiche.id)
+    this.criteria = await this.$wpAPI.criteria.getForFiche(this.fiche.id)
     this.resizeFiche()
   },
   mounted() {

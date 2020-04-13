@@ -1,5 +1,4 @@
 require('dotenv').config()
-const path = require('path')
 
 export default {
   env: {
@@ -28,7 +27,7 @@ export default {
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: '#fff' },
+  loading: { color: '#f2e808' },
   /*
    ** Global CSS
    */
@@ -39,7 +38,8 @@ export default {
   plugins: [
     { src: '~/plugins/vuelidate.js', mode: 'client' },
     { src: '~/plugins/vuerecaptchav3.js', mode: 'client' },
-    { src: '~/plugins/bootstrap.js', mode: 'client' }
+    { src: '~/plugins/bootstrap.js', mode: 'client' },
+    { src: '~/plugins/wordpressAPI.js' }
   ],
   /*
    ** Nuxt.js dev-modules
@@ -53,6 +53,7 @@ export default {
    */
   modules: [
     // Doc: https://github.com/nuxt-community/style-resources-module/blob/master/README.md
+    '@nuxtjs/axios',
     '@nuxtjs/style-resources'
   ],
   styleResources: {

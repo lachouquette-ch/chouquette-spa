@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import CategoryAPI from '~/api/wordpress/categories'
 
 export const state = () => ({
   all: {}
@@ -8,7 +7,7 @@ export const state = () => ({
 export const actions = {
   async fetchByIds({ commit, state }, ids) {
     const unknownCategoryIds = _.difference(ids, Object.keys(state.all))
-    const newCategories = await CategoryAPI.getByIds(unknownCategoryIds)
+    const newCategories = await this.$wpAPI.wp.categories.getByIds(unknownCategoryIds)
     commit('SET_CATEGORIES', newCategories)
 
     return ids.map((id) => state.all[id])
@@ -17,7 +16,7 @@ export const actions = {
     if (state.all[id]) {
       return Promise.resolve(state.all[id])
     } else {
-      const category = await CategoryAPI.getById(id)
+      const category = await this.$wpAPI.wp.categories.getById(id)
       commit('SET_CATEGORY', category)
       return category
     }

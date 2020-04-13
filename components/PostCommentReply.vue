@@ -90,7 +90,6 @@
 
 <script>
 import { required, email, url, minLength } from 'vuelidate/lib/validators'
-import CommentAPI from '../api/wordpress/comments'
 
 export default {
   props: {
@@ -124,14 +123,15 @@ export default {
         // Execute reCAPTCHA with action "login".
         const token = await this.$recaptcha('comment')
 
-        CommentAPI.postComment({
-          post: this.post,
-          parent: this.parent,
-          author_name: this.formComment.name,
-          author_email: this.formComment.email,
-          content: this.formComment.comment,
-          recaptcha: token
-        })
+        this.$wpAPI.wp.comments
+          .postComment({
+            post: this.post,
+            parent: this.parent,
+            author_name: this.formComment.name,
+            author_email: this.formComment.email,
+            content: this.formComment.comment,
+            recaptcha: token
+          })
           .then((result) => {
             this.$store.dispatch('alerts/addAction', {
               type: 'success',

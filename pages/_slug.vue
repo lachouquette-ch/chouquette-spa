@@ -97,10 +97,6 @@
 import he from 'he'
 import moment from 'moment'
 
-import PostAPI from '../api/wordpress/posts'
-import CommentAPI from '../api/wordpress/comments'
-import FicheAPI from '../api/wordpress/fiches'
-
 import WPMedia from '../components/WpMedia'
 import PostCardSwiper from '../components/PostCardSwiper'
 import PostShare from '../components/PostShare'
@@ -140,7 +136,7 @@ export default {
     }
   },
   async created() {
-    this.post = await PostAPI.getBySlug(this.$route.params.slug)
+    this.post = await this.$wpAPI.wp.posts.getBySlug(this.$route.params.slug)
 
     // helper fields
     this.featuredMedia = this.post._embedded['wp:featuredmedia'][0]
@@ -148,13 +144,13 @@ export default {
     this.tags = this.post._embedded['wp:term'][1]
     this.authorAvatar = this.author.avatar_urls
 
-    this.comments = await CommentAPI.getByPost(this.post.id)
+    this.comments = await this.$wpAPI.wp.comments.getByPost(this.post.id)
     this.rootLevelComments = this.comments.filter(({ parent }) => parent === 0)
 
     this.categories = await this.$store.dispatch('categories/fetchByIds', this.post.top_categories)
 
     // fetch similar posts
-    this.similarPosts = await PostAPI.get('/', {
+    this.similarPosts = await this.$wpAPI.wp.posts.get('/', {
       params: {
         tags: this.post.tags,
         exclude: this.post.id,
@@ -163,7 +159,7 @@ export default {
     })
 
     // fetch linked fiches
-    this.fiches = await FicheAPI.getByIds(this.post.meta.link_fiche)
+    this.fiches = await this.$wpAPI.wp.fiches.getByIds(this.post.meta.link_fiche)
   },
   head() {
     return {

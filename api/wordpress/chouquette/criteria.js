@@ -1,10 +1,12 @@
-import Repository from './repository'
+const prefix = '/chouquette/v1/criteria'
 
-const resource = '/criteria'
-
-export default {
-  getForFiche(id) {
-    const URI = `${resource}/fiche/${id}`
-    return Repository.get(URI).then((response) => response.data)
+function criteriaEndpointFactory($axios) {
+  return {
+    getForFiche(id) {
+      const URI = `${prefix}/fiche/${id}`
+      return $axios.$get(URI)
+    }
   }
 }
+
+export { criteriaEndpointFactory }

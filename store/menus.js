@@ -1,5 +1,3 @@
-import MenuAPI from '~/api/wordpress/menu/menus'
-
 const HEADER_SLUG = 'chouquette'
 const FOOTER_SLUG = 'chouquette-footer'
 
@@ -12,11 +10,11 @@ export const state = () => ({
 })
 
 export const actions = {
-  async init({ state, commit, getters, dispatch }) {
+  async init({ commit }) {
     // fetch all menus
-    const rawMenus = await MenuAPI.get()
-    // build menu with all dependencies
-    const menus = await Promise.all(rawMenus.map((rawMenu) => MenuAPI.getById(rawMenu.term_id)))
+    const rawMenus = await this.$wpAPI.menus.get()
+    // build menus with all dependencies
+    const menus = await Promise.all(rawMenus.map((rawMenu) => this.$wpAPI.menus.getById(rawMenu.term_id)))
 
     const headerMenu = menus.find((menu) => menu.slug === HEADER_SLUG)
     commit('SET_HEADER', headerMenu)
