@@ -14,7 +14,7 @@
         @error="onMailchimpSubscriptionError"
         @success="onMailchimpSubscriptionSuccess"
       >
-        <template v-slot="{ subscribe, setEmail }">
+        <template v-slot="{ subscribe, setEmail, loading }">
           <form @submit.prevent="subscribe">
             <div class="input-group">
               <input
@@ -25,7 +25,15 @@
                 @input="setEmail($event.target.value)"
               />
               <div class="input-group-append">
-                <button type="submit" class="btn btn-primary">Je m'inscris</button>
+                <button type="submit" class="btn btn-primary" :disabled="loading">
+                  <span
+                    v-show="loading"
+                    class="spinner-border spinner-border-sm mr-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Je m'inscris
+                </button>
               </div>
             </div>
           </form>
