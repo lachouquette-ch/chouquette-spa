@@ -1,6 +1,12 @@
 <template>
   <div>
-    <AppModal title="Rejoins notre newsletter" :show="showNewsletterModal" @close="closeNewsletterModal">
+    <b-modal
+      id="mailchimp-subscribe"
+      title="Rejoins notre newsletter"
+      hide-footer
+      centered
+      @shown="focusOnRef('mailRegistration')"
+    >
       <VueMailchimpSubscribe
         url="https://unechouquettealausanne.us8.list-manage.com/subscribe/post-json"
         :user-id="mailChimpUserId"
@@ -12,10 +18,10 @@
           <form @submit.prevent="subscribe">
             <div class="input-group">
               <input
+                ref="mailRegistration"
                 type="email"
                 placeholder="Ton email"
                 class="required email form-control"
-                autofocus
                 @input="setEmail($event.target.value)"
               />
               <div class="input-group-append">
@@ -25,18 +31,18 @@
           </form>
         </template>
       </VueMailchimpSubscribe>
-    </AppModal>
+    </b-modal>
 
-    <AppModal title="Tu cherches quelque chose ?" :show="showSearchModal" @close="closeSearchModal">
+    <b-modal id="search" title="Tu cherches quelque chose ?" hide-footer centered @shown="focusOnRef('search')">
       <form @submit.prevent="search(searchText)">
         <div class="input-group">
           <input
+            ref="search"
             v-model="searchText"
             class="form-control"
             type="search"
             placeholder="Dis-moi tout..."
             aria-label="Rechercher"
-            autofocus
             required
           />
           <div class="input-group-append">
@@ -44,7 +50,7 @@
           </div>
         </div>
       </form>
-    </AppModal>
+    </b-modal>
 
     <nav class="navbar fixed-top navbar-chouquette-light navbar-expand-md">
       <button
@@ -96,9 +102,11 @@
           <a href="https://www.instagram.com/lachouquettelausanne" title="Instagram" target="_blank"
             ><i class="fab fa-instagram ml-3"></i
           ></a>
-          <a href="#" title="Newsletter" @click.prevent="openNewsletter"><i class="far fa-envelope ml-3"></i></a>
+          <a v-b-modal.mailchimp-subscribe href="" title="Newsletter" @click.prevent
+            ><i class="far fa-envelope ml-3"></i
+          ></a>
           <a :href="`${baseURL}/feed/atom/`" title="RSS" target="_blank"><i class="fas fa-rss ml-3"></i></a>
-          <a href="#" title="Recherche" class="d-none d-md-inline-block" @click.prevent="openSearchModal"
+          <a v-b-modal.search href="" title="Recherche" class="d-none d-md-inline-block" @click.prevent
             ><i class="fas fa-search ml-3"></i
           ></a>
         </div>
@@ -110,19 +118,16 @@
 <script>
 import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-subscribe'
 import CategoryLogo from './CategoryLogo'
-import AppModal from './AppModal'
 
 export default {
-  components: { AppModal, CategoryLogo, VueMailchimpSubscribe },
+  components: { CategoryLogo, VueMailchimpSubscribe },
   data() {
     return {
       baseURL: process.env.wpBaseUrl,
       mailChimpUserId: process.env.mailChimpUserId,
       mailChimpListId: process.env.mailChimpListId,
       categories: [],
-      searchText: '',
-      showNewsletterModal: false,
-      showSearchModal: false
+      searchText: ''
     }
   },
   async created() {
@@ -136,25 +141,16 @@ export default {
     search(text) {
       this.$router.push({ path: '/search', query: { s: text } })
     },
-    openNewsletter() {
-      this.showNewsletterModal = true
-    },
-    closeNewsletterModal() {
-      this.showNewsletterModal = false
-    },
-    openSearchModal() {
-      this.showSearchModal = true
-    },
-    closeSearchModal() {
-      this.showSearchModal = false
+    focusOnRef(ref) {
+      this.$refs[ref].focus()
     },
     onMailchimpSubscriptionError(errorMessage) {
       this.$store.dispatch('alerts/addAction', { type: 'danger', message: errorMessage })
-      this.closeNewsletterModal()
+      this.$bvModal.hide('mailchimp-subscribe')
     },
     onMailchimpSubscriptionSuccess() {
       this.$store.dispatch('alerts/addAction', { type: 'success', message: "Tu t'es bien inscris, merci !" })
-      this.closeNewsletterModal()
+      this.$bvModal.hide('mailchimp-subscribe')
     }
   }
 }

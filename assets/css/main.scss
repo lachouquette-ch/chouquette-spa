@@ -6,11 +6,23 @@
 @import "~bootstrap/scss/bootstrap";
 @import '~bootstrap-vue/src/index';
 
-// Custom helper classes and mixins
-@import 'wordpress';
+// hack bootstrap modal
+.modal-header {
+  .close {
+    color: $chouquette-yellow;
+    opacity: 1;
+    text-shadow: none;
+  }
+}
 
 // Bootstrap custom components
 @import 'navbar';
+
+// Custom helper classes and mixins
+@import 'wordpress';
+
+// Overall styling
+@import "style";
 
 // Fonts
 @import 'fonts';
@@ -25,6 +37,3 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts" !default;
 // Swiper
 @import "~swiper/swiper";
 @import "~swiper/components/navigation/navigation";
-
-// Overall styling
-@import "style";

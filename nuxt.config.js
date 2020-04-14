@@ -57,11 +57,7 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: [
-    '@nuxtjs/axios',
-    '@nuxtjs/style-resources',
-    'bootstrap-vue/nuxt'
-  ],
+  modules: ['@nuxtjs/axios', '@nuxtjs/style-resources', 'bootstrap-vue/nuxt'],
   styleResources: {
     scss: [
       '~/assets/css/_variables.scss',
@@ -74,8 +70,7 @@ export default {
   bootstrapVue: {
     bootstrapCSS: false,
     bootstrapVueCSS: false,
-    components: ['BAlert'],
-    directives: []
+    componentPlugins: ['AlertPlugin', 'ModalPlugin']
   },
   /*
    ** Build configuration
