@@ -73,7 +73,9 @@ export default {
   },
   bootstrapVue: {
     bootstrapCSS: false,
-    bootstrapVueCSS: false
+    bootstrapVueCSS: false,
+    components: ['BAlert'],
+    directives: []
   },
   /*
    ** Build configuration

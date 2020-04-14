@@ -2,8 +2,15 @@ export const state = () => ({
   all: []
 })
 
+const AlertType = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark']
+
 export const actions = {
   addAction({ commit, state }, { type, message }) {
+    if (!AlertType.includes(type)) {
+      console.error(`Unkown alert type '${type}'`)
+      return
+    }
+
     commit('SET_ALERT', {
       type,
       message
