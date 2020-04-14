@@ -71,11 +71,6 @@ $navbar-chouquette-brand-hover-color: rgba($navbar-chouquette-color, .8);
     }
   }
 
-  // add custom
-  .navbar-divider {
-    @include nav-divider($navbar-chouquette-color);
-  }
-
   .navbar-collapse {
     @include media-breakpoint-down(sm) {
       // custom navbarnavbarChouquette
@@ -142,11 +137,6 @@ $navbar-chouquette-light-brand-hover-color: $navbar-chouquette-light-hover-color
         color: $navbar-chouquette-light-active-color;
       }
     }
-  }
-
-  // add custom
-  .navbar-divider {
-    @include nav-divider($navbar-chouquette-light-color);
   }
 
   .navbar-sn a {

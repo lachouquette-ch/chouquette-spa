@@ -88,7 +88,7 @@
             </nuxt-link>
           </li>
         </ul>
-        <div class="navbar-divider"></div>
+        <div class="dropdown-divider"></div>
         <div class="navbar-sn mr-3">
           <a href="https://www.facebook.com/lachouquettelausanne" title="Facebook" target="_blank"
             ><i class="fab fa-facebook-f"></i
