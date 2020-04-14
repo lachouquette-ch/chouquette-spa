@@ -1,17 +1,21 @@
-/* Variables and Mixins */
+// Bootstrap custom variables
+@import 'variables';
+@import 'mixins';
 
-@import "variables";
-@import "helpers";
-
-/* Third party style */
-
-// Bootstrap
+// Bootstrap imports
 @import "~bootstrap/scss/bootstrap";
+@import '~bootstrap-vue/src/index';
 
-// Google fonts
-@import url('https://fonts.googleapis.com/css?family=Lobster+Two|Shadows+Into+Light+Two|Lato&display=swap');
+// Custom helper classes and mixins
+@import 'wordpress';
 
-// Fontawesome
+// Bootstrap custom components
+@import 'navbar';
+
+// Fonts
+@import 'fonts';
+
+// Icons
 $fa-font-path: "~@fortawesome/fontawesome-free/webfonts" !default;
 @import "~@fortawesome/fontawesome-free/scss/regular";
 @import "~@fortawesome/fontawesome-free/scss/brands";
@@ -19,7 +23,8 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts" !default;
 @import "~@fortawesome/fontawesome-free/scss/solid";
 
 // Swiper
-@import "~swiper/swiper.scss";
-@import "~swiper/components/navigation/navigation.scss";
+@import "~swiper/swiper";
+@import "~swiper/components/navigation/navigation";
 
+// Overall styling
 @import "style";

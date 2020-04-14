@@ -22,7 +22,13 @@ export default {
         content: process.env.npm_package_description || ''
       }
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {
+        rel: 'stylesheet',
+        href: 'https://fonts.googleapis.com/css?family=Lobster+Two|Shadows+Into+Light+Two|Lato&display=swap'
+      }
+    ]
   },
   /*
    ** Customize the progress-bar color
@@ -31,7 +37,7 @@ export default {
   /*
    ** Global CSS
    */
-  css: [],
+  css: ['~/assets/css/main.scss'],
   /*
    ** Plugins to load before mounting the App
    */
@@ -52,17 +58,22 @@ export default {
    ** Nuxt.js modules
    */
   modules: [
-    // Doc: https://github.com/nuxt-community/style-resources-module/blob/master/README.md
     '@nuxtjs/axios',
-    '@nuxtjs/style-resources'
+    '@nuxtjs/style-resources',
+    'bootstrap-vue/nuxt'
   ],
   styleResources: {
     scss: [
-      './assets/css/_variables.scss',
-      './node_modules/bootstrap/scss/_functions.scss',
-      './node_modules/bootstrap/scss/_variables.scss',
-      './node_modules/bootstrap/scss/_mixins.scss'
+      '~/assets/css/_variables.scss',
+      '~/assets/css/_mixins.scss',
+      '~/node_modules/bootstrap/scss/_functions.scss',
+      '~/node_modules/bootstrap/scss/_variables.scss',
+      '~/node_modules/bootstrap/scss/_mixins.scss'
     ]
+  },
+  bootstrapVue: {
+    bootstrapCSS: false,
+    bootstrapVueCSS: false
   },
   /*
    ** Build configuration
