@@ -70,9 +70,9 @@
             </div>
           </section>
 
-          <section v-show="isSimilarPostsShown" class="cq-single-post-similar container my-5">
+          <section v-show="similarPosts" class="cq-single-post-similar container my-5">
             <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
-            <PostCardSwiper v-if="similarPosts" :posts="similarPosts" @init="isSimilarPostsShown = true" />
+            <PostCardSwiper v-if="similarPosts" :posts="similarPosts" />
           </section>
 
           <section class="post-comments container my-5">
@@ -107,7 +107,6 @@ export default {
   components: { FicheThumbnail, PostCommentReply, WpAvatar, PostComment, WPMedia, PostCardSwiper, PostShare },
   data() {
     return {
-      isSimilarPostsShown: false,
       sidebarShown: true,
 
       post: null,
@@ -116,7 +115,7 @@ export default {
       tags: [],
       authorAvatar: null,
       categories: [],
-      similarPosts: [],
+      similarPosts: null,
       comments: [],
       rootLevelComments: [],
       fiches: null
