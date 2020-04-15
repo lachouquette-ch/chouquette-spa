@@ -1,7 +1,7 @@
 <template>
-  <article class="fiche fiche-flip fiche-chouquettise">
+  <article ref="fiche" class="fiche fiche-flip fiche-chouquettise">
     <div class="fiche-container d-flex justify-content-center">
-      <div class="fiche-front mx-md-5">
+      <div ref="ficheFront" class="fiche-front mx-md-5">
         <div ref="front" class="card">
           <div class="card-header p-0">
             <WpMedia :media="featuredMedia" size="medium_large" :no-src-set="true" class="fiche-image" />
@@ -85,7 +85,7 @@
           </div>
         </div>
       </div>
-      <div class="fiche-back mx-md-5">
+      <div ref="ficheBack" class="fiche-back mx-md-5">
         <div ref="back" class="card">
           <div class="card-header"></div>
           <div class="card-body position-relative p-0">
@@ -226,7 +226,7 @@ export default {
   async created() {
     this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
     this.criteria = await this.$wpAPI.criteria.getForFiche(this.fiche.id)
-    this.$nextTick(() => this.resizeFiche())
+    this.$nextTick(() => this.resizeFiche()) // needs time to display fiche before computing its size
   },
   mounted() {
     // enable dropdown menu
@@ -242,8 +242,10 @@ export default {
 
       if (frontElement.height() > backElement.height()) {
         backElement.height(frontElement.height())
+        $(this.$refs.fiche).height(frontElement.height())
       } else {
         frontElement.height(backElement.height())
+        $(this.$refs.fiche).height(backElement.height())
       }
 
       // add mouse gesture
@@ -252,17 +254,17 @@ export default {
       mc.on('swipeleft swiperight', () => this.ficheFlip(this.$el))
     },
     ficheFlip(element) {
-      const fiche = $(element).hasClass('fiche') ? $(element) : $(element).parents('.fiche')
+      const fiche = $(this.$refs.fiche)
 
       // flip card
       if (!fiche.hasClass('flipped')) {
-        fiche.find('.fiche-back').css('transform', 'rotateY(0deg)')
-        fiche.find('.fiche-front').css('transform', 'rotateY(180deg)')
+        $(this.$refs.ficheBack).css('transform', 'rotateY(0deg)')
+        $(this.$refs.ficheFront).css('transform', 'rotateY(180deg)')
       } else {
         // hide dropdown
         this.fichePlanningDropdown.dropdown('hide')
-        fiche.find('.fiche-back').css('transform', 'rotateY(180deg)')
-        fiche.find('.fiche-front').css('transform', 'rotateY(0deg)')
+        $(this.$refs.ficheBack).css('transform', 'rotateY(180deg)')
+        $(this.$refs.ficheFront).css('transform', 'rotateY(0deg)')
       }
       fiche.toggleClass('flipped')
     },
