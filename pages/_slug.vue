@@ -12,7 +12,9 @@
       centered
     >
       <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
-      <template v-slot:default><Fiche :fiche="fiche"/></template>
+      <template v-slot:default>
+        <Fiche v-show="showFiche" :fiche="fiche" @init="showFiche = true"/>
+      </template>
     </b-modal>
     <nav v-show="sidebarShown" v-if="fiches" class="post-sidebar layout-content bg-darker-grey">
       <div class="post-sidebar-header d-none d-md-block text-center p-2">
@@ -123,6 +125,7 @@ export default {
   data() {
     return {
       sidebarShown: true,
+      showFiche: false,
 
       post: null,
       fiche: null,

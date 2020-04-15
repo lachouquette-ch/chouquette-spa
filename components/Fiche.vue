@@ -2,7 +2,7 @@
   <article ref="fiche" class="fiche fiche-flip fiche-chouquettise">
     <div class="fiche-container d-flex justify-content-center">
       <div ref="ficheFront" class="fiche-front mx-md-5">
-        <div ref="front" class="card">
+        <div ref="front" class="card bg-white">
           <div class="card-header p-0">
             <WpMedia v-if="featuredMedia" :media="featuredMedia" size="medium_large" :no-src-set="true" class="fiche-image" />
             <span
@@ -86,7 +86,7 @@
         </div>
       </div>
       <div v-if="criteria" ref="ficheBack" class="fiche-back mx-md-5">
-        <div ref="back" class="card">
+        <div ref="back" class="card bg-white">
           <div class="card-header"></div>
           <div class="card-body position-relative p-0">
             <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
@@ -222,12 +222,11 @@ export default {
     }
   },
   async mounted() {
-    // set initial fiche height
-    $(this.$refs.fiche).height($(this.$refs.front).height())
-
     this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
     this.criteria = await this.$wpAPI.criteria.getForFiche(this.fiche.id)
     this.$nextTick(() => this.resizeFiche()) // needs time to display fiche before computing its size
+
+    this.$emit('init')
   },
   methods: {
     resizeFiche() {
@@ -236,10 +235,8 @@ export default {
 
       if (frontElement.height() > backElement.height()) {
         backElement.height(frontElement.height())
-        $(this.$refs.fiche).height(frontElement.height())
       } else {
         frontElement.height(backElement.height())
-        $(this.$refs.fiche).height(backElement.height())
       }
 
       // add mouse gesture
@@ -305,6 +302,10 @@ export default {
 
   @include media-breakpoint-down(sm) {
     width: 100%;
+  }
+
+  .card-body {
+    min-height: unset;
   }
 
   .card-footer {
