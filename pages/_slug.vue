@@ -14,11 +14,7 @@
       </div>
     </nav>
     <div class="post-sidebar-toggle d-md-none btn-group btn-group-toggle" data-toggle="buttons">
-      <label
-        class="btn btn-sm btn-primary"
-        :class="{ active: !sidebarShown }"
-        @click="sidebarShown = false"
-      >
+      <label class="btn btn-sm btn-primary" :class="{ active: !sidebarShown }" @click="sidebarShown = false">
         <input id="option1" type="radio" name="options" checked />Article
       </label>
       <label class="btn btn-sm btn-primary" :class="{ active: sidebarShown }" @click="sidebarShown = true">

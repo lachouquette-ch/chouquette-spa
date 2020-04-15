@@ -1,17 +1,15 @@
 <template>
   <div class="layout-alert fixed-top">
-    <div v-for="alert in alerts" :key="alert.message" :type="alert.type">
-      <b-alert
-        v-for="alert in alerts"
-        :key="alert.message"
-        :show="5"
-        dismissible
-        :variant="alert.type"
-        @dismissed="removeAlert(alert)"
-      >
-        <span v-html="alert.message" />
-      </b-alert>
-    </div>
+    <b-alert
+      v-for="alert in alerts"
+      :key="alert.message"
+      :show="5"
+      dismissible
+      :variant="alert.type"
+      @dismissed="removeAlert(alert)"
+    >
+      <span v-html="alert.message" />
+    </b-alert>
   </div>
 </template>
 
