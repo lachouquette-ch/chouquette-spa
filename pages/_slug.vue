@@ -9,8 +9,10 @@
       body-text-variant="black"
       hide-footer
       centered
-      ><Fiche :fiche="fiche"
-    /></b-modal>
+    >
+      <template v-slot:modal-title class="w-100 text-center">{{ fiche.title.rendered | heDecode }}</template>
+      <template v-slot:default><Fiche :fiche="fiche"/></template>
+    </b-modal>
     <nav v-show="sidebarShown" v-if="fiches" class="post-sidebar layout-content bg-darker-grey">
       <div class="post-sidebar-header d-none d-md-block text-center p-2">
         <h2 class="post-sidebar-title h5 m-0 text-white">Cités dans l'article :</h2>
