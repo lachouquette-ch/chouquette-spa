@@ -4,7 +4,7 @@
       <div ref="ficheFront" class="fiche-front mx-md-5">
         <div ref="front" class="card">
           <div class="card-header p-0">
-            <WpMedia :media="featuredMedia" size="medium_large" :no-src-set="true" class="fiche-image" />
+            <WpMedia v-if="featuredMedia" :media="featuredMedia" size="medium_large" :no-src-set="true" class="fiche-image" />
             <span
               class="fiche-category-icon rounded-circle"
               :class="fiche.info.chouquettise ? 'bg-yellow' : 'bg-white'"
@@ -85,7 +85,7 @@
           </div>
         </div>
       </div>
-      <div ref="ficheBack" class="fiche-back mx-md-5">
+      <div v-if="criteria" ref="ficheBack" class="fiche-back mx-md-5">
         <div ref="back" class="card">
           <div class="card-header"></div>
           <div class="card-body position-relative p-0">
@@ -221,7 +221,10 @@ export default {
       return allCriteria.map(({ name }) => name).join(', ')
     }
   },
-  async created() {
+  async mounted() {
+    // set initial fiche height
+    $(this.$refs.fiche).height($(this.$refs.front).height())
+
     this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
     this.criteria = await this.$wpAPI.criteria.getForFiche(this.fiche.id)
     this.$nextTick(() => this.resizeFiche()) // needs time to display fiche before computing its size
