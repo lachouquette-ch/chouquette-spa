@@ -44,7 +44,8 @@ export default {
       return this.media_detail.source_url
     },
     srcSet() {
-      if (!this.noSrcSet)
+      if (this.noSrcSet) return ''
+      else
         return Object.entries(this.media.media_details.sizes)
           .map(([_, sizeData]) => {
             return `${sizeData.source_url} ${sizeData.width}w`
