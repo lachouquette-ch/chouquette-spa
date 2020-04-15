@@ -2,7 +2,7 @@
   <article class="fiche fiche-flip fiche-chouquettise">
     <div class="fiche-container d-flex justify-content-center">
       <div class="fiche-front mx-md-5">
-        <div class="card">
+        <div ref="front" class="card">
           <div class="card-header p-0">
             <WpMedia :media="featuredMedia" size="medium_large" :no-src-set="true" class="fiche-image" />
             <span
@@ -83,7 +83,7 @@
         </div>
       </div>
       <div class="fiche-back mx-md-5">
-        <div class="card" style="height: 580px;">
+        <div ref="back" class="card">
           <div class="card-header"></div>
           <div class="card-body position-relative p-0">
             <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
@@ -212,7 +212,7 @@ export default {
   async created() {
     this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
     this.criteria = await this.$wpAPI.criteria.getForFiche(this.fiche.id)
-    this.resizeFiche()
+    this.$nextTick(() => this.resizeFiche())
   },
   mounted() {
     // enable dropdown menu
@@ -223,35 +223,19 @@ export default {
   },
   methods: {
     resizeFiche() {
-      // handle fiche heights
-      $(this.$el)
-        .find('.fiche')
-        .each((index, element) => {
-          // compute each fiche height
-          const frontHeight = $(element)
-            .find('.fiche-front .card')
-            .height()
-          const backHeight = $(element)
-            .find('.fiche-back .card')
-            .height()
+      const frontElement = $(this.$refs.front)
+      const backElement = $(this.$refs.back)
 
-          if (frontHeight > backHeight) {
-            $(element).height(frontHeight)
-            $(element)
-              .find('.fiche-back .card')
-              .height(frontHeight)
-          } else {
-            $(element).height(backHeight)
-            $(element)
-              .find('.fiche-front .card')
-              .height(backHeight)
-          }
+      if (frontElement.height() > backElement.height()) {
+        backElement.height(frontElement.height())
+      } else {
+        frontElement.height(backElement.height())
+      }
 
-          // add mouse gesture
-          const Hammer = require('hammerjs')
-          const mc = new Hammer(element)
-          mc.on('swipeleft swiperight', () => this.ficheFlip(element))
-        })
+      // add mouse gesture
+      const Hammer = require('hammerjs')
+      const mc = new Hammer(this.$el)
+      mc.on('swipeleft swiperight', () => this.ficheFlip(this.$el))
     },
     ficheFlip(element) {
       const fiche = $(element).hasClass('fiche') ? $(element) : $(element).parents('.fiche')
@@ -269,7 +253,6 @@ export default {
       fiche.toggleClass('flipped')
     },
     getOpening(dayOfWeek = new Date().getDay()) {
-      console.log(this.fiche.info.openings)
       const opening = this.fiche.info.openings[dayOfWeek]
       return opening.includes('closed') ? 'fermé' : opening
     }
