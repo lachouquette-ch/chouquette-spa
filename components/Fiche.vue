@@ -230,13 +230,26 @@ export default {
       return allCriteria.map(({ name }) => name).join(', ')
     }
   },
-  async mounted() {
-    this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
-    this.criteria = await this.$wpAPI.criteria.getForFiche(this.fiche.id)
-    this.$nextTick(() => this.resizeFiche()) // needs time to display fiche before computing its size
-    this.loading = false
+  watch: {
+    fiche(val) {
+      this.init()
+    }
+  },
+  mounted() {
+    this.init()
   },
   methods: {
+    async init() {
+      this.loading = true
+      this.criteria = null
+      try {
+        this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
+        this.criteria = await this.$wpAPI.criteria.getForFiche(this.fiche.id)
+        this.$nextTick(() => this.resizeFiche()) // needs time to display fiche before computing its size
+      } finally {
+        this.loading = false
+      }
+    },
     resizeFiche() {
       const frontElement = $(this.$refs.front)
       const backElement = $(this.$refs.back)

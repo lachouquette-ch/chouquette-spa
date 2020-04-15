@@ -37,3 +37,8 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts" !default;
 // Swiper
 @import "~swiper/swiper";
 @import "~swiper/components/navigation/navigation";
+
+// hack swipper button color
+.swiper-button-yellow {
+  color: $chouquette-yellow;
+}

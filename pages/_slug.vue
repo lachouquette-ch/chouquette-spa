@@ -13,7 +13,19 @@
     >
       <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
       <template v-slot:default>
+        <div
+          class="swiper-button-prev swiper-button-yellow"
+          role="button"
+          aria-label="Prochaine fiche"
+          @click.prevent="previousFiche(fiche)"
+        ></div>
         <Fiche :fiche="fiche" />
+        <div
+          class="swiper-button-next swiper-button-yellow"
+          role="button"
+          aria-label="Prochaine fiche"
+          @click.prevent="nextFiche(fiche)"
+        ></div>
       </template>
     </b-modal>
     <nav v-show="sidebarShown" v-if="fiches" class="post-sidebar layout-content bg-darker-grey">
@@ -177,6 +189,16 @@ export default {
     viewFiche(fiche) {
       this.fiche = fiche
       this.$bvModal.show('fiche-modal')
+    },
+    previousFiche(fiche) {
+      let ficheIndex = this.fiches.findIndex(({ id }) => fiche.id === id)
+      const previousFicheIndex = --ficheIndex < 0 ? this.fiches.length - 1 : ficheIndex
+      this.fiche = this.fiches[previousFicheIndex]
+    },
+    nextFiche(fiche) {
+      let ficheIndex = this.fiches.findIndex(({ id }) => fiche.id === id)
+      const nextFicheIndex = ++ficheIndex >= this.fiches.length ? 0 : ficheIndex
+      this.fiche = this.fiches[nextFicheIndex]
     }
   },
   head() {

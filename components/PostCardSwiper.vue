@@ -79,8 +79,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.swiper-button-yellow {
-  color: $chouquette-yellow;
-}
-</style>
+<style scoped></style>
