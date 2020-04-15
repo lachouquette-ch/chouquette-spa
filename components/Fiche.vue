@@ -23,6 +23,7 @@
             <p class="card-text" v-html="fiche.content.rendered" />
             <div v-if="fiche.info.chouquettise" class="card-text d-flex justify-content-around mt-auto">
               <a
+                v-if="fiche.info.telephone"
                 :href="`tel: ${fiche.info.telephone}`"
                 :title="fiche.info.telephone"
                 target="_blank"
@@ -40,6 +41,7 @@
                 ><i class="far fa-envelope"></i
               ></a>
               <a
+                v-if="fiche.info.sn_facebook"
                 :href="fiche.info.sn_facebook"
                 title="Facebook"
                 target="_blank"
@@ -47,6 +49,7 @@
                 ><i class="fab fa-facebook-f"></i
               ></a>
               <a
+                v-if="fiche.info.sn_instagram"
                 :href="fiche.info.sn_instagram"
                 title="Instagram"
                 target="_blank"
@@ -88,17 +91,28 @@
           <div class="card-body position-relative p-0">
             <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
               <li class="list-group-item">
-                <a :href="`tel: ${fiche.info.telephone}`" title="Téléphone" target="_blank" class="text-decoration-none"
+                <a
+                  v-if="fiche.info.telephone"
+                  :href="`tel: ${fiche.info.telephone}`"
+                  title="Téléphone"
+                  target="_blank"
+                  class="text-decoration-none"
                   ><i class="fas fa-phone"></i> {{ fiche.info.telephone }}
                 </a>
               </li>
               <li class="list-group-item">
-                <a :href="fiche.info.website" title="Site Internet" target="_blank" class="text-decoration-none"
+                <a
+                  v-if="fiche.info.website"
+                  :href="fiche.info.website"
+                  title="Site Internet"
+                  target="_blank"
+                  class="text-decoration-none"
                   ><i class="fas fa-globe"></i> {{ fiche.info.website }}
                 </a>
               </li>
               <li class="list-group-item">
                 <a
+                  v-if="fiche.info.mail"
                   :href="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
                   title="Email"
                   target="_blank"
@@ -106,7 +120,7 @@
                   ><i class="fas fa-at"></i> {{ fiche.info.mail }}
                 </a>
               </li>
-              <li class="list-group-item">
+              <li v-if="fiche.info.cost" class="list-group-item">
                 <label class="mb-0">Prix :</label>
                 <span class="fiche-price fiche-price-selected">{{ fichePrice[0] }}</span
                 ><span class="fiche-price">{{ fichePrice[1] }}</span>
