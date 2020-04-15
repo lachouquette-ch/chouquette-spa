@@ -1,5 +1,5 @@
 <template>
-  <a href="" class="fiche btn btn-white media text-left text-decoration-none">
+  <div class="fiche btn btn-white media text-left">
     <WPMedia
       v-if="featuredMedia"
       :media="featuredMedia"
@@ -12,7 +12,7 @@
       <h3 class="mb-1 h6" v-html="fiche.title.rendered"></h3>
     </div>
     <span class="fiche-link"><i class="fas fa-external-link-alt"></i></span>
-  </a>
+  </div>
 </template>
 
 <script>

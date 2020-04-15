@@ -1,5 +1,15 @@
 <template>
   <div class="post">
+    <b-modal
+      id="fiche-modal"
+      size="xl"
+      header-bg-variant="white"
+      body-bg-variant="white"
+      body-text-variant="black"
+      hide-footer
+      centered
+      ><Fiche :fiche="fiche"
+    /></b-modal>
     <nav v-show="sidebarShown" v-if="fiches" class="post-sidebar layout-content bg-darker-grey">
       <div class="post-sidebar-header d-none d-md-block text-center p-2">
         <h2 class="post-sidebar-title h5 m-0 text-white">Cités dans l'article :</h2>
@@ -10,6 +20,7 @@
           :key="fiche.id"
           :fiche="fiche"
           class="my-2 mx-3 mx-md-2 position-relative"
+          @click.native="viewFiche(fiche)"
         />
       </div>
     </nav>
@@ -102,14 +113,16 @@ import PostComment from '../components/PostComment'
 import WpAvatar from '../components/WpAvatar'
 import PostCommentReply from '../components/PostCommentReply'
 import FicheThumbnail from '../components/FicheThumbnail'
+import Fiche from '../components/Fiche'
 
 export default {
-  components: { FicheThumbnail, PostCommentReply, WpAvatar, PostComment, WPMedia, PostCardSwiper, PostShare },
+  components: { Fiche, FicheThumbnail, PostCommentReply, WpAvatar, PostComment, WPMedia, PostCardSwiper, PostShare },
   data() {
     return {
       sidebarShown: true,
 
       post: null,
+      fiche: null,
       featuredMedia: null,
       author: null,
       tags: [],
@@ -157,6 +170,12 @@ export default {
 
     // fetch linked fiches
     this.fiches = await this.$wpAPI.wp.fiches.getByIds(this.post.meta.link_fiche)
+  },
+  methods: {
+    viewFiche(fiche) {
+      this.fiche = fiche
+      this.$bvModal.show('fiche-modal')
+    }
   },
   head() {
     return {
