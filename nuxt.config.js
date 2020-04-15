@@ -33,7 +33,7 @@ export default {
   /*
    ** Customize the progress-bar color
    */
-  loading: { color: '#f2e808' },
+  loading: { height: '5px', color: '#f2e808' },
   /*
    ** Global CSS
    */
@@ -70,7 +70,7 @@ export default {
   bootstrapVue: {
     bootstrapCSS: false,
     bootstrapVueCSS: false,
-    componentPlugins: ['AlertPlugin', 'ModalPlugin']
+    componentPlugins: ['AlertPlugin', 'ModalPlugin', 'OverlayPlugin']
   },
   /*
    ** Build configuration
