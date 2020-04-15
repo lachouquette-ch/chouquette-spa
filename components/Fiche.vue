@@ -127,28 +127,26 @@
               </li>
               <li v-if="fiche.info.openings" class="list-group-item">
                 <label class="mb-0">Horaires :</label>
-                <div class="fiche-planning dropup d-inline-block">
-                  <a
-                    :id="`planning${_uid}`"
-                    role="button"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
-                    class="link-secondary link-no-decoration dropdown-toggle"
-                    >{{ getOpening() }} ({{ currentDayOfWeek }})</a
-                  >
-                  <div :aria-labelledby="`planning${_uid}`" class="dropdown-menu">
-                    <ul>
-                      <li><label class="mb-0">Lundi</label>{{ getOpening(1) }}</li>
-                      <li><label class="mb-0">Mardi</label>{{ getOpening(2) }}</li>
-                      <li><label class="mb-0">Mercredi</label>{{ getOpening(3) }}</li>
-                      <li><label class="mb-0">Jeudi</label>{{ getOpening(4) }}</li>
-                      <li><label class="mb-0">Vendredi</label>{{ getOpening(5) }}</li>
-                      <li><label class="mb-0">Samedi</label>{{ getOpening(6) }}</li>
-                      <li><label class="mb-0">Dimanche</label>{{ getOpening(0) }}</li>
-                    </ul>
-                  </div>
-                </div>
+                <b-dropdown
+                  id="dropdown-1"
+                  class="fiche-planning"
+                  variant="link"
+                  toggle-tag="span"
+                  toggle-class="text-decoration-none d-inline-block p-0 border-0"
+                  dropup
+                  right
+                >
+                  <template v-slot:button-content> {{ getOpening() }} ({{ currentDayOfWeek }}) </template>
+                  <template v-slot:default>
+                    <b-dropdown-text><label class="mb-0">Lundi</label>{{ getOpening(1) }}</b-dropdown-text>
+                    <b-dropdown-text><label class="mb-0">Mardi</label>{{ getOpening(2) }}</b-dropdown-text>
+                    <b-dropdown-text><label class="mb-0">Mercredi</label>{{ getOpening(3) }}</b-dropdown-text>
+                    <b-dropdown-text><label class="mb-0">Jeudi</label>{{ getOpening(4) }}</b-dropdown-text>
+                    <b-dropdown-text><label class="mb-0">Vendredi</label>{{ getOpening(5) }}</b-dropdown-text>
+                    <b-dropdown-text><label class="mb-0">Samedi</label>{{ getOpening(6) }}</b-dropdown-text>
+                    <b-dropdown-text><label class="mb-0">Dimanche</label>{{ getOpening(0) }}</b-dropdown-text>
+                  </template>
+                </b-dropdown>
               </li>
             </ul>
             <div class="card-text p-3">
@@ -228,13 +226,6 @@ export default {
     this.criteria = await this.$wpAPI.criteria.getForFiche(this.fiche.id)
     this.$nextTick(() => this.resizeFiche()) // needs time to display fiche before computing its size
   },
-  mounted() {
-    // enable dropdown menu
-    require('bootstrap/js/dist/dropdown')
-    this.fichePlanningDropdown = $(this.$el)
-      .find('.fiche-planning')
-      .first()
-  },
   methods: {
     resizeFiche() {
       const frontElement = $(this.$refs.front)
@@ -261,8 +252,6 @@ export default {
         $(this.$refs.ficheBack).css('transform', 'rotateY(0deg)')
         $(this.$refs.ficheFront).css('transform', 'rotateY(180deg)')
       } else {
-        // hide dropdown
-        this.fichePlanningDropdown.dropdown('hide')
         $(this.$refs.ficheBack).css('transform', 'rotateY(180deg)')
         $(this.$refs.ficheFront).css('transform', 'rotateY(0deg)')
       }
@@ -378,24 +367,12 @@ export default {
 }
 
 .fiche-planning {
-  > a {
-    white-space: normal !important;
+  label {
+    width: 6rem;
   }
 
-  .dropdown-menu {
-    left: -5rem !important;
-
-    ul {
-      list-style-type: none;
-      padding: 0 0.75rem;
-    }
-
-    li {
-      > label {
-        width: 7rem;
-      }
-      white-space: nowrap;
-    }
+  .b-dropdown-text {
+    white-space: nowrap;
   }
 }
 
