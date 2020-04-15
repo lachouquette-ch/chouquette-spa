@@ -7,10 +7,11 @@
       header-text-variant="black"
       body-bg-variant="white"
       body-text-variant="black"
+      title-class="w-100 text-center"
       hide-footer
       centered
     >
-      <template v-slot:modal-title class="w-100 text-center">{{ fiche.title.rendered | heDecode }}</template>
+      <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
       <template v-slot:default><Fiche :fiche="fiche"/></template>
     </b-modal>
     <nav v-show="sidebarShown" v-if="fiches" class="post-sidebar layout-content bg-darker-grey">
