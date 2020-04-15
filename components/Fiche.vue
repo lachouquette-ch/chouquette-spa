@@ -1,5 +1,5 @@
 <template>
-  <b-overlay :show="loading" opacity="0" blur="none" spinner-variant="yellow">
+  <b-overlay :show="loading" opacity="0" blur="none" no-center spinner-variant="yellow">
     <article ref="fiche" class="fiche fiche-flip fiche-chouquettise">
       <div class="fiche-container d-flex justify-content-center">
         <div ref="ficheFront" class="fiche-front mx-md-5">

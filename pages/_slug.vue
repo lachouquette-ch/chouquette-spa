@@ -50,7 +50,7 @@
         <input id="option2" type="radio" name="options" />Fiches
       </label>
     </div>
-    <b-overlay :show="!post" rounded="sm">
+    <b-overlay :show="!post" spinner-variant="yellow">
       <main role="main" class="layout-content px-md-4" :class="{ 'post-with-sidebar': fiches }">
         <article v-if="post" :id="post.id">
           <header class="post-header container p-0 mb-6">
