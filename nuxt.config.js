@@ -45,6 +45,7 @@ export default {
     { src: '~/plugins/vuelidate.js', mode: 'client' },
     { src: '~/plugins/vuerecaptchav3.js', mode: 'client' },
     { src: '~/plugins/bootstrap.js', mode: 'client' },
+    { src: '~/plugins/html-entity-filters.js' },
     { src: '~/plugins/wordpressAPI.js' }
   ],
   /*

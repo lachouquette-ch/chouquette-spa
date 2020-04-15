@@ -19,7 +19,7 @@
             </span>
           </div>
           <div class="card-body d-flex flex-column position-relative">
-            <h2 class="card-title text-center h4">{{ escapedTitle }}</h2>
+            <h2 class="card-title text-center h4">{{ fiche.title.rendered | heDecode }}</h2>
             <p class="card-text" v-html="fiche.content.rendered" />
             <div v-if="fiche.info.chouquettise" class="card-text d-flex justify-content-around mt-auto">
               <a
@@ -173,7 +173,6 @@
 </template>
 
 <script>
-import he from 'he'
 import $ from 'jquery'
 import moment from 'moment'
 
@@ -194,9 +193,6 @@ export default {
     }
   },
   computed: {
-    escapedTitle() {
-      return he.decode(this.fiche.title.rendered)
-    },
     currentURL() {
       return window.location.host
     },

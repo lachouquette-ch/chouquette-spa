@@ -4,6 +4,7 @@
       id="fiche-modal"
       size="xl"
       header-bg-variant="white"
+      header-text-variant="black"
       body-bg-variant="white"
       body-text-variant="black"
       hide-footer
@@ -63,7 +64,7 @@
 
           <section class="post-content container mb-5">
             <div class="post-content-title">
-              <h1 class="mr-2 mb-4">{{ escapedTitle }}</h1>
+              <h1 class="mr-2 mb-4">{{ post.title.rendered | heDecode }}</h1>
             </div>
             <main class="post-content-text" v-html="post.content.rendered" />
           </section>
@@ -103,7 +104,6 @@
 </template>
 
 <script>
-import he from 'he'
 import moment from 'moment'
 
 import WPMedia from '../components/WpMedia'
@@ -135,9 +135,6 @@ export default {
     }
   },
   computed: {
-    escapedTitle() {
-      return he.decode(this.post.title.rendered)
-    },
     postCreatedDate() {
       return moment(this.post.date).format('DD/MM/YY')
     },

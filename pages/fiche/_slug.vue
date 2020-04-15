@@ -1,6 +1,6 @@
 <template>
   <div v-if="fiche" class="fiche-page layout-content container-fluid mx-auto">
-    <h1 class="text-center my-4">{{ escapedTitle }}</h1>
+    <h1 class="text-center my-4">{{ fiche.title.rendered | heDecode }}</h1>
     <main role="main">
       <Fiche :fiche="fiche" />
     </main>
@@ -8,8 +8,6 @@
 </template>
 
 <script>
-import he from 'he'
-
 import Fiche from '../../components/Fiche'
 
 export default {
@@ -17,11 +15,6 @@ export default {
   data() {
     return {
       fiche: null
-    }
-  },
-  computed: {
-    escapedTitle() {
-      return he.decode(this.fiche.title.rendered)
     }
   },
   async created() {

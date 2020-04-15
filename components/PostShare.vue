@@ -39,8 +39,6 @@
 </template>
 
 <script>
-import he from 'he'
-
 export default {
   props: {
     post: {
@@ -56,7 +54,7 @@ export default {
   },
   computed: {
     escapedTitle() {
-      return he.decode(this.post.title.rendered)
+      return this.$options.filters.heDecode(this.post.title.rendered)
     }
   },
   mounted() {

@@ -1,6 +1,6 @@
 <template>
   <article class="post-card post-card-chouquettise">
-    <nuxt-link :to="{ path: `/${post.slug}` }" :title="escapedTitle" class="text-decoration-none">
+    <nuxt-link :to="{ path: `/${post.slug}` }" :title="post.title.rendered | heDecode" class="text-decoration-none">
       <div class="post-card-picture" :style="postCardBackground">
         <CategoryLogo
           v-if="topCategory"
@@ -11,14 +11,13 @@
         />
       </div>
       <div class="post-card-caption d-flex text-center justify-content-center align-items-center">
-        {{ escapedTitle }}
+        {{ post.title.rendered | heDecode }}
       </div>
     </nuxt-link>
   </article>
 </template>
 
 <script>
-import he from 'he'
 import CategoryLogo from './CategoryLogo'
 
 export default {
@@ -37,9 +36,6 @@ export default {
     }
   },
   computed: {
-    escapedTitle() {
-      return he.decode(this.post.title.rendered)
-    },
     postCardBackground() {
       if (this.featuredMedia) {
         return {
