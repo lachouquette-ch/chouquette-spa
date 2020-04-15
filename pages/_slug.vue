@@ -13,7 +13,7 @@
     >
       <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
       <template v-slot:default>
-        <Fiche v-show="showFiche" :fiche="fiche" @init="showFiche = true"/>
+        <Fiche :fiche="fiche" />
       </template>
     </b-modal>
     <nav v-show="sidebarShown" v-if="fiches" class="post-sidebar layout-content bg-darker-grey">
@@ -125,7 +125,6 @@ export default {
   data() {
     return {
       sidebarShown: true,
-      showFiche: false,
 
       post: null,
       fiche: null,
