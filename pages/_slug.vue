@@ -21,71 +21,73 @@
         <input id="option2" type="radio" name="options" />Fiches
       </label>
     </div>
-    <main role="main" class="post-main layout-content px-md-4">
-      <article v-if="post" :id="post.id">
-        <header class="post-header container p-0 mb-6">
-          <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
-          <WpAvatar
-            :size="150"
-            :avatar-urls="authorAvatar"
-            :alt="author.name"
-            class="post-header-author-img rounded-circle"
-          />
-          <div class="post-header-meta">
-            <span>par {{ author.name }}</span>
-            <span>
-              publié le <time :datetime="post.date">{{ postCreatedDate }}</time> (màj le
-              <time :datetime="post.modified">{{ postModifiedDate }}</time
-              >)
-            </span>
-            <span>
-              dans
-              <span v-for="(category, index) in categories" :key="category.id">
-                <a :href="category.link" :title="category.name">{{ category.name }}</a>
-                <span v-if="index != categories.length - 1">, </span>
-              </span>
-            </span>
-          </div>
-          <PostShare :post="post" class="post-header-sn-share" />
-        </header>
-
-        <section class="post-content container mb-5">
-          <div class="post-content-title">
-            <h1 class="mr-2 mb-4">{{ escapedTitle }}</h1>
-          </div>
-          <main class="post-content-text" v-html="post.content.rendered" />
-        </section>
-
-        <section class="post-author container my-5">
-          <div class="border shadow-sm text-center position-relative">
+    <b-overlay :show="!post" rounded="sm">
+      <main role="main" class="layout-content px-md-4" :class="{ 'post-with-sidebar': fiches }">
+        <article v-if="post" :id="post.id">
+          <header class="post-header container p-0 mb-6">
+            <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
             <WpAvatar
               :size="150"
               :avatar-urls="authorAvatar"
               :alt="author.name"
               class="post-header-author-img rounded-circle"
             />
-            <h5 class="mt-3 mb-4">{{ author.name }}</h5>
-            <p class="px-2 pb-1">{{ author.description }}</p>
-          </div>
-        </section>
+            <div class="post-header-meta">
+              <span>par {{ author.name }}</span>
+              <span>
+                publié le <time :datetime="post.date">{{ postCreatedDate }}</time> (màj le
+                <time :datetime="post.modified">{{ postModifiedDate }}</time
+                >)
+              </span>
+              <span>
+                dans
+                <span v-for="(category, index) in categories" :key="category.id">
+                  <a :href="category.link" :title="category.name">{{ category.name }}</a>
+                  <span v-if="index != categories.length - 1">, </span>
+                </span>
+              </span>
+            </div>
+            <PostShare :post="post" class="post-header-sn-share" />
+          </header>
 
-        <section v-show="isSimilarPostsShown" class="cq-single-post-similar container my-5">
-          <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
-          <PostCardSwiper v-if="similarPosts" :posts="similarPosts" @init="isSimilarPostsShown = true" />
-        </section>
+          <section class="post-content container mb-5">
+            <div class="post-content-title">
+              <h1 class="mr-2 mb-4">{{ escapedTitle }}</h1>
+            </div>
+            <main class="post-content-text" v-html="post.content.rendered" />
+          </section>
 
-        <section class="post-comments container my-5">
-          <h3 class="mb-3 text-center">{{ comments.length }} commentaire(s)</h3>
-          <ol class="comment-list p-0">
-            <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
-              <PostComment :post="post.id" :comment="comment" :comments="comments" />
-            </li>
-          </ol>
-          <h3 class="my-4 text-center">Laisse-nous un petit mot</h3>
-          <PostCommentReply :post="post.id" />
-        </section>
-      </article>
-    </main>
+          <section class="post-author container my-5">
+            <div class="border shadow-sm text-center position-relative">
+              <WpAvatar
+                :size="150"
+                :avatar-urls="authorAvatar"
+                :alt="author.name"
+                class="post-header-author-img rounded-circle"
+              />
+              <h5 class="mt-3 mb-4">{{ author.name }}</h5>
+              <p class="px-2 pb-1">{{ author.description }}</p>
+            </div>
+          </section>
+
+          <section v-show="isSimilarPostsShown" class="cq-single-post-similar container my-5">
+            <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
+            <PostCardSwiper v-if="similarPosts" :posts="similarPosts" @init="isSimilarPostsShown = true" />
+          </section>
+
+          <section class="post-comments container my-5">
+            <h3 class="mb-3 text-center">{{ comments.length }} commentaire(s)</h3>
+            <ol class="comment-list p-0">
+              <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
+                <PostComment :post="post.id" :comment="comment" :comments="comments" />
+              </li>
+            </ol>
+            <h3 class="my-4 text-center">Laisse-nous un petit mot</h3>
+            <PostCommentReply :post="post.id" />
+          </section>
+        </article>
+      </main>
+    </b-overlay>
   </div>
 </template>
 
@@ -117,7 +119,7 @@ export default {
       similarPosts: [],
       comments: [],
       rootLevelComments: [],
-      fiches: []
+      fiches: null
     }
   },
   computed: {
@@ -166,7 +168,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.post-main {
+.post-with-sidebar {
   @include media-breakpoint-up(md) {
     margin-left: 300px;
   }
