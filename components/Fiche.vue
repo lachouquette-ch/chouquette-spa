@@ -3,7 +3,7 @@
     <b-modal id="report-modal" title-class="w-100 text-center" hide-footer centered>
       <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
       <template v-slot:default>
-        <form @submit.prevent="postReport" autocomplete="on">
+        <form @submit.prevent="postReport">
           <label
             >Une erreur, une remarque, une suggestion sur la fiche ? Merci de nous en faire part
             <i class="far fa-smile"></i

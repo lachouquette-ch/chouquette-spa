@@ -70,7 +70,7 @@
           v-model.trim="formComment.webSite"
           class="form-control"
           :class="{ 'is-invalid': $v.formComment.webSite.$error }"
-          name="website"
+          name="url"
           type="text"
           value=""
           size="30"
