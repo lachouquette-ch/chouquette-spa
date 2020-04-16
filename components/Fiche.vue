@@ -1,65 +1,70 @@
 <template>
   <div>
-    <b-modal id="report-modal" title-class="w-100 text-center" hide-footer centered>
+    <b-modal ref="fiche-modal" title-class="w-100 text-center" hide-footer centered>
       <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
       <template v-slot:default>
         <form @submit.prevent="postReport">
-          <label
-            >Une erreur, une remarque, une suggestion sur la fiche ? Merci de nous en faire part
-            <i class="far fa-smile"></i
-          ></label>
+          <label v-if="isContactModal">
+            Une question, une demande, une réservation... écris-lui un petit mot directement ici
+            <i class="far fa-smile"></i>
+          </label>
+          <label v-else>
+            Une erreur, une remarque, une suggestion sur la fiche ? Merci de nous en faire part
+            <i class="far fa-smile"></i>
+          </label>
           <div class="form-group">
-            <label for="ficheReportName">Ton prénom / nom *</label>
+            <label v-if="isContactModal" for="ficheModalText">Ton message *</label>
+            <label v-else for="ficheModalText">Ton commentaire *</label>
+            <textarea
+              id="ficheModalText"
+              v-model="formFiche.message"
+              class="form-control"
+              :class="{ 'is-invalid': $v.formFiche.message.$error }"
+              rows="8"
+              @blur="$v.formFiche.message.$touch"
+            ></textarea>
+            <div v-if="!$v.formFiche.message.required" class="invalid-feedback">
+              Il faut un contenu à ton message
+            </div>
+            <div v-if="!$v.formFiche.message.minText" class="invalid-feedback">
+              Ton message doit avoir un minimum de contenu
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="ficheModalName">Ton prénom / nom *</label>
             <input
-              id="ficheReportName"
-              v-model="formReport.name"
+              id="ficheModalName"
+              v-model="formFiche.name"
               name="name"
               class="form-control"
-              :class="{ 'is-invalid': $v.formReport.name.$error }"
-              @blur="$v.formReport.name.$touch"
+              :class="{ 'is-invalid': $v.formFiche.name.$error }"
+              @blur="$v.formFiche.name.$touch"
             />
-            <div v-if="!$v.formReport.name.required" class="invalid-feedback">
+            <div v-if="!$v.formFiche.name.required" class="invalid-feedback">
               Merci de nous indiquer ton ptit nom
             </div>
           </div>
           <div class="form-group">
-            <label for="ficheReportMail">Ton mail *</label>
+            <label for="ficheModalMail">Ton mail *</label>
             <input
-              id="ficheReportMail"
-              v-model="formReport.email"
+              id="ficheModalMail"
+              v-model="formFiche.email"
               type="email"
               name="email"
               class="form-control"
-              :class="{ 'is-invalid': $v.formReport.email.$error }"
-              @blur="$v.formReport.email.$touch"
+              :class="{ 'is-invalid': $v.formFiche.email.$error }"
+              @blur="$v.formFiche.email.$touch"
             />
-            <div v-if="!$v.formReport.email.required" class="invalid-feedback">
+            <div v-if="!$v.formFiche.email.required" class="invalid-feedback">
               Merci de nous indiquer ton email (ne sera pas afficher)
             </div>
-            <div v-if="!$v.formReport.email.email" class="invalid-feedback">
+            <div v-if="!$v.formFiche.email.email" class="invalid-feedback">
               Ton email doit être valide
             </div>
           </div>
-          <div class="form-group">
-            <label for="ficheReportText">Ton commentaire *</label>
-            <textarea
-              id="ficheReportText"
-              v-model="formReport.message"
-              class="form-control"
-              :class="{ 'is-invalid': $v.formReport.message.$error }"
-              rows="8"
-              @blur="$v.formReport.message.$touch"
-            ></textarea>
-            <div v-if="!$v.formReport.message.required" class="invalid-feedback">
-              Il faut un contenu à ton message
-            </div>
-            <div v-if="!$v.formReport.message.minText" class="invalid-feedback">
-              Ton message doit avoir un minimum de contenu
-            </div>
-          </div>
-          <button class="btn btn-primary w-100" type="submit" :disabled="reportLoading">
+          <button class="btn btn-primary w-100" type="submit" :disabled="loading">
             <span
-              v-show="reportLoading"
+              v-show="loading"
               class="spinner-border spinner-border-sm mr-2"
               role="status"
               aria-hidden="true"
@@ -69,7 +74,6 @@
         </form>
       </template>
     </b-modal>
-
     <article ref="fiche" class="fiche fiche-chouquettise">
       <div class="fiche-container d-flex justify-content-center">
         <div ref="ficheFront" class="fiche-front mx-md-5" :class="{ flipped: isFicheFlipped }">
@@ -108,13 +112,10 @@
                   ><i class="fas fa-phone"></i
                 ></a>
                 <a
-                  href="#"
+                  href=""
                   title="Envoyer un message"
-                  data-toggle="modal"
-                  data-target="#ficheContactModal"
-                  data-fiche-title="Maison Buet – Succursale Haldimand"
-                  data-fiche-id="18647"
                   class="fiche-social border border-secondary rounded-circle"
+                  @click.prevent="openContactModal"
                   ><i class="far fa-envelope"></i
                 ></a>
                 <a
@@ -135,11 +136,10 @@
                 ></a>
               </div>
               <a
-                v-b-modal.report-modal
                 title="Reporter une précision ou erreur sur la fiche"
                 href=""
                 class="fiche-report"
-                @click.prevent
+                @click.prevent="openReportModal"
                 ><i class="fas fa-exclamation-circle"></i
               ></a>
             </div>
@@ -221,11 +221,10 @@
                 <span v-if="criteria">{{ criteriaList }}</span>
               </div>
               <a
-                v-b-modal.report-modal
                 title="Reporter une précision ou erreur sur la fiche"
                 href=""
                 class="fiche-report"
-                @click.prevent
+                @click.prevent="openReportModal"
                 ><i class="fas fa-exclamation-circle"></i
               ></a>
             </div>
@@ -267,7 +266,7 @@ export default {
     }
   },
   validations: {
-    formReport: {
+    formFiche: {
       name: {
         required
       },
@@ -286,12 +285,14 @@ export default {
       isFicheFlipped: false,
       featuredMedia: null,
       criteria: null,
-      formReport: {
+
+      isContactModal: true,
+      formFiche: {
         name: null,
         email: null,
         message: null
       },
-      reportLoading: false
+      loading: false
     }
   },
   computed: {
@@ -320,9 +321,17 @@ export default {
     this.init()
   },
   methods: {
+    openContactModal() {
+      this.isContactModal = true
+      this.$refs['fiche-modal'].toggle()
+    },
+    openReportModal() {
+      this.isContactModal = false
+      this.$refs['fiche-modal'].toggle()
+    },
     async postReport() {
-      this.$v.formReport.$touch()
-      if (!this.$v.formReport.$invalid) {
+      this.$v.formFiche.$touch()
+      if (!this.$v.formFiche.$invalid) {
         this.reportLoading = true
         // Get recaptcha token
         await this.$recaptchaLoaded()
@@ -337,8 +346,8 @@ export default {
             message: 'Ton message nous est bien parvenu : merci :-). Nous modifierons le contenu de la fiche sous peu.'
           })
 
-          this.formReport.message = null
-          this.$v.formReport.$reset()
+          this.formFiche.message = null
+          this.$v.formFiche.$reset()
         } catch (err) {
           this.$store.dispatch('alerts/addAction', { type: 'danger', message: err })
         } finally {
