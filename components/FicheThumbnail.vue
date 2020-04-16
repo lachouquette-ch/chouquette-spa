@@ -1,5 +1,5 @@
 <template>
-  <div class="fiche btn btn-white media text-left">
+  <div class="fiche btn btn-white media text-left" :class="{ 'fiche-chouquettise': fiche.info.chouquettise }">
     <WPMedia
       v-if="featuredMedia"
       :media="featuredMedia"
