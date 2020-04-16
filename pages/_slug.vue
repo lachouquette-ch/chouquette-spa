@@ -7,6 +7,7 @@
       header-text-variant="black"
       body-bg-variant="white"
       body-text-variant="black"
+      body-class="modal-body-class"
       title-class="w-100 text-center"
       hide-footer
       centered
@@ -211,6 +212,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep .modal-body-class {
+  min-height: 50vh;
+}
+
 .post-with-sidebar {
   @include media-breakpoint-up(md) {
     margin-left: 300px;
