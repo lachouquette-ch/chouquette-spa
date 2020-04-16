@@ -24,6 +24,7 @@
         <input
           :id="`author${_uid}`"
           v-model.trim="formComment.name"
+          name="name"
           class="form-control"
           :class="{ 'is-invalid': $v.formComment.name.$error }"
           type="text"
@@ -49,6 +50,7 @@
           class="form-control"
           :class="{ 'is-invalid': $v.formComment.email.$error }"
           type="email"
+          name="email"
           aria-required="true"
           @blur="$v.formComment.email.$touch"
         />
@@ -68,7 +70,7 @@
           v-model.trim="formComment.webSite"
           class="form-control"
           :class="{ 'is-invalid': $v.formComment.webSite.$error }"
-          name="url"
+          name="website"
           type="text"
           value=""
           size="30"
