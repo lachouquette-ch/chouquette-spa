@@ -1,8 +1,8 @@
 <template>
   <img
-    :width="width"
-    :height="height"
-    :src="url"
+    :width="media_detail.width"
+    :height="media_detail.height"
+    :src="media_detail.source_url"
     :alt="media.alt_text"
     :srcset="srcSet"
     sizes="(max-width: 1024px) 100vw, 1024px"
@@ -34,15 +34,6 @@ export default {
     }
   },
   computed: {
-    width() {
-      return this.media_detail.width
-    },
-    height() {
-      return this.media_detail.height
-    },
-    url() {
-      return this.media_detail.source_url
-    },
     srcSet() {
       if (this.noSrcSet) return ''
       else
@@ -53,12 +44,22 @@ export default {
           .join(', ')
     }
   },
+  watch: {
+    media() {
+      this.init()
+    }
+  },
   created() {
-    // find media_detail_size that match wanted size of any upper size. Else fallback to full size
-    const wantedSizeOrHigher = THUMBNAIL_SIZES.slice(THUMBNAIL_SIZES.indexOf(this.size))
-    const selectedSizes = _.intersection(wantedSizeOrHigher, Object.keys(this.media.media_details.sizes))
-    if (!_.isEmpty(selectedSizes)) this.media_detail = this.media.media_details.sizes[selectedSizes.shift()]
-    else this.media_detail = this.media.media_details.sizes.full
+    this.init()
+  },
+  methods: {
+    init() {
+      // find media_detail_size that match wanted size of any upper size. Else fallback to full size
+      const wantedSizeOrHigher = THUMBNAIL_SIZES.slice(THUMBNAIL_SIZES.indexOf(this.size))
+      const selectedSizes = _.intersection(wantedSizeOrHigher, Object.keys(this.media.media_details.sizes))
+      if (!_.isEmpty(selectedSizes)) this.media_detail = this.media.media_details.sizes[selectedSizes.shift()]
+      else this.media_detail = this.media.media_details.sizes.full
+    }
   }
 }
 </script>

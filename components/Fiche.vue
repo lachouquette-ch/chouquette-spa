@@ -237,7 +237,7 @@ export default {
     }
   },
   watch: {
-    fiche(val) {
+    fiche() {
       this.init()
     }
   },
@@ -248,6 +248,7 @@ export default {
     async init() {
       this.loading = true
       this.criteria = null
+      this.isFicheFlipped = false
       try {
         this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
         this.criteria = await this.$wpAPI.criteria.getForFiche(this.fiche.id)
