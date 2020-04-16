@@ -75,15 +75,16 @@
             ></a>
           </div>
           <div class="card-footer">
-            <a
-              href="http://chouquette.test/maison-buet-boulangerie-patisserie-chocolaterie-traiteur-tea-room-brunch-lausanne/"
-              title="Dernier article sur le lieu"
+            <nuxt-link
+              :to="{ path: `/${fiche.latest_post.slug}` }"
+              :title="`Dernier article référencé : ${fiche.latest_post.title}`"
               class="btn btn-outline-secondary"
-              ><i class="far fa-newspaper"></i
-            ></a>
+            >
+              <i class="far fa-newspaper"></i>
+            </nuxt-link>
             <a
               href=""
-              title="Plus de détails (retourner la fiche)"
+              title="Plus de détails"
               class="d-md-none btn btn-secondary float-right"
               @click.prevent="ficheFlip($event.target)"
               ><i class="fas fa-plus"></i
@@ -170,15 +171,16 @@
             ></a>
           </div>
           <div class="card-footer">
-            <a
-              href="http://chouquette.test/maison-buet-boulangerie-patisserie-chocolaterie-traiteur-tea-room-brunch-lausanne/"
-              title="Dernier article sur le lieu"
+            <nuxt-link
+              :to="{ path: `/${fiche.latest_post.slug}` }"
+              :title="`Dernier article référencé : ${fiche.latest_post.title}`"
               class="btn btn-outline-secondary"
-              ><i class="far fa-newspaper"></i
-            ></a>
+            >
+              <i class="far fa-newspaper"></i>
+            </nuxt-link>
             <a
               href=""
-              title="Plus de détails (retourner la fiche)"
+              title="Plus de détails"
               class="d-md-none btn btn-secondary float-right"
               @click.prevent="ficheFlip($event.target)"
               ><i class="fas fa-plus"></i
