@@ -193,7 +193,6 @@
 </template>
 
 <script>
-import $ from 'jquery'
 import moment from 'moment'
 
 import WpMedia from './WpMedia'
@@ -246,6 +245,8 @@ export default {
       this.$nextTick(() => this.resizeFiche()) // needs time to display fiche before computing its size
     },
     resizeFiche() {
+      const $ = require('jquery')
+
       const frontElement = $(this.$refs.front)
       const backElement = $(this.$refs.back)
 
@@ -258,11 +259,6 @@ export default {
       } else {
         frontElement.height(backElement.height())
       }
-
-      // add mouse gesture
-      const Hammer = require('hammerjs')
-      const mc = new Hammer(this.$el)
-      mc.on('swipeleft swiperight', () => this.ficheFlip(this.$el))
     },
     ficheFlip() {
       this.isFicheFlipped = !this.isFicheFlipped
