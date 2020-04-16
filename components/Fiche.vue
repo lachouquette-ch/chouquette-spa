@@ -1,8 +1,8 @@
 <template>
   <b-overlay :show="loading" opacity="0" blur="none" no-center spinner-variant="yellow">
-    <article ref="fiche" class="fiche fiche-chouquettise" :class="{ flipped: isFicheFlipped }">
+    <article ref="fiche" class="fiche fiche-chouquettise">
       <div class="fiche-container d-flex justify-content-center">
-        <div ref="ficheFront" class="fiche-front mx-md-5 d-md-block" :class="{ 'd-none': isFicheFlipped }">
+        <div ref="ficheFront" class="fiche-front mx-md-5" :class="{ flipped: isFicheFlipped }">
           <div ref="front" class="card bg-white">
             <div class="card-header p-0">
               <WpMedia
@@ -92,13 +92,8 @@
             </div>
           </div>
         </div>
-        <div
-          v-if="criteria"
-          ref="ficheBack"
-          class="fiche-back mx-md-5 d-md-block"
-          :class="{ 'd-none': !isFicheFlipped }"
-        >
-          <div ref="back" class="card bg-white">
+        <div v-if="criteria" ref="ficheBack" class="fiche-back mx-md-5" :class="{ flipped: !isFicheFlipped }">
+          <div ref="back" class="card bg-whit">
             <div class="card-header"></div>
             <div class="card-body position-relative p-0">
               <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
@@ -261,6 +256,10 @@ export default {
       const frontElement = $(this.$refs.front)
       const backElement = $(this.$refs.back)
 
+      // reset height
+      frontElement.height('auto')
+      backElement.height('auto')
+
       if (frontElement.height() > backElement.height()) {
         backElement.height(frontElement.height())
       } else {
@@ -291,6 +290,11 @@ export default {
 
   @include media-breakpoint-down(sm) {
     width: 100%;
+
+    &.flipped {
+      position: absolute;
+      visibility: hidden;
+    }
   }
 
   .card-body {
