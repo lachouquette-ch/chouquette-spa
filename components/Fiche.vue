@@ -1,8 +1,8 @@
 <template>
   <b-overlay :show="loading" opacity="0" blur="none" no-center spinner-variant="yellow">
-    <article ref="fiche" class="fiche fiche-flip fiche-chouquettise">
+    <article ref="fiche" class="fiche fiche-chouquettise" :class="{ flipped: isFicheFlipped }">
       <div class="fiche-container d-flex justify-content-center">
-        <div ref="ficheFront" class="fiche-front mx-md-5">
+        <div ref="ficheFront" class="fiche-front mx-md-5 d-md-block" :class="{ 'd-none': isFicheFlipped }">
           <div ref="front" class="card bg-white">
             <div class="card-header p-0">
               <WpMedia
@@ -92,7 +92,12 @@
             </div>
           </div>
         </div>
-        <div v-if="criteria" ref="ficheBack" class="fiche-back mx-md-5">
+        <div
+          v-if="criteria"
+          ref="ficheBack"
+          class="fiche-back mx-md-5 d-md-block"
+          :class="{ 'd-none': !isFicheFlipped }"
+        >
           <div ref="back" class="card bg-white">
             <div class="card-header"></div>
             <div class="card-body position-relative p-0">
@@ -208,6 +213,7 @@ export default {
   },
   data() {
     return {
+      isFicheFlipped: false,
       loading: true,
       featuredMedia: null,
       criteria: null
@@ -265,18 +271,8 @@ export default {
       const mc = new Hammer(this.$el)
       mc.on('swipeleft swiperight', () => this.ficheFlip(this.$el))
     },
-    ficheFlip(element) {
-      const fiche = $(this.$refs.fiche)
-
-      // flip card
-      if (!fiche.hasClass('flipped')) {
-        $(this.$refs.ficheBack).css('transform', 'rotateY(0deg)')
-        $(this.$refs.ficheFront).css('transform', 'rotateY(180deg)')
-      } else {
-        $(this.$refs.ficheBack).css('transform', 'rotateY(180deg)')
-        $(this.$refs.ficheFront).css('transform', 'rotateY(0deg)')
-      }
-      fiche.toggleClass('flipped')
+    ficheFlip() {
+      this.isFicheFlipped = !this.isFicheFlipped
     },
     getOpening(dayOfWeek = new Date().getDay()) {
       const opening = this.fiche.info.openings[dayOfWeek]
@@ -287,35 +283,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// down sm : fiche front/back are folded
-@include media-breakpoint-down(sm) {
-  .fiche-flip {
-    background-color: transparent;
-    perspective: 1000px; /* Remove this if you don't want the 3D effect */
-
-    /* This container is needed to position the front and back side */
-    .fiche-container {
-      position: relative;
-      width: 100%;
-
-      /* Position the front and back side */
-      .fiche-front,
-      .fiche-back {
-        position: absolute;
-        width: 100%;
-        backface-visibility: hidden;
-
-        transition: transform 0.6s;
-        transform-style: preserve-3d;
-      }
-
-      .fiche-back {
-        transform: rotateY(180deg);
-      }
-    }
-  }
-}
-
 .fiche-front,
 .fiche-back {
   width: 300px;
