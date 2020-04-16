@@ -239,13 +239,9 @@ export default {
   methods: {
     init() {
       this.isFicheFlipped = false
-      try {
-        this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
-        this.criteria = this.fiche._embedded.criteria[0]
-        this.$nextTick(() => this.resizeFiche()) // needs time to display fiche before computing its size
-      } finally {
-        this.loading = false
-      }
+      this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
+      this.criteria = this.fiche._embedded.criteria[0]
+      this.$nextTick(() => this.resizeFiche()) // needs time to display fiche before computing its size
     },
     resizeFiche() {
       const frontElement = $(this.$refs.front)

@@ -10,6 +10,7 @@
       title-class="w-100 text-center"
       hide-footer
       centered
+      @shown="$refs.fiche.resizeFiche()"
     >
       <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
       <template v-slot:default>
@@ -19,7 +20,7 @@
           aria-label="Prochaine fiche"
           @click.prevent="previousFiche(fiche)"
         ></div>
-        <Fiche :fiche="fiche" />
+        <Fiche ref="fiche" :fiche="fiche" />
         <div
           class="swiper-button-next swiper-button-yellow"
           role="button"
