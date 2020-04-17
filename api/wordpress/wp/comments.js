@@ -6,7 +6,7 @@ class CommentRepository extends Repository {
   }
 
   postComment(comment) {
-    return this.axios.post('/', comment)
+    return this.$axios.post('/', comment)
   }
 
   getByPost(postId) {
