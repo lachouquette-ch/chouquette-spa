@@ -112,6 +112,7 @@
                   ><i class="fas fa-phone"></i
                 ></a>
                 <a
+                  v-if="fiche.info.mail"
                   href=""
                   title="Envoyer un message"
                   class="fiche-social border border-secondary rounded-circle"
@@ -154,7 +155,7 @@
               <a
                 href=""
                 title="Plus de détails"
-                class="d-md-none btn btn-secondary float-right"
+                class="d-md-none btn btn-yellow float-right"
                 @click.prevent="ficheFlip($event.target)"
                 ><i class="fas fa-plus"></i
               ></a>
@@ -239,7 +240,7 @@
               <a
                 href=""
                 title="Plus de détails"
-                class="d-md-none btn btn-secondary float-right"
+                class="d-md-none btn btn-primary float-right"
                 @click.prevent="ficheFlip($event.target)"
                 ><i class="fas fa-plus"></i
               ></a>
