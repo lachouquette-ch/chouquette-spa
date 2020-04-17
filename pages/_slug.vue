@@ -11,19 +11,19 @@
       title-class="w-100 text-center"
       hide-footer
       centered
-      @shown="$refs.fiche.resizeFiche()"
+      @shown="initModal"
     >
       <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
       <template v-slot:default>
         <div
-          class="swiper-button-prev swiper-button-yellow"
+          class="swiper-button-prev swiper-button-yellow d-none d-md-block"
           role="button"
           aria-label="Prochaine fiche"
           @click.prevent="previousFiche(fiche)"
         ></div>
         <Fiche ref="fiche" :fiche="fiche" />
         <div
-          class="swiper-button-next swiper-button-yellow"
+          class="swiper-button-next swiper-button-yellow d-none d-md-block"
           role="button"
           aria-label="Prochaine fiche"
           @click.prevent="nextFiche(fiche)"
@@ -204,6 +204,19 @@ export default {
       let ficheIndex = this.fiches.findIndex(({ id }) => fiche.id === id)
       const nextFicheIndex = ++ficheIndex >= this.fiches.length ? 0 : ficheIndex
       this.fiche = this.fiches[nextFicheIndex]
+    },
+    initModal() {
+      const Hammer = require('hammerjs')
+      delete Hammer.defaults.cssProps.userSelect
+      const mc = new Hammer(this.$refs.fiche.$el)
+      mc.on('swipeleft', () => {
+        this.nextFiche(this.fiche)
+      })
+      mc.on('swiperight', () => {
+        this.previousFiche(this.fiche)
+      })
+
+      this.$refs.fiche.resizeFiche()
     }
   },
   head() {
@@ -270,11 +283,9 @@ export default {
   z-index: $zindex-sticky + 1;
 }
 
-.post {
-  .with-sidebar {
-    @include media-breakpoint-up(md) {
-      margin-left: 300px;
-    }
+.post.with-sidebar {
+  @include media-breakpoint-up(md) {
+    margin-left: 300px;
   }
 }
 
