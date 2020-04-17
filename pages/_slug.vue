@@ -30,11 +30,7 @@
         ></div>
       </template>
     </b-modal>
-    <nav
-      v-if="fiches"
-      class="post-sidebar layout-content bg-darker-grey"
-      :class="{ 'hide-sidebar': hideSidebar }"
-    >
+    <nav v-if="fiches" class="post-sidebar layout-content bg-darker-grey" :class="{ 'hide-sidebar': hideSidebar }">
       <div class="post-sidebar-header d-none d-md-block text-center p-2">
         <h2 class="post-sidebar-title h5 m-0 text-white">Cités dans l'article :</h2>
       </div>
@@ -189,7 +185,10 @@ export default {
     })
 
     // fetch linked fiches
-    this.fiches = await this.$wpAPI.wp.fiches.getByIds(this.post.meta.link_fiche)
+    const linkedfiches = await this.$wpAPI.wp.fiches.getByIds(this.post.meta.link_fiche)
+    this.fiches = linkedfiches.sort((el1, el2) => {
+      return el2.info.chouquettise - el1.info.chouquettise
+    })
   },
   methods: {
     viewFiche(fiche) {
