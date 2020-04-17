@@ -10,8 +10,9 @@ class FicheRepository extends Repository {
     return this.$axios.post(URI, report)
   }
 
-  postMessage(postId, message) {
-    return this.$axios.post(`/${postId}/message`, message)
+  postContact(postId, message) {
+    const URI = `${this.prefix}/${postId}/contact`
+    return this.$axios.post(URI, message)
   }
 }
 

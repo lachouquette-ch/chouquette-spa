@@ -3,7 +3,7 @@
     <b-modal ref="fiche-modal" title-class="w-100 text-center" hide-footer centered>
       <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
       <template v-slot:default>
-        <form @submit.prevent="postReport">
+        <form @submit.prevent="postMessage(isContactModal)">
           <label v-if="isContactModal">
             Une question, une demande, une réservation... écris-lui un petit mot directement ici
             <i class="far fa-smile"></i>
@@ -330,29 +330,48 @@ export default {
       this.isContactModal = false
       this.$refs['fiche-modal'].toggle()
     },
-    async postReport() {
+    async postMessage(isContactForm) {
       this.$v.formFiche.$touch()
       if (!this.$v.formFiche.$invalid) {
-        this.reportLoading = true
+        this.loading = true
         // Get recaptcha token
         await this.$recaptchaLoaded()
         // Execute reCAPTCHA with action "login".
         const token = await this.$recaptcha('report')
 
+        const data = {
+          name: this.formFiche.name,
+          email: this.formFiche.email,
+          message: this.formFiche.message,
+          recaptcha: token
+        }
+
         // post report
         try {
-          await new Promise((resolve) => setTimeout(resolve, 3000))
-          this.$store.dispatch('alerts/addAction', {
-            type: 'success',
-            message: 'Ton message nous est bien parvenu : merci :-). Nous modifierons le contenu de la fiche sous peu.'
-          })
+          if (isContactForm) {
+            await this.$wpAPI.wp.fiches.postContact(this.fiche.id, data)
+            this.$store.dispatch('alerts/addAction', {
+              type: 'success',
+              message: `Nous avons bien envoyé ton message à ${this.$options.filters.heDecode(
+                this.fiche.title.rendered
+              )}.`
+            })
+          } else {
+            await this.$wpAPI.wp.fiches.postReport(this.fiche.id, data)
+            this.$store.dispatch('alerts/addAction', {
+              type: 'success',
+              message:
+                'Ton message nous est bien parvenu : merci :-). Nous modifierons le contenu de la fiche sous peu.'
+            })
+          }
 
           this.formFiche.message = null
           this.$v.formFiche.$reset()
+          this.$refs['fiche-modal'].hide()
         } catch (err) {
           this.$store.dispatch('alerts/addAction', { type: 'danger', message: err })
         } finally {
-          this.reportLoading = false
+          this.loading = false
         }
       }
     },
