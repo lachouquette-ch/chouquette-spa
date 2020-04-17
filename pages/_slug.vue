@@ -1,5 +1,5 @@
 <template>
-  <div class="post">
+  <div class="post-page">
     <b-modal
       id="fiche-modal"
       size="xl"
@@ -30,7 +30,11 @@
         ></div>
       </template>
     </b-modal>
-    <nav v-show="sidebarShown" v-if="fiches" class="post-sidebar layout-content bg-darker-grey">
+    <nav
+      v-if="fiches"
+      class="post-sidebar layout-content bg-darker-grey"
+      :class="{ 'hide-sidebar': hideSidebar }"
+    >
       <div class="post-sidebar-header d-none d-md-block text-center p-2">
         <h2 class="post-sidebar-title h5 m-0 text-white">Cités dans l'article :</h2>
       </div>
@@ -44,16 +48,16 @@
         />
       </div>
     </nav>
-    <div class="post-sidebar-toggle d-md-none btn-group btn-group-toggle" data-toggle="buttons">
-      <label class="btn btn-sm btn-primary" :class="{ active: !sidebarShown }" @click="sidebarShown = false">
+    <div class="post-sidebar-toggle-buttons d-md-none btn-group btn-group-toggle" data-toggle="buttons">
+      <label class="btn btn-sm btn-primary" :class="{ active: hideSidebar }" @click="hideSidebar = true">
         <input id="option1" type="radio" name="options" checked />Article
       </label>
-      <label class="btn btn-sm btn-primary" :class="{ active: sidebarShown }" @click="sidebarShown = true">
+      <label class="btn btn-sm btn-primary" :class="{ active: !hideSidebar }" @click="hideSidebar = false">
         <input id="option2" type="radio" name="options" />Fiches
       </label>
     </div>
     <b-overlay :show="!post" spinner-variant="yellow">
-      <main role="main" class="layout-content px-md-4" :class="{ 'post-with-sidebar': fiches }">
+      <main role="main" class="post layout-content px-md-4" :class="{ 'with-sidebar': fiches }">
         <article v-if="post" :id="post.id">
           <header class="post-header container p-0 mb-6">
             <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
@@ -138,7 +142,7 @@ export default {
   components: { Fiche, FicheThumbnail, PostCommentReply, WpAvatar, PostComment, WPMedia, PostCardSwiper, PostShare },
   data() {
     return {
-      sidebarShown: true,
+      hideSidebar: true,
 
       post: null,
       fiche: null,
@@ -216,12 +220,6 @@ export default {
   min-height: 50vh;
 }
 
-.post-with-sidebar {
-  @include media-breakpoint-up(md) {
-    margin-left: 300px;
-  }
-}
-
 .post-sidebar {
   position: fixed;
   top: 0;
@@ -259,12 +257,26 @@ export default {
   }
 }
 
-.post-sidebar-toggle {
+.hide-sidebar {
+  @include media-breakpoint-down(sm) {
+    visibility: hidden;
+  }
+}
+
+.post-sidebar-toggle-buttons {
   position: fixed;
   bottom: 10px;
   left: 50%;
   transform: translate(-50%, 0);
   z-index: $zindex-sticky + 1;
+}
+
+.post {
+  .with-sidebar {
+    @include media-breakpoint-up(md) {
+      margin-left: 300px;
+    }
+  }
 }
 
 .post-header {
