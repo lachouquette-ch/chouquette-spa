@@ -5,7 +5,8 @@ export default {
     wpBaseUrl: process.env.WP_URL,
     recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
     mailChimpUserId: process.env.MAILCHIMP_USER_ID,
-    mailChimpListId: process.env.MAILCHIMP_LIST_ID
+    mailChimpListId: process.env.MAILCHIMP_LIST_ID,
+    googleMapsKey: process.env.GOOGLE_MAPS_KEY
   },
   mode: 'universal',
   /*

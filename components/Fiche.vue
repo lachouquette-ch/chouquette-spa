@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal ref="fiche-modal" title-class="w-100 text-center" hide-footer centered>
+    <b-modal ref="ficheModal" title-class="w-100 text-center" hide-footer centered>
       <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
       <template v-slot:default>
         <form @submit.prevent="postMessage(isContactModal)">
@@ -163,8 +163,8 @@
           </div>
         </div>
         <div ref="ficheBack" class="fiche-back mx-md-5" :class="{ flipped: !isFicheFlipped }">
-          <div ref="back" class="card bg-whit">
-            <div class="card-header"></div>
+          <div ref="back" class="card bg-white">
+            <div ref="ficheMap" class="card-header p-0"></div>
             <div class="card-body position-relative p-0">
               <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
                 <li v-if="fiche.info.telephone" class="list-group-item">
@@ -257,6 +257,7 @@ import { required, email, minLength } from 'vuelidate/lib/validators'
 import moment from 'moment'
 
 import WpMedia from './WpMedia'
+import { MAP_OPTIONS } from '~/constants/mapSettings'
 
 export default {
   components: { WpMedia },
@@ -286,6 +287,9 @@ export default {
       isFicheFlipped: false,
       featuredMedia: null,
       criteria: null,
+
+      google: null,
+      map: null,
 
       isContactModal: true,
       formFiche: {
@@ -318,17 +322,23 @@ export default {
       this.init()
     }
   },
-  mounted() {
+  async mounted() {
+    const GoogleMapsApiLoader = require('google-maps-api-loader')
+    this.google = await GoogleMapsApiLoader({
+      apiKey: process.env.googleMapsKey
+    })
+    this.map = new this.google.maps.Map(this.$refs.ficheMap, MAP_OPTIONS)
+
     this.init()
   },
   methods: {
     openContactModal() {
       this.isContactModal = true
-      this.$refs['fiche-modal'].toggle()
+      this.$refs.ficheModal.toggle()
     },
     openReportModal() {
       this.isContactModal = false
-      this.$refs['fiche-modal'].toggle()
+      this.$refs.ficheModal.toggle()
     },
     async postMessage(isContactForm) {
       this.$v.formFiche.$touch()
@@ -367,7 +377,7 @@ export default {
 
           this.formFiche.message = null
           this.$v.formFiche.$reset()
-          this.$refs['fiche-modal'].hide()
+          this.$refs.ficheModal.hide()
         } catch (err) {
           this.$store.dispatch('alerts/addAction', { type: 'danger', message: err })
         } finally {
@@ -379,6 +389,7 @@ export default {
       this.isFicheFlipped = false
       this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
       this.criteria = this.fiche._embedded.criteria[0]
+      this.map.setCenter(this.fiche.info.location)
       this.$nextTick(() => this.resizeFiche()) // needs time to display fiche before computing its size
     },
     resizeFiche() {
