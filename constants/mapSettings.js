@@ -28,8 +28,5 @@ export const MAP_OPTIONS = {
     lat: 46.519962,
     lng: 6.633597
   },
-  zoomControl: true,
-  zoomControlOptions: {
-    position: 'RIGHT_TOP'
-  }
+  zoomControl: true
 }

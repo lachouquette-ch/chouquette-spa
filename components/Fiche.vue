@@ -164,7 +164,7 @@
         </div>
         <div ref="ficheBack" class="fiche-back mx-md-5" :class="{ flipped: !isFicheFlipped }">
           <div ref="back" class="card bg-white">
-            <div ref="ficheMap" class="card-header p-0"></div>
+            <div v-show="marker" ref="ficheMap" class="card-header p-0"></div>
             <div class="card-body position-relative p-0">
               <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
                 <li v-if="fiche.info.telephone" class="list-group-item">
@@ -290,6 +290,7 @@ export default {
 
       google: null,
       map: null,
+      marker: null,
 
       isContactModal: true,
       formFiche: {
@@ -319,6 +320,12 @@ export default {
   },
   watch: {
     fiche() {
+      // remove marker
+      if (this.marker) {
+        this.marker.setMap(null)
+        this.marker = null
+      }
+
       this.init()
     }
   },
@@ -389,7 +396,20 @@ export default {
       this.isFicheFlipped = false
       this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
       this.criteria = this.fiche._embedded.criteria[0]
-      this.map.setCenter(this.fiche.info.location)
+
+      // add marker
+      if (this.fiche.info.location) {
+        this.marker = new this.google.maps.Marker({
+          animation: this.google.maps.Animation.DROP,
+          clickable: false,
+          // icon: ficheIcon,
+          map: this.map,
+          position: this.fiche.info.location,
+          title: this.fiche.title.rendered
+        })
+        this.map.setCenter(this.fiche.info.location)
+      }
+
       this.$nextTick(() => this.resizeFiche()) // needs time to display fiche before computing its size
     },
     resizeFiche() {
