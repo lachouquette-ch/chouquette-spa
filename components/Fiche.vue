@@ -156,7 +156,7 @@
                 href=""
                 title="Plus de détails"
                 class="d-md-none btn btn-yellow float-right"
-                @click.prevent="ficheFlip($event.target)"
+                @click.prevent="isFicheFlipped = !isFicheFlipped"
                 ><i class="fas fa-plus"></i
               ></a>
             </div>
@@ -241,7 +241,7 @@
                 href=""
                 title="Plus de détails"
                 class="d-md-none btn btn-primary float-right"
-                @click.prevent="ficheFlip($event.target)"
+                @click.prevent="isFicheFlipped = !isFicheFlipped"
                 ><i class="fas fa-plus"></i
               ></a>
             </div>
@@ -407,9 +407,6 @@ export default {
       } else {
         frontElement.height(backElement.height())
       }
-    },
-    ficheFlip() {
-      this.isFicheFlipped = !this.isFicheFlipped
     },
     getOpening(dayOfWeek = new Date().getDay()) {
       const opening = this.fiche.info.openings[dayOfWeek]
