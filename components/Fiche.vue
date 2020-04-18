@@ -91,7 +91,7 @@
                 :class="fiche.info.chouquettise ? 'bg-yellow' : 'bg-white'"
               >
                 <img
-                  src="http://chouquette.test/wp-content/uploads/2019/06/sur-le-pouce_black-e1561470507805-150x150.png"
+                  :src="fiche.main_category.logo"
                   alt=""
                   title="Sur le pouce"
                   width="35"
@@ -402,7 +402,7 @@ export default {
         this.marker = new this.google.maps.Marker({
           animation: this.google.maps.Animation.DROP,
           clickable: false,
-          // icon: ficheIcon,
+          icon: this.fiche.main_category.marker_icon,
           map: this.map,
           position: this.fiche.info.location,
           title: this.fiche.title.rendered
