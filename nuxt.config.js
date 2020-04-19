@@ -43,7 +43,7 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    { src: '~/plugins/vuelidate.js', mode: 'client' },
+    { src: '~/plugins/vuelidate.js' },
     { src: '~/plugins/vuerecaptchav3.js', mode: 'client' },
     { src: '~/plugins/bootstrap.js', mode: 'client' },
     { src: '~/plugins/html-entity-filters.js' },

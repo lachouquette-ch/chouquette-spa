@@ -137,21 +137,52 @@ import Fiche from '../components/Fiche'
 
 export default {
   components: { Fiche, FicheThumbnail, PostCommentReply, WpAvatar, PostComment, WPMedia, PostCardSwiper, PostShare },
+  async asyncData({ app, store, params }) {
+    const post = await app.$wpAPI.wp.posts.getBySlug(params.slug)
+
+    // helper fields
+    const featuredMedia = post._embedded['wp:featuredmedia'][0]
+    const author = post._embedded.author[0]
+    const tags = post._embedded['wp:term'][1]
+    const authorAvatar = author.avatar_urls
+
+    const comments = await app.$wpAPI.wp.comments.getByPost(post.id)
+    const rootLevelComments = comments.filter(({ parent }) => parent === 0)
+
+    const categories = await store.dispatch('categories/fetchByIds', post.top_categories)
+
+    // fetch similar posts
+    const similarPosts = await app.$wpAPI.wp.posts.get('/', {
+      params: {
+        tags: post.tags,
+        exclude: post.id,
+        per_page: 6
+      }
+    })
+
+    // fetch linked fiches
+    const linkedfiches = await app.$wpAPI.wp.fiches.getByIds(post.meta.link_fiche)
+    const fiches = linkedfiches.sort((el1, el2) => {
+      return el2.info.chouquettise - el1.info.chouquettise
+    })
+
+    return {
+      post,
+      featuredMedia,
+      author,
+      tags,
+      authorAvatar,
+      comments,
+      rootLevelComments,
+      categories,
+      similarPosts,
+      fiches
+    }
+  },
   data() {
     return {
       hideSidebar: true,
-
-      post: null,
-      fiche: null,
-      featuredMedia: null,
-      author: null,
-      tags: [],
-      authorAvatar: null,
-      categories: [],
-      similarPosts: null,
-      comments: [],
-      rootLevelComments: [],
-      fiches: null
+      fiche: null
     }
   },
   computed: {
@@ -161,35 +192,6 @@ export default {
     postModifiedDate() {
       return moment(this.post.date).format('DD/MM/YY')
     }
-  },
-  async created() {
-    this.post = await this.$wpAPI.wp.posts.getBySlug(this.$route.params.slug)
-
-    // helper fields
-    this.featuredMedia = this.post._embedded['wp:featuredmedia'][0]
-    this.author = this.post._embedded.author[0]
-    this.tags = this.post._embedded['wp:term'][1]
-    this.authorAvatar = this.author.avatar_urls
-
-    this.comments = await this.$wpAPI.wp.comments.getByPost(this.post.id)
-    this.rootLevelComments = this.comments.filter(({ parent }) => parent === 0)
-
-    this.categories = await this.$store.dispatch('categories/fetchByIds', this.post.top_categories)
-
-    // fetch similar posts
-    this.similarPosts = await this.$wpAPI.wp.posts.get('/', {
-      params: {
-        tags: this.post.tags,
-        exclude: this.post.id,
-        per_page: 6
-      }
-    })
-
-    // fetch linked fiches
-    const linkedfiches = await this.$wpAPI.wp.fiches.getByIds(this.post.meta.link_fiche)
-    this.fiches = linkedfiches.sort((el1, el2) => {
-      return el2.info.chouquettise - el1.info.chouquettise
-    })
   },
   methods: {
     viewFiche(fiche) {
