@@ -125,6 +125,7 @@
 
 <script>
 import moment from 'moment'
+import _ from 'lodash'
 
 import WPMedia from '../components/WpMedia'
 import PostCardSwiper from '../components/PostCardSwiper'
@@ -159,6 +160,11 @@ export default {
         per_page: 6
       }
     })
+    // prefetch top categories and featuredMedia
+    const similarPostCategories = _.uniq(similarPosts.flatMap(({ top_categories }) => top_categories))
+    await store.dispatch('categories/fetchByIds', similarPostCategories)
+    const similarPostFeaturedMedia = _.uniq(similarPosts.flatMap(({ featured_media }) => featured_media))
+    await store.dispatch('media/fetchByIds', similarPostFeaturedMedia)
 
     // fetch linked fiches
     const linkedfiches = await app.$wpAPI.wp.fiches.getByIds(post.meta.link_fiche)
