@@ -90,13 +90,7 @@
                 class="fiche-category-icon rounded-circle"
                 :class="fiche.info.chouquettise ? 'bg-yellow' : 'bg-white'"
               >
-                <img
-                  :src="fiche.main_category.logo"
-                  alt=""
-                  title="Sur le pouce"
-                  width="35"
-                  height="35"
-                />
+                <img :src="fiche.main_category.logo" alt="" title="Sur le pouce" width="35" height="35" />
               </span>
             </div>
             <div class="card-body d-flex flex-column position-relative">
@@ -331,10 +325,15 @@ export default {
   },
   async mounted() {
     const GoogleMapsApiLoader = require('google-maps-api-loader')
-    this.google = await GoogleMapsApiLoader({
-      apiKey: process.env.googleMapsKey
-    })
-    this.map = new this.google.maps.Map(this.$refs.ficheMap, MAP_OPTIONS)
+    try {
+      this.google = await GoogleMapsApiLoader({
+        apiKey: process.env.googleMapsKey
+      })
+      this.map = new this.google.maps.Map(this.$refs.ficheMap, MAP_OPTIONS)
+    } catch (err) {
+      if (err instanceof Error) console.error(err)
+      else throw err
+    }
 
     this.init()
   },
@@ -398,7 +397,7 @@ export default {
       this.criteria = this.fiche._embedded.criteria[0]
 
       // add marker
-      if (this.fiche.info.location) {
+      if (this.map && this.fiche.info.location) {
         this.marker = new this.google.maps.Marker({
           animation: this.google.maps.Animation.DROP,
           clickable: false,
