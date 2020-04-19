@@ -12,6 +12,7 @@
       hide-footer
       centered
       @shown="initModal"
+      @hide="closeModal"
     >
       <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
       <template v-slot:default>
@@ -199,11 +200,15 @@ export default {
       let ficheIndex = this.fiches.findIndex(({ id }) => fiche.id === id)
       const previousFicheIndex = --ficheIndex < 0 ? this.fiches.length - 1 : ficheIndex
       this.fiche = this.fiches[previousFicheIndex]
+      // change history
+      history.replaceState(null, null, `/fiche/${this.fiche.slug}`)
     },
     nextFiche(fiche) {
       let ficheIndex = this.fiches.findIndex(({ id }) => fiche.id === id)
       const nextFicheIndex = ++ficheIndex >= this.fiches.length ? 0 : ficheIndex
       this.fiche = this.fiches[nextFicheIndex]
+      // change history
+      history.replaceState(null, null, `/fiche/${this.fiche.slug}`)
     },
     initModal() {
       const Hammer = require('hammerjs')
@@ -217,6 +222,13 @@ export default {
       })
 
       this.$refs.fiche.resizeFiche()
+
+      // change history
+      history.replaceState(null, null, `/fiche/${this.fiche.slug}`)
+    },
+    closeModal() {
+      // revert history to post URL
+      history.replaceState(null, null, `/${this.post.slug}`)
     },
     yoastMetaConfig(yoastMeta) {
       return yoastMeta.map((metaProperty) => {
