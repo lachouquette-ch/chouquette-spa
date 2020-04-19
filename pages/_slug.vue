@@ -217,11 +217,24 @@ export default {
       })
 
       this.$refs.fiche.resizeFiche()
+    },
+    yoastMetaConfig(yoastMeta) {
+      return yoastMeta.map((metaProperty) => {
+        return { ...metaProperty, hid: metaProperty.name || metaProperty.property }
+      })
+    },
+    yoastJsonLDConfig(yoastJsonLD) {
+      return yoastJsonLD.map((jsonLD) => {
+        return { type: 'application/ld+json', json: jsonLD }
+      })
     }
   },
   head() {
     return {
-      link: [{ rel: 'stylesheet', href: `${process.env.wpBaseUrl}/wp-includes/css/dist/block-library/style.min.css` }]
+      title: this.post ? this.post.title.rendered : '',
+      link: [{ rel: 'stylesheet', href: `${process.env.wpBaseUrl}/wp-includes/css/dist/block-library/style.min.css` }],
+      meta: this.post ? this.yoastMetaConfig(this.post.yoast_meta) : [],
+      script: this.post ? this.yoastJsonLDConfig(this.post.yoast_json_ld) : []
     }
   }
 }
