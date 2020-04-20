@@ -72,17 +72,11 @@
             />
             <div class="post-header-meta">
               <span>par {{ author.name }}</span>
-              <span>
-                publié le <time :datetime="post.date">{{ postCreatedDate }}</time> (màj le
-                <time :datetime="post.modified">{{ postModifiedDate }}</time
-                >)
+              <span v-if="postModifiedDate">
+                mise à jour le <time :datetime="post.modified">{{ postModifiedDate }}</time>
               </span>
-              <span>
-                dans
-                <span v-for="(category, index) in categories" :key="category.id">
-                  <a :href="category.link" :title="category.name">{{ category.name }}</a>
-                  <span v-if="index != categories.length - 1">, </span>
-                </span>
+              <span v-else>
+                publié le <time :datetime="post.date">{{ postCreatedDate }}</time>
               </span>
             </div>
             <PostShare :post="post" class="post-header-sn-share" />
@@ -90,7 +84,7 @@
 
           <section class="post-content container mb-5">
             <div class="post-content-title">
-              <h1 class="mr-2 mb-4">{{ post.title.rendered | heDecode }}</h1>
+              <h1 class="pt-2 mb-4 text-center">{{ post.title.rendered | heDecode }}</h1>
             </div>
             <main class="post-content-text" v-html="post.content.rendered" />
           </section>
@@ -162,8 +156,6 @@ export default {
       return { comments, rootLevelComments }
     }
 
-    const loadCategories = store.dispatch('categories/fetchByIds', post.top_categories)
-
     const loadSimilarPosts = async () => {
       const similarPosts = await app.$wpAPI.wp.posts.get('/', {
         params: {
@@ -190,11 +182,10 @@ export default {
       return fiches
     }
 
-    const [{ comments, rootLevelComments }, similarPosts, fiches, categories] = await Promise.all([
+    const [{ comments, rootLevelComments }, similarPosts, fiches] = await Promise.all([
       loadComments(),
       loadSimilarPosts(),
-      loadLinkedFiches(),
-      loadCategories
+      loadLinkedFiches()
     ])
 
     // fetch linked fiches
@@ -207,7 +198,6 @@ export default {
       authorAvatar,
       comments,
       rootLevelComments,
-      categories,
       similarPosts,
       fiches
     }
@@ -223,7 +213,7 @@ export default {
       return moment(this.post.date).format('DD/MM/YY')
     },
     postModifiedDate() {
-      return moment(this.post.date).format('DD/MM/YY')
+      return moment(this.post.modified).format('DD/MM/YY')
     },
     hasSingleFiche() {
       return this.fiches && this.fiches.length === 1
@@ -422,12 +412,18 @@ export default {
     }
   }
 
-  .wp-block-image {
+  .wp-block-embed,
+  .wp-block-image,
+  .wp-block-media-text {
     margin: 1.5rem auto;
 
     figure.aligncenter > figcaption {
       display: block;
     }
+  }
+
+  .wp-block-image.is-style-circle-mask {
+    border-radius: 50%;
   }
 }
 
@@ -442,6 +438,7 @@ export default {
 
   /* Defaults */
 
+  h2,
   h3,
   h4 {
     margin-top: 2rem;
