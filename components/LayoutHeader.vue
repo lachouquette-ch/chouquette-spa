@@ -5,7 +5,7 @@
       title="Rejoins notre newsletter"
       hide-footer
       centered
-      @shown="focusOnRef('mailRegistration')"
+      @shown="focusOn('mailRegistration')"
     >
       <VueMailchimpSubscribe
         url="https://unechouquettealausanne.us8.list-manage.com/subscribe/post-json"
@@ -42,7 +42,7 @@
       </VueMailchimpSubscribe>
     </b-modal>
 
-    <b-modal id="search" title="Tu cherches quelque chose ?" hide-footer centered @shown="focusOnRef('search')">
+    <b-modal id="search" title="Tu cherches quelque chose ?" hide-footer centered @shown="focusOn('search')">
       <form @submit.prevent="search(searchText)">
         <div class="input-group">
           <input
@@ -127,9 +127,11 @@
 <script>
 import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-subscribe'
 import CategoryLogo from './CategoryLogo'
+import modal from '~/mixins/modal'
 
 export default {
   components: { CategoryLogo, VueMailchimpSubscribe },
+  mixins: [modal],
   data() {
     return {
       baseURL: process.env.wpBaseUrl,
@@ -149,9 +151,6 @@ export default {
   methods: {
     search(text) {
       this.$router.push({ path: '/search', query: { s: text } })
-    },
-    focusOnRef(ref) {
-      this.$refs[ref].focus()
     },
     onMailchimpSubscriptionError(errorMessage) {
       this.$store.dispatch('alerts/addAction', { type: 'danger', message: errorMessage })

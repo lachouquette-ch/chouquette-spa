@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal ref="ficheModal" title-class="w-100 text-center" hide-footer centered>
+    <b-modal ref="ficheModal" title-class="w-100 text-center" hide-footer centered @shown="focusOn('message')">
       <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
       <template v-slot:default>
         <form @submit.prevent="postMessage(isContactModal)">
@@ -17,6 +17,7 @@
             <label v-else for="ficheModalText">Ton commentaire *</label>
             <textarea
               id="ficheModalText"
+              ref="message"
               v-model="formFiche.message"
               class="form-control"
               :class="{ 'is-invalid': $v.formFiche.message.$error }"
@@ -254,9 +255,11 @@ import moment from 'moment'
 
 import WpMedia from './WpMedia'
 import { MAP_OPTIONS } from '~/constants/mapSettings'
+import modal from '~/mixins/modal'
 
 export default {
   components: { WpMedia },
+  mixins: [modal],
   props: {
     fiche: {
       type: Object,
