@@ -229,6 +229,17 @@ export default {
       return this.fiches && this.fiches.length === 1
     }
   },
+  mounted() {
+    // show fiche if previously selected
+    const ficheId = parseInt(location.hash.substring(1))
+    if (ficheId) {
+      const ficheToShow = this.fiches.find(({ id }) => id === ficheId)
+      if (ficheToShow) {
+        this.hideSidebar = false
+        this.viewFiche(ficheToShow)
+      }
+    }
+  },
   methods: {
     viewFiche(fiche) {
       this.fiche = fiche
@@ -238,15 +249,15 @@ export default {
       let ficheIndex = this.fiches.findIndex(({ id }) => fiche.id === id)
       const previousFicheIndex = --ficheIndex < 0 ? this.fiches.length - 1 : ficheIndex
       this.fiche = this.fiches[previousFicheIndex]
-      // change history
-      history.replaceState(null, null, `/fiche/${this.fiche.slug}`)
+      // retain fiche
+      location.hash = this.fiche.id
     },
     nextFiche(fiche) {
       let ficheIndex = this.fiches.findIndex(({ id }) => fiche.id === id)
       const nextFicheIndex = ++ficheIndex >= this.fiches.length ? 0 : ficheIndex
       this.fiche = this.fiches[nextFicheIndex]
-      // change history
-      history.replaceState(null, null, `/fiche/${this.fiche.slug}`)
+      // retain fiche
+      location.hash = this.fiche.id
     },
     initModal() {
       const Hammer = require('hammerjs')
@@ -260,13 +271,12 @@ export default {
       })
 
       this.$refs.fiche.resizeFiche()
-
-      // change history
-      history.replaceState(null, null, `/fiche/${this.fiche.slug}`)
+      // retain fiche
+      location.hash = this.fiche.id
     },
     closeModal() {
-      // revert history to post URL
-      history.replaceState(null, null, `/${this.post.slug}`)
+      // forget fiche
+      location.hash = ''
     },
     yoastMetaConfig(yoastMeta) {
       return yoastMeta.map((metaProperty) => {
