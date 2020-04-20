@@ -20,6 +20,7 @@
               <input
                 ref="mailRegistration"
                 type="email"
+                name="email"
                 placeholder="Ton email"
                 class="required email form-control"
                 @input="setEmail($event.target.value)"
