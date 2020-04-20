@@ -76,7 +76,7 @@
     </b-modal>
     <article ref="fiche" class="fiche fiche-chouquettise">
       <div class="fiche-container d-flex justify-content-center">
-        <div ref="ficheFront" class="fiche-front mx-md-5" :class="{ flipped: isFicheFlipped }">
+        <div ref="ficheFront" class="fiche-front" :class="frontClass">
           <div ref="front" class="card bg-white">
             <div class="card-header p-0">
               <WpMedia
@@ -149,14 +149,15 @@
               <a
                 href=""
                 title="Plus de détails"
-                class="d-md-none btn btn-yellow float-right"
-                @click.prevent="isFicheFlipped = !isFicheFlipped"
+                class="btn btn-yellow float-right"
+                :class="{ 'd-md-none': responsive }"
+                @click.prevent="isFlipped = !isFlipped"
                 ><i class="fas fa-plus"></i
               ></a>
             </div>
           </div>
         </div>
-        <div ref="ficheBack" class="fiche-back mx-md-5" :class="{ flipped: !isFicheFlipped }">
+        <div ref="ficheBack" class="fiche-back" :class="backClass">
           <div ref="back" class="card bg-white">
             <div v-show="marker" ref="ficheMap" class="card-header p-0"></div>
             <div class="card-body position-relative p-0">
@@ -234,8 +235,9 @@
               <a
                 href=""
                 title="Plus de détails"
-                class="d-md-none btn btn-primary float-right"
-                @click.prevent="isFicheFlipped = !isFicheFlipped"
+                class="btn btn-primary float-right"
+                :class="{ 'd-md-none': responsive }"
+                @click.prevent="isFlipped = !isFlipped"
                 ><i class="fas fa-plus"></i
               ></a>
             </div>
@@ -259,6 +261,10 @@ export default {
     fiche: {
       type: Object,
       required: true
+    },
+    responsive: {
+      type: Boolean,
+      default: true
     }
   },
   validations: {
@@ -278,7 +284,7 @@ export default {
   },
   data() {
     return {
-      isFicheFlipped: false,
+      isFlipped: false,
       featuredMedia: null,
       criteria: null,
 
@@ -296,8 +302,20 @@ export default {
     }
   },
   computed: {
+    frontClass() {
+      return {
+        flipped: this.responsive && this.isFlipped,
+        'mr-md-3': this.responsive
+      }
+    },
+    backClass() {
+      return {
+        flipped: this.responsive && !this.isFlipped,
+        'ml-md-3': this.responsive
+      }
+    },
     currentURL() {
-      return window.location.host
+      return process.client ? window.location.host : ''
     },
     fichePrice() {
       return ['$'.repeat(this.fiche.info.cost), '$'.repeat(5 - this.fiche.info.cost)]
@@ -392,7 +410,7 @@ export default {
       }
     },
     init() {
-      this.isFicheFlipped = false
+      this.isFlipped = false
       this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
       this.criteria = this.fiche._embedded.criteria[0]
 
@@ -441,21 +459,19 @@ export default {
   width: 300px;
   max-width: 100%;
 
-  @include media-breakpoint-down(sm) {
-    width: 100%;
-
-    &.flipped {
-      position: absolute;
-      visibility: hidden;
-    }
-  }
-
   .card-body {
     min-height: unset;
   }
 
   .card-footer {
     height: 64px;
+  }
+
+  &.flipped {
+    @include media-breakpoint-down(sm) {
+      position: absolute;
+      visibility: hidden;
+    }
   }
 }
 
