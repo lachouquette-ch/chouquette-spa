@@ -304,13 +304,15 @@ export default {
   computed: {
     frontClass() {
       return {
-        flipped: this.responsive && this.isFlipped,
+        flipped: !this.responsive && this.isFlipped,
+        'flipped-responsive': this.responsive && this.isFlipped,
         'mr-md-3': this.responsive
       }
     },
     backClass() {
       return {
-        flipped: this.responsive && !this.isFlipped,
+        flipped: !this.responsive && !this.isFlipped,
+        'flipped-responsive': this.responsive && !this.isFlipped,
         'ml-md-3': this.responsive
       }
     },
@@ -459,6 +461,10 @@ export default {
   width: 300px;
   max-width: 100%;
 
+  @include media-breakpoint-down(sm) {
+    width: 100%;
+  }
+
   .card-body {
     min-height: unset;
   }
@@ -468,6 +474,11 @@ export default {
   }
 
   &.flipped {
+    position: absolute;
+    visibility: hidden;
+  }
+
+  &.flipped-responsive {
     @include media-breakpoint-down(sm) {
       position: absolute;
       visibility: hidden;

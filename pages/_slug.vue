@@ -17,6 +17,7 @@
       <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
       <template v-slot:default>
         <div
+          v-if="!hasSingleFiche"
           class="swiper-button-prev swiper-button-yellow d-none d-md-block"
           role="button"
           aria-label="Prochaine fiche"
@@ -24,6 +25,7 @@
         ></div>
         <Fiche ref="fiche" :fiche="fiche" />
         <div
+          v-if="!hasSingleFiche"
           class="swiper-button-next swiper-button-yellow d-none d-md-block"
           role="button"
           aria-label="Prochaine fiche"
@@ -35,9 +37,11 @@
       <div class="post-sidebar-header d-none d-md-block text-center p-2">
         <h2 class="post-sidebar-title h5 m-0 text-white">Cités dans l'article :</h2>
       </div>
-      <div>
+      <div v-if="fiches">
+        <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" :responsive="false" />
         <FicheThumbnail
           v-for="fiche in fiches"
+          v-else
           :key="fiche.id"
           :fiche="fiche"
           class="my-2 mx-3 mx-md-2 position-relative"
@@ -218,6 +222,9 @@ export default {
     },
     postModifiedDate() {
       return moment(this.post.date).format('DD/MM/YY')
+    },
+    hasSingleFiche() {
+      return this.fiches && this.fiches.length === 1
     }
   },
   methods: {
