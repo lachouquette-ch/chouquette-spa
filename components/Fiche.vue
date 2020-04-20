@@ -149,7 +149,7 @@
               <a
                 href=""
                 title="Plus de détails"
-                class="btn btn-yellow float-right"
+                class="btn btn-yellow border-secondary float-right"
                 :class="{ 'd-md-none': responsive }"
                 @click.prevent="isFlipped = !isFlipped"
                 ><i class="fas fa-plus"></i
@@ -235,7 +235,7 @@
               <a
                 href=""
                 title="Plus de détails"
-                class="btn btn-primary float-right"
+                class="btn btn-primary border-secondary float-right"
                 :class="{ 'd-md-none': responsive }"
                 @click.prevent="isFlipped = !isFlipped"
                 ><i class="fas fa-plus"></i
@@ -306,14 +306,14 @@ export default {
       return {
         flipped: !this.responsive && this.isFlipped,
         'flipped-responsive': this.responsive && this.isFlipped,
-        'mr-md-3': this.responsive
+        'mx-md-3': this.responsive
       }
     },
     backClass() {
       return {
         flipped: !this.responsive && !this.isFlipped,
         'flipped-responsive': this.responsive && !this.isFlipped,
-        'ml-md-3': this.responsive
+        'mx-md-3': this.responsive
       }
     },
     currentURL() {

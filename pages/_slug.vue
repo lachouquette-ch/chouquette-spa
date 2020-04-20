@@ -293,7 +293,9 @@ export default {
 <style lang="scss" scoped>
 ::v-deep .modal-body-class {
   min-height: 50vh;
-  padding: 0;
+  @include media-breakpoint-down(sm) {
+    padding: 0;
+  }
 }
 
 .post-sidebar {
