@@ -250,14 +250,14 @@ export default {
       const previousFicheIndex = --ficheIndex < 0 ? this.fiches.length - 1 : ficheIndex
       this.fiche = this.fiches[previousFicheIndex]
       // retain fiche
-      location.hash = this.fiche.id
+      history.replaceState(null, null, `#${this.fiche.id}`)
     },
     nextFiche(fiche) {
       let ficheIndex = this.fiches.findIndex(({ id }) => fiche.id === id)
       const nextFicheIndex = ++ficheIndex >= this.fiches.length ? 0 : ficheIndex
       this.fiche = this.fiches[nextFicheIndex]
       // retain fiche
-      location.hash = this.fiche.id
+      history.replaceState(null, null, `#${this.fiche.id}`)
     },
     initModal() {
       const Hammer = require('hammerjs')
@@ -272,11 +272,11 @@ export default {
 
       this.$refs.fiche.resizeFiche()
       // retain fiche
-      location.hash = this.fiche.id
+      history.replaceState(null, null, `#${this.fiche.id}`)
     },
     closeModal() {
       // forget fiche
-      location.hash = ''
+      history.replaceState(null, null, '#')
     },
     yoastMetaConfig(yoastMeta) {
       return yoastMeta.map((metaProperty) => {
@@ -291,7 +291,7 @@ export default {
   },
   head() {
     return {
-      title: this.post ? this.post.title.rendered : '',
+      title: this.post ? this.$options.filters.heDecode(this.post.title.rendered) : '',
       link: [{ rel: 'stylesheet', href: `${process.env.wpBaseUrl}/wp-includes/css/dist/block-library/style.min.css` }],
       meta: this.post ? this.yoastMetaConfig(this.post.yoast_meta) : [],
       script: this.post ? this.yoastJsonLDConfig(this.post.yoast_json_ld) : []
