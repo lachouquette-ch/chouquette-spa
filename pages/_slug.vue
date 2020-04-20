@@ -35,7 +35,9 @@
     </b-modal>
     <nav v-if="fiches" class="post-sidebar layout-content bg-darker-grey" :class="{ 'hide-sidebar': hideSidebar }">
       <div class="post-sidebar-header d-none d-md-block text-center p-2">
-        <h2 class="post-sidebar-title h5 m-0 text-white">Cités dans l'article :</h2>
+        <h2 class="post-sidebar-title h5 m-0 text-white">
+          {{ hasSingleFiche ? 'La fiche' : "Cités dans l'article" }} :
+        </h2>
       </div>
       <div v-if="fiches">
         <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" :responsive="false" />
@@ -54,7 +56,7 @@
         <input id="option1" type="radio" name="options" checked />Article
       </label>
       <label class="btn btn-sm btn-primary" :class="{ active: !hideSidebar }" @click="hideSidebar = false">
-        <input id="option2" type="radio" name="options" />Fiches
+        <input id="option2" type="radio" name="options" />{{ hasSingleFiche ? 'Fiche' : 'Fiches' }}
       </label>
     </div>
     <b-overlay :show="!post" spinner-variant="yellow">
@@ -303,7 +305,7 @@ export default {
   overflow-y: auto;
 
   @include media-breakpoint-up(md) {
-    width: 300px;
+    width: 320px;
     border-right: 5px solid $chouquette-yellow;
 
     -webkit-overflow-scrolling: touch;
@@ -346,7 +348,7 @@ export default {
 
 .post.with-sidebar {
   @include media-breakpoint-up(md) {
-    margin-left: 300px;
+    margin-left: 320px;
   }
 }
 
