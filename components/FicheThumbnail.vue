@@ -1,5 +1,5 @@
 <template>
-  <div class="fiche btn btn-white media text-left" :class="{ 'fiche-chouquettise': fiche.info.chouquettise }">
+  <div class="fiche btn media text-left" :class="ficheClass">
     <WPMedia
       v-if="featuredMedia"
       :media="featuredMedia"
@@ -30,6 +30,11 @@ export default {
     return {
       featuredMedia: this.fiche._embedded['wp:featuredmedia'][0]
     }
+  },
+  computed: {
+    ficheClass() {
+      return this.fiche.info.chouquettise ? 'btn-yellow' : 'btn-white'
+    }
   }
 }
 </script>
@@ -41,7 +46,7 @@ export default {
 }
 
 .fiche-chouquettise {
-  border: 2px solid $chouquette-yellow;
+  background-color: $chouquette-yellow;
 }
 
 .fiche-img {
