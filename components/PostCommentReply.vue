@@ -40,7 +40,7 @@
       <div class="col-sm-4">
         <label class="col-form-label" :for="`email${_uid}`">Adresse de messagerie *</label>
         <small class="form-text text-muted">
-          Ton email ne sera pas publié. Parle de Chouquette !
+          Ton email ne sera pas publié. Parole de Chouquette !
         </small>
       </div>
       <div class="col-sm-8">

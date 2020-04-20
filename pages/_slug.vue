@@ -108,13 +108,13 @@
           </section>
 
           <section class="post-comments container my-5">
-            <h3 class="mb-3 text-center">{{ comments.length }} commentaire(s)</h3>
+            <h3 v-if="comments.length" class="mb-3 text-center">{{ comments.length }} commentaire(s)</h3>
+            <h3 v-else class="mb-3 text-center">Sois le premier à nous laisser un commentaire</h3>
             <ol class="comment-list p-0">
               <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
                 <PostComment :post="post.id" :comment="comment" :comments="comments" />
               </li>
             </ol>
-            <h3 class="my-4 text-center">Laisse-nous un petit mot</h3>
             <PostCommentReply :post="post.id" />
           </section>
         </article>
