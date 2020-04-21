@@ -101,7 +101,7 @@
                 <a
                   v-if="fiche.info.telephone"
                   :href="`tel: ${fiche.info.telephone}`"
-                  :title="fiche.info.telephone"
+                  title="Appeler"
                   target="_blank"
                   class="fiche-social border border-secondary rounded-circle"
                   ><i class="fas fa-phone"></i
@@ -163,6 +163,11 @@
             <div v-show="marker" ref="ficheMap" class="card-header p-0"></div>
             <div class="card-body position-relative p-0">
               <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
+                <li v-if="fiche.info.website" class="list-group-item">
+                  <a :href="fiche.info.website" title="Site Internet" target="_blank" class="text-decoration-none"
+                    ><i class="fas fa-globe"></i> {{ fiche.info.website }}
+                  </a>
+                </li>
                 <li v-if="fiche.info.telephone" class="list-group-item">
                   <a
                     :href="`tel: ${fiche.info.telephone}`"
@@ -170,11 +175,6 @@
                     target="_blank"
                     class="text-decoration-none"
                     ><i class="fas fa-phone"></i> {{ fiche.info.telephone }}
-                  </a>
-                </li>
-                <li v-if="fiche.info.website" class="list-group-item">
-                  <a :href="fiche.info.website" title="Site Internet" target="_blank" class="text-decoration-none"
-                    ><i class="fas fa-globe"></i> {{ fiche.info.website }}
                   </a>
                 </li>
                 <li v-if="fiche.info.mail" class="list-group-item">
