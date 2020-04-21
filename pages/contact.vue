@@ -1,8 +1,5 @@
 <template>
   <div class="contact-page container layout-content my-5">
-    <div class="alert alert-primary" role="alert">
-      This is a primary alert—check it out!
-    </div>
     <h1 class="text-center mb-4">Contacter l'équipe Chouquette</h1>
     <div class="text-center">
       <p>Un coucou, une suggestion ?, une envie de te Chouquettiser ?, …</p>
@@ -124,20 +121,14 @@ export default {
   data() {
     return {
       formContact: {
-        name: 'Fabrice (test)',
-        email: 'fabrice.douchant@gmail.com',
-        subject: 'sujet test',
-        to: 'webmaster',
-        message: 'mon message test pour la page contact'
+        name: null,
+        email: null,
+        subject: null,
+        to: null,
+        message: null
       },
       loading: false
     }
-  },
-  mounted() {
-    this.$store.dispatch('alerts/addAction', {
-      type: 'success',
-      message: 'Test test test !!!'
-    })
   },
   methods: {
     async postMessage() {
@@ -149,7 +140,7 @@ export default {
           // Get recaptcha token
           await this.$recaptchaLoaded()
           // Execute reCAPTCHA with action "login".
-          const token = await this.$recaptcha('comment')
+          const token = await this.$recaptcha('contact')
 
           await this.$wpAPI.contact.postMessage({
             ...this.formContact,
@@ -158,7 +149,7 @@ export default {
 
           this.$store.dispatch('alerts/addAction', {
             type: 'success',
-            message: 'Ton commentaire nous est bien parvenu : merci :-). Il sera visible dès validation de notre part.'
+            message: 'Ton message nous est bien parvenu : merci :-). On te répondra dès que possible.'
           })
 
           // clear form
