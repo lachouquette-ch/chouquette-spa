@@ -60,9 +60,9 @@
       </label>
     </div>
     <b-overlay :show="!post" spinner-variant="yellow">
-      <main role="main" class="post layout-content px-md-4" :class="{ 'with-sidebar': fiches }">
+      <main role="main" class="post layout-content" :class="{ 'with-sidebar': fiches }">
         <article v-if="post" :id="post.id">
-          <header class="post-header container p-0 mb-6">
+          <header class="post-header container-fluid px-0 mb-6">
             <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
             <WpAvatar
               :size="150"
@@ -89,7 +89,7 @@
             <main class="post-content-text" v-html="post.content.rendered" />
           </section>
 
-          <section class="post-author container my-5">
+          <section class="post-author container mb-5">
             <div class="border shadow-sm text-center position-relative">
               <WpAvatar
                 :size="150"
@@ -100,6 +100,40 @@
               <h5 class="mt-3 mb-4">{{ author.name }}</h5>
               <p class="px-2 pb-1">{{ author.description }}</p>
             </div>
+          </section>
+
+          <section class="home-newsletter container-fluid bg-yellow py-4">
+            <h3 class="text-center mb-0">Rejoins notre newsletter</h3>
+            <p class="text-center text-muted">Pour recevoir tous nos bons plans et ne plus rien rater</p>
+            <VueMailchimpSubscribe
+              url="https://unechouquettealausanne.us8.list-manage.com/subscribe/post-json"
+              :user-id="mailChimpUserId"
+              :list-id="mailChimpListId"
+              @error="onMailchimpSubscriptionError"
+              @success="onMailchimpSubscriptionSuccess"
+            >
+              <template v-slot="{ subscribe, setEmail, loading }">
+                <form class="form-inline mx-auto justify-content-center" @submit.prevent="subscribe">
+                  <input
+                    ref="mailRegistration"
+                    type="email"
+                    name="email"
+                    placeholder="Ton email"
+                    class="required email form-control w-auto mr-2"
+                    @input="setEmail($event.target.value)"
+                  />
+                  <button type="submit" class="btn btn-dark-grey" :disabled="loading">
+                    <span
+                      v-show="loading"
+                      class="spinner-border spinner-border-sm mt-2"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+                    Je m'inscris
+                  </button>
+                </form>
+              </template>
+            </VueMailchimpSubscribe>
           </section>
 
           <section v-show="similarPosts" class="cq-single-post-similar container my-5">
@@ -127,6 +161,8 @@
 import moment from 'moment'
 import _ from 'lodash'
 
+import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-subscribe'
+
 import WPMedia from '../components/WpMedia'
 import PostCardSwiper from '../components/PostCardSwiper'
 import PostShare from '../components/PostShare'
@@ -135,9 +171,21 @@ import WpAvatar from '../components/WpAvatar'
 import PostCommentReply from '../components/PostCommentReply'
 import FicheThumbnail from '../components/FicheThumbnail'
 import Fiche from '../components/Fiche'
+import newsletter from '~/mixins/newsletter'
 
 export default {
-  components: { Fiche, FicheThumbnail, PostCommentReply, WpAvatar, PostComment, WPMedia, PostCardSwiper, PostShare },
+  components: {
+    Fiche,
+    FicheThumbnail,
+    PostCommentReply,
+    WpAvatar,
+    PostComment,
+    WPMedia,
+    PostCardSwiper,
+    PostShare,
+    VueMailchimpSubscribe
+  },
+  mixins: [newsletter],
   async asyncData({ app, store, params }) {
     const post = await app.$wpAPI.wp.posts.getBySlug(params.slug)
 
@@ -394,7 +442,7 @@ export default {
 .post-header-sn-share {
   position: absolute;
   bottom: calc(-2rem - 15px);
-  right: 0;
+  right: 10px;
 }
 
 .post-content-title {

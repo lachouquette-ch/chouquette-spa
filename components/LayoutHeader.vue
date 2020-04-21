@@ -128,15 +128,14 @@
 import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-subscribe'
 import CategoryLogo from './CategoryLogo'
 import modal from '~/mixins/modal'
+import newsletter from '~/mixins/newsletter'
 
 export default {
   components: { CategoryLogo, VueMailchimpSubscribe },
-  mixins: [modal],
+  mixins: [modal, newsletter],
   data() {
     return {
       baseURL: process.env.wpBaseUrl,
-      mailChimpUserId: process.env.mailChimpUserId,
-      mailChimpListId: process.env.mailChimpListId,
       categories: [],
       searchText: ''
     }
@@ -151,14 +150,6 @@ export default {
   methods: {
     search(text) {
       this.$router.push({ path: '/search', query: { s: text } })
-    },
-    onMailchimpSubscriptionError(errorMessage) {
-      this.$store.dispatch('alerts/addAction', { type: 'danger', message: errorMessage })
-      this.$bvModal.hide('mailchimp-subscribe')
-    },
-    onMailchimpSubscriptionSuccess() {
-      this.$store.dispatch('alerts/addAction', { type: 'success', message: "Tu t'es bien inscris, merci !" })
-      this.$bvModal.hide('mailchimp-subscribe')
     }
   }
 }
