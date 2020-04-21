@@ -421,18 +421,35 @@ export default {
 
       // add marker
       if (this.map && this.fiche.info.location) {
+        this.infoWindow = new this.google.maps.InfoWindow({
+          content: `<div class="text-center">${this.fiche.info.location.address}</div>`
+        })
+
         this.marker = new this.google.maps.Marker({
           animation: this.google.maps.Animation.DROP,
-          clickable: false,
           icon: this.fiche.main_category.marker_icon,
           map: this.map,
           position: this.fiche.info.location,
           title: this.fiche.title.rendered
         })
+        this.marker.addListener('click', () => {
+          this.toggleInfoWindow(this.infoWindow, this.map, this.marker)
+        })
+
         this.map.setCenter(this.fiche.info.location)
+        this.toggleInfoWindow(this.infoWindow, this.map, this.marker)
       }
 
       this.$nextTick(() => this.resizeFiche()) // needs time to display fiche before computing its size
+    },
+    toggleInfoWindow(infoWindow, map, marker) {
+      if (!infoWindow.isOpen) {
+        infoWindow.isOpen = true
+        infoWindow.open(map, marker)
+      } else {
+        infoWindow.isOpen = false
+        infoWindow.close()
+      }
     },
     resizeFiche() {
       const $ = require('jquery')
