@@ -61,11 +61,6 @@ span.target {
       margin-top: 2rem;
     }
 
-    pre {
-      @extend .alert !optional;
-      @extend .alert-secondary !optional;
-    }
-
     /* Alignements */
 
     .aligncenter:not(.wp-block-gallery) {
