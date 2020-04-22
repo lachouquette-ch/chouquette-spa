@@ -66,7 +66,7 @@
             <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
             <WpAvatar
               :size="150"
-              :avatar-urls="authorAvatar"
+              :avatar-urls="author.avatar_urls"
               :alt="author.name"
               class="post-header-author-img rounded-circle"
             />
@@ -91,7 +91,7 @@
             <div class="border shadow-sm text-center position-relative">
               <WpAvatar
                 :size="150"
-                :avatar-urls="authorAvatar"
+                :avatar-urls="author.avatar_urls"
                 :alt="author.name"
                 class="post-header-author-img rounded-circle"
               />
@@ -191,7 +191,6 @@ export default {
     const featuredMedia = post._embedded['wp:featuredmedia'][0]
     const author = post._embedded.author[0]
     const tags = post._embedded['wp:term'][1]
-    const authorAvatar = author.avatar_urls
 
     // build data dependencies as functions to parallelize
 
@@ -241,7 +240,6 @@ export default {
       featuredMedia,
       author,
       tags,
-      authorAvatar,
       comments,
       rootLevelComments,
       similarPosts,
