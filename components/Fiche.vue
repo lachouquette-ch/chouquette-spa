@@ -142,7 +142,7 @@
             <div class="card-footer">
               <nuxt-link
                 :to="{ path: `/${fiche.latest_post.slug}` }"
-                :title="`Dernier article référencé : ${fiche.latest_post.title}`"
+                :title="`Lire le dernier article : ${fiche.latest_post.title}`"
                 class="btn btn-outline-secondary"
               >
                 <i class="far fa-newspaper"></i>
@@ -161,7 +161,7 @@
         <div ref="ficheBack" class="fiche-back" :class="backClass">
           <div ref="back" class="card bg-white">
             <div v-show="marker" ref="ficheMap" class="card-header p-0"></div>
-            <div class="card-body position-relative p-0">
+            <div class="card-body position-relative p-0 pt-2">
               <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
                 <li v-if="fiche.info.website" class="list-group-item">
                   <a :href="fiche.info.website" title="Site Internet" target="_blank" class="text-decoration-none"
@@ -215,7 +215,14 @@
                 </li>
               </ul>
               <div class="card-text p-3">
-                <span v-if="criteria">{{ criteriaList }}</span>
+                <div v-if="criteria">
+                  <span
+                    v-for="crit in criteriaList"
+                    :key="crit.id"
+                    class="badge badge-pill badge-light-grey mr-1"
+                    >{{ crit.name }}</span
+                  >
+                </div>
               </div>
               <a
                 title="Reporter une précision ou erreur sur la fiche"
@@ -228,7 +235,7 @@
             <div class="card-footer">
               <nuxt-link
                 :to="{ path: `/${fiche.latest_post.slug}` }"
-                :title="`Dernier article référencé : ${fiche.latest_post.title}`"
+                :title="`Lire le dernier article : ${fiche.latest_post.title}`"
                 class="btn btn-outline-secondary"
               >
                 <i class="far fa-newspaper"></i>
@@ -331,8 +338,7 @@ export default {
         .format('dddd')
     },
     criteriaList() {
-      const allCriteria = this.criteria.flatMap(({ values }) => values)
-      return allCriteria.map(({ name }) => name).join(', ')
+      return this.criteria.flatMap(({ values }) => values)
     }
   },
   watch: {
