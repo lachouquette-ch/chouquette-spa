@@ -170,6 +170,7 @@ import PostCommentReply from '../components/PostCommentReply'
 import FicheThumbnail from '../components/FicheThumbnail'
 import Fiche from '../components/Fiche'
 import newsletter from '~/mixins/newsletter'
+import yoast from '~/mixins/yoast'
 
 export default {
   components: {
@@ -183,7 +184,7 @@ export default {
     PostShare,
     VueMailchimpSubscribe
   },
-  mixins: [newsletter],
+  mixins: [newsletter, yoast],
   async asyncData({ app, store, params }) {
     const post = await app.$wpAPI.wp.posts.getBySlug(params.slug)
 
@@ -311,16 +312,6 @@ export default {
     closeModal() {
       // forget fiche
       history.replaceState(null, null, '#')
-    },
-    yoastMetaConfig(yoastMeta) {
-      return yoastMeta.map((metaProperty) => {
-        return { ...metaProperty, hid: metaProperty.name || metaProperty.property }
-      })
-    },
-    yoastJsonLDConfig(yoastJsonLD) {
-      return yoastJsonLD.map((jsonLD) => {
-        return { type: 'application/ld+json', json: jsonLD }
-      })
     }
   },
   head() {
