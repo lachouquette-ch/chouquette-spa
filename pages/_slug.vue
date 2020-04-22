@@ -278,8 +278,10 @@ export default {
     }
 
     const loadScript = require('simple-load-script').all
-
     loadScript(
+      'http://chouquette.test/wp-includes/js/twemoji.js?ver=5.3.2',
+      'http://chouquette.test/wp-includes/js/wp-emoji.js?ver=5.3.2',
+      'http://chouquette.test/wp-includes/js/hoverintent-js.min.js?ver=2.2.1',
       'http://chouquette.test/wp-includes/js/wp-embed.js?ver=5.3.2',
       'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/blocks/summary/summaryMinimized.js?ver=5.3.2',
       'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/js/jquery.colorbox.min.js?ver=2.3.5',
@@ -290,8 +292,11 @@ export default {
       'http://chouquette.test/wp-includes/js/jquery/ui/accordion.min.js?ver=1.11.4',
       'http://chouquette.test/wp-includes/js/jquery/ui/tabs.min.js?ver=1.11.4',
       'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/blocks/advtabs/frontend.js?ver=2.3.5',
-      'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/js/slick.min.js?ver=5.3.2'
+      'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/js/slick.min.js?ver=5.3.2',
+      '//www.instagram.com/embed.js' // retrigger instagram
     ).then(() => {
+      // import advance-gutenberg inner script
+
       const jQuery = require('jquery')
 
       // accordion
