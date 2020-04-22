@@ -62,9 +62,10 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    { src: '~/plugins/vuelidate.js' },
     { src: '~/plugins/vuerecaptchav3.js', mode: 'client' },
     { src: '~/plugins/bootstrap.js', mode: 'client' },
+    { src: '~/plugins/jquery.js', mode: 'client' },
+    { src: '~/plugins/vuelidate.js' },
     { src: '~/plugins/html-entity-filter.js' },
     { src: '~/plugins/wordpressAPI.js' }
   ],
@@ -105,6 +106,7 @@ export default {
     plugins: [
       new webpack.ProvidePlugin({
         $: 'jquery',
+        jQuery: 'jquery',
         'jquery-ui': 'jquery-ui/jquery-ui.js'
       })
     ]

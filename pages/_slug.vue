@@ -281,6 +281,22 @@ export default {
     require('jquery-ui/ui/widgets/accordion')
     require('slick-carousel')
 
+    const loadScript = require('simple-load-script').all
+
+    loadScript(
+      'http://chouquette.test/wp-includes/js/wp-embed.js?ver=5.3.2',
+      'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/blocks/summary/summaryMinimized.js?ver=5.3.2',
+      'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/js/jquery.colorbox.min.js?ver=2.3.5',
+      'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/blocks/advvideo/lightbox.js?ver=2.3.5',
+      'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/js/jquery.colorbox.min.js?ver=2.3.5',
+      'http://chouquette.test/wp-includes/js/jquery/ui/core.min.js?ver=1.11.4',
+      'http://chouquette.test/wp-includes/js/jquery/ui/widget.min.js?ver=1.11.4',
+      'http://chouquette.test/wp-includes/js/jquery/ui/accordion.min.js?ver=1.11.4',
+      'http://chouquette.test/wp-includes/js/jquery/ui/tabs.min.js?ver=1.11.4',
+      'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/blocks/advtabs/frontend.js?ver=2.3.5',
+      'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/js/slick.min.js?ver=5.3.2'
+    )
+
     // accordion
     jQuery(document).ready(function($) {
       $('.advgb-accordion-wrapper').each(function() {
@@ -299,99 +315,6 @@ export default {
         dots: true,
         adaptiveHeight: true
       })
-    })
-
-    // frontend.js
-    jQuery(document).ready(function($) {
-      $('.advgb-tabs-wrapper').each(function() {
-        const activeTab = $(this).data('tab-active')
-        const tabPanel = $(this).find('.advgb-tab-panel')
-
-        let tab = $(this).find('li.advgb-tab:not(".advgb-tab-active")')
-        if ($(this).prop('id') !== '') {
-          tab = $(this).find('li.advgb-tab:not(".ui-state-active")')
-        }
-        const tabs = $(this).find('.advgb-tab')
-        const bodyHeaders = $(this).find('.advgb-tab-body-header')
-        const bodyContainers = $(this).find('.advgb-tab-body-container')
-        const bgColor = tab.css('background-color')
-        const borderColor = tab.css('border-color')
-        const borderWidth = tab.css('border-width')
-        const borderStyle = tab.css('border-style')
-        const borderRadius = tab.css('border-radius')
-        const textColor = tab.find('a').css('color')
-
-        if ($(this).prop('id') !== '') {
-          $(this)
-            .find('.advgb-tab a:not(.ui-tabs-anchor)')
-            .unbind('click')
-          // Render tabs UI
-          $(this).tabs({
-            active: parseInt(activeTab),
-            activate(e, ui) {
-              const newIdx = ui.newTab.index()
-              bodyHeaders.removeClass('header-active')
-              bodyHeaders.eq(newIdx).addClass('header-active')
-            }
-          })
-        } else {
-          $(this)
-            .find('.advgb-tab a:not(.advgb-tabs-anchor)')
-            .unbind('click')
-
-          tabs.on('click', function(event) {
-            event.preventDefault()
-            const currentTabActive = $(event.target).closest('.advgb-tab')
-            const href = currentTabActive.find('a').attr('href')
-
-            tabs.removeClass('advgb-tab-active')
-            currentTabActive.addClass('advgb-tab-active')
-            bodyContainers.find('.advgb-tab-body').hide()
-            bodyContainers.find('.advgb-tab-body[aria-labelledby="' + href.replace(/^#/, '') + '"]').show()
-          })
-
-          tabs.eq(activeTab).trigger('click') // Default
-        }
-
-        bodyHeaders.eq(activeTab).addClass('header-active')
-        bodyHeaders.css({
-          backgroundColor: bgColor,
-          color: textColor,
-          borderColor,
-          borderWidth,
-          borderStyle,
-          borderRadius
-        })
-      })
-
-      $('.advgb-tab-body-header').click(function() {
-        const bodyContainer = $(this).closest('.advgb-tab-body-container')
-        const bodyWrapper = $(this).closest('.advgb-tab-body-wrapper')
-        const tabsWrapper = $(this).closest('.advgb-tabs-wrapper')
-        const tabsPanel = tabsWrapper.find('.advgb-tabs-panel')
-        const idx = bodyContainer.index()
-
-        bodyWrapper.find('.advgb-tab-body-header').removeClass('header-active')
-        $(this).addClass('header-active')
-        tabsPanel
-          .find('.advgb-tab')
-          .eq(idx)
-          .find('a')
-          .trigger('click')
-      })
-    })
-
-    // summaryMinimized
-    jQuery(document).ready(function($) {
-      $('.advgb-toc-header')
-        .unbind('click')
-        .click(function() {
-          $(this).toggleClass('collapsed')
-          $(this)
-            .closest('.wp-block-advgb-summary')
-            .find('.advgb-toc')
-            .slideToggle()
-        })
     })
   },
   methods: {
