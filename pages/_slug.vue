@@ -134,7 +134,7 @@
             </VueMailchimpSubscribe>
           </section>
 
-          <section v-show="similarPosts" class="cq-single-post-similar container my-5">
+          <section v-if="similarPosts" class="cq-single-post-similar container my-5">
             <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
             <PostCardSwiper v-if="similarPosts" :posts="similarPosts" />
           </section>
@@ -189,7 +189,7 @@ export default {
     const post = await app.$wpAPI.wp.posts.getBySlug(params.slug)
 
     // helper fields
-    const featuredMedia = post._embedded['wp:featuredmedia'][0]
+    const featuredMedia = post._embedded['wp:featuredmedia'] ? post._embedded['wp:featuredmedia'][0] : null
     const author = post._embedded.author[0]
     const tags = post._embedded['wp:term'][1]
 
@@ -220,6 +220,8 @@ export default {
     }
 
     const loadLinkedFiches = async () => {
+      if (!post.meta.link_fiche.length) return Promise.resolve()
+
       const linkedfiches = await app.$wpAPI.wp.fiches.getByIds(post.meta.link_fiche)
       const fiches = linkedfiches.sort((el1, el2) => {
         return el2.info.chouquettise - el1.info.chouquettise

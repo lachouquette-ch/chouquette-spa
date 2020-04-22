@@ -48,7 +48,8 @@ export default {
   },
   async created() {
     this.topCategory = await this.$store.dispatch('categories/fetchById', this.post.top_categories[0])
-    this.featuredMedia = await this.$store.dispatch('media/fetchById', this.post.featured_media)
+    if (this.post.featuredMedia)
+      this.featuredMedia = await this.$store.dispatch('media/fetchById', this.post.featured_media)
   },
   methods: {
     /**
