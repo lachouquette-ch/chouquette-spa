@@ -171,6 +171,7 @@ import FicheThumbnail from '../components/FicheThumbnail'
 import Fiche from '../components/Fiche'
 import newsletter from '~/mixins/newsletter'
 import yoast from '~/mixins/yoast'
+import gutenberg from '~/mixins/gutenberg'
 
 export default {
   components: {
@@ -184,7 +185,7 @@ export default {
     PostShare,
     VueMailchimpSubscribe
   },
-  mixins: [newsletter, yoast],
+  mixins: [gutenberg, newsletter, yoast],
   async asyncData({ app, store, params }) {
     const post = await app.$wpAPI.wp.posts.getBySlug(params.slug)
 
@@ -276,49 +277,6 @@ export default {
         this.viewFiche(ficheToShow)
       }
     }
-
-    const loadScript = require('simple-load-script').all
-    loadScript(
-      'http://chouquette.test/wp-includes/js/twemoji.js?ver=5.3.2',
-      'http://chouquette.test/wp-includes/js/wp-emoji.js?ver=5.3.2',
-      'http://chouquette.test/wp-includes/js/hoverintent-js.min.js?ver=2.2.1',
-      'http://chouquette.test/wp-includes/js/wp-embed.js?ver=5.3.2',
-      'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/blocks/summary/summaryMinimized.js?ver=5.3.2',
-      'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/js/jquery.colorbox.min.js?ver=2.3.5',
-      'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/blocks/advvideo/lightbox.js?ver=2.3.5',
-      'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/js/jquery.colorbox.min.js?ver=2.3.5',
-      'http://chouquette.test/wp-includes/js/jquery/ui/core.min.js?ver=1.11.4',
-      'http://chouquette.test/wp-includes/js/jquery/ui/widget.min.js?ver=1.11.4',
-      'http://chouquette.test/wp-includes/js/jquery/ui/accordion.min.js?ver=1.11.4',
-      'http://chouquette.test/wp-includes/js/jquery/ui/tabs.min.js?ver=1.11.4',
-      'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/blocks/advtabs/frontend.js?ver=2.3.5',
-      'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/js/slick.min.js?ver=5.3.2',
-      '//www.instagram.com/embed.js' // retrigger instagram
-    ).then(() => {
-      // import advance-gutenberg inner script
-
-      const jQuery = require('jquery')
-
-      // accordion
-      jQuery(document).ready(function($) {
-        $('.advgb-accordion-wrapper').each(function() {
-          $(this).accordion({
-            header: '> div > .advgb-accordion-header',
-            heightStyle: 'content',
-            collapsible: true,
-            active: $(this).data('collapsed') ? false : 0
-          })
-        })
-      })
-
-      // slider
-      jQuery(document).ready(function($) {
-        $('.advgb-images-slider-block .advgb-images-slider:not(.slick-initialized)').slick({
-          dots: true,
-          adaptiveHeight: true
-        })
-      })
-    })
   },
   methods: {
     viewFiche(fiche) {
@@ -362,44 +320,7 @@ export default {
   head() {
     return {
       title: this.post ? this.$options.filters.heDecode(this.post.title.rendered) : '',
-      link: [
-        { rel: 'stylesheet', href: `${process.env.wpBaseUrl}/wp-includes/css/dist/block-library/style.min.css` },
-        {
-          rel: 'stylesheet',
-          hid: 'advgb_blocks_styles-css',
-          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/blocks_styles/blocks.css?ver=5.3.2`
-        },
-        {
-          rel: 'stylesheet',
-          hid: 'material_icon_font-css',
-          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/fonts/material-icons.min.css?ver=5.3.2`
-        },
-        {
-          rel: 'stylesheet',
-          hid: 'colorbox_style-css',
-          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/colorbox.css?ver=2.3.5`
-        },
-        {
-          rel: 'stylesheet',
-          hid: 'slick_style-css',
-          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/slick.css?ver=5.3.2`
-        },
-        {
-          rel: 'stylesheet',
-          hid: 'slick_theme_style-css',
-          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/slick-theme.css?ver=5.3.2`
-        },
-        {
-          rel: 'stylesheet',
-          hid: 'advgb_bulma_styles-css',
-          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/bulma.min.css?ver=5.3.2`
-        },
-        {
-          rel: 'stylesheet',
-          id: 'dashicons-css',
-          href: `${process.env.wpBaseUrl}/wp-includes/css/dashicons.css?ver=5.3.2`
-        }
-      ],
+      link: this.gutenbergLinks(),
       meta: this.post ? this.yoastMetaConfig(this.post.yoast_meta) : [],
       script: this.post ? this.yoastJsonLDConfig(this.post.yoast_json_ld) : []
     }
