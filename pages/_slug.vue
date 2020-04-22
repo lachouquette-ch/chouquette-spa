@@ -277,10 +277,6 @@ export default {
       }
     }
 
-    const jQuery = require('jquery')
-    require('jquery-ui/ui/widgets/accordion')
-    require('slick-carousel')
-
     const loadScript = require('simple-load-script').all
 
     loadScript(
@@ -295,25 +291,27 @@ export default {
       'http://chouquette.test/wp-includes/js/jquery/ui/tabs.min.js?ver=1.11.4',
       'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/blocks/advtabs/frontend.js?ver=2.3.5',
       'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/js/slick.min.js?ver=5.3.2'
-    )
+    ).then(() => {
+      const jQuery = require('jquery')
 
-    // accordion
-    jQuery(document).ready(function($) {
-      $('.advgb-accordion-wrapper').each(function() {
-        $(this).accordion({
-          header: '> div > .advgb-accordion-header',
-          heightStyle: 'content',
-          collapsible: true,
-          active: $(this).data('collapsed') ? false : 0
+      // accordion
+      jQuery(document).ready(function($) {
+        $('.advgb-accordion-wrapper').each(function() {
+          $(this).accordion({
+            header: '> div > .advgb-accordion-header',
+            heightStyle: 'content',
+            collapsible: true,
+            active: $(this).data('collapsed') ? false : 0
+          })
         })
       })
-    })
 
-    // slider
-    jQuery(document).ready(function($) {
-      $('.advgb-images-slider-block .advgb-images-slider:not(.slick-initialized)').slick({
-        dots: true,
-        adaptiveHeight: true
+      // slider
+      jQuery(document).ready(function($) {
+        $('.advgb-images-slider-block .advgb-images-slider:not(.slick-initialized)').slick({
+          dots: true,
+          adaptiveHeight: true
+        })
       })
     })
   },
