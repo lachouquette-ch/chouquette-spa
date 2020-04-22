@@ -1,3 +1,4 @@
+import webpack from 'webpack'
 require('dotenv').config()
 
 export default {
@@ -100,6 +101,12 @@ export default {
       ({ isClient }) => isClient && 'query-string',
       ({ isClient }) => isClient && 'split-on-first',
       ({ isClient }) => isClient && 'strict-uri-encode'
+    ],
+    plugins: [
+      new webpack.ProvidePlugin({
+        $: 'jquery',
+        'jquery-ui': 'jquery-ui/jquery-ui.js'
+      })
     ]
   }
 }
