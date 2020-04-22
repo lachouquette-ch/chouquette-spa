@@ -27,10 +27,10 @@ export default {
   },
   created() {
     const [size, url] = Object.entries(this.avatarUrls).shift()
-    const avatarUrlRegExp = new RegExp(`x${size}.jpg`)
+    const avatarUrlRegExp = new RegExp(`\\?s=${size}`)
 
-    this.urlSrc = url.replace(avatarUrlRegExp, `x${this.size}.jpg`)
-    this.urlSrcSet = url.replace(avatarUrlRegExp, `x${this.size * 2}.jpg 2x`)
+    this.urlSrc = url.replace(avatarUrlRegExp, `?s=${this.size}`)
+    this.urlSrcSet = url.replace(avatarUrlRegExp, `?s=${this.size * 2}`) + ' 2x'
   }
 }
 </script>
