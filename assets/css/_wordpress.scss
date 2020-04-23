@@ -77,6 +77,10 @@ span.target {
     padding-top: 1rem;
     padding-bottom: 1rem;
     padding-left: 2rem;
+
+    cite {
+      color: $text-muted;
+    }
   }
 
   // Instagram
