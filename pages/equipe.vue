@@ -1,12 +1,6 @@
 <template>
-  <b-overlay :show="!page" spinner-variant="yellow">
-    <div class="equipe-page container layout-content my-4">
-      <div v-if="page" class="row">
-        <div class="col gutenberg-content">
-          <h1 class="text-center mb-4">{{ page.title.rendered | heDecode }}</h1>
-          <div v-html="page.content.rendered" />
-        </div>
-      </div>
+  <WpPage :page="page">
+    <template v-slot:footer>
       <div v-if="team" class="my-3">
         <h2 class="text-center mb-4">L'équipe</h2>
         <div class="d-flex flex-wrap justify-content-around">
@@ -25,40 +19,29 @@
           </div>
         </div>
       </div>
-    </div>
-  </b-overlay>
+    </template>
+  </WpPage>
 </template>
 
 <script>
 import WpAvatar from '../components/WpAvatar'
-import yoast from '~/mixins/yoast'
+import WpPage from '~/components/WpPage'
 
 export default {
   components: {
+    WpPage,
     WpAvatar
   },
-  mixins: [yoast],
   async asyncData({ app }) {
     return {
       page: await app.$wpAPI.wp.pages.getBySlug('equipe'),
       team: await app.$wpAPI.wp.users.getTeam()
-    }
-  },
-  head() {
-    return {
-      link: [{ rel: 'stylesheet', href: `${process.env.wpBaseUrl}/wp-includes/css/dist/block-library/style.min.css` }],
-      meta: this.page ? this.yoastMetaConfig(this.page.yoast_meta) : [],
-      script: this.page ? this.yoastJsonLDConfig(this.page.yoast_json_ld) : []
     }
   }
 }
 </script>
 
 <style lang="scss">
-.equipe-page {
-  min-height: 100vh;
-}
-
 .card {
   max-width: 300px;
 
