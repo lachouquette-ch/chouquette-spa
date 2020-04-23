@@ -82,7 +82,7 @@
             <PostShare :post="post" class="post-header-sn-share" />
           </header>
 
-          <section class="gutenberg-content container mb-5">
+          <section class="gutenberg-content container pt-4 mb-5">
             <h1 class="pt-2 mb-4 text-center">{{ post.title.rendered | heDecode }}</h1>
             <main v-html="post.content.rendered" />
           </section>
