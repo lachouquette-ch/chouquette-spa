@@ -204,7 +204,7 @@ export default {
     }
 
     const loadSimilarPosts = async () => {
-      const similarPosts = await app.$wpAPI.wp.posts.get('/', {
+      const similarPosts = await app.$wpAPI.wp.posts.get({
         params: {
           tags: post.tags,
           exclude: post.id,

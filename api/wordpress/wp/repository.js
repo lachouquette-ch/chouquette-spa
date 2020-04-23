@@ -5,7 +5,7 @@ class Repository {
   }
 
   get(params) {
-    return this.$axios.$get(this.prefix + '/', { params })
+    return this.$axios.$get(this.prefix + '/', params)
   }
 
   getBySlug(slug) {
