@@ -18,7 +18,7 @@ export default {
       'http://chouquette.test/wp-content/plugins/advanced-gutenberg/assets/js/slick.min.js?ver=5.3.2',
       '//www.instagram.com/embed.js' // retrigger instagram
     ).then(() => {
-      // import advance-gutenberg inner script
+      // execute advance-gutenberg inner script
 
       const jQuery = require('jquery')
 
@@ -42,6 +42,9 @@ export default {
         })
       })
     })
+
+    // execute anchor fixing
+    require('~/assets/scripts/link-anchor-fixed-header')
   },
   methods: {
     gutenbergLinks() {
