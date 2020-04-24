@@ -42,14 +42,12 @@ span.target {
     margin-bottom: 1.5rem;
   }
 
-  /* Exceptions to default block styling */
+  /* Component styling */
 
   // Summary
   .wp-block-advgb-summary ul.advgb-toc {
     width: fit-content;
   }
-
-  /* Gutenberg customization */
 
   // Image
   figure figcaption {
@@ -84,11 +82,11 @@ span.target {
   }
 
   // Instagram
-  figure.wp-block-embed-instagram {
+  figure[class^="wp-block"] {
     iframe {
+      max-width: 100%;
       margin-left: auto !important;
       margin-right: auto !important;
     }
   }
-
 }
