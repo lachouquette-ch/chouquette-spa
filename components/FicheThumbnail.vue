@@ -12,7 +12,7 @@
       width="64"
     />
     <div class="media-body ml-1 p-1">
-      <h3 class="text-center mb-1 h6" v-html="fiche.title.rendered"></h3>
+      <h3 class="mb-1 h6" v-html="fiche.title.rendered"></h3>
     </div>
     <span class="fiche-link"><i class="fas fa-external-link-alt"></i></span>
   </div>
