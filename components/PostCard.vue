@@ -1,27 +1,25 @@
 <template>
-  <article class="post-card post-card-chouquettise">
-    <nuxt-link :to="{ path: `/${post.slug}` }" :title="post.title.rendered | heDecode" class="text-decoration-none">
-      <div class="post-card-picture" :style="postCardBackground">
-        <CategoryLogo
-          v-if="topCategory"
-          :category="topCategory"
-          color="black"
-          class="rounded-circle float-left post-card-category"
-          @init="dispatchInit"
-        />
+  <article class="card shadow position-relative d-inline">
+    <div>
+      <WpMedia v-if="featuredMedia" :media="featuredMedia" size="medium_large" class="card-img-top"></WpMedia>
+      <div class="card-category rounded-circle bg-white shadow">
+        <CategoryLogo v-if="topCategory" :category="topCategory" width="35" height="35" color="black" @init="dispatchInit" />
       </div>
-      <div class="post-card-caption d-flex text-center justify-content-center align-items-center">
+    </div>
+    <div class="card-body">
+      <p class="card-text text-center">
         {{ post.title.rendered | heDecode }}
-      </div>
-    </nuxt-link>
+      </p>
+    </div>
   </article>
 </template>
 
 <script>
 import CategoryLogo from './CategoryLogo'
+import WpMedia from '~/components/WpMedia'
 
 export default {
-  components: { CategoryLogo },
+  components: { WpMedia, CategoryLogo },
   props: {
     post: {
       required: true,
@@ -31,19 +29,7 @@ export default {
   data() {
     return {
       topCategory: null,
-      featuredMedia: null,
-      categoryLogoInit: false
-    }
-  },
-  computed: {
-    postCardBackground() {
-      if (this.featuredMedia) {
-        return {
-          'background-image': `url('${this.featuredMedia.media_details.sizes.medium.source_url}')`
-        }
-      } else {
-        return {}
-      }
+      featuredMedia: null
     }
   },
   async created() {
@@ -66,37 +52,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.post-card {
-  display: inline-block;
-  position: relative;
-  width: 300px;
+.card {
+  width: 300px !important;
   max-width: 100%;
 
   font-family: $font-family-heading;
   font-size: $h5-font-size;
-
-  background-color: $white;
-  box-shadow: $box-shadow;
-
-  > a {
-    color: $black;
-    @include hover-focus-active {
-      color: $black;
-    }
-  }
-
-  transition: 0.3s;
 }
 
-.post-card-chouquettise {
-  .post-card-category {
+.card-img-top {
+  height: 300px;
+  object-fit: cover;
+}
+
+.card-chouquettise {
+  .card-category {
     background-color: $chouquette-yellow;
   }
 }
 
-.post-card-category {
-  background-color: $white;
-  box-shadow: $box-shadow;
+.card-category {
   padding: 0.75rem;
 
   position: absolute;
@@ -104,28 +79,13 @@ export default {
   left: 5px;
 
   transform: rotate(-5deg);
-
-  > img {
-    width: 35px;
-  }
 }
 
-.post-card-picture {
+.card-img-top {
   border: 15px solid $white;
-
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
-.post-card-picture:after {
-  content: '';
-  display: block;
-  padding-bottom: 100%;
-}
-
-.post-card-caption {
-  margin: 0 10px 5px 10px;
+.card-text {
   min-height: $line-height-base * 3rem;
 }
 </style>
