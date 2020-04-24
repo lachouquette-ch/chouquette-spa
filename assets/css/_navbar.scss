@@ -16,6 +16,10 @@ $navbar-chouquette-brand-hover-color: rgba($navbar-chouquette-color, .8);
   padding-top: 0;
   padding-bottom: 0;
 
+  a {
+    text-decoration: none;
+  }
+
   .navbar-brand {
     padding: 0;
     @include hover-focus {

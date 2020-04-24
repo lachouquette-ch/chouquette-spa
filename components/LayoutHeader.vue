@@ -61,7 +61,7 @@
       </form>
     </b-modal>
 
-    <nav class="navbar fixed-top navbar-chouquette-light navbar-expand-md">
+    <nav class="navbar navbar-chouquette-light navbar-expand-md fixed-top">
       <button
         class="navbar-toggler"
         type="button"
@@ -73,7 +73,7 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <nuxt-link to="/" class="navbar-brand mx-auto text-decoration-none">La Chouquette</nuxt-link>
+      <nuxt-link to="/" class="navbar-brand mx-auto">La Chouquette</nuxt-link>
 
       <div id="navbarChouquette" class="collapse navbar-collapse">
         <form class="d-md-none mb-2" @submit.prevent="search(searchText)">
@@ -96,15 +96,15 @@
             <nuxt-link
               :to="{ path: `/category/${category.slug}` }"
               :title="category.description"
-              class="nav-link text-decoration-none"
+              class="nav-link text-center"
             >
               <CategoryLogo :category="category" color="white" class="d-inline nav-logo ml-lg-3 mr-2"></CategoryLogo>
-              {{ category.name }}
+              <span class="text-nowrap">{{ category.name }}</span>
             </nuxt-link>
           </li>
         </ul>
         <div class="dropdown-divider"></div>
-        <div class="navbar-sn mr-3">
+        <div class="navbar-sn text-center mr-3">
           <a href="https://www.facebook.com/lachouquettelausanne" title="Facebook" target="_blank"
             ><i class="fab fa-facebook-f"></i
           ></a>

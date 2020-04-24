@@ -1,5 +1,8 @@
 <template>
-  <div class="fiche btn media text-left" :class="ficheClass">
+  <div
+    class="media btn btn-outline-dark-grey border-0 p-0 shadow text-left"
+    :class="{ 'btn-yellow': fiche.info.chouquettise }"
+  >
     <WPMedia
       v-if="featuredMedia"
       :media="featuredMedia"
@@ -8,8 +11,8 @@
       height="64"
       width="64"
     />
-    <div class="media-body ml-1 p-1 text-black">
-      <h3 class="mb-1 h6" v-html="fiche.title.rendered"></h3>
+    <div class="media-body ml-1 p-1">
+      <h3 class="text-center mb-1 h6" v-html="fiche.title.rendered"></h3>
     </div>
     <span class="fiche-link"><i class="fas fa-external-link-alt"></i></span>
   </div>
@@ -30,21 +33,11 @@ export default {
     return {
       featuredMedia: this.fiche._embedded['wp:featuredmedia'][0]
     }
-  },
-  computed: {
-    ficheClass() {
-      return this.fiche.info.chouquettise ? 'btn-yellow' : 'btn-white'
-    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.fiche {
-  padding: 0;
-  border: 0;
-}
-
 .fiche-chouquettise {
   background-color: $chouquette-yellow;
 }

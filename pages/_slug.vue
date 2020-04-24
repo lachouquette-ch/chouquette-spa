@@ -33,11 +33,9 @@
         ></div>
       </template>
     </b-modal>
-    <nav v-if="fiches" class="post-sidebar layout-content bg-darker-grey" :class="{ 'hide-sidebar': hideSidebar }">
-      <div class="post-sidebar-header d-none d-md-block text-center p-2">
-        <h2 class="post-sidebar-title h5 m-0 text-white">
-          {{ hasSingleFiche ? 'La fiche' : "Cités dans l'article" }} :
-        </h2>
+    <nav v-if="fiches" class="post-sidebar" :class="{ 'hide-sidebar': hideSidebar }">
+      <div class="post-sidebar-header d-none d-md-block text-center my-4">
+        <h2 class="post-sidebar-title h5 m-0">{{ hasSingleFiche ? 'La fiche' : "Cités dans l'article" }} :</h2>
       </div>
       <div v-if="fiches">
         <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" :responsive="false" />
@@ -338,7 +336,7 @@ export default {
 
 .post-sidebar {
   position: fixed;
-  top: 0;
+  top: $header-height + $covid-banner-height;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -347,7 +345,6 @@ export default {
 
   @include media-breakpoint-up(md) {
     width: 320px;
-    border-right: 5px solid $chouquette-yellow;
 
     -webkit-overflow-scrolling: touch;
 
