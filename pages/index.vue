@@ -50,9 +50,9 @@
         </div>
         <div class="d-none d-md-flex flex-row flex-wrap justify-content-center text-center">
           <div v-for="category in categories" :key="category.id" class="home-header-category m-4">
-            <nuxt-link :to="{ path: `/category/${category.slug}` }" :title="category.description">
+            <nuxt-link :to="{ path: `/category/${category.slug}` }" :title="category.description" class="text-decoration-none">
               <div class="home-header-category-logo p-3 rounded-circle  ">
-                <CategoryLogo :category="category" heigth="150" width="150" color="yellow" />
+                <CategoryLogo :category="category" height="60" width="60" color="yellow" />
               </div>
               <h2 class="my-2">{{ category.name }}</h2>
             </nuxt-link>
@@ -110,39 +110,7 @@
           <h2 class="mb-4">Nos derniers articles</h2>
         </div>
         <div class="article-card-shuffle-container d-flex flex-wrap align-items-center justify-content-center">
-          <!--<?php
-                // sticky first
-                $args = array(
-                    'posts_per_page' => 6,
-        'post__in' => get_option('sticky_posts'),
-        'ignore_sticky_posts' => 1,
-        'orderby' => 'modified',
-        'order' => 'DESC'
-        );
-        $sticky_posts = new WP_Query($args);
-        if ($sticky_posts->have_posts()) {
-        while ($sticky_posts->have_posts()) {
-        $sticky_posts->the_post();
-        get_template_part('template-parts/article-card');
-        }
-        }
-
-        // lastest if any slot left
-        $remaining_slots = 6 - $sticky_posts->post_count;
-        if ($remaining_slots) {
-        $args = array(
-        'posts_per_page' => $remaining_slots,
-        'ignore_sticky_posts' => 1,
-        );
-        $latest_posts = new WP_Query($args);
-        if ($latest_posts->have_posts()) {
-        while ($latest_posts->have_posts()) {
-        $latest_posts->the_post();
-        get_template_part('template-parts/article-card');
-        }
-        }
-        }
-        ?>-->
+          <PostCard v-for="post in posts" :key="post.id" :post="post" class="article-card" />
         </div>
       </div>
 
@@ -239,13 +207,17 @@
 <script>
 import { mapState } from 'vuex'
 import CategoryLogo from '~/components/CategoryLogo'
+import PostCard from '~/components/PostCard'
+
+const LATEST_POSTS_NUM = 6
 
 export default {
-  components: { CategoryLogo },
+  components: { PostCard, CategoryLogo },
   layout: 'no-header',
   data() {
     return {
-      categories: []
+      categories: [],
+      posts: []
     }
   },
   computed: {
@@ -255,11 +227,26 @@ export default {
     })
   },
   async created() {
+    // get categories
     this.categories = await Promise.all(
       this.$store.state.menus.headerCategories.map(({ object_id }) => {
         return this.$store.dispatch('categories/fetchById', object_id)
       })
     )
+
+    // get posts
+    const posts = await this.$wpAPI.wp.posts.get({
+      params: {
+        sticky: true,
+        per_page: LATEST_POSTS_NUM
+      }
+    })
+    const remainingPostCount = LATEST_POSTS_NUM - posts.length
+    if (remainingPostCount) {
+      const remainingPosts = await this.$wpAPI.wp.posts.get({ params: { per_page: remainingPostCount } })
+      posts.push(...remainingPosts)
+    }
+    this.posts = posts
   }
 }
 </script>
