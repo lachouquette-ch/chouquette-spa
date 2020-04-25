@@ -464,22 +464,22 @@ export default {
     font-family: $font-family-heading;
     font-size: $h1-font-size;
   }
+}
 
-  ::v-deep .post-comments {
-    h3 {
-      font-family: $font-family-heading;
-      font-size: $h1-font-size;
-    }
+.post-comments {
+  h3 {
+    font-family: $font-family-heading;
+    font-size: $h1-font-size;
+  }
 
-    ol {
-      padding-left: 20px;
-    }
+  ol {
+    padding-left: 20px;
+  }
 
-    // no list bullets
-    ol,
-    ul {
-      list-style-type: none;
-    }
+  // no list bullets
+  ol,
+  ul {
+    list-style-type: none;
   }
 }
 </style>
