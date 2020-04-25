@@ -1,5 +1,7 @@
+import { ressourceStates, ressourceMutations } from './_ressource-helper'
+
 export const state = () => ({
-  all: {},
+  ...ressourceStates(),
   hierarchy: []
 })
 
@@ -21,8 +23,7 @@ export const actions = {
 
 export const mutations = {
   SET_LOCATIONS(state, locations) {
-    // set plain
-    locations.forEach((location) => (state.all[location.id] = location))
+    ressourceMutations.setRessources(state, locations)
 
     const topLocations = locations.filter(({ parent }) => parent === 0)
     // single level only. Add level property

@@ -1,33 +1,23 @@
-import _ from 'lodash'
+import { ressourceStates, ressourceActions, ressourceMutations } from './_ressource-helper'
 
 export const state = () => ({
-  all: {}
+  ...ressourceStates()
 })
 
 export const actions = {
-  async fetchByIds({ commit, state, dispatch }, ids) {
-    const unknownMediaIds = _.difference(ids, Object.keys(state.all))
-    const newMediaList = await this.$wpAPI.wp.media.getByIds(unknownMediaIds)
-    commit('SET_MEDIA_LIST', newMediaList)
-
-    return ids.map((id) => state.all[id])
+  fetchByIds(context, ids) {
+    return ressourceActions.fetchByIds(this.$wpAPI.wp.media, 'SET_MEDIA_LIST', context, ids)
   },
-  async fetchById({ commit, state }, id) {
-    if (state.all[id]) {
-      return Promise.resolve(state.all[id])
-    } else {
-      const media = await this.$wpAPI.wp.media.getById(id)
-      commit('SET_MEDIA', media)
-      return media
-    }
+  fetchById(context, id) {
+    return ressourceActions.fetchById(this.$wpAPI.wp.media, 'SET_MEDIA', context, id)
   }
 }
 
 export const mutations = {
   SET_MEDIA_LIST(state, mediaList) {
-    mediaList.forEach((media) => (state.all[media.id] = media))
+    ressourceMutations.setRessources(state, mediaList)
   },
   SET_MEDIA(state, media) {
-    state.all[media.id] = media
+    ressourceMutations.setRessource(state, media)
   }
 }
