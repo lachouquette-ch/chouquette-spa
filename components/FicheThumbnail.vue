@@ -1,6 +1,6 @@
 <template>
   <div
-    class="media btn btn-outline-dark-grey border-0 p-0 shadow text-left"
+    class="fiche media btn btn-outline-dark-grey border-0 p-0 shadow-sm text-left"
     :class="{ 'btn-yellow': fiche.info.chouquettise }"
   >
     <WPMedia
@@ -38,6 +38,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.fiche {
+  @include hover-focus {
+    box-shadow: $box-shadow !important;
+  }
+}
+
 .fiche-chouquettise {
   background-color: $chouquette-yellow;
 }
