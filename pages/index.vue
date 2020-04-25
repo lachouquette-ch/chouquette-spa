@@ -115,7 +115,7 @@
         </div>
         <div class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
           <nuxt-link
-            v-for="post in posts"
+            v-for="post in latestPosts"
             :key="post.id"
             :to="{ path: `/${post.slug}` }"
             class="post-card text-decoration-none"
@@ -157,7 +157,7 @@
                       <button type="submit" name="subscribe" class="btn btn-dark-grey w-100 btn-lg" :disabled="loading">
                         <span
                           v-show="loading"
-                          class="spinner-border spinner-border-sm mt-2"
+                          class="spinner-border spinner-border-sm mr-2"
                           role="status"
                           aria-hidden="true"
                         ></span
@@ -174,26 +174,9 @@
 
       <div class="home-tops container">
         <div class="text-center">
-          <h2 class="mb-4">Nos best of...</h2>
+          <h2 class="mb-4">Nos derniers tops...</h2>
         </div>
-        <div class="swiper-container">
-          <div class="swiper-wrapper">
-            <!--<?php
-                    $tops_posts = new WP_Query('posts_per_page=8&tag=tops&orderby=rand');
-                    if ($tops_posts->have_posts()) :
-          while ($tops_posts->have_posts()) :
-          $tops_posts->the_post();
-          echo '<div class="swiper-slide">';
-          get_template_part('template-parts/article-card');
-          echo '</div>';
-          endwhile;
-          endif;
-          ?>-->
-          </div>
-          <!-- Add Arrows -->
-          <div class="swiper-button-next swiper-button-black"></div>
-          <div class="swiper-button-prev swiper-button-black"></div>
-        </div>
+        <PostCardSwiper v-if="topPosts" :posts="topPosts" />
       </div>
     </div>
   </div>
@@ -208,17 +191,20 @@ import CategoryLogo from '~/components/CategoryLogo'
 import PostCard from '~/components/PostCard'
 
 import newsletter from '~/mixins/newsletter'
+import PostCardSwiper from '~/components/PostCardSwiper'
 
 const LATEST_POSTS_NUM = 6
+const TOP_POSTS_NUM = 8
 
 export default {
-  components: { PostCard, CategoryLogo, VueMailchimpSubscribe },
+  components: { PostCardSwiper, PostCard, CategoryLogo, VueMailchimpSubscribe },
   mixins: [newsletter],
   layout: 'no-header',
   data() {
     return {
       categories: [],
-      posts: []
+      latestPosts: [],
+      topPosts: []
     }
   },
   computed: {
@@ -247,7 +233,14 @@ export default {
       const remainingPosts = await this.$wpAPI.wp.posts.get({ params: { per_page: remainingPostCount } })
       posts.push(...remainingPosts)
     }
-    this.posts = posts
+    this.latestPosts = posts
+
+    this.topPosts = await this.$wpAPI.wp.posts.get({
+      params: {
+        tags: 'tops',
+        per_page: TOP_POSTS_NUM
+      }
+    })
   }
 }
 </script>
