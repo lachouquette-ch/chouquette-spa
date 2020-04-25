@@ -73,20 +73,11 @@
                 </select>
               </div>
               <div class="col-md-4 home-header-filters-item">
-                <select model="cat" class="form-control" title="Qu'aimerais-tu faire ?" name="cat">
-                  <option title="" value="">Qu'aimerais-tu faire ?</option>
-                  <!--<?php
-                                // get menu items
-                                $menu_items = chouquette_menu_items();
-                                if (!empty ($menu_items)) {
-                                    foreach ($menu_items as $menu_item) :
-                                        $category = get_category($menu_item->object_id);
-              echo "<option title='{$menu_item->title}' value='{$category->slug}'>{$category->name}</option>";
-              endforeach;
-              } else {
-              trigger_error(sprintf("Menu principal du thème '%s' non renseigné", CQ_PRIMARY_MENU), E_USER_WARNING);
-              }
-              ?>-->
+                <select :model="formSearch.category" class="form-control" title="Qu'aimerais-tu faire ?">
+                  <option :value="null">Qu'aimerais-tu faire ?</option>
+                  <option v-for="category in categories" :key="category.id" :value="category.slug">{{
+                    category.name
+                  }}</option>
                 </select>
               </div>
               <div class="col-md-4 home-header-filters-item">
@@ -206,7 +197,12 @@ export default {
       baseURL: process.env.wpBaseUrl,
       categories: [],
       latestPosts: [],
-      topPosts: []
+      topPosts: [],
+
+      formSearch: {
+        category: null,
+        location: null
+      }
     }
   },
   computed: {

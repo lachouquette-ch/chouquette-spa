@@ -1,0 +1,40 @@
+export const state = () => ({
+  all: {},
+  hierarchy: []
+})
+
+export const actions = {
+  async init({ commit }) {
+    // fetch all menus
+    const locations = await this.$wpAPI.wp.locations.get({
+      params: {
+        hide_empty: true,
+        orderby: 'count',
+        order: 'desc'
+      }
+    })
+    commit('SET_LOCATIONS', locations)
+
+    return locations
+  }
+}
+
+export const mutations = {
+  SET_LOCATIONS(state, locations) {
+    // set plain
+    locations.forEach((location) => (state.all[location.id] = location))
+
+    const topLocations = locations.filter(({ parent }) => parent === 0)
+    // single level only. Add level property
+    state.hierarchy = topLocations.map((topLocation) => {
+      return {
+        location: { ...topLocation, level: 0 },
+        subLocations: locations
+          .filter(({ parent }) => parent === topLocation.id)
+          .map((subLocation) => {
+            return { ...subLocation, level: 1 }
+          })
+      }
+    })
+  }
+}
