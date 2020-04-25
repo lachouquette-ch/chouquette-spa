@@ -1,5 +1,5 @@
 <template>
-  <article class="card shadow position-relative d-inline">
+  <article class="card shadow position-relative text-black">
     <div class="card-img-top">
       <WpMedia v-if="featuredMedia" :media="featuredMedia" size="medium_large" />
       <div class="card-category rounded-circle bg-white shadow">
@@ -62,8 +62,6 @@ export default {
 .card {
   width: 300px;
   max-width: 100%;
-
-  transition: 0.3s;
 }
 
 .card-img-top {

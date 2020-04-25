@@ -1,7 +1,14 @@
 <template>
-  <div class="swiper-container py-2">
+  <div class="swiper-container py-3">
     <div class="swiper-wrapper">
-      <PostCard v-for="post in posts" :key="post.id" :post="post" class="swiper-slide" @init="update(post)" />
+      <nuxt-link
+        v-for="post in posts"
+        :key="post.id"
+        :to="{ path: `/{$post.slug}` }"
+        class="swiper-slide text-decoration-none"
+      >
+        <PostCard :post="post" class="swiper-slide" @init="update(post)" />
+      </nuxt-link>
     </div>
     <div class="swiper-button-next swiper-button-yellow"></div>
     <div class="swiper-button-prev swiper-button-yellow"></div>
@@ -79,4 +86,10 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.swiper-slide {
+  @include hover-focus {
+    box-shadow: $box-shadow;
+  }
+}
+</style>

@@ -132,7 +132,7 @@
             </VueMailchimpSubscribe>
           </section>
 
-          <section v-if="similarPosts" class="cq-single-post-similar container my-5">
+          <section v-if="similarPosts" class="post-similar container my-5 p-0">
             <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
             <PostCardSwiper v-if="similarPosts" :posts="similarPosts" />
           </section>
@@ -465,35 +465,21 @@ export default {
     font-size: $h1-font-size;
   }
 
-  .swiper-wrapper {
-    @extend .py-3, .px-1 !optional;
-  }
-
-  .swiper-slide {
-    .article-card {
-      width: calc(100% - 10px);
+  ::v-deep .post-comments {
+    h3 {
+      font-family: $font-family-heading;
+      font-size: $h1-font-size;
     }
 
-    .article-card:hover {
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.7);
+    ol {
+      padding-left: 20px;
     }
-  }
-}
 
-::v-deep .post-comments {
-  h3 {
-    font-family: $font-family-heading;
-    font-size: $h1-font-size;
-  }
-
-  ol {
-    padding-left: 20px;
-  }
-
-  // no list bullets
-  ol,
-  ul {
-    list-style-type: none;
+    // no list bullets
+    ol,
+    ul {
+      list-style-type: none;
+    }
   }
 }
 </style>

@@ -109,8 +109,8 @@
         <div class="text-center">
           <h2 class="mb-4">Nos derniers articles</h2>
         </div>
-        <div class="article-card-shuffle-container d-flex flex-wrap align-items-center justify-content-center">
-          <PostCard v-for="post in posts" :key="post.id" :post="post" class="article-card" />
+        <div class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
+          <PostCard v-for="post in posts" :key="post.id" :post="post" class="post-card" />
         </div>
       </div>
 
@@ -251,7 +251,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .home-header {
   margin-top: 70px;
   height: calc(100vh - 70px);
@@ -427,17 +427,6 @@ h3.home-header-menu-description {
 
   .swiper-container {
     padding: 1rem 0.5rem;
-  }
-
-  .swiper-slide {
-    .article-card {
-      height: 100%;
-      width: 100%;
-    }
-
-    .article-card:hover {
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.7);
-    }
   }
 }
 </style>

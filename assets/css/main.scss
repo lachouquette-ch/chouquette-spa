@@ -21,8 +21,9 @@
 // Custom helper classes and mixins
 @import 'wordpress';
 
-// Overall styling
-@import "style";
+// Styling
+@import "layout";
+@import "post-card-shuffler";
 
 // Fonts
 @import 'fonts';
