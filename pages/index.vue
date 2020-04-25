@@ -235,9 +235,10 @@ export default {
     }
     this.latestPosts = posts
 
+    const topsTag = await this.$store.dispatch('tags/fetchBySlug', 'tops')
     this.topPosts = await this.$wpAPI.wp.posts.get({
       params: {
-        tags: 'tops',
+        tags: topsTag.id,
         per_page: TOP_POSTS_NUM
       }
     })
