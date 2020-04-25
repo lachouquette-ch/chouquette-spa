@@ -1,9 +1,16 @@
 <template>
   <article class="card shadow position-relative d-inline">
-    <div>
-      <WpMedia v-if="featuredMedia" :media="featuredMedia" size="medium_large" class="card-img-top"></WpMedia>
+    <div class="card-img-top">
+      <WpMedia v-if="featuredMedia" :media="featuredMedia" size="medium_large" />
       <div class="card-category rounded-circle bg-white shadow">
-        <CategoryLogo v-if="topCategory" :category="topCategory" width="35" height="35" color="black" @init="dispatchInit" />
+        <CategoryLogo
+          v-if="topCategory"
+          :category="topCategory"
+          width="35"
+          height="35"
+          color="black"
+          @init="dispatchInit"
+        />
       </div>
     </div>
     <div class="card-body">
@@ -53,16 +60,30 @@ export default {
 
 <style lang="scss" scoped>
 .card {
-  width: 300px !important;
+  width: 300px;
   max-width: 100%;
 
-  font-family: $font-family-heading;
-  font-size: $h5-font-size;
+  transition: 0.3s;
 }
 
 .card-img-top {
-  height: 300px;
-  object-fit: cover;
+  width: 100%;
+  padding-top: 100%; /* 1:1 Aspect Ratio */
+  position: relative;
+
+  > img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    border: 15px solid $white;
+  }
 }
 
 .card-chouquettise {
@@ -81,11 +102,14 @@ export default {
   transform: rotate(-5deg);
 }
 
-.card-img-top {
-  border: 15px solid $white;
+.card-body {
+  padding: 0 10px 5px 10px;
 }
 
 .card-text {
+  font-family: $font-family-heading;
+  font-size: $h5-font-size;
+
   min-height: $line-height-base * 3rem;
 }
 </style>
