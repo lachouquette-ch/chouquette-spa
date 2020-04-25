@@ -64,7 +64,7 @@
         </div>
 
         <div class="home-header-filters text-center">
-          <form id="app" action="action" submit.capture="doSearch">
+          <form id="app" action="action" @submit.prevent="search">
             <div class="row">
               <div class="col-md-4 home-header-filters-item">
                 <select v-model="formSearch.location" class="form-control" title="Où veux-tu aller ?">
@@ -88,12 +88,20 @@
                 </select>
               </div>
               <div class="col-md-4 home-header-filters-item">
-                <input model="search" class="form-control" type="text" placeholder="Un mot clef ?" name="searchName" />
+                <input
+                  v-model="formSearch.searchText"
+                  class="form-control"
+                  type="text"
+                  placeholder="Un mot clef ?"
+                  name="searchName"
+                />
               </div>
             </div>
             <div class="row">
               <div class="col home-header-filters-item">
-                <button class="btn btn-primary py-2 px-5" type="submit">Rechercher</button>
+                <button class="btn btn-primary py-2 px-5" type="submit" :disabled="$v.formSearch.$invalid">
+                  Rechercher
+                </button>
               </div>
             </div>
           </form>
@@ -208,7 +216,8 @@ export default {
 
       formSearch: {
         category: null,
-        location: null
+        location: null,
+        searchText: null
       }
     }
   },
@@ -222,7 +231,17 @@ export default {
     }),
     flatLocations() {
       // first level only
-      return this.locations.reduce((acc, { location, subLocations }) => [...acc, location, ...subLocations], [])
+      return this.locations.reduce(
+        (locations, { location, subLocations }) => [...locations, location, ...subLocations],
+        []
+      )
+    }
+  },
+  validations: {
+    formSearch: {
+      oneField() {
+        return !!this.formSearch.location || !!this.formSearch.category || !!this.formSearch.searchText
+      }
     }
   },
   async created() {
@@ -254,6 +273,21 @@ export default {
         per_page: TOP_POSTS_NUM
       }
     })
+  },
+  methods: {
+    search() {
+      if (!this.formSearch.$invalid) {
+        const query = this.formSearch.searchText ? { s: this.formSearch.searchText } : {}
+        if (this.formSearch.category) {
+          if (this.formSearch.location) query.l = this.formSearch.location.slug
+          this.$router.push({ path: `/category/${this.formSearch.category.slug}`, query })
+        } else if (this.formSearch.location) {
+          this.$router.push({ path: `/location/${this.formSearch.location.slug}`, query })
+        } else {
+          this.$router.push({ path: '/', query })
+        }
+      }
+    }
   }
 }
 </script>
