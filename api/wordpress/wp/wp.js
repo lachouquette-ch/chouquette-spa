@@ -12,7 +12,8 @@ function wpEndpointFactory($axios) {
     posts: new Repository('posts', $axios),
     pages: new Repository('pages', $axios),
     users: new UserRepository($axios),
-    tags: new Repository('tags', $axios)
+    tags: new Repository('tags', $axios),
+    locations: new Repository('locations', $axios)
   }
 }
 

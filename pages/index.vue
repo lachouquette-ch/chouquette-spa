@@ -67,9 +67,11 @@
           <form id="app" action="action" submit.capture="doSearch">
             <div class="row">
               <div class="col-md-4 home-header-filters-item">
-                <select model="loc" class="form-control" title="Où veux-tu aller ?" name="loc">
-                  <option title="" value="">Où veux-tu aller ?</option>
-                  <!--<?php chouquette_location_options(); ?>-->
+                <select :model="formSearch.location" class="form-control" title="Où veux-tu aller ?">
+                  <option :value="null">Où veux-tu aller ?</option>
+                  <option v-for="location in flatLocations" :key="location.id" :value="location.slug" :class="{'font-weight-bold': !location.level}">
+                    {{ '&nbsp;'.repeat(location.level * 2) }}{{ location.name }}
+                  </option>
                 </select>
               </div>
               <div class="col-md-4 home-header-filters-item">
@@ -209,7 +211,14 @@ export default {
     ...mapState({
       wpName: 'name',
       wpDescription: 'description'
-    })
+    }),
+    ...mapState('locations', {
+      locations: 'hierarchy'
+    }),
+    flatLocations() {
+      // first level only
+      return this.locations.reduce((acc, { location, subLocations }) => [...acc, location, ...subLocations], [])
+    }
   },
   async created() {
     // get categories
