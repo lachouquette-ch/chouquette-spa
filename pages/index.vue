@@ -17,14 +17,14 @@
           <h2 class="home-header-name">{{ wpName }}</h2>
         </a>
         <div class="home-header-sn mr-md-5">
-          <a href="<?php echo esc_url(CQ_SN_FACEBOOK); ?>" title="Facebook" target="_blank"
+          <a href="https://www.facebook.com/lachouquettelausanne" title="Facebook" target="_blank"
             ><i class="fab fa-facebook-f"></i
           ></a>
-          <a href="<?php echo esc_url(CQ_SN_INSTAGRAM); ?>" title="Instagram" target="_blank"
+          <a href="https://www.instagram.com/lachouquettelausanne" title="Instagram" target="_blank"
             ><i class="fab fa-instagram ml-4"></i
           ></a>
           <a href="#newsletter" title="Newsletter"><i class="far fa-envelope ml-4"></i></a>
-          <a href="<?php bloginfo('atom_url'); ?>" title="RSS" target="_blank"><i class="fas fa-rss ml-4"></i></a>
+          <a :href="`${baseURL}/feed/atom/`" title="RSS" target="_blank"><i class="fas fa-rss ml-4"></i></a>
         </div>
 
         <div id="navbarChouquette" class="collapse navbar-collapse">
@@ -125,7 +125,8 @@
         </div>
       </div>
 
-      <div id="newsletter" class="home-newsletter container-fluid my-5">
+      <div class="home-newsletter container-fluid my-5">
+        <a class="home-newsletter-target" name="newsletter"></a>
         <div class="row">
           <div class="col-lg-6 m-md-auto mb-3">
             <h2 class="w-75 m-auto text-center">Pour être dans la confidence du meilleur de chez toi</h2>
@@ -202,6 +203,7 @@ export default {
   layout: 'no-header',
   data() {
     return {
+      baseURL: process.env.wpBaseUrl,
       categories: [],
       latestPosts: [],
       topPosts: []
@@ -397,6 +399,14 @@ h3.home-header-menu-description {
     font-size: 1.75rem;
     line-height: 2.5rem;
   }
+}
+
+.home-newsletter-target {
+  display: block;
+  position: relative;
+  visibility: hidden;
+
+  top: -1 * $covid-banner-height - 15px;
 }
 
 .home-newsletter-response {
