@@ -8,7 +8,7 @@ export const ressourceStates = () => ({
 
 /* Actions */
 
-const fetchRessourceByIds = async (ressourceRepository, mutationName, { commit, state }, ids) => {
+const fetchByIds = async (ressourceRepository, mutationName, { commit, state }, ids) => {
   const unknownIds = _.difference(ids, Object.keys(state.all))
   const newRessources = await ressourceRepository.getByIds(unknownIds)
   commit(mutationName, newRessources)
@@ -16,7 +16,7 @@ const fetchRessourceByIds = async (ressourceRepository, mutationName, { commit, 
   return ids.map((id) => state.all[id])
 }
 
-const fetchRessourceById = async (ressourceRepository, mutationName, { commit, state }, id) => {
+const fetchById = async (ressourceRepository, mutationName, { commit, state }, id) => {
   if (state.all[id]) {
     return Promise.resolve(state.all[id])
   } else {
@@ -26,7 +26,13 @@ const fetchRessourceById = async (ressourceRepository, mutationName, { commit, s
   }
 }
 
-export const ressourceActions = { fetchById: fetchRessourceById, fetchByIds: fetchRessourceByIds }
+const fetchBySlug = async (ressourceRepository, mutationName, { commit, state }, slug) => {
+  const ressource = await ressourceRepository.getBySlug(slug)
+  commit(mutationName, ressource)
+  return ressource
+}
+
+export const ressourceActions = { fetchById, fetchByIds, fetchBySlug }
 
 /* Mutations */
 

@@ -1,17 +1,17 @@
+import { ressourceStates, ressourceActions, ressourceMutations } from './_ressource-helper'
+
 export const state = () => ({
-  all: {}
+  ...ressourceStates()
 })
 
 export const actions = {
-  async fetchBySlug({ commit, state }, slug) {
-    const tag = await this.$wpAPI.wp.tags.getBySlug(slug)
-    commit('SET_TAG', tag)
-    return tag
+  fetchBySlug(context, slug) {
+    return ressourceActions.fetchBySlug(this.$wpAPI.wp.tags, 'SET_TAG', context, slug)
   }
 }
 
 export const mutations = {
   SET_TAG(state, tag) {
-    state.all[tag.id] = tag
+    ressourceMutations.setRessource(state, tag)
   }
 }
