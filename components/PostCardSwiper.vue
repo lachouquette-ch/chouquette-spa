@@ -4,7 +4,7 @@
       <nuxt-link
         v-for="post in posts"
         :key="post.id"
-        :to="{ path: `/{$post.slug}` }"
+        :to="{ path: `/${post.slug}` }"
         class="swiper-slide text-decoration-none"
       >
         <PostCard :post="post" class="swiper-slide" @init="update(post)" />

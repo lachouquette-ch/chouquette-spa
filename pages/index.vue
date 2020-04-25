@@ -50,7 +50,11 @@
         </div>
         <div class="d-none d-md-flex flex-row flex-wrap justify-content-center text-center">
           <div v-for="category in categories" :key="category.id" class="home-header-category m-4">
-            <nuxt-link :to="{ path: `/category/${category.slug}` }" :title="category.description" class="text-decoration-none">
+            <nuxt-link
+              :to="{ path: `/category/${category.slug}` }"
+              :title="category.description"
+              class="text-decoration-none"
+            >
               <div class="home-header-category-logo p-3 rounded-circle  ">
                 <CategoryLogo :category="category" height="60" width="60" color="yellow" />
               </div>
@@ -110,7 +114,9 @@
           <h2 class="mb-4">Nos derniers articles</h2>
         </div>
         <div class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
-          <PostCard v-for="post in posts" :key="post.id" :post="post" class="post-card" />
+          <nuxt-link v-for="post in posts" :key="post.id" :to="{ path: `/${post.slug}` }" class="post-card text-decoration-none">
+            <PostCard :post="post" />
+          </nuxt-link>
         </div>
       </div>
 
