@@ -91,5 +91,10 @@ export default {
   @include hover-focus {
     box-shadow: $box-shadow;
   }
+
+  @include media-breakpoint-down(sm) {
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 </style>
