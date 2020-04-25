@@ -114,7 +114,12 @@
           <h2 class="mb-4">Nos derniers articles</h2>
         </div>
         <div class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
-          <nuxt-link v-for="post in posts" :key="post.id" :to="{ path: `/${post.slug}` }" class="post-card text-decoration-none">
+          <nuxt-link
+            v-for="post in posts"
+            :key="post.id"
+            :to="{ path: `/${post.slug}` }"
+            class="post-card text-decoration-none"
+          >
             <PostCard :post="post" />
           </nuxt-link>
         </div>
@@ -129,33 +134,40 @@
             <p class="mb-1 h4">Rejoins notre newsletter</p>
             <p class="text-muted">Pour recevoir tous nos bons plans et ne plus rien rater</p>
             <VueMailchimpSubscribe
-                    url="https://unechouquettealausanne.us8.list-manage.com/subscribe/post-json"
-                    :user-id="mailChimpUserId"
-                    :list-id="mailChimpListId"
-                    @error="onMailchimpSubscriptionError"
-                    @success="onMailchimpSubscriptionSuccess"
+              url="https://unechouquettealausanne.us8.list-manage.com/subscribe/post-json"
+              :user-id="mailChimpUserId"
+              :list-id="mailChimpListId"
+              @error="onMailchimpSubscriptionError"
+              @success="onMailchimpSubscriptionSuccess"
             >
               <template v-slot="{ subscribe, setEmail, loading }">
-
                 <form class="form-inline mx-auto justify-content-center" @submit.prevent="subscribe">
-                <div class="form-row w-100">
-                  <div class="col-lg-8 mb-2">
-                    <input ref="mailRegistration" type="email" name="email" placeholder="Ton email" class="required email form-control form-control-lg w-100" @input="setEmail($event.target.value)">
+                  <div class="form-row w-100">
+                    <div class="col-lg-8 mb-2">
+                      <input
+                        ref="mailRegistration"
+                        type="email"
+                        name="email"
+                        placeholder="Ton email"
+                        class="required email form-control form-control-lg w-100"
+                        @input="setEmail($event.target.value)"
+                      />
+                    </div>
+                    <div class="col-lg-4">
+                      <button type="submit" name="subscribe" class="btn btn-dark-grey w-100 btn-lg" :disabled="loading">
+                        <span
+                          v-show="loading"
+                          class="spinner-border spinner-border-sm mt-2"
+                          role="status"
+                          aria-hidden="true"
+                        ></span
+                        >Je m'inscris
+                      </button>
+                    </div>
                   </div>
-                  <div class="col-lg-4">
-                    <button type="submit" name="subscribe" class="btn btn-dark-grey w-100 btn-lg" :disabled="loading">
-                      <span
-                            v-show="loading"
-                            class="spinner-border spinner-border-sm mt-2"
-                            role="status"
-                            aria-hidden="true"></span>Je m'inscris
-                    </button>
-                  </div>
-                </div>
                 </form>
               </template>
             </VueMailchimpSubscribe>
-            </div>
           </div>
         </div>
       </div>
