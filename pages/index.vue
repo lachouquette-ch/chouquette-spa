@@ -67,17 +67,22 @@
           <form id="app" action="action" submit.capture="doSearch">
             <div class="row">
               <div class="col-md-4 home-header-filters-item">
-                <select :model="formSearch.location" class="form-control" title="Où veux-tu aller ?">
+                <select v-model="formSearch.location" class="form-control" title="Où veux-tu aller ?">
                   <option :value="null">Où veux-tu aller ?</option>
-                  <option v-for="location in flatLocations" :key="location.id" :value="location.slug" :class="{'font-weight-bold': !location.level}">
+                  <option
+                    v-for="location in flatLocations"
+                    :key="location.id"
+                    :value="location"
+                    :class="{ 'font-weight-bold': !location.level }"
+                  >
                     {{ '&nbsp;'.repeat(location.level * 2) }}{{ location.name }}
                   </option>
                 </select>
               </div>
               <div class="col-md-4 home-header-filters-item">
-                <select :model="formSearch.category" class="form-control" title="Qu'aimerais-tu faire ?">
+                <select v-model="formSearch.category" class="form-control" title="Qu'aimerais-tu faire ?">
                   <option :value="null">Qu'aimerais-tu faire ?</option>
-                  <option v-for="category in categories" :key="category.id" :value="category.slug">{{
+                  <option v-for="category in categories" :key="category.id" :value="category">{{
                     category.name
                   }}</option>
                 </select>
