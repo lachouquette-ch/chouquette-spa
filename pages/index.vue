@@ -128,56 +128,33 @@
           <div class="col-lg-6">
             <p class="mb-1 h4">Rejoins notre newsletter</p>
             <p class="text-muted">Pour recevoir tous nos bons plans et ne plus rien rater</p>
-            <div id="mc_embed_signup">
-              <form
-                id="mc-embedded-subscribe-form"
-                class="validate form-inline mt-3"
-                action="https://unechouquettealausanne.us8.list-manage.com/subscribe/post?u=570ea90f4cbc136c450fe880a&amp;id=26f7afd6a2"
-                method="post"
-                name="mc-embedded-subscribe-form"
-                target="_blank"
-                novalidate
-              >
+            <VueMailchimpSubscribe
+                    url="https://unechouquettealausanne.us8.list-manage.com/subscribe/post-json"
+                    :user-id="mailChimpUserId"
+                    :list-id="mailChimpListId"
+                    @error="onMailchimpSubscriptionError"
+                    @success="onMailchimpSubscriptionSuccess"
+            >
+              <template v-slot="{ subscribe, setEmail, loading }">
+
+                <form class="form-inline mx-auto justify-content-center" @submit.prevent="subscribe">
                 <div class="form-row w-100">
                   <div class="col-lg-8 mb-2">
-                    <input
-                      id="mce-EMAIL"
-                      type="email"
-                      value=""
-                      name="EMAIL"
-                      class="required email form-control form-control-lg w-100"
-                      placeholder="Ton email"
-                    />
-                    <div id="mce-responses" class="home-newsletter-response">
-                      <div
-                        id="mce-error-response"
-                        class="index-newsletter-response-error mt-2"
-                        style="display:none"
-                      ></div>
-                      <div
-                        id="mce-success-response"
-                        class="index-newsletter-response-success mt-2"
-                        style="display:none"
-                      ></div>
-                    </div>
-                    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-                    <div style="position: absolute; left: -5000px;" aria-hidden="true">
-                      <input type="text" name="b_570ea90f4cbc136c450fe880a_26f7afd6a2" tabindex="-1" value="" />
-                    </div>
+                    <input ref="mailRegistration" type="email" name="email" placeholder="Ton email" class="required email form-control form-control-lg w-100" @input="setEmail($event.target.value)">
                   </div>
                   <div class="col-lg-4">
-                    <button
-                      id="mc-embedded-subscribe"
-                      type="submit"
-                      value="Subscribe"
-                      name="subscribe"
-                      class="btn btn-white w-100 btn-lg"
-                    >
-                      Je m'inscris
+                    <button type="submit" name="subscribe" class="btn btn-dark-grey w-100 btn-lg" :disabled="loading">
+                      <span
+                            v-show="loading"
+                            class="spinner-border spinner-border-sm mt-2"
+                            role="status"
+                            aria-hidden="true"></span>Je m'inscris
                     </button>
                   </div>
                 </div>
-              </form>
+                </form>
+              </template>
+            </VueMailchimpSubscribe>
             </div>
           </div>
         </div>
@@ -212,13 +189,19 @@
 
 <script>
 import { mapState } from 'vuex'
+
+import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-subscribe'
+
 import CategoryLogo from '~/components/CategoryLogo'
 import PostCard from '~/components/PostCard'
+
+import newsletter from '~/mixins/newsletter'
 
 const LATEST_POSTS_NUM = 6
 
 export default {
-  components: { PostCard, CategoryLogo },
+  components: { PostCard, CategoryLogo, VueMailchimpSubscribe },
+  mixins: [newsletter],
   layout: 'no-header',
   data() {
     return {
