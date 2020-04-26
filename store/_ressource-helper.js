@@ -10,8 +10,10 @@ export const ressourceStates = () => ({
 
 const fetchByIds = async (ressourceRepository, mutationName, { commit, state }, ids) => {
   const unknownIds = _.difference(ids, Object.keys(state.all))
-  const newRessources = await ressourceRepository.getByIds(unknownIds)
-  commit(mutationName, newRessources)
+  if (!_.isEmpty(unknownIds)) {
+    const newRessources = await ressourceRepository.getByIds(unknownIds)
+    commit(mutationName, newRessources)
+  }
 
   return ids.map((id) => state.all[id])
 }

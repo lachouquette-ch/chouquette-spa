@@ -210,9 +210,6 @@ export default {
   data() {
     return {
       baseURL: process.env.wpBaseUrl,
-      categories: [],
-      latestPosts: [],
-      topPosts: [],
 
       formSearch: {
         category: null,
@@ -244,35 +241,57 @@ export default {
       }
     }
   },
-  async created() {
+  async asyncData({ app, store }) {
     // get categories
-    this.categories = await Promise.all(
-      this.$store.state.menus.headerCategories.map(({ object_id }) => {
-        return this.$store.dispatch('categories/fetchById', object_id)
-      })
-    )
-
-    // get posts
-    const posts = await this.$wpAPI.wp.posts.get({
-      params: {
-        sticky: true,
-        per_page: LATEST_POSTS_NUM
-      }
-    })
-    const remainingPostCount = LATEST_POSTS_NUM - posts.length
-    if (remainingPostCount) {
-      const remainingPosts = await this.$wpAPI.wp.posts.get({ params: { per_page: remainingPostCount } })
-      posts.push(...remainingPosts)
+    const loadCategories = async () => {
+      const categoryIds = store.state.menus.headerCategories.map(({ object_id }) => object_id)
+      return await store.dispatch('categories/fetchByIds', categoryIds)
     }
-    this.latestPosts = posts
 
-    const topsTag = await this.$store.dispatch('tags/fetchBySlug', 'tops')
-    this.topPosts = await this.$wpAPI.wp.posts.get({
-      params: {
-        tags: topsTag.id,
-        per_page: TOP_POSTS_NUM
+    // latest posts
+    const loadLatestPosts = async () => {
+      const posts = await app.$wpAPI.wp.posts.get({
+        params: {
+          sticky: true,
+          per_page: LATEST_POSTS_NUM
+        }
+      })
+      const remainingPostCount = LATEST_POSTS_NUM - posts.length
+      if (remainingPostCount) {
+        const remainingPosts = await app.$wpAPI.wp.posts.get({ params: { per_page: remainingPostCount } })
+        posts.push(...remainingPosts)
       }
-    })
+      return posts
+    }
+
+    // top posts
+    const loadTopPosts = async () => {
+      const topsTag = await store.dispatch('tags/fetchBySlug', 'tops')
+      return await app.$wpAPI.wp.posts.get({
+        params: {
+          tags: topsTag.id,
+          per_page: TOP_POSTS_NUM
+        }
+      })
+    }
+
+    const [categories, latestPosts, topPosts] = await Promise.all([loadCategories(), loadLatestPosts(), loadTopPosts()])
+
+    // prefetch all categories and media for posts once
+    const allPosts = [].concat(latestPosts, topPosts)
+    const categoryIds = allPosts.flatMap(({ top_categories }) => top_categories)
+    const mediaIds = allPosts.map(({ featured_media }) => featured_media).filter(Boolean)
+
+    await Promise.all([
+      await store.dispatch('categories/fetchByIds', categoryIds),
+      await store.dispatch('media/fetchByIds', mediaIds)
+    ])
+
+    return {
+      categories,
+      latestPosts,
+      topPosts
+    }
   },
   methods: {
     search() {
