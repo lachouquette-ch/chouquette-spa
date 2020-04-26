@@ -31,8 +31,11 @@ export default {
   },
   data() {
     return {
-      featuredMedia: this.fiche._embedded['wp:featuredmedia'][0]
+      featuredMedia: null
     }
+  },
+  async mounted() {
+    this.featuredMedia = await this.$store.dispatch('media/fetchById', this.fiche.featured_media)
   }
 }
 </script>

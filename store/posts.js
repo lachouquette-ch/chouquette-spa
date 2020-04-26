@@ -49,8 +49,22 @@ export const actions = {
     return posts
   },
 
+  async fetchSimilar({ dispatch }, post) {
+    const posts = await this.$wpAPI.wp.posts.get({
+      tags: post.tags,
+      exclude: post.id,
+      per_page: 6
+    })
+
+    // fetch related ressources
+    await dispatch('fetchRelatedRessources', posts)
+
+    return posts
+  },
+
   async fetchByIds(context, ids) {
     const posts = ressourceActions.fetchByIds(this.$wpAPI.wp.posts, 'SET_POSTS', context, ids)
+
     // fetch related ressources
     await context.dispatch('fetchRelatedRessources', posts)
 

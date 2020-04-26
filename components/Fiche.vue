@@ -420,10 +420,10 @@ export default {
         }
       }
     },
-    init() {
+    async init() {
       this.isFlipped = false
-      this.featuredMedia = this.fiche._embedded['wp:featuredmedia'][0]
-      this.criteria = this.fiche._embedded.criteria[0]
+      this.featuredMedia = await this.$store.dispatch('media/fetchById', this.fiche.featured_media)
+      this.criteria = await this.$wpAPI.criteria.getForFiche(this.fiche.id)
 
       // add marker
       if (this.map && this.fiche.info.location) {

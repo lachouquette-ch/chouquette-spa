@@ -192,48 +192,12 @@ export default {
     const author = post._embedded.author[0]
     const tags = post._embedded['wp:term'][1]
 
-    // build data dependencies as functions to parallelize
-
-    const loadComments = async () => {
-      const comments = await app.$wpAPI.wp.comments.getByPost(post.id)
-      const rootLevelComments = comments.filter(({ parent }) => parent === 0)
-
-      return { comments, rootLevelComments }
-    }
-
-    const loadSimilarPosts = async () => {
-      const similarPosts = await app.$wpAPI.wp.posts.get({
-        tags: post.tags,
-        exclude: post.id,
-        per_page: 6
-      })
-      // prefetch top categories and featuredMedia
-      const similarPostCategories = _.uniq(similarPosts.flatMap(({ top_categories }) => top_categories))
-      await store.dispatch('categories/fetchByIds', similarPostCategories)
-      const similarPostFeaturedMedia = _.uniq(similarPosts.flatMap(({ featured_media }) => featured_media))
-      await store.dispatch('media/fetchByIds', similarPostFeaturedMedia)
-
-      return similarPosts
-    }
-
-    const loadLinkedFiches = async () => {
-      if (!post.meta.link_fiche.length) return Promise.resolve()
-
-      const linkedfiches = await app.$wpAPI.wp.fiches.getByIds(post.meta.link_fiche)
-      const fiches = linkedfiches.sort((el1, el2) => {
-        return el2.info.chouquettise - el1.info.chouquettise
-      })
-
-      return fiches
-    }
-
-    const [{ comments, rootLevelComments }, similarPosts, fiches] = await Promise.all([
-      loadComments(),
-      loadSimilarPosts(),
-      loadLinkedFiches()
+    const [comments, similarPosts, fiches] = await Promise.all([
+      app.$wpAPI.wp.comments.getByPost(post.id),
+      store.dispatch('posts/fetchSimilar', post),
+      store.dispatch('fiches/fetchByIds', post.meta.link_fiche)
     ])
-
-    // fetch linked fiches
+    const rootLevelComments = comments.filter(({ parent }) => parent === 0)
 
     return {
       post,
