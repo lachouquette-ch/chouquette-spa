@@ -4,30 +4,32 @@ class Repository {
     this.prefix = `/wp/v2/${resource}`
   }
 
-  get(params) {
-    return this.$axios.$get(this.prefix + '/', params)
+  get(queryParams = {}) {
+    return this.$axios.$get(this.prefix + '/', { params: queryParams })
   }
 
-  getBySlug(slug) {
-    const params = {
+  getBySlug(slug, queryParams = {}) {
+    queryParams = {
       slug,
-      _embed: true
+      _embed: true,
+      ...queryParams
     }
-    return this.$axios.$get(this.prefix + '/', { params }).then((posts) => posts[0])
+    return this.$axios.$get(this.prefix + '/', { params: queryParams }).then((posts) => posts[0])
   }
 
-  getByIds(ids) {
-    const params = {
+  getByIds(ids, queryParams = {}) {
+    queryParams = {
       include: ids,
       per_page: ids.length,
-      _embed: true
+      _embed: true,
+      ...queryParams
     }
-    return this.$axios.$get(this.prefix + '/', { params })
+    return this.$axios.$get(this.prefix + '/', { params: queryParams })
   }
 
-  getById(id) {
+  getById(id, queryParams = {}) {
     const URI = `${this.prefix}/${id}?_embed=true`
-    return this.$axios.$get(URI)
+    return this.$axios.$get(URI, { params: queryParams })
   }
 }
 

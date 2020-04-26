@@ -251,14 +251,12 @@ export default {
     // latest posts
     const loadLatestPosts = async () => {
       const posts = await app.$wpAPI.wp.posts.get({
-        params: {
-          sticky: true,
-          per_page: LATEST_POSTS_NUM
-        }
+        sticky: true,
+        per_page: LATEST_POSTS_NUM
       })
       const remainingPostCount = LATEST_POSTS_NUM - posts.length
       if (remainingPostCount) {
-        const remainingPosts = await app.$wpAPI.wp.posts.get({ params: { per_page: remainingPostCount } })
+        const remainingPosts = await app.$wpAPI.wp.posts.get({ per_page: remainingPostCount })
         posts.push(...remainingPosts)
       }
       return posts
@@ -268,10 +266,8 @@ export default {
     const loadTopPosts = async () => {
       const topsTag = await store.dispatch('tags/fetchBySlug', 'tops')
       return await app.$wpAPI.wp.posts.get({
-        params: {
-          tags: topsTag.id,
-          per_page: TOP_POSTS_NUM
-        }
+        tags: topsTag.id,
+        per_page: TOP_POSTS_NUM
       })
     }
 

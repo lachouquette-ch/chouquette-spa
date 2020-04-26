@@ -203,11 +203,9 @@ export default {
 
     const loadSimilarPosts = async () => {
       const similarPosts = await app.$wpAPI.wp.posts.get({
-        params: {
-          tags: post.tags,
-          exclude: post.id,
-          per_page: 6
-        }
+        tags: post.tags,
+        exclude: post.id,
+        per_page: 6
       })
       // prefetch top categories and featuredMedia
       const similarPostCategories = _.uniq(similarPosts.flatMap(({ top_categories }) => top_categories))

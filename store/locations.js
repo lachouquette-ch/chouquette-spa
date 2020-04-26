@@ -9,11 +9,9 @@ export const actions = {
   async init({ commit }) {
     // fetch all menus
     const locations = await this.$wpAPI.wp.locations.get({
-      params: {
-        hide_empty: true,
-        orderby: 'count',
-        order: 'desc'
-      }
+      hide_empty: true,
+      orderby: 'count',
+      order: 'desc'
     })
     commit('SET_LOCATIONS', locations)
 
