@@ -11,7 +11,6 @@ class Repository {
   getBySlug(slug, queryParams = {}) {
     queryParams = {
       slug,
-      _embed: true,
       ...queryParams
     }
     return this.$axios.$get(this.prefix + '/', { params: queryParams }).then((posts) => posts[0])
@@ -21,7 +20,6 @@ class Repository {
     queryParams = {
       include: ids,
       per_page: ids.length,
-      _embed: true,
       ...queryParams
     }
     return this.$axios.$get(this.prefix + '/', { params: queryParams })

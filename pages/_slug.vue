@@ -185,7 +185,7 @@ export default {
   },
   mixins: [gutenberg, newsletter, yoast],
   async asyncData({ app, store, params }) {
-    const post = await app.$wpAPI.wp.posts.getBySlug(params.slug)
+    const post = await app.$wpAPI.wp.posts.getBySlug(params.slug, { _embed: true })
 
     // helper fields
     const featuredMedia = post._embedded['wp:featuredmedia'] ? post._embedded['wp:featuredmedia'][0] : null

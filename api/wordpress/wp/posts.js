@@ -1,7 +1,7 @@
 import Repository from './repository'
 
 class PostRepository extends Repository {
-  static DEFAULT_FIELDS = ['id', 'title', 'categories', 'top_categories', 'featured_media']
+  static DEFAULT_FIELDS = ['id', 'slug', 'title', 'categories', 'top_categories', 'featured_media']
 
   constructor($axios) {
     super('posts', $axios)
@@ -10,7 +10,6 @@ class PostRepository extends Repository {
   get(queryParams = {}) {
     queryParams = {
       _fields: PostRepository.DEFAULT_FIELDS,
-      _embed: false,
       ...queryParams
     }
     return super.get(queryParams)
@@ -19,7 +18,6 @@ class PostRepository extends Repository {
   getByIds(ids, queryParams = {}) {
     queryParams = {
       _fields: PostRepository.DEFAULT_FIELDS,
-      _embed: false,
       ...queryParams
     }
     return super.getByIds(ids, queryParams)
@@ -28,7 +26,6 @@ class PostRepository extends Repository {
   getById(id, queryParams = {}) {
     queryParams = {
       _fields: PostRepository.DEFAULT_FIELDS,
-      _embed: false,
       ...queryParams
     }
     return super.getById(id, queryParams)
