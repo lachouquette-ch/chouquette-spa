@@ -216,12 +216,9 @@
               </ul>
               <div class="card-text p-3">
                 <div v-if="criteria">
-                  <span
-                    v-for="crit in criteriaList"
-                    :key="crit.id"
-                    class="badge badge-pill badge-light-grey mr-1"
-                    >{{ crit.name }}</span
-                  >
+                  <span v-for="crit in criteriaList" :key="crit.id" class="badge badge-pill badge-light-grey mr-1">{{
+                    crit.name
+                  }}</span>
                 </div>
               </div>
               <a
@@ -338,7 +335,9 @@ export default {
         .format('dddd')
     },
     criteriaList() {
-      return this.criteria.flatMap(({ values }) => values)
+      const criteriaList = this.criteria.flatMap(({ values }) => values)
+      console.log(criteriaList.map(({ id }) => id), criteriaList)
+      return criteriaList
     }
   },
   watch: {
@@ -423,7 +422,7 @@ export default {
     async init() {
       this.isFlipped = false
       this.featuredMedia = await this.$store.dispatch('media/fetchById', this.fiche.featured_media)
-      this.criteria = await this.$wpAPI.criteria.getForFiche(this.fiche.id)
+      this.criteria = this.$store.state.fiches.criteria[this.fiche.id]
 
       // add marker
       if (this.map && this.fiche.info.location) {
