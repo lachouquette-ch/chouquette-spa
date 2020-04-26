@@ -277,6 +277,11 @@ export default {
 
     const [categories, latestPosts, topPosts] = await Promise.all([loadCategories(), loadLatestPosts(), loadTopPosts()])
 
+    /* TODOs to avoid complex code into fetchData :
+    - create store post for posts but discard content (and other huge data)
+    - on fetch, dispatch to other store : categories, medias (featured_media and categories media)
+     */
+
     // prefetch all categories and media for posts once
     const allPosts = [].concat(latestPosts, topPosts)
     const categoryIds = allPosts.flatMap(({ top_categories }) => top_categories)
