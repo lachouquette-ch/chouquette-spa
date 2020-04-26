@@ -1,7 +1,7 @@
 import Repository from './repository'
 
 class PostRepository extends Repository {
-  static DEFAULT_FIELDS = ['id', 'title', 'categories', 'top_categories', 'feature_media']
+  static DEFAULT_FIELDS = ['id', 'title', 'categories', 'top_categories', 'featured_media']
 
   constructor($axios) {
     super('posts', $axios)

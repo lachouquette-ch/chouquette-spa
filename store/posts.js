@@ -5,30 +5,72 @@ export const state = () => ({
 })
 
 export const actions = {
-  async fetchByIds(context, ids) {
-    const posts = ressourceActions.fetchByIds(this.$wpAPI.wp.posts, 'SET_POSTS', context, ids)
-
-    // fetch related ressources
+  async fetchRelatedRessources({ dispatch }, posts) {
     const categoryIds = posts.flatMap(({ top_categories }) => top_categories)
     const mediaIds = posts.map(({ featured_media }) => featured_media).filter(Boolean)
 
     await Promise.all([
-      context.dispatch('categories/fetchByIds', categoryIds),
-      context.dispatch('media/fetchByIds', mediaIds)
+      dispatch('categories/fetchByIds', categoryIds, { root: true }),
+      dispatch('media/fetchByIds', mediaIds, { root: true })
     ])
+  },
+
+  async fetchLatests({ commit, dispatch }, number) {
+    const posts = await this.$wpAPI.wp.posts.get({
+      sticky: true,
+      per_page: number
+    })
+    const remainingPostCount = number - posts.length
+    if (remainingPostCount) {
+      const remainingPosts = await this.$wpAPI.wp.posts.get({ per_page: remainingPostCount })
+      posts.push(...remainingPosts)
+    }
+
+    // fetch related ressources
+    await dispatch('fetchRelatedRessources', posts)
+
+    commit('SET_POSTS', posts)
+    return posts
+  },
+
+  async fetchTops({ commit, dispatch }, number) {
+    // first get tag
+    const topsTag = await dispatch('tags/fetchBySlug', 'tops', { root: true })
+
+    const posts = await this.$wpAPI.wp.posts.get({
+      tags: topsTag.id,
+      per_page: number
+    })
+
+    // fetch related ressources
+    await dispatch('fetchRelatedRessources', posts)
+
+    commit('SET_POSTS', posts)
+    return posts
+  },
+
+  async fetchByIds(context, ids) {
+    const posts = ressourceActions.fetchByIds(this.$wpAPI.wp.posts, 'SET_POSTS', context, ids)
+    // fetch related ressources
+    await context.dispatch('fetchRelatedRessources', posts)
 
     return posts
   },
-  fetchById(context, id) {
-    return ressourceActions.fetchById(this.$wpAPI.wp.posts, 'SET_POST', context, id)
+
+  async fetchById(context, id) {
+    const post = ressourceActions.fetchById(this.$wpAPI.wp.posts, 'SET_POST', context, id)
+    // fetch related ressources
+    await context.dispatch('posts/fetchRelatedRessources', [post])
+
+    return post
   }
 }
 
 export const mutations = {
-  SET_POSTS(state, categories) {
-    ressourceMutations.setRessources(state, categories)
+  SET_POSTS(state, posts) {
+    ressourceMutations.setRessources(state, posts)
   },
-  SET_POST(state, category) {
-    ressourceMutations.setRessource(state, category)
+  SET_POST(state, posts) {
+    ressourceMutations.setRessource(state, posts)
   }
 }

@@ -243,49 +243,13 @@ export default {
   },
   async asyncData({ app, store }) {
     // get categories
-    const loadCategories = async () => {
-      const categoryIds = store.state.menus.headerCategories.map(({ object_id }) => object_id)
-      return await store.dispatch('categories/fetchByIds', categoryIds)
-    }
+    const categoryIds = store.state.menus.headerCategories.map(({ object_id }) => object_id)
 
-    // latest posts
-    const loadLatestPosts = async () => {
-      const posts = await app.$wpAPI.wp.posts.get({
-        sticky: true,
-        per_page: LATEST_POSTS_NUM
-      })
-      const remainingPostCount = LATEST_POSTS_NUM - posts.length
-      if (remainingPostCount) {
-        const remainingPosts = await app.$wpAPI.wp.posts.get({ per_page: remainingPostCount })
-        posts.push(...remainingPosts)
-      }
-      return posts
-    }
-
-    // top posts
-    const loadTopPosts = async () => {
-      const topsTag = await store.dispatch('tags/fetchBySlug', 'tops')
-      return await app.$wpAPI.wp.posts.get({
-        tags: topsTag.id,
-        per_page: TOP_POSTS_NUM
-      })
-    }
-
-    const [categories, latestPosts, topPosts] = await Promise.all([loadCategories(), loadLatestPosts(), loadTopPosts()])
-
-    /* TODOs to avoid complex code into fetchData :
-    - create store post for posts but discard content (and other huge data)
-    - on fetch, dispatch to other store : categories, medias (featured_media and categories media)
-     */
-
-    // prefetch all categories and media for posts once
-    const allPosts = [].concat(latestPosts, topPosts)
-    const categoryIds = allPosts.flatMap(({ top_categories }) => top_categories)
-    const mediaIds = allPosts.map(({ featured_media }) => featured_media).filter(Boolean)
-
-    await Promise.all([
-      await store.dispatch('categories/fetchByIds', categoryIds),
-      await store.dispatch('media/fetchByIds', mediaIds)
+    // fetch all
+    const [categories, latestPosts, topPosts] = await Promise.all([
+      store.dispatch('categories/fetchByIds', categoryIds),
+      store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
+      store.dispatch('posts/fetchTops', TOP_POSTS_NUM)
     ])
 
     return {
