@@ -51,7 +51,7 @@ export const actions = {
 
   async fetchSimilar({ dispatch }, post) {
     const posts = await this.$wpAPI.wp.posts.get({
-      tags: post.tags,
+      tags: post.tags.join(','),
       exclude: post.id,
       per_page: 6
     })

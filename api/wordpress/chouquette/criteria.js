@@ -10,7 +10,7 @@ function criteriaEndpointFactory($axios) {
       const URI = `${prefix}/fiche`
       return $axios.$get(URI, {
         params: {
-          include: ids
+          include: ids.join(',')
         }
       })
     }

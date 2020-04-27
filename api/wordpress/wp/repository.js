@@ -18,7 +18,7 @@ class Repository {
 
   getByIds(ids, queryParams = {}) {
     queryParams = {
-      include: ids,
+      include: ids.join(','),
       per_page: ids.length,
       ...queryParams
     }
