@@ -33,7 +33,7 @@
         ></div>
       </template>
     </b-modal>
-    <nav v-if="fiches" class="post-sidebar bg-white" :class="{ 'hide-sidebar': hideSidebar }">
+    <nav v-if="fiches" class="post-sidebar bg-white pb-5 pb-md-1" :class="{ 'hide-sidebar': hideSidebar }">
       <div class="post-sidebar-header d-none d-md-block text-center my-4">
         <h2 class="post-sidebar-title h5 m-0">{{ hasSingleFiche ? 'La fiche' : "Cités dans l'article" }} :</h2>
       </div>
@@ -324,10 +324,6 @@ export default {
       box-shadow: inset 0 0 6px rgba($chouquette-grey, 0.3);
       background-color: $chouquette-grey;
     }
-  }
-
-  @include media-breakpoint-down(sm) {
-    padding-bottom: 40px;
   }
 }
 
