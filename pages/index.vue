@@ -183,7 +183,13 @@
         <div class="text-center">
           <h2 class="mb-4">Nos derniers tops...</h2>
         </div>
-        <PostCardSwiper v-if="topPosts" :posts="topPosts" />
+        <swiper v-if="topPosts" class="swiper py-3" :options="swiperOption">
+          <swiper-slide v-for="post in topPosts" :key="post.id">
+            <PostCard :post="post" />
+          </swiper-slide>
+          <div slot="button-prev" class="swiper-button-prev"></div>
+          <div slot="button-next" class="swiper-button-next"></div>
+        </swiper>
       </div>
     </div>
   </div>
@@ -194,17 +200,19 @@ import { mapState } from 'vuex'
 
 import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-subscribe'
 
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import CategoryLogo from '~/components/CategoryLogo'
 import PostCard from '~/components/PostCard'
 
 import newsletter from '~/mixins/newsletter'
-import PostCardSwiper from '~/components/PostCardSwiper'
+
+import { AUTO_PLAY_REPONSIVE } from '~/constants/swiper'
 
 const LATEST_POSTS_NUM = 6
 const TOP_POSTS_NUM = 8
 
 export default {
-  components: { PostCardSwiper, PostCard, CategoryLogo, VueMailchimpSubscribe },
+  components: { PostCard, CategoryLogo, VueMailchimpSubscribe, Swiper, SwiperSlide },
   mixins: [newsletter],
   layout: 'no-header',
   data() {
@@ -215,7 +223,9 @@ export default {
         category: null,
         location: null,
         searchText: null
-      }
+      },
+
+      swiperOption: AUTO_PLAY_REPONSIVE
     }
   },
   computed: {
@@ -458,8 +468,19 @@ h3.home-header-menu-description {
     display: none;
   }
 
-  .swiper-container {
+  .swiper {
     padding: 1rem 0.5rem;
+  }
+
+  .swiper-slide {
+    @include hover-focus {
+      box-shadow: $box-shadow;
+    }
+
+    @include media-breakpoint-down(sm) {
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
 }
 </style>

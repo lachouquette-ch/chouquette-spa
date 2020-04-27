@@ -65,6 +65,7 @@ export default {
     { src: '~/plugins/vuerecaptchav3.js', mode: 'client' },
     { src: '~/plugins/bootstrap.js', mode: 'client' },
     { src: '~/plugins/jquery.js', mode: 'client' },
+    { src: '~/node_modules/vue-awesome-swiper', mode: 'client' },
     { src: '~/plugins/vuelidate.js' },
     { src: '~/plugins/html-entity-filter.js' },
     { src: '~/plugins/wordpressAPI.js' }
