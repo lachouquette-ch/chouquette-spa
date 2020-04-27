@@ -9,7 +9,7 @@ class MediaRepository extends Repository {
 
   get(queryParams = {}) {
     queryParams = {
-      _fields: MediaRepository.DEFAULT_FIELDS,
+      _fields: MediaRepository.DEFAULT_FIELDS.join(','),
       ...queryParams
     }
     return super.get(queryParams)
@@ -17,7 +17,7 @@ class MediaRepository extends Repository {
 
   getByIds(ids, queryParams = {}) {
     queryParams = {
-      _fields: MediaRepository.DEFAULT_FIELDS,
+      _fields: MediaRepository.DEFAULT_FIELDS.join(','),
       ...queryParams
     }
     return super.getByIds(ids, queryParams)
@@ -25,7 +25,7 @@ class MediaRepository extends Repository {
 
   getById(id, queryParams = {}) {
     queryParams = {
-      _fields: MediaRepository.DEFAULT_FIELDS,
+      _fields: MediaRepository.DEFAULT_FIELDS.join(','),
       ...queryParams
     }
     return super.getById(id, queryParams)
