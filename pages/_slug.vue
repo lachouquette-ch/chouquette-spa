@@ -155,7 +155,6 @@
 
 <script>
 import moment from 'moment'
-import _ from 'lodash'
 
 import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-subscribe'
 
