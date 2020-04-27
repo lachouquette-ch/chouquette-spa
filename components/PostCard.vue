@@ -39,10 +39,9 @@ export default {
       featuredMedia: null
     }
   },
-  async created() {
-    this.topCategory = await this.$store.dispatch('categories/fetchById', this.post.top_categories[0])
-    if (this.post.featured_media)
-      this.featuredMedia = await this.$store.dispatch('media/fetchById', this.post.featured_media)
+  created() {
+    this.topCategory = this.$store.state.categories.all[this.post.top_categories[0]]
+    if (this.post.featured_media) this.featuredMedia = this.$store.state.media.all[this.post.featured_media]
   },
   methods: {
     /**

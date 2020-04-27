@@ -420,9 +420,9 @@ export default {
         }
       }
     },
-    async init() {
+    init() {
       this.isFlipped = false
-      this.featuredMedia = await this.$store.dispatch('media/fetchById', this.fiche.featured_media)
+      this.featuredMedia = this.$store.state.media.all[this.fiche.featured_media]
       this.criteria = this.$store.state.fiches.criteria[this.fiche.id]
 
       // add marker

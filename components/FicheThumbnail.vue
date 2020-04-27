@@ -34,8 +34,8 @@ export default {
       featuredMedia: null
     }
   },
-  async mounted() {
-    this.featuredMedia = await this.$store.dispatch('media/fetchById', this.fiche.featured_media)
+  mounted() {
+    this.featuredMedia = this.$store.state.media.all[this.fiche.featured_media]
   }
 }
 </script>

@@ -19,10 +19,7 @@ export const actions = {
     await dispatch('locations/init')
     // fetch categories
     const menuCategoryIds = state.menus.headerCategories.map(({ object_id }) => object_id)
-    const categories = await dispatch('categories/fetchByIds', menuCategoryIds)
-    // fetch medias
-    const logoIds = categories.flatMap((category) => Object.values(category.logos))
-    await dispatch('media/fetchByIds', logoIds)
+    await dispatch('categories/fetchByIds', menuCategoryIds)
   }
 }
 

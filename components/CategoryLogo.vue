@@ -26,9 +26,9 @@ export default {
       media: null
     }
   },
-  async created() {
+  created() {
     const mediaId = this.category.logos[`logo_${this.color}`]
-    this.media = await this.$store.dispatch('media/fetchById', mediaId)
+    this.media = this.$store.state.media.all[mediaId]
     this.$emit('init')
   }
 }
