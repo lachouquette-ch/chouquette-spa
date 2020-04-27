@@ -9,7 +9,7 @@ class PostRepository extends Repository {
 
   get(queryParams = {}) {
     queryParams = {
-      _fields: PostRepository.DEFAULT_FIELDS.join(','),
+      _fields: PostRepository.DEFAULT_FIELDS,
       ...queryParams
     }
     return super.get(queryParams)
@@ -17,7 +17,7 @@ class PostRepository extends Repository {
 
   getByIds(ids, queryParams = {}) {
     queryParams = {
-      _fields: PostRepository.DEFAULT_FIELDS.join(','),
+      _fields: PostRepository.DEFAULT_FIELDS,
       ...queryParams
     }
     return super.getByIds(ids, queryParams)
@@ -25,7 +25,7 @@ class PostRepository extends Repository {
 
   getById(id, queryParams = {}) {
     queryParams = {
-      _fields: PostRepository.DEFAULT_FIELDS.join(','),
+      _fields: PostRepository.DEFAULT_FIELDS,
       ...queryParams
     }
     return super.getById(id, queryParams)

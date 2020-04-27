@@ -6,7 +6,7 @@ export const state = () => ({
 
 export const actions = {
   async fetchRelatedRessources({ dispatch }, categories) {
-    const mediaIds = categories.map(({ logos }) => Object.values(logos))
+    const mediaIds = categories.flatMap(({ logos }) => Object.values(logos))
 
     await Promise.all([dispatch('media/fetchByIds', mediaIds, { root: true })])
   },
