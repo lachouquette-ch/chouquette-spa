@@ -20,7 +20,7 @@ const fetchByIds = async (ressourceRepository, mutationName, { commit, state }, 
 
 const fetchById = async (ressourceRepository, mutationName, { commit, state }, id) => {
   if (state.all[id]) {
-    return Promise.resolve(state.all[id])
+    return state.all[id]
   } else {
     const ressource = await ressourceRepository.getById(id)
     commit(mutationName, ressource)

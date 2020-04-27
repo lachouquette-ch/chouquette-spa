@@ -5,11 +5,11 @@ export const state = () => ({
 })
 
 export const actions = {
-  fetchByIds(context, ids) {
-    return ressourceActions.fetchByIds(this.$wpAPI.wp.media, 'SET_MEDIA_LIST', context, ids)
+  async fetchByIds(context, ids) {
+    return await ressourceActions.fetchByIds(this.$wpAPI.wp.media, 'SET_MEDIA_LIST', context, ids)
   },
-  fetchById(context, id) {
-    return ressourceActions.fetchById(this.$wpAPI.wp.media, 'SET_MEDIA', context, id)
+  async fetchById(context, id) {
+    return await ressourceActions.fetchById(this.$wpAPI.wp.media, 'SET_MEDIA', context, id)
   }
 }
 

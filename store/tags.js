@@ -5,8 +5,8 @@ export const state = () => ({
 })
 
 export const actions = {
-  fetchBySlug(context, slug) {
-    return ressourceActions.fetchBySlug(this.$wpAPI.wp.tags, 'SET_TAG', context, slug)
+  async fetchBySlug(context, slug) {
+    return await ressourceActions.fetchBySlug(this.$wpAPI.wp.tags, 'SET_TAG', context, slug)
   }
 }
 

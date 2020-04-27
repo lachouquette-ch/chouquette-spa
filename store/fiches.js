@@ -32,7 +32,7 @@ export const actions = {
   },
 
   async fetchById(context, id) {
-    const fiche = ressourceActions.fetchById(this.$wpAPI.wp.fiches, 'SET_FICHE', context, id)
+    const fiche = await ressourceActions.fetchById(this.$wpAPI.wp.fiches, 'SET_FICHE', context, id)
 
     // fetch criteria
     const criteria = await this.$wpAPI.criteria.getForFiche(id)
