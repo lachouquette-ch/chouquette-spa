@@ -256,6 +256,7 @@
 <script>
 import { required, email, minLength } from 'vuelidate/lib/validators'
 import moment from 'moment'
+import _ from 'lodash'
 
 import WpMedia from './WpMedia'
 import { MAP_OPTIONS } from '~/constants/mapSettings'
@@ -335,9 +336,9 @@ export default {
         .format('dddd')
     },
     criteriaList() {
-      const criteriaList = this.criteria.flatMap(({ values }) => values)
-      console.log(criteriaList.map(({ id }) => id), criteriaList)
-      return criteriaList
+      const criteriaList = Object.values(this.criteria).flat()
+      const termsList = criteriaList.flatMap(({ values }) => values)
+      return _.uniqBy(termsList, 'slug')
     }
   },
   watch: {
