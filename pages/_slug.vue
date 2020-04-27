@@ -18,7 +18,7 @@
       <template v-slot:default>
         <div
           v-if="!hasSingleFiche"
-          class="swiper-button-prev swiper-button-yellow d-none d-md-block"
+          class="swiper-button-prev d-none d-md-block"
           role="button"
           aria-label="Prochaine fiche"
           @click.prevent="previousFiche(fiche)"
@@ -26,7 +26,7 @@
         <Fiche ref="fiche" :fiche="fiche" />
         <div
           v-if="!hasSingleFiche"
-          class="swiper-button-next swiper-button-yellow d-none d-md-block"
+          class="swiper-button-next d-none d-md-block"
           role="button"
           aria-label="Prochaine fiche"
           @click.prevent="nextFiche(fiche)"
@@ -134,7 +134,13 @@
 
           <section v-if="similarPosts" class="post-similar container my-5 p-0">
             <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
-            <PostCardSwiper v-if="similarPosts" :posts="similarPosts" />
+            <swiper class="swiper py-3" :options="swiperOption">
+              <swiper-slide v-for="post in similarPosts" :key="post.id">
+                <PostCard :post="post" />
+              </swiper-slide>
+              <div slot="button-prev" class="swiper-button-prev"></div>
+              <div slot="button-next" class="swiper-button-next"></div>
+            </swiper>
           </section>
 
           <section class="post-comments container my-5">
@@ -158,10 +164,11 @@ import moment from 'moment'
 
 import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-subscribe'
 
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import WPMedia from '../components/WpMedia'
-import PostCardSwiper from '../components/PostCardSwiper'
 import PostShare from '../components/PostShare'
 import PostComment from '../components/PostComment'
+import PostCard from '../components/PostCard'
 import WpAvatar from '../components/WpAvatar'
 import PostCommentReply from '../components/PostCommentReply'
 import FicheThumbnail from '../components/FicheThumbnail'
@@ -169,6 +176,8 @@ import Fiche from '../components/Fiche'
 import newsletter from '~/mixins/newsletter'
 import yoast from '~/mixins/yoast'
 import gutenberg from '~/mixins/gutenberg'
+
+import { AUTO_PLAY_REPONSIVE } from '~/constants/swiper'
 
 export default {
   components: {
@@ -178,9 +187,11 @@ export default {
     WpAvatar,
     PostComment,
     WPMedia,
-    PostCardSwiper,
+    PostCard,
     PostShare,
-    VueMailchimpSubscribe
+    VueMailchimpSubscribe,
+    Swiper,
+    SwiperSlide
   },
   mixins: [gutenberg, newsletter, yoast],
   async asyncData({ app, store, params }) {
@@ -212,7 +223,9 @@ export default {
   data() {
     return {
       hideSidebar: true,
-      fiche: null
+      fiche: null,
+
+      swiperOption: AUTO_PLAY_REPONSIVE
     }
   },
   computed: {
