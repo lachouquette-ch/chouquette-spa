@@ -109,7 +109,7 @@
         <div
           class="d-md-none home-header-menu-next d-flex rounded-circle align-items-center justify-content-center text-center"
         >
-          <a href="#homeContent"> <i class="fas fa-chevron-down"></i><br /> </a>
+          <a href="#homeContent" class="text-yellow"> <i class="fas fa-chevron-down"></i><br /> </a>
         </div>
       </div>
     </header>
@@ -227,6 +227,11 @@ export default {
 
       swiperOption: AUTO_PLAY_REPONSIVE
     }
+  },
+  mounted() {
+    // execute anchor fixing
+    const linkAnchorFixedHeader = require('~/assets/scripts/link-anchor-fixed-header')
+    linkAnchorFixedHeader(70)
   },
   computed: {
     ...mapState({

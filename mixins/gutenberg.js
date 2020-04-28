@@ -44,7 +44,8 @@ export default {
     })
 
     // execute anchor fixing
-    require('~/assets/scripts/link-anchor-fixed-header')
+    const linkAnchorFixedHeader = require('~/assets/scripts/link-anchor-fixed-header')
+    linkAnchorFixedHeader()
   },
   methods: {
     gutenbergLinks() {
