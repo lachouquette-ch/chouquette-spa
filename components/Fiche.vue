@@ -104,7 +104,7 @@
                   title="Appeler"
                   target="_blank"
                   class="fiche-social border border-secondary rounded-circle"
-                  ><i class="fas fa-phone"></i
+                  ><i class="fas fa-phone-alt"></i
                 ></a>
                 <a
                   v-if="fiche.info.mail"
