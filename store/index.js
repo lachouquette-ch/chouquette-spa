@@ -11,6 +11,9 @@ export const actions = {
     const settings = await this.$wpAPI._.$get()
     commit('SET_SETTINGS', settings)
 
+    /* Fetch yoast redirect */
+    await dispatch('yoast/init')
+
     /* Fetch Layout component data */
 
     // fetch menus

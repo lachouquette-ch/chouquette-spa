@@ -9,7 +9,7 @@ export default {
     mailChimpListId: process.env.MAILCHIMP_LIST_ID,
     googleMapsKey: process.env.GOOGLE_MAPS_KEY
   },
-  mode: 'spa',
+  mode: 'universal',
   /*
    ** Headers of the page
    */
@@ -49,6 +49,9 @@ export default {
         href: 'https://fonts.googleapis.com/css?family=Lobster+Two|Shadows+Into+Light+Two|Lato&display=swap'
       }
     ]
+  },
+  router: {
+    middleware: 'redirect'
   },
   /*
    ** Customize the progress-bar color
