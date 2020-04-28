@@ -143,7 +143,7 @@
               <nuxt-link
                 :to="{ path: `/${fiche.latest_post.slug}` }"
                 :title="`Lire le dernier article : ${fiche.latest_post.title}`"
-                class="btn btn-outline-secondary text-decoration-none text-black"
+                class="btn btn-outline-secondary text-decoration-none"
               >
                 Dernier article
               </nuxt-link>
@@ -198,7 +198,7 @@
                     class="fiche-planning"
                     variant="link"
                     toggle-tag="span"
-                    toggle-class="text-decoration-none d-inline-block p-0 border-0"
+                    toggle-class="text-decoration-none text-black d-inline-block p-0 border-0"
                     dropup
                     right
                   >
@@ -482,6 +482,10 @@ export default {
   width: 300px;
   max-width: 100%;
 
+  a {
+    color: $black;
+  }
+
   @include media-breakpoint-down(sm) {
     width: 100%;
   }
@@ -536,12 +540,6 @@ export default {
 
 .card-title {
   font-family: $font-family-heading;
-}
-
-.card-text {
-  a {
-    color: $secondary;
-  }
 }
 
 .fiche-social {
