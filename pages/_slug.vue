@@ -50,10 +50,18 @@
       </div>
     </nav>
     <div class="post-sidebar-toggle-buttons d-md-none btn-group btn-group-toggle" data-toggle="buttons">
-      <label class="btn btn-sm btn-primary" :class="{ active: hideSidebar }" @click="hideSidebar = true">
+      <label
+        class="btn btn-sm btn-primary border-grey border-right-0"
+        :class="{ active: hideSidebar }"
+        @click="hideSidebar = true"
+      >
         <input id="option1" type="radio" name="options" checked />Article
       </label>
-      <label class="btn btn-sm btn-primary" :class="{ active: !hideSidebar }" @click="hideSidebar = false">
+      <label
+        class="btn btn-sm btn-primary border-grey border-left-0"
+        :class="{ active: !hideSidebar }"
+        @click="hideSidebar = false"
+      >
         <input id="option2" type="radio" name="options" />{{ hasSingleFiche ? 'Fiche' : 'Fiches' }}
       </label>
     </div>
