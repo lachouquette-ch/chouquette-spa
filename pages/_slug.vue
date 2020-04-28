@@ -257,6 +257,14 @@ export default {
         this.viewFiche(ficheToShow)
       }
     }
+
+    document.onfullscreenchange = (event) => {
+      if (document.fullscreenElement) {
+        this.mc.set({ enable: false })
+      } else {
+        this.mc.set({ enable: true })
+      }
+    }
   },
   methods: {
     viewFiche(fiche) {
@@ -280,11 +288,11 @@ export default {
     initModal() {
       const Hammer = require('hammerjs')
       delete Hammer.defaults.cssProps.userSelect
-      const mc = new Hammer(this.$refs.fiche.$el)
-      mc.on('swipeleft', () => {
+      this.mc = new Hammer(this.$refs.fiche.$el)
+      this.mc.on('swipeleft', () => {
         this.nextFiche(this.fiche)
       })
-      mc.on('swiperight', () => {
+      this.mc.on('swiperight', () => {
         this.previousFiche(this.fiche)
       })
 
@@ -295,6 +303,8 @@ export default {
     closeModal() {
       // forget fiche
       history.replaceState(null, null, '#')
+
+      this.mc.destroy()
     }
   },
   head() {
