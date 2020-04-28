@@ -99,20 +99,20 @@
               <p class="card-text" v-html="fiche.content.rendered" />
               <div v-if="fiche.info.chouquettise" class="card-text d-flex justify-content-around mt-auto">
                 <a
-                  v-if="fiche.info.telephone"
-                  :href="`tel: ${fiche.info.telephone}`"
-                  title="Appeler"
-                  target="_blank"
-                  class="fiche-social border border-secondary rounded-circle"
-                  ><i class="fas fa-phone-alt"></i
-                ></a>
-                <a
                   v-if="fiche.info.mail"
                   href=""
                   title="Envoyer un message"
                   class="fiche-social border border-secondary rounded-circle"
                   @click.prevent="openContactModal"
                   ><i class="far fa-envelope"></i
+                ></a>
+                <a
+                  v-if="fiche.info.telephone"
+                  :href="`tel: ${fiche.info.telephone}`"
+                  title="Appeler"
+                  target="_blank"
+                  class="fiche-social border border-secondary rounded-circle"
+                  ><i class="fas fa-phone-alt"></i
                 ></a>
                 <a
                   v-if="fiche.info.sn_facebook"
@@ -143,18 +143,19 @@
               <nuxt-link
                 :to="{ path: `/${fiche.latest_post.slug}` }"
                 :title="`Lire le dernier article : ${fiche.latest_post.title}`"
-                class="btn btn-outline-secondary"
+                class="btn btn-outline-secondary text-decoration-none text-black"
               >
-                <i class="far fa-newspaper"></i>
+                Dernier article
               </nuxt-link>
-              <a
+              <button
                 href=""
                 title="Plus de détails"
-                class="btn btn-yellow border-secondary float-right"
+                class="btn btn-yellow border-grey float-right"
                 :class="{ 'd-md-none': responsive }"
                 @click.prevent="isFlipped = !isFlipped"
-                ><i class="fas fa-plus"></i
-              ></a>
+              >
+                Voir plus
+              </button>
             </div>
           </div>
         </div>
@@ -230,21 +231,15 @@
               ></a>
             </div>
             <div class="card-footer">
-              <nuxt-link
-                :to="{ path: `/${fiche.latest_post.slug}` }"
-                :title="`Lire le dernier article : ${fiche.latest_post.title}`"
-                class="btn btn-outline-secondary"
-              >
-                <i class="far fa-newspaper"></i>
-              </nuxt-link>
-              <a
+              <button
                 href=""
                 title="Plus de détails"
                 class="btn btn-primary border-secondary float-right"
                 :class="{ 'd-md-none': responsive }"
                 @click.prevent="isFlipped = !isFlipped"
-                ><i class="fas fa-plus"></i
-              ></a>
+              >
+                Retour
+              </button>
             </div>
           </div>
         </div>
