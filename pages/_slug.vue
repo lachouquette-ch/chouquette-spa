@@ -3,8 +3,7 @@
     <b-modal
       id="fiche-modal"
       size="xl"
-      header-bg-variant="white"
-      header-text-variant="black"
+      header-class="d-none"
       body-bg-variant="white"
       body-text-variant="black"
       body-class="modal-body-class"
@@ -14,8 +13,14 @@
       @shown="initModal"
       @hide="closeModal"
     >
-      <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
-      <template v-slot:default>
+      <template #default="{close}">
+        <div
+          v-if="$refs.fiche"
+          class="fiche-modal-close bg-white m-2 border-0 rounded-circle text-center"
+          :class="{ 'd-none': $refs.fiche.isFlipped }"
+        >
+          <a class="text-black text-decoration-none font-weight-bold" @click.prevent="close">×</a>
+        </div>
         <div
           v-if="!hasSingleFiche"
           class="swiper-button-prev d-none d-md-block"
@@ -323,6 +328,23 @@ export default {
   min-height: 50vh;
   @include media-breakpoint-down(sm) {
     padding: 0;
+  }
+
+  .fiche-modal-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    height: 40px;
+    width: 40px;
+
+    z-index: 1;
+
+    > a {
+      line-height: 40px;
+
+      font-size: 1.5rem;
+    }
   }
 }
 
