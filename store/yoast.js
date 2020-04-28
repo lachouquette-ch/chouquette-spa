@@ -16,8 +16,6 @@ export const actions = {
       }
     })
 
-    console.log(redirects)
-
     commit('SET_REDIRECTS', redirects)
 
     return [redirects]
