@@ -19,7 +19,7 @@
             <Fiche ref="fiche" :fiche="fiche" />
             <div
               class="fiche-modal-close bg-white m-2 border-0 rounded-circle text-center"
-              :class="{ 'd-none': $refs.fiche && $refs.fiche[index].isFlipped }"
+              :class="{ 'd-none': $refs.fiche && $refs.fiche[index] && $refs.fiche[index].isFlipped }"
             >
               <a href="" class="text-black text-decoration-none font-weight-bold" @click.prevent="close">×</a>
             </div>

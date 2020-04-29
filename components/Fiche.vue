@@ -152,7 +152,7 @@
                 title="Plus de détails"
                 class="btn btn-yellow border-grey float-right"
                 :class="{ 'd-md-none': responsive }"
-                @click.prevent="isFlipped = !isFlipped"
+                @click.prevent="isFlipped = true"
               >
                 Voir plus
               </button>
@@ -236,7 +236,7 @@
                 title="Plus de détails"
                 class="btn btn-primary border-secondary float-right"
                 :class="{ 'd-md-none': responsive }"
-                @click.prevent="isFlipped = !isFlipped"
+                @click.prevent="isFlipped = false"
               >
                 Retour
               </button>
