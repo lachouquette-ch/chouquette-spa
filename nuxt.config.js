@@ -65,13 +65,14 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    { src: '~/plugins/vuerecaptchav3.js', mode: 'client' },
+    { src: '~/plugins/vue-recaptcha-v3.js', mode: 'client' },
     { src: '~/plugins/bootstrap.js', mode: 'client' },
     { src: '~/plugins/jquery.js', mode: 'client' },
+    { src: '~/plugins/google-maps.js', mode: 'client' },
     { src: '~/node_modules/vue-awesome-swiper', mode: 'client' },
     { src: '~/plugins/vuelidate.js' },
     { src: '~/plugins/html-entity-filter.js' },
-    { src: '~/plugins/wordpressAPI.js' }
+    { src: '~/plugins/wordpress-API.js' }
   ],
   /*
    ** Nuxt.js dev-modules

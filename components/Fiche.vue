@@ -348,11 +348,8 @@ export default {
     }
   },
   async mounted() {
-    const GoogleMapsApiLoader = require('google-maps-api-loader')
     try {
-      this.google = await GoogleMapsApiLoader({
-        apiKey: process.env.googleMapsKey
-      })
+      this.google = await this.$googleMaps
       this.map = new this.google.maps.Map(this.$refs.ficheMap, MAP_OPTIONS)
     } catch (err) {
       if (err instanceof Error) console.error(err)
