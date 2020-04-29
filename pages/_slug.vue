@@ -255,13 +255,13 @@ export default {
       }
     }
 
-    // document.onfullscreenchange = (event) => {
-    //   if (document.fullscreenElement) {
-    //     this.mc.set({ enable: false })
-    //   } else {
-    //     this.mc.set({ enable: true })
-    //   }
-    // }
+    document.onfullscreenchange = (event) => {
+      if (document.fullscreenElement) {
+        this.$refs.ficheSwiper.$swiper.detachEvents()
+      } else {
+        this.$refs.ficheSwiper.$swiper.attachEvents()
+      }
+    }
   },
   methods: {
     viewFiche(fiche, index) {
