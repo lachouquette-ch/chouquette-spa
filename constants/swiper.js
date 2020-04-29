@@ -3,9 +3,15 @@ export const DEFAULT = {
   centeredSlides: true,
   loop: true,
   slidesPerView: 1,
+  spaceBetween: 10,
   navigation: {
     nextEl: '.swiper-button-next',
     prevEl: '.swiper-button-prev'
+  },
+  pagination: {
+    el: '.swiper-pagination',
+    dynamicBullets: true,
+    clickable: true
   }
 }
 
@@ -18,7 +24,6 @@ export const AUTO_PLAY = {
 
 export const RESPONSIVE = {
   // Responsive breakpoints (based on bootstrap breakpoints)
-  spaceBetween: 10,
   breakpointsInverse: true,
   breakpoints: {
     576: {

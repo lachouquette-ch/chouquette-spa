@@ -36,10 +36,7 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts" !default;
 @import "~@fortawesome/fontawesome-free/scss/solid";
 
 // Swiper
+$themeColor: $chouquette-yellow;
 @import "~swiper/swiper";
 @import "~swiper/components/navigation/navigation";
-
-// hack swipper button color
-.swiper-button-prev, .swiper-button-next {
-  color: $chouquette-yellow !important;
-}
+@import "~swiper/components/pagination/pagination";

@@ -30,6 +30,7 @@
               <a href="" class="text-black text-decoration-none font-weight-bold" @click.prevent="close">×</a>
             </div>
           </swiper-slide>
+          <div slot="pagination" class="swiper-pagination"></div>
           <div v-if="!hasSingleFiche" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
           <div v-if="!hasSingleFiche" slot="button-next" class="swiper-button-next d-none d-md-block" />
         </swiper>
@@ -250,9 +251,6 @@ export default {
     },
     hasSingleFiche() {
       return this.fiches && this.fiches.length === 1
-    },
-    swiperAPI() {
-      return this.$refs.ficheSwiper ? this.$refs.ficheSwiper.$swiper : null
     }
   },
   mounted() {
@@ -271,9 +269,9 @@ export default {
       'fullscreenchange',
       () => {
         if (document.fullscreenElement) {
-          this.swiperAPI.detachEvents()
+          this.$refs.ficheSwiper.$swiper.detachEvents()
         } else {
-          this.swiperAPI.attachEvents()
+          this.$refs.ficheSwiper.$swiper.attachEvents()
         }
       },
       { passive: true }
@@ -287,9 +285,9 @@ export default {
       this.$bvModal.show('fiche-modal')
     },
     slideChange() {
-      if (this.swiperAPI) {
+      if (this.$refs.ficheSwiper.$swiper) {
         // retain fiche
-        this.fiche = this.fiches[this.swiperAPI.realIndex]
+        this.fiche = this.fiches[this.$refs.ficheSwiper.$swiper.realIndex]
         history.replaceState(null, null, `#${this.fiche.id}`)
       }
     },
@@ -321,6 +319,10 @@ export default {
   min-height: 50vh;
   @include media-breakpoint-down(sm) {
     padding: 0;
+  }
+
+  .swiper-pagination {
+    bottom: 0;
   }
 
   .fiche-modal-close {
