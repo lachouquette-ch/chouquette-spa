@@ -206,7 +206,7 @@ import PostCard from '~/components/PostCard'
 
 import newsletter from '~/mixins/newsletter'
 
-import { AUTO_PLAY_REPONSIVE } from '~/constants/swiper'
+import { AUTO_PLAY, DEFAULT, RESPONSIVE } from '~/constants/swiper'
 
 const LATEST_POSTS_NUM = 6
 const TOP_POSTS_NUM = 8
@@ -225,7 +225,11 @@ export default {
         searchText: null
       },
 
-      swiperOption: AUTO_PLAY_REPONSIVE
+      swiperOption: {
+        ...DEFAULT,
+        ...AUTO_PLAY,
+        ...RESPONSIVE
+      }
     }
   },
   mounted() {
