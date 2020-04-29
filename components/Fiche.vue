@@ -360,6 +360,17 @@ export default {
     }
 
     this.init()
+
+    document.addEventListener('fullscreenchange', (event) => {
+      if (document.fullscreenElement) {
+        this.map.gestureHandling = 'auto'
+      } else {
+        this.map.gestureHandling = 'none'
+        this.map.setCenter(this.marker.position)
+        // also center on infoWindow
+        this.infoWindow.open(this.map, this.marker)
+      }
+    })
   },
   methods: {
     openContactModal() {
