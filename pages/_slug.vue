@@ -248,10 +248,10 @@ export default {
     // show fiche if previously selected
     const ficheId = parseInt(location.hash.substring(1))
     if (ficheId) {
-      const ficheToShow = this.fiches.find(({ id }) => id === ficheId)
-      if (ficheToShow) {
+      const ficheIndex = this.fiches.findIndex(({ id }) => id === ficheId)
+      if (ficheIndex) {
         this.hideSidebar = false
-        this.viewFiche(ficheToShow)
+        this.viewFiche(this.fiches[ficheIndex], ficheIndex)
       }
     }
 
