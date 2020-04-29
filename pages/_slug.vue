@@ -242,6 +242,9 @@ export default {
     },
     hasSingleFiche() {
       return this.fiches && this.fiches.length === 1
+    },
+    swiperAPI() {
+      return this.$refs.ficheSwiper.$swiper
     }
   },
   mounted() {
@@ -255,13 +258,13 @@ export default {
       }
     }
 
-    document.onfullscreenchange = (event) => {
+    document.addEventListener('fullscreenchange', (event) => {
       if (document.fullscreenElement) {
-        this.$refs.ficheSwiper.$swiper.detachEvents()
+        this.swiperAPI.detachEvents()
       } else {
-        this.$refs.ficheSwiper.$swiper.attachEvents()
+        this.swiperAPI.attachEvents()
       }
-    }
+    })
   },
   methods: {
     viewFiche(fiche, index) {
@@ -270,8 +273,8 @@ export default {
       this.$bvModal.show('fiche-modal')
     },
     slideChange() {
-      if (this.$refs.ficheSwiper.$swiper.realIndex) {
-        this.fiche = this.fiches[this.$refs.ficheSwiper.$swiper.realIndex]
+      if (this.swiperAPI.realIndex) {
+        this.fiche = this.fiches[this.swiperAPI.realIndex]
         // retain fiche
         history.replaceState(null, null, `#${this.fiche.id}`)
       }

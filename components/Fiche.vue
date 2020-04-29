@@ -350,7 +350,10 @@ export default {
   async mounted() {
     try {
       this.google = await this.$googleMaps
-      this.map = new this.google.maps.Map(this.$refs.ficheMap, MAP_OPTIONS)
+      this.map = new this.google.maps.Map(this.$refs.ficheMap, {
+        ...MAP_OPTIONS,
+        gestureHandling: 'none'
+      })
     } catch (err) {
       if (err instanceof Error) console.error(err)
       else throw err
@@ -434,7 +437,7 @@ export default {
           this.toggleInfoWindow(this.infoWindow, this.map, this.marker)
         })
 
-        this.map.setCenter(this.fiche.info.location)
+        this.map.setCenter(this.marker.getPosition())
         this.toggleInfoWindow(this.infoWindow, this.map, this.marker)
       }
 
