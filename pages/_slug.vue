@@ -14,19 +14,18 @@
       @hide="closeModal"
     >
       <template #default="{close}">
-        <div
-          v-if="$refs.fiche"
-          class="fiche-modal-close bg-white m-2 border-0 rounded-circle text-center"
-          :class="{ 'd-none': fiche.isFlipped }"
-        >
-          <a href="" class="text-black text-decoration-none font-weight-bold" @click.prevent="close">×</a>
-        </div>
         <swiper ref="ficheSwiper" :options="swiperOption" @slideChange="slideChange">
-          <swiper-slide v-for="fiche in fiches" :key="fiche.id" class="align-self-center">
+          <swiper-slide v-for="(fiche, index) in fiches" :key="fiche.id" class="align-self-center">
             <Fiche ref="fiche" :fiche="fiche" />
+            <div
+              class="fiche-modal-close bg-white m-2 border-0 rounded-circle text-center"
+              :class="{ 'd-none': $refs.fiche && $refs.fiche[index].isFlipped }"
+            >
+              <a href="" class="text-black text-decoration-none font-weight-bold" @click.prevent="close">×</a>
+            </div>
           </swiper-slide>
-          <div v-if="!hasSingleFiche" slot="button-prev" class="swiper-button-prev" />
-          <div v-if="!hasSingleFiche" slot="button-next" class="swiper-button-next" />
+          <div v-if="!hasSingleFiche" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
+          <div v-if="!hasSingleFiche" slot="button-next" class="swiper-button-next d-none d-md-block" />
         </swiper>
       </template>
     </b-modal>
