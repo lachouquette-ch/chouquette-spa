@@ -1,18 +1,24 @@
-export const AUTO_PLAY_REPONSIVE = {
+export const DEFAULT = {
   grabCursor: true,
   centeredSlides: true,
   loop: true,
   slidesPerView: 1,
-  spaceBetween: 10,
-  autoplay: {
-    delay: 3000,
-    disableOnInteraction: false
-  },
   navigation: {
     nextEl: '.swiper-button-next',
     prevEl: '.swiper-button-prev'
-  },
+  }
+}
+
+export const AUTO_PLAY = {
+  autoplay: {
+    delay: 3000,
+    disableOnInteraction: false
+  }
+}
+
+export const RESPONSIVE = {
   // Responsive breakpoints (based on bootstrap breakpoints)
+  spaceBetween: 10,
   breakpointsInverse: true,
   breakpoints: {
     576: {

@@ -17,25 +17,17 @@
         <div
           v-if="$refs.fiche"
           class="fiche-modal-close bg-white m-2 border-0 rounded-circle text-center"
-          :class="{ 'd-none': $refs.fiche.isFlipped }"
+          :class="{ 'd-none': fiche.isFlipped }"
         >
-          <a class="text-black text-decoration-none font-weight-bold" @click.prevent="close">×</a>
+          <a href="" class="text-black text-decoration-none font-weight-bold" @click.prevent="close">×</a>
         </div>
-        <div
-          v-if="!hasSingleFiche"
-          class="swiper-button-prev d-none d-md-block"
-          role="button"
-          aria-label="Prochaine fiche"
-          @click.prevent="previousFiche(fiche)"
-        ></div>
-        <Fiche ref="fiche" :fiche="fiche" />
-        <div
-          v-if="!hasSingleFiche"
-          class="swiper-button-next d-none d-md-block"
-          role="button"
-          aria-label="Prochaine fiche"
-          @click.prevent="nextFiche(fiche)"
-        ></div>
+        <swiper ref="ficheSwiper" :options="swiperOption">
+          <swiper-slide v-for="fiche in fiches" :key="fiche.id">
+            <Fiche ref="fiche" :fiche="fiche" />
+          </swiper-slide>
+          <div v-if="!hasSingleFiche" slot="button-prev" class="swiper-button-prev" />
+          <div v-if="!hasSingleFiche" slot="button-next" class="swiper-button-next" />
+        </swiper>
       </template>
     </b-modal>
     <nav v-if="fiches" class="post-sidebar bg-white pb-5 pb-md-1" :class="{ 'hide-sidebar': hideSidebar }">
@@ -45,12 +37,12 @@
       <div v-if="fiches">
         <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" :responsive="false" />
         <FicheThumbnail
-          v-for="fiche in fiches"
+          v-for="(fiche, index) in fiches"
           v-else
           :key="fiche.id"
           :fiche="fiche"
           class="my-2 mx-3 mx-md-2 position-relative"
-          @click.native="viewFiche(fiche)"
+          @click.native="viewFiche(fiche, index)"
         />
       </div>
     </nav>
@@ -190,7 +182,7 @@ import newsletter from '~/mixins/newsletter'
 import yoast from '~/mixins/yoast'
 import gutenberg from '~/mixins/gutenberg'
 
-import { AUTO_PLAY_REPONSIVE } from '~/constants/swiper'
+import { DEFAULT } from '~/constants/swiper'
 
 export default {
   components: {
@@ -237,8 +229,9 @@ export default {
     return {
       hideSidebar: true,
       fiche: null,
+      ficheIndex: null,
 
-      swiperOption: AUTO_PLAY_REPONSIVE
+      swiperOption: DEFAULT
     }
   },
   computed: {
@@ -263,17 +256,18 @@ export default {
       }
     }
 
-    document.onfullscreenchange = (event) => {
-      if (document.fullscreenElement) {
-        this.mc.set({ enable: false })
-      } else {
-        this.mc.set({ enable: true })
-      }
-    }
+    // document.onfullscreenchange = (event) => {
+    //   if (document.fullscreenElement) {
+    //     this.mc.set({ enable: false })
+    //   } else {
+    //     this.mc.set({ enable: true })
+    //   }
+    // }
   },
   methods: {
-    viewFiche(fiche) {
+    viewFiche(fiche, index) {
       this.fiche = fiche
+      this.ficheIndex = index
       this.$bvModal.show('fiche-modal')
     },
     previousFiche(fiche) {
@@ -291,25 +285,17 @@ export default {
       history.replaceState(null, null, `#${this.fiche.id}`)
     },
     initModal() {
-      const Hammer = require('hammerjs')
-      delete Hammer.defaults.cssProps.userSelect
-      this.mc = new Hammer(this.$refs.fiche.$el)
-      this.mc.on('swipeleft', () => {
-        this.nextFiche(this.fiche)
-      })
-      this.mc.on('swiperight', () => {
-        this.previousFiche(this.fiche)
-      })
+      this.$refs.fiche.forEach((fiche) => fiche.resizeFiche())
 
-      this.$refs.fiche.resizeFiche()
+      // go to the given fiche
+      this.$refs.ficheSwiper.$swiper.slideTo(this.ficheIndex + 1, 0)
+
       // retain fiche
       history.replaceState(null, null, `#${this.fiche.id}`)
     },
     closeModal() {
       // forget fiche
       history.replaceState(null, null, '#')
-
-      this.mc.destroy()
     }
   },
   head() {
@@ -338,7 +324,7 @@ export default {
     height: 40px;
     width: 40px;
 
-    z-index: 1;
+    z-index: 2;
 
     > a {
       line-height: 40px;

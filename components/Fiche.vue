@@ -441,7 +441,7 @@ export default {
         this.toggleInfoWindow(this.infoWindow, this.map, this.marker)
       }
 
-      this.$nextTick(() => this.resizeFiche()) // needs time to display fiche before computing its size
+      this.resizeFiche() // needs time to display fiche before computing its size
     },
     toggleInfoWindow(infoWindow, map, marker) {
       if (!infoWindow.isOpen) {
