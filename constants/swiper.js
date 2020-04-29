@@ -3,7 +3,7 @@ export const DEFAULT = {
   centeredSlides: true,
   loop: true,
   slidesPerView: 1,
-  spaceBetween: 10,
+  spaceBetween: 30,
   navigation: {
     nextEl: '.swiper-button-next',
     prevEl: '.swiper-button-prev'
