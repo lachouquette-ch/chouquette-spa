@@ -257,7 +257,7 @@ export default {
     const ficheId = parseInt(location.hash.substring(1))
     if (ficheId) {
       const ficheIndex = this.fiches.findIndex(({ id }) => id === ficheId)
-      if (ficheIndex) {
+      if (ficheIndex !== -1) {
         this.hideSidebar = false
         this.viewFiche(this.fiches[ficheIndex], ficheIndex)
       }
