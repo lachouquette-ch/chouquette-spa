@@ -264,13 +264,17 @@ export default {
     }
 
     // avoid googlemaps fullscreen to change slides underneath
-    document.addEventListener('fullscreenchange', () => {
-      if (document.fullscreenElement) {
-        this.swiperAPI.detachEvents()
-      } else {
-        this.swiperAPI.attachEvents()
-      }
-    })
+    document.addEventListener(
+      'fullscreenchange',
+      () => {
+        if (document.fullscreenElement) {
+          this.swiperAPI.detachEvents()
+        } else {
+          this.swiperAPI.attachEvents()
+        }
+      },
+      { passive: true }
+    )
   },
   methods: {
     viewFiche(fiche, index) {
@@ -280,13 +284,14 @@ export default {
       this.$bvModal.show('fiche-modal')
     },
     slideChange() {
-      if (this.swiperAPI && this.swiperAPI.realIndex) {
+      if (this.swiperAPI) {
         // retain fiche
         this.fiche = this.fiches[this.swiperAPI.realIndex]
         history.replaceState(null, null, `#${this.fiche.id}`)
       }
     },
     initModal() {
+      // resize all
       this.$refs.fiche.forEach((fiche) => fiche.resizeFiche())
 
       // retain fiche

@@ -363,16 +363,20 @@ export default {
     this.init()
 
     // toggle gesture if fullscreen
-    document.addEventListener('fullscreenchange', (event) => {
-      if (document.fullscreenElement) {
-        this.map.gestureHandling = 'auto'
-      } else {
-        this.map.gestureHandling = 'none'
-        // center map
-        this.map.setCenter(this.marker.position)
-        this.infoWindow.open(this.map, this.marker) // force to center on infoWindow too
-      }
-    })
+    document.addEventListener(
+      'fullscreenchange',
+      (event) => {
+        if (document.fullscreenElement) {
+          this.map.gestureHandling = 'auto'
+        } else {
+          this.map.gestureHandling = 'none'
+          // center map
+          this.map.setCenter(this.marker.position)
+          this.infoWindow.open(this.map, this.marker) // force to center on infoWindow too
+        }
+      },
+      { passive: 'true' }
+    )
   },
   methods: {
     openContactModal() {
@@ -433,26 +437,7 @@ export default {
       this.featuredMedia = this.$store.state.media.all[this.fiche.featured_media]
       this.criteria = this.$store.state.fiches.criteria[this.fiche.id]
 
-      // add marker
-      if (this.map && this.fiche.info.location) {
-        this.infoWindow = new this.google.maps.InfoWindow({
-          content: `<div class="text-center">${this.fiche.info.location.address}</div>`
-        })
-
-        this.marker = new this.google.maps.Marker({
-          animation: this.google.maps.Animation.DROP,
-          icon: this.fiche.main_category.marker_icon,
-          map: this.map,
-          position: this.fiche.info.location,
-          title: this.fiche.title.rendered
-        })
-        this.marker.addListener('click', () => {
-          this.toggleInfoWindow()
-        })
-
-        this.map.setCenter(this.marker.getPosition())
-        this.toggleInfoWindow()
-      }
+      this.initMap()
 
       this.resizeFiche() // needs time to display fiche before computing its size
     },
@@ -461,6 +446,31 @@ export default {
         this.infoWindow.open(this.map, this.marker)
       } else {
         this.infoWindow.close()
+      }
+    },
+    initMap() {
+      // remove marker in any
+      if (this.marker) {
+        this.marker.setMap(null)
+        this.marker = null
+      }
+      // add marker
+      if (this.map && this.fiche.info.location) {
+        this.infoWindow = new this.google.maps.InfoWindow({
+          content: `<div class="text-center">${this.fiche.info.location.address}</div>`
+        })
+        this.marker = new this.google.maps.Marker({
+          animation: this.google.maps.Animation.DROP,
+          icon: this.fiche.main_category.marker_icon,
+          map: this.map,
+          position: this.fiche.info.location,
+          title: this.fiche.title.rendered
+        })
+        // this.marker.addListener('click', () => {
+        //   this.toggleInfoWindow()
+        // })
+        this.map.setCenter(this.marker.getPosition())
+        // this.toggleInfoWindow()
       }
     },
     resizeFiche() {
