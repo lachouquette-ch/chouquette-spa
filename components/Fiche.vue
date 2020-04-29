@@ -342,6 +342,7 @@ export default {
       if (this.marker) {
         this.marker.setMap(null)
         this.marker = null
+        this.infoWindow = null
       }
 
       this.init()
@@ -361,14 +362,15 @@ export default {
 
     this.init()
 
+    // toggle gesture if fullscreen
     document.addEventListener('fullscreenchange', (event) => {
       if (document.fullscreenElement) {
         this.map.gestureHandling = 'auto'
       } else {
         this.map.gestureHandling = 'none'
+        // center map
         this.map.setCenter(this.marker.position)
-        // also center on infoWindow
-        this.infoWindow.open(this.map, this.marker)
+        this.infoWindow.open(this.map, this.marker) // force to center on infoWindow too
       }
     })
   },
@@ -445,22 +447,20 @@ export default {
           title: this.fiche.title.rendered
         })
         this.marker.addListener('click', () => {
-          this.toggleInfoWindow(this.infoWindow, this.map, this.marker)
+          this.toggleInfoWindow()
         })
 
         this.map.setCenter(this.marker.getPosition())
-        this.toggleInfoWindow(this.infoWindow, this.map, this.marker)
+        this.toggleInfoWindow()
       }
 
       this.resizeFiche() // needs time to display fiche before computing its size
     },
-    toggleInfoWindow(infoWindow, map, marker) {
-      if (!infoWindow.isOpen) {
-        infoWindow.isOpen = true
-        infoWindow.open(map, marker)
+    toggleInfoWindow() {
+      if (!this.infoWindow.getMap()) {
+        this.infoWindow.open(this.map, this.marker)
       } else {
-        infoWindow.isOpen = false
-        infoWindow.close()
+        this.infoWindow.close()
       }
     },
     resizeFiche() {

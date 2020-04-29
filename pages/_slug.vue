@@ -3,11 +3,10 @@
     <b-modal
       id="fiche-modal"
       size="xl"
-      header-class="d-none"
       body-bg-variant="white"
       body-text-variant="black"
       body-class="modal-body-class"
-      title-class="w-100 text-center"
+      hide-header
       hide-footer
       centered
       @shown="initModal"
@@ -243,7 +242,7 @@ export default {
       return this.fiches && this.fiches.length === 1
     },
     swiperAPI() {
-      return this.$refs.ficheSwiper.$swiper
+      return this.$refs.ficheSwiper ? this.$refs.ficheSwiper.$swiper : null
     }
   },
   mounted() {
@@ -257,7 +256,8 @@ export default {
       }
     }
 
-    document.addEventListener('fullscreenchange', (event) => {
+    // avoid googlemaps fullscreen to change slides underneath
+    document.addEventListener('fullscreenchange', () => {
       if (document.fullscreenElement) {
         this.swiperAPI.detachEvents()
       } else {
@@ -268,13 +268,14 @@ export default {
   methods: {
     viewFiche(fiche, index) {
       this.fiche = fiche
+      // start with correct fiche
       this.swiperOption.initialSlide = index
       this.$bvModal.show('fiche-modal')
     },
     slideChange() {
-      if (this.swiperAPI.realIndex) {
-        this.fiche = this.fiches[this.swiperAPI.realIndex]
+      if (this.swiperAPI && this.swiperAPI.realIndex) {
         // retain fiche
+        this.fiche = this.fiches[this.swiperAPI.realIndex]
         history.replaceState(null, null, `#${this.fiche.id}`)
       }
     },
