@@ -229,7 +229,6 @@ export default {
     return {
       hideSidebar: true,
       fiche: null,
-      ficheIndex: null,
 
       swiperOption: DEFAULT
     }
@@ -267,7 +266,7 @@ export default {
   methods: {
     viewFiche(fiche, index) {
       this.fiche = fiche
-      this.ficheIndex = index
+      this.swiperOption.initialSlide = index
       this.$bvModal.show('fiche-modal')
     },
     previousFiche(fiche) {
@@ -286,9 +285,6 @@ export default {
     },
     initModal() {
       this.$refs.fiche.forEach((fiche) => fiche.resizeFiche())
-
-      // go to the given fiche
-      this.$refs.ficheSwiper.$swiper.slideTo(this.ficheIndex + 1, 0)
 
       // retain fiche
       history.replaceState(null, null, `#${this.fiche.id}`)
