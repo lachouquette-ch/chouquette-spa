@@ -22,7 +22,7 @@
           <a href="" class="text-black text-decoration-none font-weight-bold" @click.prevent="close">×</a>
         </div>
         <swiper ref="ficheSwiper" :options="swiperOption" @slideChange="slideChange">
-          <swiper-slide v-for="fiche in fiches" :key="fiche.id">
+          <swiper-slide v-for="fiche in fiches" :key="fiche.id" class="align-self-center">
             <Fiche ref="fiche" :fiche="fiche" />
           </swiper-slide>
           <div v-if="!hasSingleFiche" slot="button-prev" class="swiper-button-prev" />
