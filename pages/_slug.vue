@@ -13,11 +13,18 @@
       @hide="closeModal"
     >
       <template #default="{close}">
+        <!-- For medium device -->
+        <a
+          href=""
+          class="fiche-modal-close d-none d-md-block m-2 text-center text-black text-decoration-none font-weight-bold"
+          @click.prevent="close"
+          >×</a
+        >
         <swiper ref="ficheSwiper" :options="swiperOption" @slideChange="slideChange">
           <swiper-slide v-for="(fiche, index) in fiches" :key="fiche.id" class="align-self-center">
             <Fiche ref="fiche" :fiche="fiche" />
             <div
-              class="fiche-modal-close bg-white m-2 border-0 rounded-circle text-center"
+              class="fiche-modal-close d-md-none bg-white m-2 border-0 rounded-circle text-center"
               :class="{ 'd-none': $refs.fiche && $refs.fiche[index] && $refs.fiche[index].isFlipped }"
             >
               <a href="" class="text-black text-decoration-none font-weight-bold" @click.prevent="close">×</a>
@@ -318,11 +325,9 @@ export default {
 
     z-index: 2;
 
-    > a {
-      line-height: 40px;
+    line-height: 40px;
 
-      font-size: 1.5rem;
-    }
+    font-size: 1.5rem;
   }
 }
 
