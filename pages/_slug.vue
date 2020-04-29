@@ -235,7 +235,10 @@ export default {
       hideSidebar: true,
       fiche: null,
 
-      swiperOption: DEFAULT
+      swiperOption: {
+        ...DEFAULT,
+        loop: false // issue with refreshing underlying slide (fiche component) on loop transition : map not displayed + button actions not triggered
+      }
     }
   },
   computed: {
