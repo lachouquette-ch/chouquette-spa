@@ -21,7 +21,7 @@
         >
           <a href="" class="text-black text-decoration-none font-weight-bold" @click.prevent="close">×</a>
         </div>
-        <swiper ref="ficheSwiper" :options="swiperOption">
+        <swiper ref="ficheSwiper" :options="swiperOption" @slideChange="slideChange">
           <swiper-slide v-for="fiche in fiches" :key="fiche.id">
             <Fiche ref="fiche" :fiche="fiche" />
           </swiper-slide>
@@ -269,19 +269,12 @@ export default {
       this.swiperOption.initialSlide = index
       this.$bvModal.show('fiche-modal')
     },
-    previousFiche(fiche) {
-      let ficheIndex = this.fiches.findIndex(({ id }) => fiche.id === id)
-      const previousFicheIndex = --ficheIndex < 0 ? this.fiches.length - 1 : ficheIndex
-      this.fiche = this.fiches[previousFicheIndex]
-      // retain fiche
-      history.replaceState(null, null, `#${this.fiche.id}`)
-    },
-    nextFiche(fiche) {
-      let ficheIndex = this.fiches.findIndex(({ id }) => fiche.id === id)
-      const nextFicheIndex = ++ficheIndex >= this.fiches.length ? 0 : ficheIndex
-      this.fiche = this.fiches[nextFicheIndex]
-      // retain fiche
-      history.replaceState(null, null, `#${this.fiche.id}`)
+    slideChange() {
+      if (this.$refs.ficheSwiper.$swiper.realIndex) {
+        this.fiche = this.fiches[this.$refs.ficheSwiper.$swiper.realIndex]
+        // retain fiche
+        history.replaceState(null, null, `#${this.fiche.id}`)
+      }
     },
     initModal() {
       this.$refs.fiche.forEach((fiche) => fiche.resizeFiche())
