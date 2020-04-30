@@ -1,5 +1,5 @@
 <template>
-  <article class="card shadow position-relative text-black">
+  <article class="card shadow-sm position-relative text-black">
     <div class="card-img-top">
       <WpMedia v-if="featuredMedia" :media="featuredMedia" size="medium_large" />
       <div class="card-category rounded-circle bg-white shadow">
@@ -61,6 +61,10 @@ export default {
 .card {
   width: 300px;
   max-width: 100%;
+
+  @include hover-focus {
+    box-shadow: $box-shadow !important;
+  }
 }
 
 .card-img-top {

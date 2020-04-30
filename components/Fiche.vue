@@ -140,7 +140,8 @@
               ></a>
             </div>
             <div class="card-footer">
-              <nuxt-link v-if="fiche.latest_post"
+              <nuxt-link
+                v-if="fiche.latest_post"
                 :to="{ path: `/${fiche.latest_post.slug}` }"
                 :title="`Lire le dernier article : ${fiche.latest_post.title}`"
                 class=" btn btn-sm btn-outline-secondary text-decoration-none"
@@ -503,6 +504,12 @@ export default {
 
   @include media-breakpoint-down(sm) {
     width: 100%;
+  }
+
+  .card {
+    @include hover-focus {
+      box-shadow: $box-shadow !important;
+    }
   }
 
   .card-body {
