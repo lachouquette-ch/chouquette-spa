@@ -1,6 +1,6 @@
 <template>
   <form id="app" action="action" @submit.prevent="search">
-    <div class="row">
+    <div class="form-row">
       <div class="col-md-4 p-0 mb-2">
         <select v-model="formSearch.location" class="form-control" title="Où veux-tu aller ?">
           <option :value="null">Où veux-tu aller ?</option>
@@ -30,7 +30,7 @@
         />
       </div>
     </div>
-    <div class="row mt-2">
+    <div class="form-row mt-2">
       <div class="col">
         <button class="btn btn-primary py-2 px-5 d-block mx-auto" type="submit" :disabled="$v.formSearch.$invalid">
           Rechercher

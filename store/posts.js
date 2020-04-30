@@ -78,18 +78,16 @@ export const actions = {
   },
 
   async fetchByText({ dispatch, commit }, text) {
-    const posts = await this.$wpAPI.wp.posts
-      .get({
-        search: text,
-        per_page: 20
-      })
-      .then(({ data }) => data)
+    const { data: posts, headers } = await this.$wpAPI.wp.posts.get({
+      search: text,
+      per_page: 20
+    })
 
     // fetch related ressources
     await dispatch('fetchRelatedRessources', posts)
 
     commit('SET_POSTS', posts)
-    return posts
+    return { posts, total: parseInt(headers['x-wp-total']), pages: parseInt(headers['x-wp-totalpages']) }
   }
 }
 
