@@ -439,7 +439,7 @@ export default {
 
       this.initMap()
 
-      this.resizeFiche() // needs time to display fiche before computing its size
+      this.resizeFiche()
     },
     toggleInfoWindow() {
       if (!this.infoWindow.getMap()) {

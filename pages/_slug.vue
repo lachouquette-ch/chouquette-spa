@@ -21,7 +21,7 @@
           @click.prevent="close"
           >×</a
         >
-        <swiper ref="ficheSwiper" :options="swiperOption" class="pb-md-4" @slideChange="slideChange">
+        <swiper ref="ficheSwiper" :options="swiperOption" @slideChange="slideChange">
           <swiper-slide v-for="(fiche, index) in fiches" :key="fiche.id" class="align-self-center">
             <Fiche ref="fiche" :fiche="fiche" />
             <div
@@ -31,7 +31,7 @@
               <a href="" class="text-black text-decoration-none font-weight-bold" @click.prevent="close">×</a>
             </div>
           </swiper-slide>
-          <div slot="pagination" class="swiper-pagination d-none d-md-block"></div>
+          <div slot="pagination" class="swiper-pagination"></div>
           <div v-if="!hasSingleFiche" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
           <div v-if="!hasSingleFiche" slot="button-next" class="swiper-button-next d-none d-md-block" />
         </swiper>
@@ -324,7 +324,9 @@ export default {
   }
 
   .swiper-pagination {
-    bottom: 0;
+    bottom: auto;
+    position: relative;
+    margin-top: 15px;
   }
 
   .fiche-modal-close {
