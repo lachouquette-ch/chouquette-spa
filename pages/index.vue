@@ -55,57 +55,14 @@
               :title="category.description"
               class="text-decoration-none"
             >
-              <div class="home-header-category-logo p-3 rounded-circle  ">
+              <div class="home-header-category-logo p-3 rounded-circle">
                 <CategoryLogo :category="category" height="60" width="60" color="yellow" />
               </div>
               <h2 class="my-2">{{ category.name }}</h2>
             </nuxt-link>
           </div>
         </div>
-
-        <div class="home-header-filters text-center">
-          <form id="app" action="action" @submit.prevent="search">
-            <div class="row">
-              <div class="col-md-4 home-header-filters-item">
-                <select v-model="formSearch.location" class="form-control" title="Où veux-tu aller ?">
-                  <option :value="null">Où veux-tu aller ?</option>
-                  <option
-                    v-for="location in flatLocations"
-                    :key="location.id"
-                    :value="location"
-                    :class="{ 'font-weight-bold': !location.level }"
-                  >
-                    {{ '&nbsp;'.repeat(location.level * 2) }}{{ location.name }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-md-4 home-header-filters-item">
-                <select v-model="formSearch.category" class="form-control" title="Qu'aimerais-tu faire ?">
-                  <option :value="null">Qu'aimerais-tu faire ?</option>
-                  <option v-for="category in categories" :key="category.id" :value="category">{{
-                    category.name
-                  }}</option>
-                </select>
-              </div>
-              <div class="col-md-4 home-header-filters-item">
-                <input
-                  v-model="formSearch.searchText"
-                  class="form-control"
-                  type="text"
-                  placeholder="Un mot clef ?"
-                  name="searchName"
-                />
-              </div>
-            </div>
-            <div class="row">
-              <div class="col home-header-filters-item">
-                <button class="btn btn-primary py-2 px-5" type="submit" :disabled="$v.formSearch.$invalid">
-                  Rechercher
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
+        <Search class="home-header-filters" />
         <div
           class="d-md-none home-header-menu-next d-flex rounded-circle align-items-center justify-content-center text-center"
         >
@@ -203,6 +160,7 @@ import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-su
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import CategoryLogo from '~/components/CategoryLogo'
 import PostCard from '~/components/PostCard'
+import Search from '~/components/Search'
 
 import newsletter from '~/mixins/newsletter'
 
@@ -212,18 +170,12 @@ const LATEST_POSTS_NUM = 6
 const TOP_POSTS_NUM = 8
 
 export default {
-  components: { PostCard, CategoryLogo, VueMailchimpSubscribe, Swiper, SwiperSlide },
+  components: { PostCard, CategoryLogo, Search, VueMailchimpSubscribe, Swiper, SwiperSlide },
   mixins: [newsletter],
   layout: 'no-header',
   data() {
     return {
       baseURL: process.env.wpBaseUrl,
-
-      formSearch: {
-        category: null,
-        location: null,
-        searchText: null
-      },
 
       swiperOption: {
         ...DEFAULT,
@@ -242,54 +194,20 @@ export default {
       wpName: 'name',
       wpDescription: 'description'
     }),
-    ...mapState('locations', {
-      locations: 'hierarchy'
-    }),
-    flatLocations() {
-      // first level only
-      return this.locations.reduce(
-        (locations, { location, subLocations }) => [...locations, location, ...subLocations],
-        []
-      )
-    }
-  },
-  validations: {
-    formSearch: {
-      oneField() {
-        return !!this.formSearch.location || !!this.formSearch.category || !!this.formSearch.searchText
-      }
-    }
+    ...mapState('menus', {
+      categories: 'headerCategories'
+    })
   },
   async asyncData({ app, store }) {
-    // get categories
-    const categoryIds = store.state.menus.headerCategories.map(({ object_id }) => object_id)
-
     // fetch all
-    const [categories, latestPosts, topPosts] = await Promise.all([
-      store.dispatch('categories/fetchByIds', categoryIds),
+    const [latestPosts, topPosts] = await Promise.all([
       store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
       store.dispatch('posts/fetchTops', TOP_POSTS_NUM)
     ])
 
     return {
-      categories,
       latestPosts,
       topPosts
-    }
-  },
-  methods: {
-    search() {
-      if (!this.formSearch.$invalid) {
-        const query = this.formSearch.searchText ? { s: this.formSearch.searchText } : {}
-        if (this.formSearch.category) {
-          if (this.formSearch.location) query.l = this.formSearch.location.slug
-          this.$router.push({ path: `/category/${this.formSearch.category.slug}`, query })
-        } else if (this.formSearch.location) {
-          this.$router.push({ path: `/location/${this.formSearch.location.slug}`, query })
-        } else {
-          this.$router.push({ path: `/search/${this.formSearch.searchText}` })
-        }
-      }
     }
   }
 }
@@ -397,27 +315,6 @@ h3.home-header-menu-description {
 
   @include media-breakpoint-only(xl) {
     width: 50%;
-  }
-}
-
-.home-header-filters-item {
-  padding: 0;
-  margin-bottom: 1rem;
-
-  @include media-breakpoint-down(sm) {
-    margin-bottom: 0.5rem;
-  }
-
-  @include media-breakpoint-up(md) {
-    &:not(:last-child) {
-      padding-right: 0.5rem !important;
-    }
-  }
-
-  > button {
-    @include media-breakpoint-down(sm) {
-      width: 100%;
-    }
   }
 }
 
