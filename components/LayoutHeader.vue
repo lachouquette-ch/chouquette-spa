@@ -125,6 +125,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-subscribe'
 import CategoryLogo from './CategoryLogo'
 import modal from '~/mixins/modal'
@@ -140,12 +142,10 @@ export default {
       searchText: ''
     }
   },
-  async created() {
-    this.categories = await Promise.all(
-      this.$store.state.menus.headerCategories.map(({ object_id }) => {
-        return this.$store.dispatch('categories/fetchById', object_id)
-      })
-    )
+  computed: {
+    ...mapState('menus', {
+      categories: 'headerCategories'
+    })
   },
   methods: {
     search(text) {
