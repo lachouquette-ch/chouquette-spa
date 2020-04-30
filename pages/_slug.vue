@@ -36,7 +36,7 @@
               <a href="" class="text-black text-decoration-none font-weight-bold" @click.prevent="close">×</a>
             </div>
           </swiper-slide>
-          <div slot="pagination" class="swiper-pagination"></div>
+          <div v-if="!hasSingleFiche" slot="pagination" class="swiper-pagination"></div>
           <div v-if="!hasSingleFiche" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
           <div v-if="!hasSingleFiche" slot="button-next" class="swiper-button-next d-none d-md-block" />
         </swiper>
@@ -316,12 +316,6 @@ export default {
   @include media-breakpoint-down(sm) {
     padding: 0;
     background-color: transparent !important;
-  }
-
-  .swiper-pagination {
-    bottom: auto;
-    position: relative;
-    margin-top: 15px;
   }
 
   .fiche-modal-close {

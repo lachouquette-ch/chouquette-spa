@@ -47,7 +47,8 @@ export const actions = {
 
   async fetchByText({ dispatch, commit }, text) {
     const fiches = await this.$wpAPI.wp.fiches.get({
-      search: text
+      search: text,
+      per_page: 20
     })
 
     // fetch related ressources

@@ -1,6 +1,5 @@
 export const DEFAULT = {
   grabCursor: true,
-  centeredSlides: true,
   hashNavigation: {
     replaceState: true
   },
@@ -31,7 +30,7 @@ export const LOOP = {
         this.slideToLoop(0, null, false)
       }
     }
-  },
+  }
 }
 
 export const AUTO_PLAY = {

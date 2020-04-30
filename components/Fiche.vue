@@ -140,7 +140,7 @@
               ></a>
             </div>
             <div class="card-footer">
-              <nuxt-link
+              <nuxt-link v-if="fiche.latest_post"
                 :to="{ path: `/${fiche.latest_post.slug}` }"
                 :title="`Lire le dernier article : ${fiche.latest_post.title}`"
                 class=" btn btn-sm btn-outline-secondary text-decoration-none"

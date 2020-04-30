@@ -83,7 +83,8 @@ export const actions = {
 
   async fetchByText({ dispatch, commit }, text) {
     const posts = await this.$wpAPI.wp.posts.get({
-      search: text
+      search: text,
+      per_page: 20
     })
 
     // fetch related ressources
