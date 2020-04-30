@@ -2,11 +2,12 @@
   <div>
     <b-modal
       id="searchModal"
-      title-class="mx-auto"
       body-class="p-3"
       centered
       hide-footer
       title="J'affine ma recherche"
+      title-class="mx-auto"
+      hide-header-close
       @shown="initSearch"
     >
       <Search ref="searchBox" button-class="w-100" filter-col="col-12" />
