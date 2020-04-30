@@ -2,7 +2,7 @@
   <form id="app" action="action" @submit.prevent="search">
     <div class="form-row">
       <div class="p-0 px-md-1 mb-2" :class="filterCol">
-        <select v-model="formSearch.location" class="form-control" title="Où veux-tu aller ?">
+        <select ref="locationFilter" v-model="formSearch.location" class="form-control" title="Où veux-tu aller ?">
           <option :value="null">Où veux-tu aller ?</option>
           <option
             v-for="location in flatLocations"
@@ -15,13 +15,14 @@
         </select>
       </div>
       <div class="p-0 px-md-1 mb-2" :class="filterCol">
-        <select v-model="formSearch.category" class="form-control" title="Qu'aimerais-tu faire ?">
+        <select ref="categoryFilter" v-model="formSearch.category" class="form-control" title="Qu'aimerais-tu faire ?">
           <option :value="null">Qu'aimerais-tu faire ?</option>
           <option v-for="category in categories" :key="category.id" :value="category">{{ category.name }}</option>
         </select>
       </div>
       <div class="p-0 px-md-1 mb-2" :class="filterCol">
         <input
+          ref="textFilter"
           v-model="formSearch.searchText"
           class="form-control"
           type="text"
