@@ -89,7 +89,7 @@ export default {
   },
   data() {
     return {
-      swiperOption: { ...DEFAULT, ...RESPONSIVE }
+      swiperOption: { ...DEFAULT, ...RESPONSIVE, centeredSlides: false }
     }
   },
   computed: {
