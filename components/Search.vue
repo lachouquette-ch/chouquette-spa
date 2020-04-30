@@ -1,7 +1,7 @@
 <template>
   <form id="app" action="action" @submit.prevent="search">
     <div class="row">
-      <div class="col-md-4 p-0">
+      <div class="col-md-4 p-0 mb-2">
         <select v-model="formSearch.location" class="form-control" title="Où veux-tu aller ?">
           <option :value="null">Où veux-tu aller ?</option>
           <option
@@ -14,13 +14,13 @@
           </option>
         </select>
       </div>
-      <div class="col-md-4 px-1">
+      <div class="col-md-4 px-0 px-md-1 mb-2">
         <select v-model="formSearch.category" class="form-control" title="Qu'aimerais-tu faire ?">
           <option :value="null">Qu'aimerais-tu faire ?</option>
           <option v-for="category in categories" :key="category.id" :value="category">{{ category.name }}</option>
         </select>
       </div>
-      <div class="col-md-4 p-0">
+      <div class="col-md-4 p-0 mb-2">
         <input
           v-model="formSearch.searchText"
           class="form-control"
