@@ -1,7 +1,7 @@
 <template>
   <form id="app" action="action" @submit.prevent="search">
     <div class="form-row">
-      <div class="col-md-4 p-0 mb-2">
+      <div class="p-0 px-md-1 mb-2" :class="filterCol">
         <select v-model="formSearch.location" class="form-control" title="Où veux-tu aller ?">
           <option :value="null">Où veux-tu aller ?</option>
           <option
@@ -14,13 +14,13 @@
           </option>
         </select>
       </div>
-      <div class="col-md-4 px-0 px-md-1 mb-2">
+      <div class="p-0 px-md-1 mb-2" :class="filterCol">
         <select v-model="formSearch.category" class="form-control" title="Qu'aimerais-tu faire ?">
           <option :value="null">Qu'aimerais-tu faire ?</option>
           <option v-for="category in categories" :key="category.id" :value="category">{{ category.name }}</option>
         </select>
       </div>
-      <div class="col-md-4 p-0 mb-2">
+      <div class="p-0 px-md-1 mb-2" :class="filterCol">
         <input
           v-model="formSearch.searchText"
           class="form-control"
@@ -30,9 +30,14 @@
         />
       </div>
     </div>
-    <div class="form-row mt-2">
-      <div class="col">
-        <button class="btn btn-primary py-2 px-5 d-block mx-auto" type="submit" :disabled="$v.formSearch.$invalid">
+    <div class="form-row">
+      <div class="col px-0">
+        <button
+          class="btn btn-primary d-block mx-auto py-2 px-5"
+          :class="buttonClass"
+          type="submit"
+          :disabled="$v.formSearch.$invalid"
+        >
           Rechercher
         </button>
       </div>
@@ -44,6 +49,15 @@
 import { mapState } from 'vuex'
 
 export default {
+  props: {
+    buttonClass: {
+      type: String
+    },
+    filterCol: {
+      type: String,
+      default: 'col-md-4'
+    }
+  },
   data() {
     return {
       formSearch: {

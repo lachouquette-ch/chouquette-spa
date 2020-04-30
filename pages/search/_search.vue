@@ -1,7 +1,7 @@
 <template>
   <div>
-    <b-modal id="searchModal" title-class="mx-auto" body-class="p-2" centered hide-footer title="J'affine ma recherche">
-      <Search />
+    <b-modal id="searchModal" title-class="mx-auto" body-class="p-3" centered hide-footer title="J'affine ma recherche">
+      <Search button-class="w-100" filter-col="col-12" />
     </b-modal>
     <div class="layout-content">
       <div class="container-fluid">
