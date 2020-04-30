@@ -2,6 +2,9 @@ export const DEFAULT = {
   grabCursor: true,
   centeredSlides: true,
   loop: true,
+  hashNavigation: {
+    replaceState: true
+  },
   slidesPerView: 1,
   spaceBetween: 30,
   navigation: {

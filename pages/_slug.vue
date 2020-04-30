@@ -21,8 +21,13 @@
           @click.prevent="close"
           >×</a
         >
-        <swiper ref="ficheSwiper" :options="swiperOption" @slideChange="slideChange">
-          <swiper-slide v-for="(fiche, index) in fiches" :key="fiche.id" class="align-self-center">
+        <swiper ref="ficheSwiper" :options="swiperOption">
+          <swiper-slide
+            v-for="(fiche, index) in fiches"
+            :key="fiche.id"
+            class="align-self-center"
+            :data-hash="fiche.id"
+          >
             <Fiche ref="fiche" :fiche="fiche" />
             <div
               class="fiche-modal-close d-md-none bg-white m-2 border-0 rounded-circle text-center"
@@ -285,22 +290,12 @@ export default {
       this.swiperOption.initialSlide = index
       this.$bvModal.show('fiche-modal')
     },
-    slideChange() {
-      if (this.$refs.ficheSwiper.$swiper) {
-        // retain fiche
-        this.fiche = this.fiches[this.$refs.ficheSwiper.$swiper.realIndex]
-        history.replaceState(null, null, `#${this.fiche.id}`)
-      }
-    },
     initModal() {
       // resize all
       this.$refs.fiche.forEach((fiche) => fiche.resizeFiche())
-
-      // retain fiche
-      history.replaceState(null, null, `#${this.fiche.id}`)
     },
     closeModal() {
-      // forget fiche
+      // remove hash reference (if any)
       history.replaceState(null, null, '#')
     }
   },
