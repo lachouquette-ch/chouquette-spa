@@ -70,21 +70,11 @@ export const actions = {
   },
 
   async fetchByIds(context, ids) {
-    const posts = await ressourceActions.fetchByIds(this.$wpAPI.wp.posts, 'SET_POSTS', context, ids)
-
-    // fetch related ressources
-    await context.dispatch('fetchRelatedRessources', posts)
-
-    return posts
+    return await ressourceActions.fetchByIds(this.$wpAPI.wp.posts, 'SET_POSTS', context, ids)
   },
 
   async fetchById(context, id) {
-    const post = await ressourceActions.fetchById(this.$wpAPI.wp.posts, 'SET_POST', context, id)
-
-    // fetch related ressources
-    await context.dispatch('posts/fetchRelatedRessources', [post])
-
-    return post
+    return await ressourceActions.fetchById(this.$wpAPI.wp.posts, 'SET_POST', context, id)
   },
 
   async fetchByText({ dispatch, commit }, text) {

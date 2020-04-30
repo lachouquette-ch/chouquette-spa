@@ -12,21 +12,11 @@ export const actions = {
   },
 
   async fetchByIds(context, ids) {
-    const categories = await ressourceActions.fetchByIds(this.$wpAPI.wp.categories, 'SET_CATEGORIES', context, ids)
-
-    // fetch related ressources
-    await context.dispatch('fetchRelatedRessources', categories)
-
-    return categories
+    return await ressourceActions.fetchByIds(this.$wpAPI.wp.categories, 'SET_CATEGORIES', context, ids)
   },
 
   async fetchById(context, id) {
-    const category = await ressourceActions.fetchById(this.$wpAPI.wp.categories, 'SET_CATEGORY', context, id)
-
-    // fetch related ressources
-    await context.dispatch('fetchRelatedRessources', [category])
-
-    return category
+    return await ressourceActions.fetchById(this.$wpAPI.wp.categories, 'SET_CATEGORY', context, id)
   }
 }
 

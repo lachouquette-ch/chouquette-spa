@@ -8,29 +8,53 @@ export const ressourceStates = () => ({
 
 /* Actions */
 
-const fetchByIds = async (ressourceRepository, mutationName, { commit, state }, ids) => {
+/**
+ * Try to get ressources from store (camche). Fetch missing ressources if any, store them and fetch its related ressources
+ */
+const fetchByIds = async (ressourceRepository, mutationName, { dispatch, commit, state }, ids) => {
+  // find which keys aren't in store
   const unknownIds = _.difference(_.uniq(ids), Object.keys(state.all))
   if (!_.isEmpty(unknownIds)) {
+    // fetch those missing ressources and add to store
     const newRessources = await ressourceRepository.getByIds(unknownIds).then(({ data }) => data)
     commit(mutationName, newRessources)
+
+    // fetch related ressources
+    await dispatch('fetchRelatedRessources', newRessources)
   }
 
   return ids.map((id) => state.all[id])
 }
 
-const fetchById = async (ressourceRepository, mutationName, { commit, state }, id) => {
+/**
+ * Try to get ressource from store (cache). Fetch if not, add to store and fetch also related ressources
+ */
+const fetchById = async (ressourceRepository, mutationName, { dispatch, commit, state }, id) => {
+  // try to use cache first
   if (state.all[id]) {
     return state.all[id]
   } else {
+    // fetch ressource and add to store
     const ressource = await ressourceRepository.getById(id).then(({ data }) => data)
     commit(mutationName, ressource)
+
+    // fetch related ressources
+    await dispatch('fetchRelatedRessources', [ressource])
+
     return ressource
   }
 }
 
-const fetchBySlug = async (ressourceRepository, mutationName, { commit, state }, slug) => {
+/**
+ * Fetch ressource by slug, add to store and fetch its related ressources
+ */
+const fetchBySlug = async (ressourceRepository, mutationName, { dispatch, commit, state }, slug) => {
   const ressource = await ressourceRepository.getBySlug(slug).then(({ data }) => data[0])
   commit(mutationName, ressource)
+
+  // fetch related ressources
+  await dispatch('fetchRelatedRessources', [ressource])
+
   return ressource
 }
 

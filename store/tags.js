@@ -5,6 +5,9 @@ export const state = () => ({
 })
 
 export const actions = {
+  fetchRelatedRessources(context, tags) {
+    return Promise.resolve()
+  },
   async fetchBySlug(context, slug) {
     return await ressourceActions.fetchBySlug(this.$wpAPI.wp.tags, 'SET_TAG', context, slug)
   }

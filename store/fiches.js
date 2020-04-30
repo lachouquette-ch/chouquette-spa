@@ -20,9 +20,6 @@ export const actions = {
 
     context.commit('SET_CRITERIA_LIST', criteriaList)
 
-    // fetch related ressources
-    await context.dispatch('fetchRelatedRessources', fiches)
-
     // sort by chouquettise
     const sortedFiches = fiches.sort((el1, el2) => {
       return el2.info.chouquettise - el1.info.chouquettise
@@ -36,11 +33,7 @@ export const actions = {
 
     // fetch criteria
     const criteria = await this.$wpAPI.criteria.getForFiche(id).then(({ data }) => data)
-
     context.commit('SET_CRITERIA', id, criteria)
-
-    // fetch related ressources
-    await context.dispatch('posts/fetchRelatedRessources', [fiche])
 
     return fiche
   },

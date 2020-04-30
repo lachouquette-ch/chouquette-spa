@@ -5,6 +5,9 @@ export const state = () => ({
 })
 
 export const actions = {
+  fetchRelatedRessources(context, mediaList) {
+    return Promise.resolve()
+  },
   async fetchByIds(context, ids) {
     return await ressourceActions.fetchByIds(this.$wpAPI.wp.media, 'SET_MEDIA_LIST', context, ids)
   },
