@@ -24,7 +24,7 @@
               </div>
             </div>
             <client-only>
-              <swiper v-if="fiches" ref="ficheSwiper" :options="swiperOption" class="px-5">
+              <swiper v-if="fiches" ref="ficheSwiper" :options="swiperOption" class="px-1 px-md-5">
                 <swiper-slide v-for="fiche in fiches" :key="fiche.id">
                   <Fiche :fiche="fiche" :responsive="false" />
                 </swiper-slide>
@@ -44,9 +44,9 @@
               </div>
             </div>
             <client-only>
-              <swiper v-if="posts" ref="postSwiper" :options="swiperOption" class="px-5">
+              <swiper v-if="posts" ref="postSwiper" :options="swiperOption" class="px-1 px-md-5">
                 <swiper-slide v-for="post in posts" :key="post.id">
-                  <PostCard :post="post" />
+                  <PostCard :post="post" class="mx-auto" />
                 </swiper-slide>
                 <div v-if="!!posts.length" slot="pagination" class="swiper-pagination" />
                 <div v-if="!!posts.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
