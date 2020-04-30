@@ -20,9 +20,6 @@ export const actions = {
     await dispatch('menus/init')
     // fetch locations
     await dispatch('locations/init')
-    // fetch categories
-    const menuCategoryIds = state.menus.headerCategories.map(({ object_id }) => object_id)
-    await dispatch('categories/fetchByIds', menuCategoryIds)
   }
 }
 

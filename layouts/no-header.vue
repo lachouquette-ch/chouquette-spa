@@ -15,7 +15,12 @@ import LayoutFooter from '../components/LayoutFooter'
 import LayoutAlert from '../components/LayoutAlert'
 
 export default {
-  components: { LayoutAlert, LayoutFooter, LayoutHeaderCovid }
+  components: { LayoutAlert, LayoutFooter, LayoutHeaderCovid },
+  middleware({ store }) {
+    if (process.client) {
+      store.dispatch('nuxtServerInit')
+    }
+  }
 }
 </script>
 
