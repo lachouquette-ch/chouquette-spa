@@ -34,8 +34,8 @@ export default {
   },
   async asyncData({ app }) {
     return {
-      page: await app.$wpAPI.wp.pages.getBySlug('equipe'),
-      team: await app.$wpAPI.wp.users.getTeam()
+      page: await app.$wpAPI.wp.pages.getBySlug('equipe').then(({ data }) => data[0]),
+      team: await app.$wpAPI.wp.users.getTeam().then(({ data }) => data)
     }
   }
 }

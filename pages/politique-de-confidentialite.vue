@@ -8,7 +8,7 @@ export default {
   components: { WpPage },
   async asyncData({ app }) {
     return {
-      page: await app.$wpAPI.wp.pages.getBySlug('politique-de-confidentialite')
+      page: await app.$wpAPI.wp.pages.getBySlug('politique-de-confidentialite').then(({ data }) => data[0])
     }
   }
 }

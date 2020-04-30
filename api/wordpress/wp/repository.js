@@ -5,7 +5,7 @@ class Repository {
   }
 
   get(queryParams = {}) {
-    return this.$axios.$get(this.prefix + '/', { params: queryParams })
+    return this.$axios.get(this.prefix + '/', { params: queryParams })
   }
 
   getBySlug(slug, queryParams = {}) {
@@ -13,7 +13,7 @@ class Repository {
       slug,
       ...queryParams
     }
-    return this.$axios.$get(this.prefix + '/', { params: queryParams }).then((posts) => posts[0])
+    return this.$axios.get(this.prefix + '/', { params: queryParams })
   }
 
   getByIds(ids, queryParams = {}) {
@@ -22,12 +22,12 @@ class Repository {
       per_page: ids.length,
       ...queryParams
     }
-    return this.$axios.$get(this.prefix + '/', { params: queryParams })
+    return this.$axios.get(this.prefix + '/', { params: queryParams })
   }
 
   getById(id, queryParams = {}) {
     const URI = `${this.prefix}/${id}?_embed=true`
-    return this.$axios.$get(URI, { params: queryParams })
+    return this.$axios.get(URI, { params: queryParams })
   }
 }
 

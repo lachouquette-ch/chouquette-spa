@@ -8,7 +8,7 @@ export default {
   components: { WpPage },
   async asyncData({ app }) {
     return {
-      page: await app.$wpAPI.wp.pages.getBySlug('foire-aux-questions')
+      page: await app.$wpAPI.wp.pages.getBySlug('foire-aux-questions').then(({ data }) => data[0])
     }
   }
 }

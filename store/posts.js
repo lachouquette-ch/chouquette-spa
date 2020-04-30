@@ -16,13 +16,15 @@ export const actions = {
   },
 
   async fetchLatests({ commit, dispatch }, number) {
-    const posts = await this.$wpAPI.wp.posts.get({
-      sticky: true,
-      per_page: number
-    })
+    const posts = await this.$wpAPI.wp.posts
+      .get({
+        sticky: true,
+        per_page: number
+      })
+      .then(({ data }) => data)
     const remainingPostCount = number - posts.length
     if (remainingPostCount) {
-      const remainingPosts = await this.$wpAPI.wp.posts.get({ per_page: remainingPostCount })
+      const remainingPosts = await this.$wpAPI.wp.posts.get({ per_page: remainingPostCount }).then(({ data }) => data)
       posts.push(...remainingPosts)
     }
 
@@ -37,10 +39,12 @@ export const actions = {
     // first get tag
     const topsTag = await dispatch('tags/fetchBySlug', 'tops', { root: true })
 
-    const posts = await this.$wpAPI.wp.posts.get({
-      tags: topsTag.id,
-      per_page: number
-    })
+    const posts = await this.$wpAPI.wp.posts
+      .get({
+        tags: topsTag.id,
+        per_page: number
+      })
+      .then(({ data }) => data)
 
     // fetch related ressources
     await dispatch('fetchRelatedRessources', posts)
@@ -50,11 +54,13 @@ export const actions = {
   },
 
   async fetchSimilar({ dispatch, commit }, post) {
-    const posts = await this.$wpAPI.wp.posts.get({
-      tags: post.tags.join(','),
-      exclude: post.id,
-      per_page: 6
-    })
+    const posts = await this.$wpAPI.wp.posts
+      .get({
+        tags: post.tags.join(','),
+        exclude: post.id,
+        per_page: 6
+      })
+      .then(({ data }) => data)
 
     // fetch related ressources
     await dispatch('fetchRelatedRessources', posts)
@@ -82,10 +88,12 @@ export const actions = {
   },
 
   async fetchByText({ dispatch, commit }, text) {
-    const posts = await this.$wpAPI.wp.posts.get({
-      search: text,
-      per_page: 20
-    })
+    const posts = await this.$wpAPI.wp.posts
+      .get({
+        search: text,
+        per_page: 20
+      })
+      .then(({ data }) => data)
 
     // fetch related ressources
     await dispatch('fetchRelatedRessources', posts)

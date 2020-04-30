@@ -5,7 +5,7 @@ export const state = () => ({
 export const actions = {
   async init({ commit }) {
     // fetch all redirections
-    const rawRedirects = await this.$wpAPI.yoast.getRedirects()
+    const rawRedirects = await this.$wpAPI.yoast.getRedirects().then(({ data }) => data)
 
     const redirects = rawRedirects.map((redirect) => {
       const [from, to, status] = redirect.split(' ')

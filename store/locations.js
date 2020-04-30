@@ -8,11 +8,13 @@ export const state = () => ({
 export const actions = {
   async init({ commit }) {
     // fetch all menus
-    const locations = await this.$wpAPI.wp.locations.get({
-      hide_empty: true,
-      orderby: 'count',
-      order: 'desc'
-    })
+    const locations = await this.$wpAPI.wp.locations
+      .get({
+        hide_empty: true,
+        orderby: 'count',
+        order: 'desc'
+      })
+      .then(({ data }) => data)
     commit('SET_LOCATIONS', locations)
 
     return locations

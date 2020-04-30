@@ -16,7 +16,7 @@ export const actions = {
 
     // fetch criteria list
     const ficheIds = fiches.map(({ id }) => id)
-    const criteriaList = await this.$wpAPI.criteria.getForFiches(ficheIds)
+    const criteriaList = await this.$wpAPI.criteria.getForFiches(ficheIds).then(({ data }) => data)
 
     context.commit('SET_CRITERIA_LIST', criteriaList)
 
@@ -35,7 +35,7 @@ export const actions = {
     const fiche = await ressourceActions.fetchById(this.$wpAPI.wp.fiches, 'SET_FICHE', context, id)
 
     // fetch criteria
-    const criteria = await this.$wpAPI.criteria.getForFiche(id)
+    const criteria = await this.$wpAPI.criteria.getForFiche(id).then(({ data }) => data)
 
     context.commit('SET_CRITERIA', id, criteria)
 
@@ -46,10 +46,12 @@ export const actions = {
   },
 
   async fetchByText({ dispatch, commit }, text) {
-    const fiches = await this.$wpAPI.wp.fiches.get({
-      search: text,
-      per_page: 20
-    })
+    const fiches = await this.$wpAPI.wp.fiches
+      .get({
+        search: text,
+        per_page: 20
+      })
+      .then(({ data }) => data)
 
     // fetch related ressources
     await dispatch('fetchRelatedRessources', fiches)

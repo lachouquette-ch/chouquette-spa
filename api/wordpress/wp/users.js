@@ -6,7 +6,7 @@ class UserRepository extends Repository {
   }
 
   getTeam() {
-    return this.$axios.$get(this.prefix + '/team')
+    return this.$axios.get(this.prefix + '/team')
   }
 }
 

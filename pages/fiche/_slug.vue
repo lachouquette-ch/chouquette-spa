@@ -18,7 +18,7 @@ export default {
     }
   },
   async created() {
-    this.fiche = await this.$wpAPI.wp.fiches.getBySlug(this.$route.params.slug)
+    this.fiche = await this.$wpAPI.wp.fiches.getBySlug(this.$route.params.slug).then(({ data }) => data[0])
   }
 }
 </script>

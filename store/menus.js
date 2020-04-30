@@ -12,9 +12,11 @@ export const state = () => ({
 export const actions = {
   async init({ commit }) {
     // fetch all menus
-    const rawMenus = await this.$wpAPI.menus.get()
+    const rawMenus = await this.$wpAPI.menus.get().then(({ data }) => data)
     // build menus with all dependencies
-    const menus = await Promise.all(rawMenus.map((rawMenu) => this.$wpAPI.menus.getById(rawMenu.term_id)))
+    const menus = await Promise.all(
+      rawMenus.map((rawMenu) => this.$wpAPI.menus.getById(rawMenu.term_id).then(({ data }) => data))
+    )
 
     const headerMenu = menus.find((menu) => menu.slug === HEADER_SLUG)
     commit('SET_HEADER', headerMenu)

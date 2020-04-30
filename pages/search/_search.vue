@@ -10,7 +10,7 @@
               <swiper-slide v-for="(fiche, index) in fiches" :key="fiche.id">
                 <Fiche :fiche="fiche" :responsive="false" />
               </swiper-slide>
-              <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination"></div>
+              <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
               <div v-if="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
               <div v-if="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
             </swiper>
@@ -25,7 +25,7 @@
               <swiper-slide v-for="(post, index) in posts" :key="post.id">
                 <PostCard :post="post" />
               </swiper-slide>
-              <div v-if="!!posts.length" slot="pagination" class="swiper-pagination"></div>
+              <div v-if="!!posts.length" slot="pagination" class="swiper-pagination" />
               <div v-if="!!posts.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
               <div v-if="!!posts.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
             </swiper>

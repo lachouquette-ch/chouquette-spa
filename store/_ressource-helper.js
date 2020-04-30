@@ -11,7 +11,7 @@ export const ressourceStates = () => ({
 const fetchByIds = async (ressourceRepository, mutationName, { commit, state }, ids) => {
   const unknownIds = _.difference(_.uniq(ids), Object.keys(state.all))
   if (!_.isEmpty(unknownIds)) {
-    const newRessources = await ressourceRepository.getByIds(unknownIds)
+    const newRessources = await ressourceRepository.getByIds(unknownIds).then(({ data }) => data)
     commit(mutationName, newRessources)
   }
 
@@ -22,14 +22,14 @@ const fetchById = async (ressourceRepository, mutationName, { commit, state }, i
   if (state.all[id]) {
     return state.all[id]
   } else {
-    const ressource = await ressourceRepository.getById(id)
+    const ressource = await ressourceRepository.getById(id).then(({ data }) => data)
     commit(mutationName, ressource)
     return ressource
   }
 }
 
 const fetchBySlug = async (ressourceRepository, mutationName, { commit, state }, slug) => {
-  const ressource = await ressourceRepository.getBySlug(slug)
+  const ressource = await ressourceRepository.getBySlug(slug).then(({ data }) => data[0])
   commit(mutationName, ressource)
   return ressource
 }

@@ -8,7 +8,7 @@ export default {
   components: { WpPage },
   async asyncData({ app }) {
     return {
-      page: await app.$wpAPI.wp.pages.getBySlug('notre-charte-editoriale')
+      page: await app.$wpAPI.wp.pages.getBySlug('notre-charte-editoriale').then(({ data }) => data[0])
     }
   }
 }
