@@ -190,7 +190,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .contact-page {
   h1 {
     font-family: $font-family-heading;
