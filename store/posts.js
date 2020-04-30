@@ -49,7 +49,7 @@ export const actions = {
     return posts
   },
 
-  async fetchSimilar({ dispatch }, post) {
+  async fetchSimilar({ dispatch, commit }, post) {
     const posts = await this.$wpAPI.wp.posts.get({
       tags: post.tags.join(','),
       exclude: post.id,
@@ -59,6 +59,7 @@ export const actions = {
     // fetch related ressources
     await dispatch('fetchRelatedRessources', posts)
 
+    commit('SET_POSTS', posts)
     return posts
   },
 
@@ -78,6 +79,18 @@ export const actions = {
     await context.dispatch('posts/fetchRelatedRessources', [post])
 
     return post
+  },
+
+  async fetchByText({ dispatch, commit }, text) {
+    const posts = await this.$wpAPI.wp.posts.get({
+      search: text
+    })
+
+    // fetch related ressources
+    await dispatch('fetchRelatedRessources', posts)
+
+    commit('SET_POSTS', posts)
+    return posts
   }
 }
 

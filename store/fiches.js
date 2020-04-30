@@ -43,6 +43,18 @@ export const actions = {
     await context.dispatch('posts/fetchRelatedRessources', [fiche])
 
     return fiche
+  },
+
+  async fetchByText({ dispatch, commit }, text) {
+    const fiches = await this.$wpAPI.wp.fiches.get({
+      search: text
+    })
+
+    // fetch related ressources
+    await dispatch('fetchRelatedRessources', fiches)
+
+    commit('SET_FICHES', fiches)
+    return fiches
   }
 }
 
