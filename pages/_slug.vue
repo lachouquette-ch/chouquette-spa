@@ -6,7 +6,7 @@
       body-bg-variant="white"
       body-text-variant="black"
       body-class="modal-body-class"
-      content-class="bg-transparent"
+      content-class="bg-transparent border-0"
       hide-header
       hide-footer
       centered

@@ -13,8 +13,7 @@ export const DEFAULT = {
   },
   pagination: {
     el: '.swiper-pagination',
-    dynamicBullets: true,
-    clickable: true
+    type: 'progressbar'
   }
 }
 
