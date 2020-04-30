@@ -353,7 +353,8 @@ export default {
       this.google = await this.$googleMaps
       this.map = new this.google.maps.Map(this.$refs.ficheMap, {
         ...MAP_OPTIONS,
-        gestureHandling: 'none'
+        gestureHandling: 'none',
+        zoomControl: false
       })
     } catch (err) {
       if (err instanceof Error) console.error(err)
@@ -368,8 +369,10 @@ export default {
       (event) => {
         if (document.fullscreenElement) {
           this.map.gestureHandling = 'auto'
+          this.map.zoomControl = true
         } else {
           this.map.gestureHandling = 'none'
+          this.map.zoomControl = false
           // center map
           this.map.setCenter(this.marker.position)
           this.infoWindow.open(this.map, this.marker) // force to center on infoWindow too
@@ -600,5 +603,9 @@ export default {
 }
 .fiche-back .fiche-report {
   bottom: 5px;
+}
+
+::v-deep div.gm-style-iw-d + button {
+  display: none !important;
 }
 </style>
