@@ -194,7 +194,7 @@ import newsletter from '~/mixins/newsletter'
 import yoast from '~/mixins/yoast'
 import gutenberg from '~/mixins/gutenberg'
 
-import { DEFAULT } from '~/constants/swiper'
+import { DEFAULT, LOOP } from '~/constants/swiper'
 
 export default {
   components: {
@@ -244,7 +244,7 @@ export default {
 
       swiperOption: {
         ...DEFAULT,
-        loop: false // issue with refreshing underlying slide (fiche component) on loop transition : map not displayed + button actions not triggered
+        ...LOOP
       }
     }
   },

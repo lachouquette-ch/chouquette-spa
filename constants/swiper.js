@@ -1,7 +1,6 @@
 export const DEFAULT = {
   grabCursor: true,
   centeredSlides: true,
-  loop: true,
   hashNavigation: {
     replaceState: true
   },
@@ -15,6 +14,24 @@ export const DEFAULT = {
     el: '.swiper-pagination',
     type: 'progressbar'
   }
+}
+
+export const LOOP = {
+  loop: true,
+  /* Need to hide (and skip) duplicates since it's only HTML copies and not Vue component (no JS) */
+  slideDuplicateClass: 'invisible',
+  on: {
+    slideChange() {
+      // skip duplicate
+      if (this.isBeginning) {
+        this.slideToLoop(this.slides.length - 3, null, false) // 2 duplicates
+      }
+      // skip duplicate
+      if (this.isEnd) {
+        this.slideToLoop(0, null, false)
+      }
+    }
+  },
 }
 
 export const AUTO_PLAY = {
