@@ -143,14 +143,14 @@
               <nuxt-link
                 :to="{ path: `/${fiche.latest_post.slug}` }"
                 :title="`Lire le dernier article : ${fiche.latest_post.title}`"
-                class="btn btn-outline-secondary text-decoration-none"
+                class=" btn btn-sm btn-outline-secondary text-decoration-none"
               >
                 Dernier article
               </nuxt-link>
               <button
                 href=""
                 title="Plus de détails"
-                class="btn btn-yellow border-grey float-right"
+                class="btn btn-sm btn-yellow border-grey float-right"
                 :class="{ 'd-md-none': responsive }"
                 @click.prevent="isFlipped = true"
               >
@@ -234,7 +234,7 @@
               <button
                 href=""
                 title="Plus de détails"
-                class="btn btn-primary border-secondary float-right"
+                class="btn btn-sm btn-primary border-secondary float-right"
                 :class="{ 'd-md-none': responsive }"
                 @click.prevent="isFlipped = false"
               >
@@ -516,7 +516,7 @@ export default {
   }
 
   .card-footer {
-    height: 64px;
+    height: 56px;
   }
 
   &.flipped {
