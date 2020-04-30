@@ -138,7 +138,6 @@ export default {
   data() {
     return {
       baseURL: process.env.wpBaseUrl,
-      categories: [],
       searchText: ''
     }
   },
