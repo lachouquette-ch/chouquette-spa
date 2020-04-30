@@ -441,13 +441,6 @@ export default {
 
       this.resizeFiche()
     },
-    toggleInfoWindow() {
-      if (!this.infoWindow.getMap()) {
-        this.infoWindow.open(this.map, this.marker)
-      } else {
-        this.infoWindow.close()
-      }
-    },
     initMap() {
       // remove marker in any
       if (this.marker) {
@@ -466,11 +459,9 @@ export default {
           position: this.fiche.info.location,
           title: this.fiche.title.rendered
         })
-        // this.marker.addListener('click', () => {
-        //   this.toggleInfoWindow()
-        // })
+
         this.map.setCenter(this.marker.getPosition())
-        // this.toggleInfoWindow()
+        this.infoWindow.open(this.map, this.marker)
       }
     },
     resizeFiche() {
