@@ -153,7 +153,9 @@
             <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
             <swiper class="swiper py-3" :options="swiperOption">
               <swiper-slide v-for="post in similarPosts" :key="post.id">
-                <PostCard :post="post" />
+                <nuxt-link :to="{ path: `/${post.slug}` }" class="text-decoration-none">
+                  <PostCard :post="post" />
+                </nuxt-link>
               </swiper-slide>
               <div slot="button-prev" class="swiper-button-prev"></div>
               <div slot="button-next" class="swiper-button-next"></div>
