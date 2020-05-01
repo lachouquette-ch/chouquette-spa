@@ -252,12 +252,9 @@ export default {
       hideSidebar: true,
       fiche: null,
 
-      swiperFichesOptions: {
+      swiperOption: {
         ...DEFAULT,
-        ...LOOP
-      },
-      swiperPostsOptions: {
-        ...DEFAULT,
+        ...LOOP,
         ...RESPONSIVE
       }
     }
