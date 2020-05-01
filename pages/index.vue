@@ -140,14 +140,16 @@
         <div class="text-center">
           <h2 class="mb-4">Nos derniers tops...</h2>
         </div>
-        <swiper v-if="topPosts" class="swiper py-3" :options="swiperOption">
-          <swiper-slide v-for="post in topPosts" :key="post.id">
-            <PostCard :post="post" class="mx-auto" />
-          </swiper-slide>
+        <div v-if="topPosts" v-swiper="swiperOptions" class="swiper px-md-5">
+          <div class="swiper-wrapper pt-3 pt-md-0">
+            <div v-for="post in topPosts" :key="post.id" class="swiper-slide">
+              <PostCard :post="post" class="mx-auto" />
+            </div>
+          </div>
           <div slot="pagination" class="swiper-pagination d-block d-md-none" />
           <div slot="button-prev" class="swiper-button-prev d-none d-md-block"></div>
           <div slot="button-next" class="swiper-button-next d-none d-md-block"></div>
-        </swiper>
+        </div>
       </div>
     </div>
   </div>
@@ -158,7 +160,7 @@ import { mapState } from 'vuex'
 
 import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-subscribe'
 
-import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+import { directive as SwiperDirective } from 'vue-awesome-swiper'
 import CategoryLogo from '~/components/CategoryLogo'
 import PostCard from '~/components/PostCard'
 import Search from '~/components/Search'
@@ -171,16 +173,17 @@ const LATEST_POSTS_NUM = 6
 const TOP_POSTS_NUM = 8
 
 export default {
-  components: { PostCard, CategoryLogo, Search, VueMailchimpSubscribe, Swiper, SwiperSlide },
+  components: { PostCard, CategoryLogo, Search, VueMailchimpSubscribe },
+  directives: { swiper: SwiperDirective },
   mixins: [newsletter],
   layout: 'no-header',
   data() {
     return {
       baseURL: process.env.wpBaseUrl,
 
-      swiperOption: {
+      swiperOptions: {
         ...DEFAULT,
-        ...AUTO_PLAY,
+        //...AUTO_PLAY,
         ...RESPONSIVE
       }
     }
@@ -379,21 +382,6 @@ h3.home-header-menu-description {
   // do not display category for tops
   .article-card-category {
     display: none;
-  }
-
-  .swiper {
-    padding: 1rem 0.5rem;
-  }
-
-  .swiper-slide {
-    @include hover-focus {
-      box-shadow: $box-shadow;
-    }
-
-    @include media-breakpoint-down(sm) {
-      margin-left: auto;
-      margin-right: auto;
-    }
   }
 }
 </style>
