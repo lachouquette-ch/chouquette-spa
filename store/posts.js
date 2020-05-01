@@ -77,10 +77,10 @@ export const actions = {
     return await ressourceActions.fetchById(this.$wpAPI.wp.posts, 'SET_POST', context, id)
   },
 
-  async fetchByText({ dispatch, commit }, text) {
+  async fetchByText({ dispatch, commit }, { search, page = 1 }) {
     const { data: posts, headers } = await this.$wpAPI.wp.posts.get({
-      search: text,
-      per_page: 20
+      search,
+      page
     })
 
     // fetch related ressources

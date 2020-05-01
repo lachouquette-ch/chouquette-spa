@@ -14,50 +14,49 @@
     </b-modal>
     <div class="layout-content">
       <div class="container-fluid">
-        <h1 class="text-center my-4">{{ totalResultCount }} résultats pour "{{ searchText }}"</h1>
+        <div class="text-center my-4">
+          <h1>{{ totalResultCount }} résultats pour "{{ search }}"</h1>
+          <div v-if="tooManyResultats">
+            C'est beaucoup ! <a v-b-modal.searchModal href="" @click.prevent>Affine ta recherche</a>
+          </div>
+        </div>
         <div class="row">
           <div class="col">
-            <div class="text-center mb-3">
-              <h2 class="mb-0">{{ fichesTotal }} fiche(s)</h2>
-              <div v-if="tooManyFiches">
-                C'est beaucoup ! <a v-b-modal.searchModal href="" @click.prevent>Affine ta recherche</a>
-              </div>
-            </div>
+            <h2 class="text-center">{{ fichesTotal }} fiche(s)</h2>
             <client-only>
-              <div v-if="fiches" v-swiper:ficheSwiper="swiperOption" class="px-1 px-md-5">
-                <div class="swiper-wrapper mt-3">
-                  <div v-for="fiche in fiches" :key="fiche.id" class="swiper-slide">
-                    <Fiche :fiche="fiche" :responsive="false" />
+              <b-overlay :show="fichesLoading" opacity="0.6" blur="none" spinner-variant="yellow">
+                <div v-if="fiches" v-swiper:fichesSwiper="ficheSwiperOptions" class="px-1 px-md-5">
+                  <div class="swiper-wrapper mt-3">
+                    <div v-for="fiche in fiches" :key="fiche.id" class="swiper-slide">
+                      <Fiche :fiche="fiche" :responsive="false" />
+                    </div>
                   </div>
+                  <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
+                  <div v-if="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
+                  <div v-if="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
                 </div>
-                <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
-                <div v-if="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-                <div v-if="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
-              </div>
+              </b-overlay>
             </client-only>
           </div>
         </div>
         <div class="row mt-5 mb-4">
           <div class="col">
-            <div class="text-center mb-3">
-              <h2 class="mb-0">{{ postsTotal }} articles(s)</h2>
-              <div v-if="tooManyPosts">
-                C'est beaucoup ! <a v-b-modal.searchModal href="" @click.prevent>Affine ta recherche</a>
-              </div>
-            </div>
+            <h2 class="text-center">{{ postsTotal }} articles(s)</h2>
             <client-only>
-              <div v-if="posts" v-swiper:postSwiper="swiperOption" class="px-1 px-md-5">
-                <div class="swiper-wrapper mt-3">
-                  <div v-for="post in posts" :key="post.id" class="swiper-slide">
-                    <nuxt-link :to="{ path: `/${post.slug}` }" class="text-decoration-none">
-                      <PostCard :post="post" class="mx-auto" />
-                    </nuxt-link>
+              <b-overlay :show="postsLoading" opacity="0.6" blur="none" spinner-variant="yellow">
+                <div v-if="posts" v-swiper:postsSwiper="postSwiperOptions" class="px-1 px-md-5">
+                  <div class="swiper-wrapper mt-3">
+                    <div v-for="post in posts" :key="post.id" class="swiper-slide">
+                      <nuxt-link :to="{ path: `/${post.slug}` }" class="text-decoration-none">
+                        <PostCard :post="post" class="mx-auto" />
+                      </nuxt-link>
+                    </div>
                   </div>
+                  <div v-if="!!posts.length" slot="pagination" class="swiper-pagination" />
+                  <div v-if="!!posts.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
+                  <div v-if="!!posts.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
                 </div>
-                <div v-if="!!posts.length" slot="pagination" class="swiper-pagination" />
-                <div v-if="!!posts.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-                <div v-if="!!posts.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
-              </div>
+              </b-overlay>
             </client-only>
           </div>
         </div>
@@ -76,41 +75,92 @@ import { DEFAULT, RESPONSIVE } from '~/constants/swiper'
 export default {
   components: { PostCard, Fiche, Search },
   directives: { swiper: SwiperDirective },
-  async asyncData({ params, store, app }) {
+  async asyncData({ params, store }) {
     const [ficheResult, postResult] = await Promise.all([
-      store.dispatch('fiches/fetchByText', params.search),
-      store.dispatch('posts/fetchByText', params.search)
+      store.dispatch('fiches/fetchByText', { search: params.search }),
+      store.dispatch('posts/fetchByText', { search: params.search })
     ])
 
     return {
-      searchText: params.search,
+      search: params.search,
+
       fiches: ficheResult.fiches,
       fichesTotal: ficheResult.total,
       fichesPages: ficheResult.pages,
+      fichesNextPage: 2,
+      fichesLoading: false,
+
       posts: postResult.posts,
       postsTotal: postResult.total,
-      postsPages: postResult.pages
+      postsPages: postResult.pages,
+      postsNextPage: 2,
+      postsLoading: false
     }
   },
   data() {
+    const swiperOptions = {
+      ...DEFAULT,
+      ...RESPONSIVE,
+      centeredSlides: false
+    }
     return {
-      swiperOption: { ...DEFAULT, ...RESPONSIVE, centeredSlides: false }
+      postSwiperOptions: {
+        ...swiperOptions,
+        on: {
+          reachEnd: () => this.loadMorePosts()
+        }
+      },
+      ficheSwiperOptions: {
+        ...swiperOptions,
+        on: {
+          reachEnd: () => this.loadMoreFiches()
+        }
+      }
     }
   },
   computed: {
     totalResultCount() {
       return this.fichesTotal + this.postsTotal
     },
-    tooManyFiches() {
-      return this.fichesTotal > this.fiches.length
-    },
-    tooManyPosts() {
-      return this.postsTotal > this.posts.length
+    tooManyResultats() {
+      return this.totalResultCount > 50
     }
   },
   methods: {
+    async loadMorePosts() {
+      // stop if last page
+      if (this.postsNextPage > this.postsPages) return
+
+      try {
+        this.postsLoading = true
+        const newPosts = await this.$store.dispatch('posts/fetchByText', {
+          search: this.search,
+          page: this.postsNextPage++
+        })
+        this.posts.push(...newPosts.posts)
+        this.postsSwiper.update()
+      } finally {
+        this.postsLoading = false
+      }
+    },
+    async loadMoreFiches() {
+      // stop if last page
+      if (this.fichesNextPage > this.fichesPages) return
+
+      try {
+        this.fichesLoading = true
+        const newFiches = await this.$store.dispatch('fiches/fetchByText', {
+          search: this.search,
+          page: this.fichesNextPage++
+        })
+        this.fiches.push(...newFiches.fiches)
+        this.fichesSwiper.update()
+      } finally {
+        this.fichesLoading = false
+      }
+    },
     initSearch() {
-      this.$refs.searchBox.formSearch.searchText = this.searchText
+      this.$refs.searchBox.formSearch.searchText = this.search
       this.$refs.searchBox.$refs.textFilter.focus()
     }
   }

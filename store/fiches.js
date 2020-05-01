@@ -38,10 +38,10 @@ export const actions = {
     return fiche
   },
 
-  async fetchByText({ dispatch, commit }, text) {
+  async fetchByText({ dispatch, commit }, { search, page = 1 }) {
     const { data: fiches, headers } = await this.$wpAPI.wp.fiches.get({
-      search: text,
-      per_page: 20
+      search,
+      page
     })
 
     // fetch related ressources
