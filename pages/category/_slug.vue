@@ -1,9 +1,9 @@
 <template>
-  <div class="layout-content">
-    <h1>{{ category.name }}</h1>
-    <div>Ma recherche</div>
-    <div class="flex-column">
-      <Fiche v-for="fiche in fiches" :key="fiche.id" :fiche="fiche" :responsive="false" />
+  <div class="layout-content container">
+    <h1 class="text-center my-4">{{ category.name }}</h1>
+    <div class="h3">Ma recherche</div>
+    <div class="d-flex justify-content-around flex-wrap my-4">
+      <Fiche v-for="fiche in fiches" :key="fiche.id" :fiche="fiche" :responsive="false" class="mx-2 mb-3" />
     </div>
   </div>
 </template>
