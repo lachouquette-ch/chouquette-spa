@@ -121,39 +121,7 @@
             </div>
           </section>
 
-          <section class="home-newsletter container-fluid bg-yellow py-4">
-            <h3 class="text-center mb-0">Rejoins notre newsletter</h3>
-            <p class="text-center text-muted">Pour recevoir tous nos bons plans et ne plus rien rater</p>
-            <VueMailchimpSubscribe
-              url="https://unechouquettealausanne.us8.list-manage.com/subscribe/post-json"
-              :user-id="mailChimpUserId"
-              :list-id="mailChimpListId"
-              @error="onMailchimpSubscriptionError"
-              @success="onMailchimpSubscriptionSuccess"
-            >
-              <template v-slot="{ subscribe, setEmail, loading }">
-                <form class="form-inline mx-auto justify-content-center" @submit.prevent="subscribe">
-                  <input
-                    ref="mailRegistration"
-                    type="email"
-                    name="email"
-                    placeholder="Ton email"
-                    class="required email form-control w-auto mr-2"
-                    @input="setEmail($event.target.value)"
-                  />
-                  <button type="submit" class="btn btn-dark-grey" :disabled="loading">
-                    <span
-                      v-show="loading"
-                      class="spinner-border spinner-border-sm mt-2"
-                      role="status"
-                      aria-hidden="true"
-                    ></span>
-                    Je m'inscris
-                  </button>
-                </form>
-              </template>
-            </VueMailchimpSubscribe>
-          </section>
+          <Newsletter />
 
           <section v-if="similarPosts" class="post-similar container my-5">
             <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
@@ -206,9 +174,11 @@ import yoast from '~/mixins/yoast'
 import gutenberg from '~/mixins/gutenberg'
 
 import { DEFAULT, LOOP, RESPONSIVE } from '~/constants/swiper'
+import Newsletter from "~/components/Newsletter";
 
 export default {
   components: {
+    Newsletter,
     Fiche,
     FicheThumbnail,
     PostCommentReply,

@@ -61,6 +61,7 @@
           </div>
         </div>
       </div>
+      <Newsletter />
     </div>
   </div>
 </template>
@@ -71,9 +72,10 @@ import Fiche from '~/components/Fiche'
 import PostCard from '~/components/PostCard'
 import Search from '~/components/Search'
 import { DEFAULT, RESPONSIVE } from '~/constants/swiper'
+import Newsletter from '~/components/Newsletter'
 
 export default {
-  components: { PostCard, Fiche, Search },
+  components: { Newsletter, PostCard, Fiche, Search },
   directives: { swiper: SwiperDirective },
   async asyncData({ params, store }) {
     const [ficheResult, postResult] = await Promise.all([

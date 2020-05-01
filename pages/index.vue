@@ -88,52 +88,9 @@
         </div>
       </div>
 
-      <div class="home-newsletter container-fluid my-5">
+      <div class="my-5">
         <a class="home-newsletter-target" name="newsletter"></a>
-        <div class="row">
-          <div class="col-lg-6 m-md-auto mb-3">
-            <h2 class="w-75 m-auto text-center">Pour être dans la confidence du meilleur de chez toi</h2>
-          </div>
-          <div class="col-lg-6">
-            <p class="mb-1 h4">Rejoins notre newsletter</p>
-            <p class="text-muted">Pour recevoir tous nos bons plans et ne plus rien rater</p>
-            <VueMailchimpSubscribe
-              url="https://unechouquettealausanne.us8.list-manage.com/subscribe/post-json"
-              :user-id="mailChimpUserId"
-              :list-id="mailChimpListId"
-              @error="onMailchimpSubscriptionError"
-              @success="onMailchimpSubscriptionSuccess"
-            >
-              <template v-slot="{ subscribe, setEmail, loading }">
-                <form class="form-inline mx-auto justify-content-center" @submit.prevent="subscribe">
-                  <div class="form-row w-100">
-                    <div class="col-lg-8 mb-2">
-                      <input
-                        ref="mailRegistration"
-                        type="email"
-                        name="email"
-                        placeholder="Ton email"
-                        class="required email form-control form-control-lg w-100"
-                        @input="setEmail($event.target.value)"
-                      />
-                    </div>
-                    <div class="col-lg-4">
-                      <button type="submit" name="subscribe" class="btn btn-dark-grey w-100 btn-lg" :disabled="loading">
-                        <span
-                          v-show="loading"
-                          class="spinner-border spinner-border-sm mr-2"
-                          role="status"
-                          aria-hidden="true"
-                        ></span
-                        >Je m'inscris
-                      </button>
-                    </div>
-                  </div>
-                </form>
-              </template>
-            </VueMailchimpSubscribe>
-          </div>
-        </div>
+        <Newsletter />
       </div>
 
       <div class="home-tops container">
@@ -160,12 +117,11 @@
 <script>
 import { mapState } from 'vuex'
 
-import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-subscribe'
-
 import { directive as SwiperDirective } from 'vue-awesome-swiper'
 import CategoryLogo from '~/components/CategoryLogo'
 import PostCard from '~/components/PostCard'
 import Search from '~/components/Search'
+import Newsletter from '~/components/Newsletter'
 
 import newsletter from '~/mixins/newsletter'
 
@@ -175,7 +131,7 @@ const LATEST_POSTS_NUM = 6
 const TOP_POSTS_NUM = 8
 
 export default {
-  components: { PostCard, CategoryLogo, Search, VueMailchimpSubscribe },
+  components: { PostCard, CategoryLogo, Search, Newsletter },
   directives: { swiper: SwiperDirective },
   mixins: [newsletter],
   layout: 'no-header',
@@ -185,7 +141,7 @@ export default {
 
       swiperOptions: {
         ...DEFAULT,
-        // ...AUTO_PLAY,
+        ...AUTO_PLAY,
         ...RESPONSIVE
       }
     }
@@ -338,22 +294,6 @@ h3.home-header-menu-description {
     @include media-breakpoint-up(lg) {
       font-size: 3rem;
     }
-  }
-}
-
-.home-newsletter {
-  padding: 4rem 3rem;
-  background-color: $chouquette-yellow;
-  color: black;
-
-  @include media-breakpoint-down(lg) {
-    padding: 3rem;
-  }
-
-  h2 {
-    font-family: $font-family-heading;
-    font-size: 1.75rem;
-    line-height: 2.5rem;
   }
 }
 
