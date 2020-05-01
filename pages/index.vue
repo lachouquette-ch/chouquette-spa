@@ -123,8 +123,6 @@ import PostCard from '~/components/PostCard'
 import Search from '~/components/Search'
 import Newsletter from '~/components/Newsletter'
 
-import newsletter from '~/mixins/newsletter'
-
 import { AUTO_PLAY, DEFAULT, RESPONSIVE } from '~/constants/swiper'
 
 const LATEST_POSTS_NUM = 6
@@ -133,7 +131,6 @@ const TOP_POSTS_NUM = 8
 export default {
   components: { PostCard, CategoryLogo, Search, Newsletter },
   directives: { swiper: SwiperDirective },
-  mixins: [newsletter],
   layout: 'no-header',
   data() {
     return {
@@ -303,21 +300,6 @@ h3.home-header-menu-description {
   visibility: hidden;
 
   top: -1 * $covid-banner-height - 15px;
-}
-
-.home-newsletter-response {
-  &-error,
-  a {
-    color: red;
-  }
-
-  &-success {
-    color: darkgreen;
-  }
-
-  a {
-    text-decoration: underline;
-  }
 }
 
 .home-tops {

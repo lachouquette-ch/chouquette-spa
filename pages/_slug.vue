@@ -158,8 +158,6 @@
 <script>
 import moment from 'moment'
 
-import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-subscribe'
-
 import { directive as SwiperDirective } from 'vue-awesome-swiper'
 import WPMedia from '../components/WpMedia'
 import PostShare from '../components/PostShare'
@@ -169,12 +167,11 @@ import WpAvatar from '../components/WpAvatar'
 import PostCommentReply from '../components/PostCommentReply'
 import FicheThumbnail from '../components/FicheThumbnail'
 import Fiche from '../components/Fiche'
-import newsletter from '~/mixins/newsletter'
 import yoast from '~/mixins/yoast'
 import gutenberg from '~/mixins/gutenberg'
 
 import { DEFAULT, LOOP, RESPONSIVE } from '~/constants/swiper'
-import Newsletter from "~/components/Newsletter";
+import Newsletter from '~/components/Newsletter'
 
 export default {
   components: {
@@ -186,11 +183,10 @@ export default {
     PostComment,
     WPMedia,
     PostCard,
-    PostShare,
-    VueMailchimpSubscribe
+    PostShare
   },
   directives: { swiper: SwiperDirective },
-  mixins: [gutenberg, newsletter, yoast],
+  mixins: [gutenberg, yoast],
   async asyncData({ app, store, params }) {
     const post = await app.$wpAPI.wp.posts.getBySlug(params.slug, { _embed: true }).then(({ data }) => data[0])
 
