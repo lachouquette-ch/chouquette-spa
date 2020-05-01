@@ -13,14 +13,17 @@
         </div>
       </div>
     </div>
+    <Newsletter />
   </b-overlay>
 </template>
 
 <script>
 import yoast from '~/mixins/yoast'
 import gutenberg from '~/mixins/gutenberg'
+import Newsletter from '~/components/Newsletter'
 
 export default {
+  components: { Newsletter },
   mixins: [yoast, gutenberg],
   props: {
     page: {

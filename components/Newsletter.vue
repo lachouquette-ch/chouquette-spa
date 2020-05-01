@@ -86,6 +86,10 @@ export default {
     }
   }
 
+  @include media-breakpoint-up(xl) {
+    padding: 4rem 6rem;
+  }
+
   h3 {
     font-family: $font-family-heading;
     line-height: 2.5rem;
