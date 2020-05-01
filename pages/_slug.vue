@@ -21,25 +21,27 @@
           @click.prevent="close"
           >×</a
         >
-        <swiper ref="ficheSwiper" :options="swiperOption">
-          <swiper-slide
-            v-for="(fiche, index) in fiches"
-            :key="fiche.id"
-            class="align-self-center"
-            :data-hash="fiche.id"
-          >
-            <Fiche ref="fiche" :fiche="fiche" />
+        <div v-swiper:ficheSwiper="swiperOption">
+          <div class="swiper-wrapper mt-3">
             <div
-              class="fiche-modal-close d-md-none bg-white m-2 border-0 rounded-circle text-center"
-              :class="{ 'd-none': $refs.fiche && $refs.fiche[index] && $refs.fiche[index].isFlipped }"
+              v-for="(fiche, index) in fiches"
+              :key="fiche.id"
+              class="swiper-slide align-self-center"
+              :data-hash="fiche.id"
             >
-              <a href="" class="text-black text-decoration-none font-weight-bold" @click.prevent="close">×</a>
+              <Fiche ref="fiche" :fiche="fiche" />
+              <div
+                class="fiche-modal-close d-md-none bg-white m-2 border-0 rounded-circle text-center"
+                :class="{ 'd-none': $refs.fiche && $refs.fiche[index] && $refs.fiche[index].isFlipped }"
+              >
+                <a href="" class="text-black text-decoration-none font-weight-bold" @click.prevent="close">×</a>
+              </div>
             </div>
-          </swiper-slide>
-          <div v-if="!hasSingleFiche" slot="pagination" class="swiper-pagination"></div>
+          </div>
+          <div v-if="!hasSingleFiche" slot="pagination" class="swiper-pagination d-none d-md-block"></div>
           <div v-if="!hasSingleFiche" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
           <div v-if="!hasSingleFiche" slot="button-next" class="swiper-button-next d-none d-md-block" />
-        </swiper>
+        </div>
       </template>
     </b-modal>
     <nav v-if="fiches" class="post-sidebar bg-white pb-5 pb-md-1" :class="{ 'hide-sidebar': hideSidebar }">
@@ -151,15 +153,17 @@
 
           <section v-if="similarPosts" class="post-similar container my-5 p-0">
             <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
-            <swiper class="swiper py-3" :options="swiperOption">
-              <swiper-slide v-for="post in similarPosts" :key="post.id">
-                <nuxt-link :to="{ path: `/${post.slug}` }" class="text-decoration-none">
-                  <PostCard :post="post" />
-                </nuxt-link>
-              </swiper-slide>
+            <div v-swiper:similarSwiper="swiperOption" class="swiper py-3">
+              <div class="swiper-wrapper">
+                <div v-for="post in similarPosts" :key="post.id" class="swiper-slide">
+                  <nuxt-link :to="{ path: `/${post.slug}` }" class="text-decoration-none">
+                    <PostCard :post="post" class="mx-auto" />
+                  </nuxt-link>
+                </div>
+              </div>
               <div slot="button-prev" class="swiper-button-prev"></div>
               <div slot="button-next" class="swiper-button-next"></div>
-            </swiper>
+            </div>
           </section>
 
           <section class="post-comments container my-5">
@@ -183,7 +187,7 @@ import moment from 'moment'
 
 import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-subscribe'
 
-import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+import { directive as SwiperDirective } from 'vue-awesome-swiper'
 import WPMedia from '../components/WpMedia'
 import PostShare from '../components/PostShare'
 import PostComment from '../components/PostComment'
@@ -196,7 +200,7 @@ import newsletter from '~/mixins/newsletter'
 import yoast from '~/mixins/yoast'
 import gutenberg from '~/mixins/gutenberg'
 
-import { DEFAULT, LOOP } from '~/constants/swiper'
+import { DEFAULT, LOOP, RESPONSIVE } from '~/constants/swiper'
 
 export default {
   components: {
@@ -208,10 +212,9 @@ export default {
     WPMedia,
     PostCard,
     PostShare,
-    VueMailchimpSubscribe,
-    Swiper,
-    SwiperSlide
+    VueMailchimpSubscribe
   },
+  directives: { swiper: SwiperDirective },
   mixins: [gutenberg, newsletter, yoast],
   async asyncData({ app, store, params }) {
     const post = await app.$wpAPI.wp.posts.getBySlug(params.slug, { _embed: true }).then(({ data }) => data[0])
@@ -319,6 +322,8 @@ export default {
     padding: 0;
     background-color: transparent !important;
   }
+
+  padding-top: 50px;
 
   .fiche-modal-close {
     position: absolute;

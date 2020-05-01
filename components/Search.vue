@@ -100,7 +100,7 @@ export default {
         } else if (this.formSearch.location) {
           this.$router.push({ path: `/location/${this.formSearch.location.slug}`, query })
         } else {
-          this.$router.push({ path: `/search/${this.formSearch.searchText}` })
+          this.$router.push(`/search/${this.formSearch.searchText}`)
         }
       }
     }

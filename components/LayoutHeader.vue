@@ -148,7 +148,7 @@ export default {
   },
   methods: {
     search(text) {
-      this.$router.push({ path: '/search', query: { s: text } })
+      this.$router.push(`/search/${text}`)
     }
   }
 }

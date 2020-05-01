@@ -24,14 +24,16 @@
               </div>
             </div>
             <client-only>
-              <swiper v-if="fiches" ref="ficheSwiper" :options="swiperOption" class="px-1 px-md-5">
-                <swiper-slide v-for="fiche in fiches" :key="fiche.id">
-                  <Fiche :fiche="fiche" :responsive="false" />
-                </swiper-slide>
+              <div v-if="fiches" v-swiper:ficheSwiper="swiperOption" class="px-1 px-md-5">
+                <div class="swiper-wrapper mt-3">
+                  <div v-for="fiche in fiches" :key="fiche.id" class="swiper-slide">
+                    <Fiche :fiche="fiche" :responsive="false" />
+                  </div>
+                </div>
                 <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
                 <div v-if="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
                 <div v-if="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
-              </swiper>
+              </div>
             </client-only>
           </div>
         </div>
@@ -44,16 +46,18 @@
               </div>
             </div>
             <client-only>
-              <swiper v-if="posts" ref="postSwiper" :options="swiperOption" class="px-1 px-md-5">
-                <swiper-slide v-for="post in posts" :key="post.id">
-                  <nuxt-link :to="{ path: `/${post.slug}` }" class="text-decoration-none">
-                    <PostCard :post="post" class="mx-auto" />
-                  </nuxt-link>
-                </swiper-slide>
+              <div v-if="posts" v-swiper:postSwiper="swiperOption" class="px-1 px-md-5">
+                <div class="swiper-wrapper mt-3">
+                  <div v-for="post in posts" :key="post.id" class="swiper-slide">
+                    <nuxt-link :to="{ path: `/${post.slug}` }" class="text-decoration-none">
+                      <PostCard :post="post" class="mx-auto" />
+                    </nuxt-link>
+                  </div>
+                </div>
                 <div v-if="!!posts.length" slot="pagination" class="swiper-pagination" />
                 <div v-if="!!posts.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
                 <div v-if="!!posts.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
-              </swiper>
+              </div>
             </client-only>
           </div>
         </div>
@@ -63,14 +67,15 @@
 </template>
 
 <script>
-import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+import { directive as SwiperDirective } from 'vue-awesome-swiper'
 import Fiche from '~/components/Fiche'
 import PostCard from '~/components/PostCard'
 import Search from '~/components/Search'
 import { DEFAULT, RESPONSIVE } from '~/constants/swiper'
 
 export default {
-  components: { PostCard, Fiche, Swiper, SwiperSlide, Search },
+  components: { PostCard, Fiche, Search },
+  directives: { swiper: SwiperDirective },
   async asyncData({ params, store, app }) {
     const [ficheResult, postResult] = await Promise.all([
       store.dispatch('fiches/fetchByText', params.search),

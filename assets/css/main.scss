@@ -40,10 +40,3 @@ $themeColor: $chouquette-yellow;
 @import "~swiper/swiper";
 @import "~swiper/components/navigation/navigation";
 @import "~swiper/components/pagination/pagination";
-
-// hack swiper pagination
-.swiper-pagination {
-  bottom: auto;
-  position: relative;
-  margin-top: 15px;
-}
