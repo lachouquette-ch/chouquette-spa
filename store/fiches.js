@@ -49,6 +49,19 @@ export const actions = {
 
     commit('SET_FICHES', fiches)
     return { fiches, total: parseInt(headers['x-wp-total']), pages: parseInt(headers['x-wp-totalpages']) }
+  },
+
+  async fetchByCategoryIds({ dispatch, commit }, { categoryIds, page = 1 }) {
+    const { data: fiches, headers } = await this.$wpAPI.wp.fiches.get({
+      categories: categoryIds.join(','),
+      page
+    })
+
+    // fetch related ressources
+    await dispatch('fetchRelatedRessources', fiches)
+
+    commit('SET_FICHES', fiches)
+    return { fiches, total: parseInt(headers['x-wp-total']), pages: parseInt(headers['x-wp-totalpages']) }
   }
 }
 
