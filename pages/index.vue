@@ -143,7 +143,9 @@
         <div v-if="topPosts" v-swiper="swiperOptions" class="swiper px-md-5">
           <div class="swiper-wrapper pt-3 pt-md-0">
             <div v-for="post in topPosts" :key="post.id" class="swiper-slide">
-              <PostCard :post="post" class="mx-auto" />
+              <nuxt-link :to="{ path: `/${post.slug}` }" class="text-decoration-none">
+                <PostCard :post="post" class="mx-auto" />
+              </nuxt-link>
             </div>
           </div>
           <div slot="pagination" class="swiper-pagination d-block d-md-none" />
@@ -183,7 +185,7 @@ export default {
 
       swiperOptions: {
         ...DEFAULT,
-        //...AUTO_PLAY,
+        // ...AUTO_PLAY,
         ...RESPONSIVE
       }
     }

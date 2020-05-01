@@ -21,7 +21,7 @@
           @click.prevent="close"
           >×</a
         >
-        <div v-swiper:ficheSwiper="swiperOption">
+        <div v-swiper:ficheSwiper="swiperFichesOptions">
           <div class="swiper-wrapper mt-3">
             <div
               v-for="(fiche, index) in fiches"
@@ -155,18 +155,19 @@
             </VueMailchimpSubscribe>
           </section>
 
-          <section v-if="similarPosts" class="post-similar container my-5 p-0">
+          <section v-if="similarPosts" class="post-similar container my-5">
             <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
-            <div v-swiper:similarSwiper="swiperOption" class="swiper px-3">
-              <div class="swiper-wrapper">
+            <div v-swiper:similarSwiper="swiperPostsOptions" class="swiper px-md-5">
+              <div class="swiper-wrapper pt-3 pt-md-0">
                 <div v-for="post in similarPosts" :key="post.id" class="swiper-slide">
                   <nuxt-link :to="{ path: `/${post.slug}` }" class="text-decoration-none">
                     <PostCard :post="post" class="mx-auto" />
                   </nuxt-link>
                 </div>
               </div>
-              <div slot="button-prev" class="swiper-button-prev"></div>
-              <div slot="button-next" class="swiper-button-next"></div>
+              <div slot="pagination" class="swiper-pagination d-block d-md-none" />
+              <div slot="button-prev" class="swiper-button-prev d-none d-md-block"></div>
+              <div slot="button-next" class="swiper-button-next d-none d-md-block"></div>
             </div>
           </section>
 
@@ -251,9 +252,12 @@ export default {
       hideSidebar: true,
       fiche: null,
 
-      swiperOption: {
+      swiperFichesOptions: {
         ...DEFAULT,
-        ...LOOP,
+        ...LOOP
+      },
+      swiperPostsOptions: {
+        ...DEFAULT,
         ...RESPONSIVE
       }
     }
@@ -297,7 +301,7 @@ export default {
     viewFiche(fiche, index) {
       this.fiche = fiche
       // start with correct fiche
-      this.swiperOption.initialSlide = index
+      this.swiperFichesOptions.initialSlide = index
       this.$bvModal.show('fiche-modal')
     },
     initModal() {
