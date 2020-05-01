@@ -100,8 +100,7 @@ export default {
   data() {
     const swiperOptions = {
       ...DEFAULT,
-      ...RESPONSIVE,
-      centeredSlides: false
+      ...RESPONSIVE
     }
     return {
       postSwiperOptions: {

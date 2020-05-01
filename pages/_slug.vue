@@ -44,7 +44,11 @@
         </div>
       </template>
     </b-modal>
-    <nav v-if="fiches" class="post-sidebar bg-white pb-5 pb-md-1" :class="{ 'hide-sidebar': hideSidebar }">
+    <nav
+      v-if="fiches"
+      class="post-sidebar bg-white pb-5 pb-md-1 border-right border-grey"
+      :class="{ 'hide-sidebar': hideSidebar }"
+    >
       <div class="post-sidebar-header d-none d-md-block text-center my-4">
         <h2 class="post-sidebar-title h5 m-0">{{ hasSingleFiche ? 'La fiche' : "Cités dans l'article" }} :</h2>
       </div>
@@ -153,7 +157,7 @@
 
           <section v-if="similarPosts" class="post-similar container my-5 p-0">
             <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
-            <div v-swiper:similarSwiper="swiperOption" class="swiper py-3">
+            <div v-swiper:similarSwiper="swiperOption" class="swiper px-3">
               <div class="swiper-wrapper">
                 <div v-for="post in similarPosts" :key="post.id" class="swiper-slide">
                   <nuxt-link :to="{ path: `/${post.slug}` }" class="text-decoration-none">
@@ -249,7 +253,8 @@ export default {
 
       swiperOption: {
         ...DEFAULT,
-        ...LOOP
+        ...LOOP,
+        ...RESPONSIVE
       }
     }
   },
