@@ -62,7 +62,7 @@
             </nuxt-link>
           </div>
         </div>
-        <Search class="home-header-filters" />
+        <Search class="home-header-filters" button-class="home-header-filters-button" />
         <div
           class="d-md-none home-header-menu-next d-flex rounded-circle align-items-center justify-content-center text-center"
         >
@@ -83,7 +83,7 @@
             :to="{ path: `/${post.slug}` }"
             class="post-card text-decoration-none"
           >
-            <PostCard :post="post" />
+            <PostCard :post="post" class="mx-auto" />
           </nuxt-link>
         </div>
       </div>
@@ -142,10 +142,11 @@
         </div>
         <swiper v-if="topPosts" class="swiper py-3" :options="swiperOption">
           <swiper-slide v-for="post in topPosts" :key="post.id">
-            <PostCard :post="post" />
+            <PostCard :post="post" class="mx-auto" />
           </swiper-slide>
-          <div slot="button-prev" class="swiper-button-prev"></div>
-          <div slot="button-next" class="swiper-button-next"></div>
+          <div slot="pagination" class="swiper-pagination d-block d-md-none" />
+          <div slot="button-prev" class="swiper-button-prev d-none d-md-block"></div>
+          <div slot="button-next" class="swiper-button-next d-none d-md-block"></div>
         </swiper>
       </div>
     </div>
@@ -315,6 +316,12 @@ h3.home-header-menu-description {
 
   @include media-breakpoint-only(xl) {
     width: 50%;
+  }
+}
+
+::v-deep .home-header-filters-button {
+  @include media-breakpoint-down(sm) {
+    width: 100%;
   }
 }
 
