@@ -6,21 +6,23 @@ export const state = () => ({
 })
 
 export const actions = {
-  async fetchRelatedRessources({ dispatch }, fiches) {
+  async fetchRelatedRessources({ dispatch, commit }, fiches) {
+    // fetch criteria
+    const ficheIds = fiches.map(({ id }) => id)
+    const criteriaList = this.$wpAPI.criteria.getForFiches(ficheIds).then(({ data }) => {
+      commit('SET_CRITERIA_LIST', data)
+    })
+
+    // fetch featured media
     const mediaIds = fiches.map(({ featured_media }) => featured_media).filter(Boolean)
-    await dispatch('media/fetchByIds', mediaIds, { root: true })
+
+    await Promise.all([criteriaList, dispatch('media/fetchByIds', mediaIds, { root: true })])
   },
 
   async fetchByIds(context, ids) {
     const fiches = await ressourceActions.fetchByIds(this.$wpAPI.wp.fiches, 'SET_FICHES', context, ids)
 
-    // fetch criteria list
-    const ficheIds = fiches.map(({ id }) => id)
-    const criteriaList = await this.$wpAPI.criteria.getForFiches(ficheIds).then(({ data }) => data)
-
-    context.commit('SET_CRITERIA_LIST', criteriaList)
-
-    // sort by chouquettise
+    // sort by "Chouquettise" since WP return same order than includes
     const sortedFiches = fiches.sort((el1, el2) => {
       return el2.info.chouquettise - el1.info.chouquettise
     })
@@ -29,13 +31,7 @@ export const actions = {
   },
 
   async fetchById(context, id) {
-    const fiche = await ressourceActions.fetchById(this.$wpAPI.wp.fiches, 'SET_FICHE', context, id)
-
-    // fetch criteria
-    const criteria = await this.$wpAPI.criteria.getForFiche(id).then(({ data }) => data)
-    context.commit('SET_CRITERIA', id, criteria)
-
-    return fiche
+    return await ressourceActions.fetchById(this.$wpAPI.wp.fiches, 'SET_FICHE', context, id)
   },
 
   async fetchByText({ dispatch, commit }, { search, page = 1 }) {
@@ -74,8 +70,5 @@ export const mutations = {
   },
   SET_CRITERIA_LIST(state, criteriaList) {
     state.criteria = Object.assign({}, state.criteria, criteriaList)
-  },
-  SET_CRITERIA(state, id, criteria) {
-    state.criteria[id] = criteria
   }
 }
