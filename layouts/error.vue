@@ -8,6 +8,7 @@
     <div v-else-if="error.statusCode === 410">
       <h1 class="text-center mb-5">Désolé, la page que tu cherches n'exite plus... <i class="far fa-trash-alt"></i></h1>
       <p>Retourne sur la <nuxt-link to="/">page d'accueil</nuxt-link> et découvre nos dernières nouveautés</p>
+      <p>Ou indique nous ce que tu souhaites chercher :</p>
       <Search />
     </div>
     <div v-else>
