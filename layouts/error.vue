@@ -6,17 +6,17 @@
       <Search />
     </div>
     <div v-else-if="error.statusCode === 410">
-      <h1 class="text-center mb-5">Désolé, la page que tu cherches n'exite plus... <i class="far fa-trash-alt"></i></h1>
-      <p>Retourne sur la <nuxt-link to="/">page d'accueil</nuxt-link> et découvre nos dernières nouveautés</p>
-      <p>Ou indique nous ce que tu souhaites chercher :</p>
+      <h1 class="text-center mb-5">Désolé, ce contenu a été supprimé de notre site... <i class="far fa-trash-alt"></i></h1>
+      <p>Retourne sur la <nuxt-link to="/">page d'accueil</nuxt-link> et découvre nos dernières nouveautés <i class="far fa-smile-wink"></i></p>
+      <p>Ou dis nous ce que tu cherches :</p>
       <Search />
     </div>
     <div v-else>
       <h1 class="text-center mb-5">Aïe, une erreur s'est produite... <i class="far fa-frown"></i></h1>
       <h2>Tu veux vite sortir de là ? <i class="fas fa-running"></i></h2>
       <p>
-        Alors reviens à la <a href="" @click.prevent="$router.go(-1)">page précédente</a> ou tente ta chance et
-        <a href="">recherche la page</a> <i class="fas fa-redo"></i>
+        Alors reviens à la <a href="" @click.prevent="$router.go(-1)">page précédente</a> ou tente ta chance en
+        <a href="">rechargeant la page</a> <i class="fas fa-redo"></i>
       </p>
       <p>
         Tu peux aussi aller sur la <nuxt-link to="/">page d'accueil</nuxt-link> pour découvrir nos dernières nouveautés
@@ -24,7 +24,7 @@
       </p>
       <h2>L'erreur persiste ? <i class="fas fa-angry"></i></h2>
       <p>
-        <nuxt-link to="/contact">Ecris-nous</nuxt-link> pour nous informer de cette erreur
+        <nuxt-link to="/contact">Ecris-nous</nuxt-link> pour nous en informer
         <i class="far fa-thumbs-up"></i>
       </p>
       <button v-b-toggle.error-details class="btn btn-secondary">
