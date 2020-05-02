@@ -97,7 +97,7 @@ export default {
   bootstrapVue: {
     bootstrapCSS: false,
     bootstrapVueCSS: false,
-    componentPlugins: ['AlertPlugin', 'ModalPlugin', 'OverlayPlugin', 'DropdownPlugin']
+    componentPlugins: ['AlertPlugin', 'ModalPlugin', 'OverlayPlugin', 'DropdownPlugin', 'CollapsePlugin']
   },
   /*
    ** Build configuration
