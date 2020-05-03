@@ -1,5 +1,5 @@
 <template>
-  <div class="error layout-content d-flex justify-content-center align-items-center">
+  <div class="error layout-content d-flex justify-content-center align-items-center px-3 pb-3">
     <component :is="errorComponent" :message="message" />
   </div>
 </template>
