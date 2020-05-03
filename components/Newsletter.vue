@@ -29,13 +29,8 @@
                 </div>
                 <div class="col-lg-4">
                   <button type="submit" name="subscribe" class="btn btn-dark-grey w-100" :disabled="loading">
-                    <span
-                      v-show="loading"
-                      class="spinner-border spinner-border-sm mr-2"
-                      role="status"
-                      aria-hidden="true"
-                    ></span
-                    >Je m'inscris !
+                    <b-spinner small v-show="loading" variant="yellow" label="chargement" class="mr-2"></b-spinner>
+                    Je m'inscris !
                   </button>
                 </div>
               </div>

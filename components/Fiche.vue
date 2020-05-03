@@ -64,12 +64,7 @@
             </div>
           </div>
           <button class="btn btn-primary w-100" type="submit" :disabled="loading">
-            <span
-              v-show="loading"
-              class="spinner-border spinner-border-sm mr-2"
-              role="status"
-              aria-hidden="true"
-            ></span>
+            <b-spinner small v-show="loading" variant="yellow" label="chargement" class="mr-2"></b-spinner>
             Envoyer
           </button>
         </form>

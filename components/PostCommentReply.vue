@@ -83,7 +83,7 @@
     </div>
     <div class="form-submit">
       <button class="btn btn-primary" type="submit" :disabled="loading">
-        <span v-show="loading" class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>
+        <b-spinner small v-show="loading" variant="yellow" label="chargement" class="mr-2"></b-spinner>
         Poster mon commentaire
       </button>
     </div>
