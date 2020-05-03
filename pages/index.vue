@@ -76,7 +76,7 @@
         <div class="text-center">
           <h2 class="mb-4">Nos derniers articles</h2>
         </div>
-        <div class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
+        <div v-if="latestPosts" class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
           <nuxt-link
             v-for="post in latestPosts"
             :key="post.id"
@@ -86,6 +86,7 @@
             <PostCard :post="post" class="mx-auto" />
           </nuxt-link>
         </div>
+        <div v-else class="text-center"><b-spinner variant="yellow" label="Spinning"></b-spinner></div>
       </div>
 
       <div class="my-5">
@@ -109,6 +110,7 @@
           <div slot="button-prev" class="swiper-button-prev d-none d-md-block"></div>
           <div slot="button-next" class="swiper-button-next d-none d-md-block"></div>
         </div>
+        <div v-else class="text-center"><b-spinner variant="yellow" label="Spinning"></b-spinner></div>
       </div>
     </div>
   </div>
@@ -136,6 +138,9 @@ export default {
   mixins: [yoast],
   data() {
     return {
+      latestPosts: null,
+      topPosts: null,
+
       baseURL: process.env.wpBaseUrl,
 
       swiperOptions: {
@@ -159,17 +164,14 @@ export default {
       categories: 'headerCategories'
     })
   },
+  created() {
+    this.$store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM).then((posts) => (this.latestPosts = posts))
+    this.$store.dispatch('posts/fetchTops', TOP_POSTS_NUM).then((posts) => (this.topPosts = posts))
+  },
   async asyncData({ app, store }) {
-    // fetch all
-    const [latestPosts, topPosts, yoast] = await Promise.all([
-      store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
-      store.dispatch('posts/fetchTops', TOP_POSTS_NUM),
-      app.$wpAPI.yoast.getHome().then(({ data }) => data)
-    ])
+    const yoast = await app.$wpAPI.yoast.getHome().then(({ data }) => data)
 
     return {
-      latestPosts,
-      topPosts,
       yoast
     }
   },

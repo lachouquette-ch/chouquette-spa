@@ -9,7 +9,7 @@ export default {
     mailChimpListId: process.env.MAILCHIMP_LIST_ID,
     googleMapsKey: process.env.GOOGLE_MAPS_KEY
   },
-  mode: 'universal',
+  mode: 'spa',
   /*
    ** Headers of the page
    */
@@ -97,7 +97,14 @@ export default {
   bootstrapVue: {
     bootstrapCSS: false,
     bootstrapVueCSS: false,
-    componentPlugins: ['AlertPlugin', 'ModalPlugin', 'OverlayPlugin', 'DropdownPlugin', 'CollapsePlugin']
+    componentPlugins: [
+      'AlertPlugin',
+      'ModalPlugin',
+      'OverlayPlugin',
+      'DropdownPlugin',
+      'CollapsePlugin',
+      'SpinnerPlugin'
+    ]
   },
   /*
    ** Build configuration
