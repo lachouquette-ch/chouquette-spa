@@ -1,16 +1,16 @@
 <template>
   <div>
-    <h1 class="text-center mb-5">Aïe, une erreur s'est produite... <i class="far fa-frown"></i></h1>
+    <h1 class="text-center mb-5">Aïe, une erreur s'est produite... <i class="far fa-grin-beam-sweat"></i></h1>
     <h2>Tu veux vite sortir de là ? <i class="fas fa-running"></i></h2>
     <p>
       Alors reviens à la <a href="" @click.prevent="$router.go(-1)">page précédente</a> ou tente ta chance en
-      <a href="">rechargeant la page</a> <i class="fas fa-redo"></i>
+      <a href="">rechargeant la page</a> <i class="fas fa-dice"></i>
     </p>
     <p>
       Tu peux aussi aller sur la <nuxt-link to="/">page d'accueil</nuxt-link> pour découvrir nos dernières nouveautés
       <i class="far fa-smile-wink"></i>
     </p>
-    <h2>L'erreur persiste ? <i class="fas fa-angry"></i></h2>
+    <h2>L'erreur persiste ? <i class="far fa-angry"></i></h2>
     <p>
       <nuxt-link to="/contact">Ecris-nous</nuxt-link> pour nous en informer
       <i class="far fa-thumbs-up"></i>
