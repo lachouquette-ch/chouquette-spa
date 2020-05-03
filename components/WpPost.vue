@@ -139,7 +139,7 @@
             </div>
           </section>
 
-          <section class="post-comments container my-5">
+          <section v-if="comments" class="post-comments container my-5">
             <h3 v-if="comments.length" class="mb-3 text-center">{{ comments.length }} commentaire(s)</h3>
             <h3 v-else class="mb-3 text-center">Sois le premier à nous laisser un commentaire</h3>
             <ol class="comment-list p-0">
@@ -192,14 +192,6 @@ export default {
       type: Object,
       required: true
     },
-    comments: {
-      type: Array,
-      required: true
-    },
-    similarPosts: {
-      type: Array,
-      required: true
-    },
     fiches: {
       type: Array,
       required: true
@@ -207,6 +199,9 @@ export default {
   },
   data() {
     return {
+      comments: null,
+      similarPosts: null,
+
       hideSidebar: true,
       fiche: null,
 
@@ -242,6 +237,12 @@ export default {
     rootLevelComments() {
       return this.comments.filter(({ parent }) => parent === 0)
     }
+  },
+  async created() {
+    ;[this.comments, this.similarPosts] = await Promise.all([
+      this.$wpAPI.wp.comments.getByPost(this.post.id).then(({ data }) => data),
+      this.$store.dispatch('posts/fetchSimilar', this.post)
+    ])
   },
   mounted() {
     // show fiche if previously selected

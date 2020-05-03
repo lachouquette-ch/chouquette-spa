@@ -1,13 +1,7 @@
 <template>
   <div>
     <WpPage v-if="pageType === 'page'" :page="page" />
-    <WpPost
-      v-else-if="pageType === 'post'"
-      :post="post"
-      :comments="comments"
-      :similar-posts="similarPosts"
-      :fiches="fiches"
-    />
+    <WpPost v-else-if="pageType === 'post'" :post="post" :fiches="fiches" />
   </div>
 </template>
 
@@ -41,17 +35,11 @@ export default {
       return {}
     }
 
-    const [comments, similarPosts, fiches] = await Promise.all([
-      app.$wpAPI.wp.comments.getByPost(post.id).then(({ data }) => data),
-      store.dispatch('posts/fetchSimilar', post),
-      store.dispatch('fiches/fetchByIds', post.meta.link_fiche)
-    ])
+    const fiches = await store.dispatch('fiches/fetchByIds', post.meta.link_fiche)
 
     return {
       pageType: 'post',
       post,
-      comments,
-      similarPosts,
       fiches
     }
   },
