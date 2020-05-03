@@ -124,6 +124,7 @@ import Search from '~/components/Search'
 import Newsletter from '~/components/Newsletter'
 
 import { AUTO_PLAY, DEFAULT, RESPONSIVE } from '~/constants/swiper'
+import yoast from '~/mixins/yoast'
 
 const LATEST_POSTS_NUM = 6
 const TOP_POSTS_NUM = 8
@@ -132,6 +133,7 @@ export default {
   components: { PostCard, CategoryLogo, Search, Newsletter },
   directives: { swiper: SwiperDirective },
   layout: 'no-header',
+  mixins: [yoast],
   data() {
     return {
       baseURL: process.env.wpBaseUrl,
@@ -159,19 +161,23 @@ export default {
   },
   async asyncData({ app, store }) {
     // fetch all
-    let latestPosts, topPosts
-    try {
-      ;[latestPosts, topPosts] = await Promise.all([
-        store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
-        store.dispatch('posts/fetchTops', TOP_POSTS_NUM)
-      ])
-    } catch (err) {
-
-    }
+    const [latestPosts, topPosts, yoast] = await Promise.all([
+      store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
+      store.dispatch('posts/fetchTops', TOP_POSTS_NUM),
+      app.$wpAPI.yoast.getHome().then(({ data }) => data)
+    ])
 
     return {
       latestPosts,
-      topPosts
+      topPosts,
+      yoast
+    }
+  },
+  head() {
+    return {
+      title: this.yoast.yoast_title,
+      meta: this.yoastMetaConfig(this.yoast.yoast_meta),
+      script: this.yoastJsonLDConfig(this.yoast.yoast_json_ld)
     }
   }
 }

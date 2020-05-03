@@ -4,6 +4,9 @@ function yoastEndpointFactory($axios) {
   return {
     getRedirects() {
       return $axios.get(`${prefix}/redirects`)
+    },
+    getHome() {
+      return $axios.get(`${prefix}/home`)
     }
   }
 }
