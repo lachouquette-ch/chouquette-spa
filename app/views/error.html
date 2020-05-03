@@ -17,10 +17,8 @@
         <img src="/logo.png">
         <h1 class="my-3">Gros plantage ! <i class="fas fa-poo-storm"></i></h1>
         <p class="h4 my-3">On s'excuse platement...</p>
-        <p>L'équipe est certainement en train de corriger le problème mais si l'erreur persiste, <a
-                href="javascript:reportError()">signale
-            le nous par
-            mail</a> <span class="h5"><i class="far fa-kiss-wink-heart"></i></span></p>
+        <p>L'équipe est certainement en train de corriger le problème, mais si l'erreur persiste <a
+                href="mailto:webmaster@lachouquette.ch" onclick="reportError()">envoie nous un mail</a> <span class="h5"><i class="far fa-kiss-wink-heart"></i></span></p>
         <div></div>
     </div>
     <div class="w-100 text-center bg-dark py-3">
@@ -37,6 +35,7 @@
 <script language="JavaScript">
     function reportError() {
         window.location.href = 'mailto:webmaster@lachouquette.ch?subject=Erreur serveur - ' + window.location.href
+        return false;
     }
 </script>
 <script crossorigin="anonymous"
