@@ -34,9 +34,16 @@ export default {
   },
   async asyncData({ app }) {
     return {
-      page: await app.$wpAPI.wp.pages.getBySlug('equipe').then(({ data }) => data[0]),
-      team: await app.$wpAPI.wp.users.getTeam().then(({ data }) => data)
+      page: await app.$wpAPI.wp.pages.getBySlug('equipe').then(({ data }) => data[0])
     }
+  },
+  data() {
+    return {
+      team: null
+    }
+  },
+  async created() {
+    this.team = await this.$wpAPI.wp.users.getTeam().then(({ data }) => data)
   }
 }
 </script>
