@@ -20,8 +20,8 @@
       <i v-if="messageVisible" class="fas fa-minus"></i>
       <i v-else class="fas fa-plus"></i>
     </button>
-    <b-collapse id="error-details" v-model="messageVisible" class="mt-3 p-2 border rounded">
-      {{ message }}
+    <b-collapse id="error-details" v-model="messageVisible">
+      <div class="mt-3 p-2 border rounded">{{ message }}</div>
     </b-collapse>
   </div>
 </template>
@@ -36,7 +36,7 @@ export default {
   },
   data() {
     return {
-      messageVisible: false
+      messageVisible: null
     }
   }
 }
