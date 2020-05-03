@@ -20,8 +20,7 @@ export default {
   },
   data() {
     return {
-      from: null,
-      messageVisible: false
+      from: null
     }
   },
   computed: {
@@ -30,11 +29,18 @@ export default {
       return this.$options.components[name] ? name : 'Error'
     },
     statusCode() {
-      return (this.error && this.error.statusCode) || 500
+      if (this.error.isAxiosError) {
+        return this.error.response.status
+      } else {
+        return (this.error && this.error.statusCode) || 500
+      }
     },
     message() {
       return this.error.message
     }
+  },
+  created() {
+    console.error(this.message, this.error)
   }
 }
 </script>

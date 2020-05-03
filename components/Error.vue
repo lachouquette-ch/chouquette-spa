@@ -33,6 +33,11 @@ export default {
       type: String,
       required: true
     }
+  },
+  data() {
+    return {
+      messageVisible: false
+    }
   }
 }
 </script>
