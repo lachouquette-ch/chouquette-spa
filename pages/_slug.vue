@@ -190,25 +190,15 @@ export default {
   async asyncData({ app, store, params }) {
     const post = await app.$wpAPI.wp.posts.getBySlug(params.slug, { _embed: true }).then(({ data }) => data[0])
 
-    // helper fields
-    const featuredMedia = post._embedded['wp:featuredmedia'] ? post._embedded['wp:featuredmedia'][0] : null
-    const author = post._embedded.author[0]
-    const tags = post._embedded['wp:term'][1]
-
     const [comments, similarPosts, fiches] = await Promise.all([
       app.$wpAPI.wp.comments.getByPost(post.id).then(({ data }) => data),
       store.dispatch('posts/fetchSimilar', post),
       store.dispatch('fiches/fetchByIds', post.meta.link_fiche)
     ])
-    const rootLevelComments = comments.filter(({ parent }) => parent === 0)
 
     return {
       post,
-      featuredMedia,
-      author,
-      tags,
       comments,
-      rootLevelComments,
       similarPosts,
       fiches
     }
@@ -237,6 +227,18 @@ export default {
     },
     hasSingleFiche() {
       return this.fiches && this.fiches.length === 1
+    },
+    featuredMedia() {
+      return this.post._embedded['wp:featuredmedia'] ? this.post._embedded['wp:featuredmedia'][0] : null
+    },
+    author() {
+      return this.post._embedded.author[0]
+    },
+    tags() {
+      return this.post._embedded['wp:term'][1]
+    },
+    rootLevelComments() {
+      return this.comments.filter(({ parent }) => parent === 0)
     }
   },
   mounted() {
