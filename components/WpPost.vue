@@ -239,19 +239,10 @@ export default {
     }
   },
   async created() {
-    try {
-      ;[this.comments, this.similarPosts] = await Promise.all([
-        this.$wpAPI.wp.comments.getByPost(this.post.id).then(({ data }) => data),
-        this.$store.dispatch('posts/fetchSimilar', this.post)
-      ])
-    } catch (err) {
-      // ignore API errors
-      if (err.isAxiosError) {
-        console.error(err)
-      } else {
-        this.$nuxt.error(err)
-      }
-    }
+    ;[this.comments, this.similarPosts] = await Promise.all([
+      this.$wpAPI.wp.comments.getByPost(this.post.id).then(({ data }) => data),
+      this.$store.dispatch('posts/fetchSimilar', this.post)
+    ])
   },
   mounted() {
     // show fiche if previously selected
