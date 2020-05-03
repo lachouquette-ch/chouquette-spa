@@ -1,48 +1,17 @@
 <template>
   <div class="error layout-content d-flex justify-content-center align-items-center">
-    <div v-if="error.statusCode === 404">
-      <h1 class="text-center mb-5">Oups, impossible de trouver ta page... <i class="far fa-surprise"></i></h1>
-      <p>Tu cherches quelque chose ? C'est pas ici :</p>
-      <Search />
-    </div>
-    <div v-else-if="error.statusCode === 410">
-      <h1 class="text-center mb-5">Désolé, ce contenu a été supprimé de notre site... <i class="far fa-trash-alt"></i></h1>
-      <p>Retourne sur la <nuxt-link to="/">page d'accueil</nuxt-link> et découvre nos dernières nouveautés <i class="far fa-smile-wink"></i></p>
-      <p>Ou dis nous ce que tu cherches :</p>
-      <Search />
-    </div>
-    <div v-else>
-      <h1 class="text-center mb-5">Aïe, une erreur s'est produite... <i class="far fa-frown"></i></h1>
-      <h2>Tu veux vite sortir de là ? <i class="fas fa-running"></i></h2>
-      <p>
-        Alors reviens à la <a href="" @click.prevent="$router.go(-1)">page précédente</a> ou tente ta chance en
-        <a href="">rechargeant la page</a> <i class="fas fa-redo"></i>
-      </p>
-      <p>
-        Tu peux aussi aller sur la <nuxt-link to="/">page d'accueil</nuxt-link> pour découvrir nos dernières nouveautés
-        <i class="far fa-smile-wink"></i>
-      </p>
-      <h2>L'erreur persiste ? <i class="fas fa-angry"></i></h2>
-      <p>
-        <nuxt-link to="/contact">Ecris-nous</nuxt-link> pour nous en informer
-        <i class="far fa-thumbs-up"></i>
-      </p>
-      <button v-b-toggle.error-details class="btn btn-secondary">
-        <span class="mr-2">Détails de l'erreur</span>
-        <i v-if="messageVisible" class="fas fa-minus"></i>
-        <i v-else class="fas fa-plus"></i>
-      </button>
-      <b-collapse id="error-details" v-model="messageVisible" class="mt-3 p-2 border rounded">
-        {{ message }}
-      </b-collapse>
-    </div>
+    <component :is="errorComponent" :message="message" />
   </div>
 </template>
 
 <script>
 import Search from '~/components/Search'
+import Error from '~/components/Error'
+import Error404 from '~/components/Error404'
+import Error410 from '~/components/Error410'
+
 export default {
-  components: { Search },
+  components: { Search, Error, Error404, Error410 },
   props: {
     error: {
       type: Object,
@@ -56,6 +25,10 @@ export default {
     }
   },
   computed: {
+    errorComponent() {
+      const name = 'Error' + this.statusCode
+      return this.$options.components[name] ? name : 'Error'
+    },
     statusCode() {
       return (this.error && this.error.statusCode) || 500
     },
