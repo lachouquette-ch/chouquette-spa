@@ -159,10 +159,15 @@ export default {
   },
   async asyncData({ app, store }) {
     // fetch all
-    const [latestPosts, topPosts] = await Promise.all([
-      store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
-      store.dispatch('posts/fetchTops', TOP_POSTS_NUM)
-    ])
+    let latestPosts, topPosts
+    try {
+      ;[latestPosts, topPosts] = await Promise.all([
+        store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
+        store.dispatch('posts/fetchTops', TOP_POSTS_NUM)
+      ])
+    } catch (err) {
+
+    }
 
     return {
       latestPosts,
