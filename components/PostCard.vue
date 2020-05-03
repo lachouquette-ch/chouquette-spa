@@ -9,7 +9,6 @@
           width="35"
           height="35"
           color="black"
-          @init="dispatchInit"
         />
       </div>
     </div>
@@ -42,17 +41,6 @@ export default {
   created() {
     this.topCategory = this.$store.state.categories.all[this.post.top_categories[0]]
     if (this.post.featured_media) this.featuredMedia = this.$store.state.media.all[this.post.featured_media]
-  },
-  methods: {
-    /**
-     * Wait for all async data before emitting init event
-     *
-     * @returns {Promise<void>}
-     */
-    async dispatchInit() {
-      await Promise.all([this.topCategory, this.featuredMedia])
-      this.$emit('init')
-    }
   }
 }
 </script>

@@ -29,7 +29,6 @@ export default {
   created() {
     const mediaId = this.category.logos[`logo_${this.color}`]
     this.media = this.$store.state.media.all[mediaId]
-    this.$emit('init')
   }
 }
 </script>
