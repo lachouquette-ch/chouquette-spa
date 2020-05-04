@@ -24,12 +24,12 @@
         <template>
           <div class="search-results container-fluid">
             <div v-if="fiches || posts" class="text-center my-4">
-              <h1>{{ totalResultCount }} résultats pour "{{ search }}"</h1>
+              <h1>{{ totalResultCount }} résultat(s) pour "{{ search }}"</h1>
               <div v-if="tooManyResultats">
                 C'est beaucoup ! <a v-b-modal.searchModal href="" @click.prevent>Affine ta recherche</a>
               </div>
             </div>
-            <div v-if="fiches" class="row">
+            <div v-if="fiches && fiches.length" class="row">
               <div class="col">
                 <h2 class="text-center">{{ fichesTotal }} fiche(s)</h2>
                 <client-only>
@@ -48,7 +48,7 @@
                 </client-only>
               </div>
             </div>
-            <div v-if="posts" class="row mt-5 mb-4">
+            <div v-if="posts && posts.length" class="row mt-5 mb-4">
               <div class="col">
                 <h2 class="text-center">{{ postsTotal }} articles(s)</h2>
                 <client-only>
