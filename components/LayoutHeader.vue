@@ -126,6 +126,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import $ from 'jquery'
 
 import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-subscribe'
 import CategoryLogo from './CategoryLogo'
@@ -148,6 +149,12 @@ export default {
       selectedCategory: 'selectedCategory'
     })
   },
+  created() {
+    this.$root.$on('routeChanged', () => {
+      this.$bvModal.hide('search-modal')
+      $('#navbarChouquette').collapse('hide')
+    })
+  },
   methods: {
     search(text) {
       this.$router.push(`/search/${text}`)
@@ -159,9 +166,6 @@ export default {
     logoColor(category) {
       return category === this.hoverCategory || this.isSelectedCategory(category) ? 'yellow' : 'white'
     }
-  },
-  created() {
-    this.$root.$on('routeChanged', () => this.$bvModal.hide('search-modal'))
   }
 }
 </script>
