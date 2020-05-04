@@ -37,7 +37,7 @@
       </VueMailchimpSubscribe>
     </b-modal>
 
-    <b-modal id="search" title="Tu cherches quelque chose ?" hide-footer centered @shown="focusOn('search')">
+    <b-modal id="search-modal" title="Tu cherches quelque chose ?" hide-footer centered @shown="focusOn('search')">
       <form @submit.prevent="search(searchText)">
         <div class="input-group">
           <input
@@ -115,7 +115,7 @@
             ><i class="far fa-envelope ml-3"></i
           ></a>
           <a :href="`${baseURL}/feed/atom/`" title="RSS" target="_blank"><i class="fas fa-rss ml-3"></i></a>
-          <a v-b-modal.search href="" title="Recherche" class="d-none d-md-inline-block" @click.prevent
+          <a v-b-modal.search-modal href="" title="Recherche" class="d-none d-md-inline-block" @click.prevent
             ><i class="fas fa-search ml-3"></i
           ></a>
         </div>
@@ -159,6 +159,9 @@ export default {
     logoColor(category) {
       return category === this.hoverCategory || this.isSelectedCategory(category) ? 'yellow' : 'white'
     }
+  },
+  created() {
+    this.$root.$on('routeChanged', () => this.$bvModal.hide('search-modal'))
   }
 }
 </script>
