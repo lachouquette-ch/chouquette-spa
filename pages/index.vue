@@ -86,7 +86,6 @@
             <PostCard :post="post" class="mx-auto" />
           </nuxt-link>
         </div>
-        <div v-else class="text-center"><b-spinner variant="yellow" label="Spinning"></b-spinner></div>
       </div>
 
       <div class="my-5">
@@ -138,7 +137,6 @@ export default {
   mixins: [yoast],
   data() {
     return {
-      latestPosts: null,
       topPosts: null,
 
       baseURL: process.env.wpBaseUrl,
@@ -164,14 +162,17 @@ export default {
       categories: 'headerCategories'
     })
   },
-  created() {
-    this.$store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM).then((posts) => (this.latestPosts = posts))
-    this.$store.dispatch('posts/fetchTops', TOP_POSTS_NUM).then((posts) => (this.topPosts = posts))
+  async created() {
+    this.topPosts = await this.$store.dispatch('posts/fetchTops', TOP_POSTS_NUM)
   },
   async asyncData({ app, store }) {
-    const yoast = await app.$wpAPI.yoast.getHome().then(({ data }) => data)
+    const [latestPosts, yoast] = await Promise.all([
+      store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
+      app.$wpAPI.yoast.getHome().then(({ data }) => data)
+    ])
 
     return {
+      latestPosts,
       yoast
     }
   },
