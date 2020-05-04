@@ -14,54 +14,63 @@
     </b-modal>
     <div class="layout-content">
       <b-overlay :show="!fiches && !posts" opacity="0.6" blur="none" spinner-variant="yellow">
-        <div class="search-results container-fluid">
-          <div v-if="fiches || posts" class="text-center my-4">
-            <h1>{{ totalResultCount }} résultats pour "{{ search }}"</h1>
-            <div v-if="tooManyResultats">
-              C'est beaucoup ! <a v-b-modal.searchModal href="" @click.prevent>Affine ta recherche</a>
-            </div>
+        <template #overlay>
+          <div class="text-center">
+            <h2 class="mb-3">On cherche pour toi... <i class="fas fa-binoculars"></i></h2>
+            <b-spinner variant="yellow" label="chargement" />
           </div>
-          <div v-if="fiches" class="row">
-            <div class="col">
-              <h2 class="text-center">{{ fichesTotal }} fiche(s)</h2>
-              <client-only>
-                <b-overlay :show="fichesLoading" opacity="0.6" blur="none" spinner-variant="yellow">
-                  <div v-if="fiches" v-swiper:fichesSwiper="ficheSwiperOptions" class="px-1 px-md-5">
-                    <div class="swiper-wrapper mt-3">
-                      <div v-for="fiche in fiches" :key="fiche.id" class="swiper-slide">
-                        <Fiche :fiche="fiche" :responsive="false" />
+        </template>
+
+        <template>
+          <div class="search-results container-fluid">
+            <div v-if="fiches || posts" class="text-center my-4">
+              <h1>{{ totalResultCount }} résultats pour "{{ search }}"</h1>
+              <div v-if="tooManyResultats">
+                C'est beaucoup ! <a v-b-modal.searchModal href="" @click.prevent>Affine ta recherche</a>
+              </div>
+            </div>
+            <div v-if="fiches" class="row">
+              <div class="col">
+                <h2 class="text-center">{{ fichesTotal }} fiche(s)</h2>
+                <client-only>
+                  <b-overlay :show="fichesLoading" opacity="0.6" blur="none" spinner-variant="yellow">
+                    <div v-if="fiches" v-swiper:fichesSwiper="ficheSwiperOptions" class="px-1 px-md-5">
+                      <div class="swiper-wrapper mt-3">
+                        <div v-for="fiche in fiches" :key="fiche.id" class="swiper-slide">
+                          <Fiche :fiche="fiche" :responsive="false" />
+                        </div>
                       </div>
+                      <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
+                      <div v-if="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
+                      <div v-if="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
                     </div>
-                    <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
-                    <div v-if="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-                    <div v-if="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
-                  </div>
-                </b-overlay>
-              </client-only>
+                  </b-overlay>
+                </client-only>
+              </div>
             </div>
-          </div>
-          <div v-if="posts" class="row mt-5 mb-4">
-            <div class="col">
-              <h2 class="text-center">{{ postsTotal }} articles(s)</h2>
-              <client-only>
-                <b-overlay :show="postsLoading" opacity="0.6" blur="none" spinner-variant="yellow">
-                  <div v-if="posts" v-swiper:postsSwiper="postSwiperOptions" class="px-1 px-md-5">
-                    <div class="swiper-wrapper mt-3">
-                      <div v-for="post in posts" :key="post.id" class="swiper-slide">
-                        <nuxt-link :to="{ path: `/${post.slug}` }" class="text-decoration-none">
-                          <PostCard :post="post" class="mx-auto" />
-                        </nuxt-link>
+            <div v-if="posts" class="row mt-5 mb-4">
+              <div class="col">
+                <h2 class="text-center">{{ postsTotal }} articles(s)</h2>
+                <client-only>
+                  <b-overlay :show="postsLoading" opacity="0.6" blur="none" spinner-variant="yellow">
+                    <div v-if="posts" v-swiper:postsSwiper="postSwiperOptions" class="px-1 px-md-5">
+                      <div class="swiper-wrapper mt-3">
+                        <div v-for="post in posts" :key="post.id" class="swiper-slide">
+                          <nuxt-link :to="{ path: `/${post.slug}` }" class="text-decoration-none">
+                            <PostCard :post="post" class="mx-auto" />
+                          </nuxt-link>
+                        </div>
                       </div>
+                      <div v-if="!!posts.length" slot="pagination" class="swiper-pagination" />
+                      <div v-if="!!posts.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
+                      <div v-if="!!posts.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
                     </div>
-                    <div v-if="!!posts.length" slot="pagination" class="swiper-pagination" />
-                    <div v-if="!!posts.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-                    <div v-if="!!posts.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
-                  </div>
-                </b-overlay>
-              </client-only>
+                  </b-overlay>
+                </client-only>
+              </div>
             </div>
           </div>
-        </div>
+        </template>
       </b-overlay>
       <Newsletter />
     </div>
@@ -121,7 +130,9 @@ export default {
       return this.totalResultCount > 50
     }
   },
-  created() {
+  async created() {
+    await new Promise((resolve) => setTimeout(resolve, 10000))
+
     this.$store.dispatch('posts/fetchByText', { search: this.search }).then((postResult) => {
       this.posts = postResult.posts
       this.postsTotal = postResult.total
