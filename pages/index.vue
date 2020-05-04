@@ -97,7 +97,7 @@
         <div class="text-center">
           <h2 class="mb-4">Nos derniers tops...</h2>
         </div>
-        <div v-if="topPosts" v-swiper="swiperOptions" class="swiper px-md-5">
+        <div v-show="topPosts" v-swiper="swiperOptions" class="swiper px-md-5">
           <div class="swiper-wrapper pt-3 pt-md-0">
             <div v-for="post in topPosts" :key="post.id" class="swiper-slide">
               <nuxt-link :to="{ path: `/${post.slug}` }" class="text-decoration-none">
@@ -109,7 +109,7 @@
           <div slot="button-prev" class="swiper-button-prev d-none d-md-block"></div>
           <div slot="button-next" class="swiper-button-next d-none d-md-block"></div>
         </div>
-        <div v-else class="text-center"><b-spinner variant="yellow" label="Spinning"></b-spinner></div>
+        <div v-if="!topPosts" class="text-center"><b-spinner variant="yellow" label="Spinning"></b-spinner></div>
       </div>
     </div>
   </div>
@@ -153,6 +153,11 @@ export default {
     const linkAnchorFixedHeader = require('~/assets/scripts/link-anchor-fixed-header')
     linkAnchorFixedHeader(70)
   },
+  created() {
+    this.$store.dispatch('posts/fetchTops', TOP_POSTS_NUM).then((posts) => {
+      this.topPosts = posts
+    })
+  },
   computed: {
     ...mapState({
       wpName: 'name',
@@ -161,9 +166,6 @@ export default {
     ...mapState('menus', {
       categories: 'headerCategories'
     })
-  },
-  async created() {
-    this.topPosts = await this.$store.dispatch('posts/fetchTops', TOP_POSTS_NUM)
   },
   async asyncData({ app, store }) {
     const [latestPosts, yoast] = await Promise.all([
