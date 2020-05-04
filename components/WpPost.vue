@@ -170,7 +170,7 @@ import Fiche from '../components/Fiche'
 import yoast from '~/mixins/yoast'
 import gutenberg from '~/mixins/gutenberg'
 
-import { DEFAULT, LOOP, RESPONSIVE } from '~/constants/swiper'
+import { DEFAULT, LOOP, RESPONSIVE, HASH } from '~/constants/swiper'
 import Newsletter from '~/components/Newsletter'
 
 export default {
@@ -207,7 +207,8 @@ export default {
 
       swiperFichesOptions: {
         ...DEFAULT,
-        ...LOOP
+        ...LOOP,
+        ...HASH
       },
       swiperPostsOptions: {
         ...DEFAULT,

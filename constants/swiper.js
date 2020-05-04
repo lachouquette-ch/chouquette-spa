@@ -1,8 +1,5 @@
 export const DEFAULT = {
   grabCursor: true,
-  hashNavigation: {
-    replaceState: true
-  },
   slidesPerView: 1,
   spaceBetween: 30,
   navigation: {
@@ -12,6 +9,12 @@ export const DEFAULT = {
   pagination: {
     el: '.swiper-pagination',
     type: 'progressbar'
+  }
+}
+
+export const HASH = {
+  hashNavigation: {
+    replaceState: true
   }
 }
 
