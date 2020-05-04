@@ -27,7 +27,7 @@
               />
               <div class="input-group-append">
                 <button type="submit" class="btn btn-primary" :disabled="loading">
-                  <b-spinner small v-show="loading" variant="yellow" label="chargement" class="mr-2"></b-spinner>
+                  <b-spinner v-show="loading" small variant="yellow" label="chargement" class="mr-2"></b-spinner>
                   Je m'inscris
                 </button>
               </div>
@@ -87,13 +87,18 @@
           </div>
         </form>
         <ul v-for="category in categories" :key="category.id" class="navbar-nav mr-auto">
-          <li class="nav-item">
+          <li class="nav-item" @mouseover="hoverCategory = category" @mouseout="hoverCategory = null">
             <nuxt-link
               :to="{ path: `/category/${category.slug}` }"
               :title="category.description"
               class="nav-link text-md-center"
+              :class="{ 'text-yellow': isSelectedCategory(category) }"
             >
-              <CategoryLogo :category="category" color="white" class="d-inline nav-logo ml-lg-3 mr-2"></CategoryLogo>
+              <CategoryLogo
+                :category="category"
+                :color="logoColor(category)"
+                class="d-inline nav-logo ml-lg-3 mr-2"
+              ></CategoryLogo>
               <span class="text-nowrap">{{ category.name }}</span>
             </nuxt-link>
           </li>
@@ -132,18 +137,27 @@ export default {
   mixins: [modal, newsletter],
   data() {
     return {
+      hoverCategory: null,
       baseURL: process.env.wpBaseUrl,
       searchText: ''
     }
   },
   computed: {
     ...mapState('menus', {
-      categories: 'headerCategories'
+      categories: 'headerCategories',
+      selectedCategory: 'selectedCategory'
     })
   },
   methods: {
     search(text) {
       this.$router.push(`/search/${text}`)
+    },
+    isSelectedCategory(category) {
+      if (!this.selectedCategory) return false
+      return this.selectedCategory.id === category.id
+    },
+    logoColor(category) {
+      return category === this.hoverCategory || this.isSelectedCategory(category) ? 'yellow' : 'white'
     }
   }
 }

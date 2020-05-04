@@ -5,6 +5,10 @@
 <script>
 import WpMedia from './WpMedia'
 
+// as defined in ACF for Category
+const CATEGORY_LOGO_COLORS = ['white', 'yellow', 'black']
+const isColorValid = (color) => CATEGORY_LOGO_COLORS.includes(color)
+
 export default {
   components: { WpMedia },
   props: {
@@ -15,10 +19,7 @@ export default {
     color: {
       type: String,
       required: true,
-      validator(value) {
-        // as defined in ACF for Category
-        return ['white', 'yellow', 'black'].includes(value)
-      }
+      validator: isColorValid
     }
   },
   data: () => {
@@ -26,9 +27,20 @@ export default {
       media: null
     }
   },
+  watch: {
+    color(newColor) {
+      if (!isColorValid) throw new TypeError(`${newColor} is not a valid color`)
+      this.initMedia()
+    }
+  },
   created() {
-    const mediaId = this.category.logos[`logo_${this.color}`]
-    this.media = this.$store.state.media.all[mediaId]
+    this.initMedia()
+  },
+  methods: {
+    initMedia() {
+      const mediaId = this.category.logos[`logo_${this.color}`]
+      this.media = this.$store.state.media.all[mediaId]
+    }
   }
 }
 </script>

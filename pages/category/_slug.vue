@@ -29,6 +29,9 @@ export default {
       fichesNextPage: 2,
       fichesLoading: false
     }
+  },
+  created() {
+    this.$store.dispatch('menus/setSelectedCategory', this.category)
   }
 }
 </script>
