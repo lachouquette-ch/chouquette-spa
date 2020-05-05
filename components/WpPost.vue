@@ -368,11 +368,7 @@ export default {
 }
 
 .post-sidebar-toggle-buttons {
-  position: fixed;
-  bottom: 10px;
-  left: 50%;
-  transform: translate(-50%, 0);
-  z-index: $zindex-sticky + 1;
+  @include toggle-buttons;
 }
 
 .post.with-sidebar {

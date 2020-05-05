@@ -14,7 +14,7 @@
       <div ref="map" class="h-100 w-100" />
     </div>
 
-    <div class="toggle-buttons d-md-none btn-group btn-group-toggle" data-toggle="buttons">
+    <div class="fiches-map-toggle-buttons d-md-none btn-group btn-group-toggle" data-toggle="buttons">
       <label
         class="btn btn-sm btn-primary border-white border-right-0"
         :class="{ active: !isMapShown }"
@@ -27,7 +27,7 @@
         :class="{ active: isMapShown }"
         @click="isMapShown = true"
       >
-        <input id="showMap" type="radio" name="options" :checked="isMapShown" />Cartes
+        <input id="showMap" type="radio" name="options" :checked="isMapShown" />Carte
       </label>
     </div>
   </div>
@@ -107,11 +107,7 @@ export default {
   }
 }
 
-.toggle-buttons {
-  position: fixed;
-  bottom: 10px;
-  left: 50%;
-  transform: translate(-50%, 0);
-  z-index: $zindex-sticky + 1;
+.fiches-map-toggle-buttons {
+  @include toggle-buttons;
 }
 </style>
