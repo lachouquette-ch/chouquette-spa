@@ -135,6 +135,7 @@
               ></a>
             </div>
             <div class="card-footer">
+              <FicheShare :fiche="fiche" />
               <button
                 href=""
                 title="Plus de détails"
@@ -252,9 +253,11 @@ import _ from 'lodash'
 import WpMedia from './WpMedia'
 import { MAP_OPTIONS } from '~/constants/mapSettings'
 import modal from '~/mixins/modal'
+import PostShare from '~/components/PostShare'
+import FicheShare from '~/components/FicheShare'
 
 export default {
-  components: { WpMedia },
+  components: { FicheShare, PostShare, WpMedia },
   mixins: [modal],
   props: {
     fiche: {
