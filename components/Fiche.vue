@@ -64,7 +64,7 @@
             </div>
           </div>
           <button class="btn btn-primary w-100" type="submit" :disabled="loading">
-            <b-spinner small v-show="loading" variant="yellow" label="chargement" class="mr-2"></b-spinner>
+            <b-spinner v-show="loading" small variant="yellow" label="chargement" class="mr-2"></b-spinner>
             Envoyer
           </button>
         </form>
@@ -135,14 +135,6 @@
               ></a>
             </div>
             <div class="card-footer">
-              <nuxt-link
-                v-if="fiche.latest_post"
-                :to="{ path: `/${fiche.latest_post.slug}` }"
-                :title="`Lire le dernier article : ${fiche.latest_post.title}`"
-                class=" btn btn-sm btn-outline-secondary text-decoration-none"
-              >
-                Dernier article
-              </nuxt-link>
               <button
                 href=""
                 title="Plus de détails"
@@ -160,9 +152,9 @@
             <div v-show="marker" ref="ficheMap" class="card-header p-0"></div>
             <div class="card-body position-relative p-0 pt-2">
               <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
-                <li v-if="fiche.info.website" class="list-group-item">
+                <li v-if="fiche.info.website" class="list-group-item ellipses">
                   <a :href="fiche.info.website" title="Site Internet" target="_blank" class="text-decoration-none"
-                    ><i class="fas fa-globe"></i> {{ fiche.info.website }}
+                    ><i class="fas fa-globe"></i> {{ fiche.info.website | prettyURL }}
                   </a>
                 </li>
                 <li v-if="fiche.info.telephone" class="list-group-item">
@@ -174,7 +166,7 @@
                     ><i class="fas fa-phone"></i> {{ fiche.info.telephone }}
                   </a>
                 </li>
-                <li v-if="fiche.info.mail" class="list-group-item">
+                <li v-if="fiche.info.mail" class="list-group-item ellipses">
                   <a
                     :href="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
                     title="Email"
@@ -227,6 +219,14 @@
               ></a>
             </div>
             <div class="card-footer">
+              <nuxt-link
+                v-if="fiche.latest_post"
+                :to="{ path: `/${fiche.latest_post.slug}` }"
+                :title="`Lire le dernier article : ${fiche.latest_post.title}`"
+                class=" btn btn-sm btn-outline-secondary text-decoration-none"
+              >
+                Dernier article
+              </nuxt-link>
               <button
                 href=""
                 title="Plus de détails"
@@ -509,6 +509,12 @@ export default {
 
   .card-body {
     min-height: unset;
+
+    .list-group-item.ellipses {
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
   }
 
   .card-footer {

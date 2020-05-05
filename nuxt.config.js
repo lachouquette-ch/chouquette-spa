@@ -72,6 +72,7 @@ export default {
     { src: '~/node_modules/vue-awesome-swiper', mode: 'client' },
     { src: '~/plugins/vuelidate.js' },
     { src: '~/plugins/html-entity-filter.js' },
+    { src: '~/plugins/pretty-url-filter.js' },
     { src: '~/plugins/wordpress-API.js' }
   ],
   /*
