@@ -5,7 +5,7 @@
       <a
         class="text-primary"
         title="Autres"
-        @click.prevent="shareWith('Article de la Chouquette', escapedTitle, currentPage)"
+        @click.prevent="shareWith('Article de La Chouquette', escapedTitle, currentPage)"
         ><i class="fas fa-share-alt-square"></i
       ></a>
     </template>

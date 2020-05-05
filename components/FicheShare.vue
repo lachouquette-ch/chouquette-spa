@@ -1,16 +1,15 @@
 <template>
   <span id="share">
     <template v-if="shareApiAvailable">
-      Partage cet article
-      <a
-        class="text-primary"
-        title="Autres"
-        @click.prevent="shareWith('Article de la Chouquette', escapedTitle, fichePage)"
-        ><i class="fas fa-share-alt-square"></i
-      ></a>
+      <button
+        class="btn btn-sm btn-outline-secondary text-black"
+        @click.prevent="shareWith('Fiche sur La Chouquette', escapedTitle, fichePage)"
+      >
+        <span class="mr-2"><i class="fas fa-share-alt"></i></span>Partager
+      </button>
     </template>
     <template v-else>
-      <b-dropdown size="sm" dropup text="A partager sur" variant="outline-secondary">
+      <b-dropdown size="sm" dropup text="A partager sur" variant="outline-secondary" toggle-class="text-black">
         <b-dropdown-item
           :href="`https://www.facebook.com/sharer/sharer.php?u=${fichePage}`"
           target="_blank"
