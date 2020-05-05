@@ -33,7 +33,7 @@
           variant="secondary"
           link-class="text-decoration-none"
         >
-          <span style="color: #25d366" class="mr-2"><i class="fab fa-whatsapp-square"></i></span> Whatsapp
+          <span style="color: #25d366" class="mr-2"><i class="fab fa-whatsapp-square"></i></span> WhatsApp
         </b-dropdown-item>
         <b-dropdown-item
           :href="`mailto:?subject=${escapedTitle}&amp;body=Je te partage cet article ${fichePage}`"
@@ -57,7 +57,7 @@ export default {
   },
   data() {
     return {
-      shareApiAvailable: false,
+      shareApiAvailable: false
     }
   },
   computed: {
@@ -79,4 +79,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+a.dropdown-item span {
+  font-size: 1.2rem;
+}
+</style>
