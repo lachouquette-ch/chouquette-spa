@@ -287,7 +287,7 @@ export default {
   },
   head() {
     return {
-      title: this.post.yoast_title,
+      title: this.$options.filters.heDecode(this.post.yoast_title),
       link: this.gutenbergLinks(),
       meta: this.yoastMetaConfig(this.post.yoast_meta),
       script: this.yoastJsonLDConfig(this.post.yoast_json_ld)

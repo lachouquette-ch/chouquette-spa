@@ -33,10 +33,10 @@ export default {
   },
   head() {
     return {
-      title: this.page ? this.$options.filters.heDecode(this.page.title.rendered) : '',
+      title: this.$options.filters.heDecode(this.page.title.rendered),
       link: this.gutenbergLinks(),
-      meta: this.page ? this.yoastMetaConfig(this.page.yoast_meta) : [],
-      script: this.page ? this.yoastJsonLDConfig(this.page.yoast_json_ld) : []
+      meta: this.yoastMetaConfig(this.page.yoast_meta),
+      script: this.yoastJsonLDConfig(this.page.yoast_json_ld)
     }
   }
 }
