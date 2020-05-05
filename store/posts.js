@@ -35,7 +35,7 @@ export const actions = {
     return posts
   },
 
-  async fetchByTagSlug({ commit, dispatch }, { slug, number }) {
+  async fetchByTagSlug({ commit, dispatch }, { slug, number = null }) {
     // first get tag
     const tag = await dispatch('tags/fetchBySlug', slug, { root: true })
 

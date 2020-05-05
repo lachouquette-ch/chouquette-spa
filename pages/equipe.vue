@@ -1,6 +1,6 @@
 <template>
   <WpPage :page="page">
-    <template v-slot:footer>
+    <template #footer>
       <div v-if="team" class="my-3">
         <h2 class="text-center mb-4">L'équipe</h2>
         <div class="d-flex flex-wrap justify-content-around">
