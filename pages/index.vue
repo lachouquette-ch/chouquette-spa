@@ -154,7 +154,7 @@ export default {
     linkAnchorFixedHeader(70)
   },
   created() {
-    this.$store.dispatch('posts/fetchTops', TOP_POSTS_NUM).then((posts) => {
+    this.$store.dispatch('posts/fetchByTagSlug', { slug: 'tops', number: TOP_POSTS_NUM }).then((posts) => {
       this.topPosts = posts
     })
   },

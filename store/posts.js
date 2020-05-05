@@ -35,13 +35,13 @@ export const actions = {
     return posts
   },
 
-  async fetchTops({ commit, dispatch }, number) {
+  async fetchByTagSlug({ commit, dispatch }, { slug, number }) {
     // first get tag
-    const topsTag = await dispatch('tags/fetchBySlug', 'tops', { root: true })
+    const tag = await dispatch('tags/fetchBySlug', slug, { root: true })
 
     const posts = await this.$wpAPI.wp.posts
       .get({
-        tags: topsTag.id,
+        tags: tag.id,
         per_page: number
       })
       .then(({ data }) => data)
