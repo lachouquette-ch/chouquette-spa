@@ -36,7 +36,7 @@
 <script>
 import Vue from 'vue'
 import Fiche from '~/components/Fiche'
-import { MAP_OPTIONS } from '~/constants/mapSettings'
+import { MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS } from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
 
 const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
@@ -67,7 +67,9 @@ export default {
       map: null,
       bounds: null,
       markers: new Map(),
+      currentMarker: null,
       infoWindows: new Map(),
+      currentInfoWindow: null,
 
       isMapShown: false
     }
@@ -90,6 +92,28 @@ export default {
     this.loadMap(this.fiches)
   },
   methods: {
+    resetMapObjects() {
+      if (this.currentMarker) {
+        this.currentMarker.setZIndex(this.currentMarker.defaultZIndex)
+      }
+      if (this.currentInfoWindow) {
+        this.currentInfoWindow.close()
+      }
+    },
+    resetMap() {
+      this.resetMapObjects()
+
+      if (this.markers.size > 1) {
+        this.map.fitBounds(this.bounds)
+      } else {
+        // single marker
+        this.currentMarker = this.markers.values().next().value
+        this.map.setCenter(this.currentMarker.getPosition())
+
+        this.currentInfoWindow = this.infoWindows.values().next().value
+        this.currentInfoWindow.open(this.map, this.currentMarker)
+      }
+    },
     loadMap(fiches) {
       for (const fiche of fiches) {
         if (!fiche.info || !fiche.info.location) {
@@ -113,18 +137,23 @@ export default {
           position: fiche.info.location,
           title: fiche.title.rendered
         })
+        marker.defaultZIndex = fiche.info.chouquettise ? Z_INDEXES.chouquettise : Z_INDEXES.default
+        marker.setZIndex(marker.defaultZIndex)
         marker.addListener('click', () => {
-          this.map.setCenter(marker.getPosition())
+          this.resetMapObjects()
 
-          if (infoWindow.getMap()) {
-            infoWindow.close()
-          } else {
-            infoWindow.open(this.map, marker)
-          }
+          marker.setZIndex(Z_INDEXES.selected)
+          infoWindow.open(this.map, marker)
+
+          this.currentMarker = marker
+          this.currentInfoWindow = infoWindow
         })
         this.markers.set(fiche.id, marker)
         this.bounds.extend(marker.getPosition())
       }
+
+      // init map
+      this.resetMap()
     }
   }
 }

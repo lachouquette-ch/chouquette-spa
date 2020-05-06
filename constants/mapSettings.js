@@ -1,5 +1,13 @@
-export const ZOOM_LEVEL_DEFAULT = 15
-export const ZOOM_LEVEL_ACTIVED = 17
+export const Z_INDEXES = {
+  default: 100,
+  chouquettise: 500,
+  selected: 1000
+}
+
+export const ZOOM_LEVELS = {
+  default: 15,
+  activated: 17
+}
 
 export const SWITZERLAND_BOUNDS = {
   north: 48.5744540832,
@@ -14,7 +22,7 @@ export const MAP_STYLES = {
 }
 
 export const MAP_OPTIONS = {
-  zoom: ZOOM_LEVEL_DEFAULT,
+  zoom: ZOOM_LEVELS.default,
   clickableIcons: false,
   disableDefaultUI: true,
   fullscreenControl: true,
