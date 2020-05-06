@@ -35,10 +35,13 @@
 
 <script>
 import Vue from 'vue'
+import MarkerClusterer from '@google/markerclustererplus'
+
 import Fiche from '~/components/Fiche'
 import { MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS } from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
 
+// create class from component to use it in code
 const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
 
 export default {
@@ -65,11 +68,11 @@ export default {
     return {
       google: null,
       map: null,
-      bounds: null,
       markers: new Map(),
       currentMarker: null,
       infoWindows: new Map(),
       currentInfoWindow: null,
+      markerClusterer: null,
 
       isMapShown: false
     }
@@ -83,11 +86,15 @@ export default {
       this.map = new this.google.maps.Map(this.$refs.map, {
         ...MAP_OPTIONS
       })
-      this.bounds = new this.google.maps.LatLngBounds()
     } catch (err) {
       if (err instanceof Error) console.error(err)
       else throw err
     }
+
+    this.markerClusterer = new MarkerClusterer(this.map, [], {
+      averageCenter: true,
+      imagePath: '/maps_cluster/m'
+    })
 
     this.loadMap(this.fiches)
   },
@@ -103,16 +110,12 @@ export default {
     resetMap() {
       this.resetMapObjects()
 
-      if (this.markers.size > 1) {
-        this.map.fitBounds(this.bounds)
-      } else {
-        // single marker
-        this.currentMarker = this.markers.values().next().value
-        this.map.setCenter(this.currentMarker.getPosition())
+      this.markerClusterer.fitMapToMarkers()
 
-        this.currentInfoWindow = this.infoWindows.values().next().value
-        this.currentInfoWindow.open(this.map, this.currentMarker)
-      }
+      this.currentMarker = this.markers.values().next().value
+      this.currentInfoWindow = this.infoWindows.values().next().value
+
+      if (this.markers.size === 1) this.currentInfoWindow.open(this.map, this.currentMarker)
     },
     loadMap(fiches) {
       for (const fiche of fiches) {
@@ -133,7 +136,6 @@ export default {
 
         const marker = new this.google.maps.Marker({
           icon: fiche.main_category.marker_icon,
-          map: this.map,
           position: fiche.info.location,
           title: fiche.title.rendered
         })
@@ -149,8 +151,9 @@ export default {
           this.currentInfoWindow = infoWindow
         })
         this.markers.set(fiche.id, marker)
-        this.bounds.extend(marker.getPosition())
       }
+
+      this.markerClusterer.addMarkers(Array.from(this.markers.values()))
 
       // init map
       this.resetMap()

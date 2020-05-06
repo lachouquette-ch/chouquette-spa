@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.0",
+    "@google/markerclustererplus": "^5.0.3",
     "@nuxtjs/axios": "^5.9.7",
     "bootstrap-vue": "^2.11.0",
     "google-maps-api-loader": "^1.1.1",

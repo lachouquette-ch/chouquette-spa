@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{ fiche.title.rendered }}
+    {{ fiche.title.rendered | heDecode }}
   </div>
 </template>
 
