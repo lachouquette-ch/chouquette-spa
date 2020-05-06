@@ -34,8 +34,13 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import Fiche from '~/components/Fiche'
 import { MAP_OPTIONS } from '~/constants/mapSettings'
+import FicheInfoWindow from '~/components/FicheInfoWindow'
+
+const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
+
 export default {
   components: { Fiche },
   async asyncData({ store, params }) {
@@ -58,7 +63,12 @@ export default {
   },
   data() {
     return {
+      google: null,
       map: null,
+      bounds: null,
+      markers: new Map(),
+      infoWindows: new Map(),
+
       isMapShown: false
     }
   },
@@ -69,13 +79,52 @@ export default {
     try {
       this.google = await this.$googleMaps
       this.map = new this.google.maps.Map(this.$refs.map, {
-        ...MAP_OPTIONS,
-        gestureHandling: 'none',
-        zoomControl: false
+        ...MAP_OPTIONS
       })
+      this.bounds = new this.google.maps.LatLngBounds()
     } catch (err) {
       if (err instanceof Error) console.error(err)
       else throw err
+    }
+
+    this.loadMap(this.fiches)
+  },
+  methods: {
+    loadMap(fiches) {
+      for (const fiche of fiches) {
+        if (!fiche.info || !fiche.info.location) {
+          console.warn(`${fiche} has no location (not info)`)
+          continue
+        }
+
+        const ficheInfoWindow = new FicheInfoWindowClass({
+          propsData: { fiche }
+        })
+        ficheInfoWindow.$mount()
+
+        const infoWindow = new this.google.maps.InfoWindow({
+          content: ficheInfoWindow.$el
+        })
+        this.infoWindows.set(fiche.id, infoWindow)
+
+        const marker = new this.google.maps.Marker({
+          icon: fiche.main_category.marker_icon,
+          map: this.map,
+          position: fiche.info.location,
+          title: fiche.title.rendered
+        })
+        marker.addListener('click', () => {
+          this.map.setCenter(marker.getPosition())
+
+          if (infoWindow.getMap()) {
+            infoWindow.close()
+          } else {
+            infoWindow.open(this.map, marker)
+          }
+        })
+        this.markers.set(fiche.id, marker)
+        this.bounds.extend(marker.getPosition())
+      }
     }
   }
 }
