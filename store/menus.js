@@ -37,8 +37,12 @@ export const actions = {
     return [headerMenu, footerMenu]
   },
 
-  setSelectedCategory({ dispatch, commit }, category) {
+  setSelectedCategory({ commit }, category) {
     commit('SET_SELECTED_CATEGORY', category)
+  },
+
+  clearSelectedCategory({ commit }) {
+    commit('UNSET_SELECTED_CATEGORY')
   }
 }
 
@@ -57,5 +61,8 @@ export const mutations = {
   },
   SET_SELECTED_CATEGORY(state, category) {
     state.selectedCategory = category
+  },
+  UNSET_SELECTED_CATEGORY(state) {
+    state.selectedCategory = null
   }
 }

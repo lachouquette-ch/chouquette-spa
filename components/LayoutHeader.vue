@@ -151,8 +151,10 @@ export default {
   },
   created() {
     this.$root.$on('routeChanged', () => {
+      // reset component
       this.$bvModal.hide('search-modal')
       $('#navbarChouquette').collapse('hide')
+      this.$store.dispatch('menus/clearSelectedCategory')
     })
   },
   methods: {
