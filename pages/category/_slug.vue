@@ -15,6 +15,11 @@
             @click.native="gotoMarker(fiche)"
           />
         </div>
+        <button class="btn btn-sm btn-yellow w-100" :disabled="loading || !hasMoreFiche" @click="loadMoreFiches">
+          <b-spinner v-show="loading" small variant="dark-grey" label="chargement" class="mr-2"></b-spinner>
+          <span v-if="hasMoreFiche">Voir plus de fiches</span>
+          <span v-else>T'es arrivé au bout du bout</span>
+        </button>
       </div>
     </div>
 
@@ -76,12 +81,14 @@ export default {
     const subCategories = store.state.categories.children[category.id] // fetched along category
 
     const subCategoryIds = subCategories.map(({ id }) => id)
+    const categoryIds = [category.id, ...subCategoryIds]
     const ficheResult = await store.dispatch('fiches/fetchByCategoryIds', {
-      categoryIds: [category.id, ...subCategoryIds]
+      categoryIds
     })
 
     return {
       category,
+      categoryIds,
       fiches: ficheResult.fiches,
       fichesTotal: ficheResult.total,
       fichesPages: ficheResult.pages,
@@ -99,7 +106,13 @@ export default {
       currentInfoWindow: null,
       markerClusterer: null,
 
-      isMapShown: false
+      isMapShown: false,
+      loading: false
+    }
+  },
+  computed: {
+    hasMoreFiche() {
+      return this.fichesNextPage <= this.fichesPages
     }
   },
   created() {
@@ -133,7 +146,7 @@ export default {
     const centerControl = new MapControl(() => this.resetMap())
     this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(centerControl)
 
-    this.loadMap(this.fiches)
+    this.loadFiches(this.fiches)
   },
   methods: {
     gotoMarker(fiche) {
@@ -163,7 +176,26 @@ export default {
 
       if (this.markers.size === 1) this.currentInfoWindow.open(this.map, this.currentMarker)
     },
-    loadMap(fiches) {
+    async loadMoreFiches() {
+      if (!this.hasMoreFiche) {
+        console.warn('no more fiche to load')
+      }
+
+      this.loading = true
+      try {
+        const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
+          categoryIds: this.categoryIds,
+          page: this.fichesNextPage
+        })
+        this.fichesNextPage++
+
+        this.loadFiches(ficheResult.fiches)
+        this.fiches.push(...ficheResult.fiches)
+      } finally {
+        this.loading = false
+      }
+    },
+    loadFiches(fiches) {
       for (const fiche of fiches) {
         if (!fiche.info || !fiche.info.location) {
           console.warn(`${fiche} has no location (not info)`)
