@@ -15,7 +15,12 @@
             @click.native="gotoMarker(fiche)"
           />
         </div>
-        <button class="btn btn-sm btn-yellow w-100" :disabled="loading || !hasMoreFiche" @click="loadMoreFiches">
+        <button
+          v-b-visible="loadMoreFiches"
+          class="btn btn-sm btn-yellow w-100"
+          :disabled="loading || !hasMoreFiche"
+          @click="loadMoreFiches"
+        >
           <b-spinner v-show="loading" small variant="dark-grey" label="chargement" class="mr-2"></b-spinner>
           <span v-if="hasMoreFiche">Voir plus de fiches</span>
           <span v-else>T'es arrivé au bout du bout</span>
