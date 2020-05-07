@@ -460,7 +460,7 @@ export default {
           icon: this.fiche.main_category.marker_icon,
           map: this.map,
           position: this.fiche.info.location,
-          title: this.fiche.title.rendered
+          title: this.$options.filters.heDecode(this.fiche.title.rendered)
         })
 
         this.map.setCenter(this.marker.getPosition())

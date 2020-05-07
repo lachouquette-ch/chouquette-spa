@@ -5,7 +5,14 @@
         <h1 class="text-center mb-4">{{ category.name }}</h1>
         <div class="h3">Ma recherche</div>
         <div class="d-flex justify-content-around flex-wrap my-4">
-          <Fiche v-for="fiche in fiches" :key="fiche.id" :fiche="fiche" :responsive="false" class="mx-2 mb-3" />
+          <Fiche
+            v-for="fiche in fiches"
+            :ref="`fiche-${fiche.id}`"
+            :key="fiche.id"
+            :fiche="fiche"
+            :responsive="false"
+            class="mx-2 mb-3"
+          />
         </div>
       </div>
     </div>
@@ -113,7 +120,6 @@ export default {
     this.markerClusterer = new MarkerClusterer(this.map, [], {
       averageCenter: true,
       styles: CLUSTER_STYLES,
-      clusterClass: CLUSTER_CLASS,
       calculator: (markers, clusterIconStylesCount) => {
         const index = markers.find((marker) => marker.chouquettise) ? 2 : 1
         return {

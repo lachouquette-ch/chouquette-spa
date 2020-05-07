@@ -1,17 +1,29 @@
 @mixin clustericon {
-  color: $black;
+  font-size: 16px;
   font-weight: bold;
-  font-size: 15px;
+
   display: flex;
   align-items: center;
+
+  border-radius: 100%;
+  border: 1px solid $chouquette-grey;
+  box-shadow: 0 0 5px $chouquette-grey;
 }
 
 .clustericon {
   @include clustericon;
-  background-image: url("/marker_white.png");
+  background-color: $white;
+
+  // enforce size due to border size
+  width: 32px !important;
+  height: 32px !important;
 }
 
 .clustericon-chouquettise {
   @include clustericon;
-  background-image: url("/marker_yellow.png");
+  background-color: #ffe800;
+
+  // enforce size due to border size
+  width: 42px !important;
+  height: 42px !important;
 }

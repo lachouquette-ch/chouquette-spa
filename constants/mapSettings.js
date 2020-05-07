@@ -41,15 +41,13 @@ export const MAP_OPTIONS = {
 
 export const CLUSTER_STYLES = [
   {
-    width: 50,
-    height: 57,
+    width: 30,
+    height: 30,
     className: 'clustericon'
   },
   {
-    width: 50,
-    height: 57,
+    width: 40,
+    height: 40,
     className: 'clustericon-chouquettise'
   }
 ]
-
-export const CLUSTER_CLASS = 'custom-clustericon'
