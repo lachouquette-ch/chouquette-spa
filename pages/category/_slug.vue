@@ -44,7 +44,7 @@ import FicheInfoWindow from '~/components/FicheInfoWindow'
 // create class from component to use it in code
 const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
 
-// create controls
+// create map control
 function MapControl(handler) {
   // Set CSS for the control border.
   const controlButton = document.createElement('button')
@@ -171,7 +171,7 @@ export default {
         const marker = new this.google.maps.Marker({
           icon: fiche.main_category.marker_icon,
           position: fiche.info.location,
-          title: fiche.title.rendered
+          title: this.$options.filters.heDecode(fiche.title.rendered)
         })
         marker.defaultZIndex = fiche.info.chouquettise ? Z_INDEXES.chouquettise : Z_INDEXES.default
         marker.chouquettise = fiche.info.chouquettise
@@ -184,6 +184,11 @@ export default {
 
           this.currentMarker = marker
           this.currentInfoWindow = infoWindow
+
+          const ficheElmt = this.$refs[`fiche-${fiche.id}`][0]
+          this.$scrollTo(ficheElmt.$el, 600, {
+            offset: -160
+          })
         })
         this.markers.set(fiche.id, marker)
       }

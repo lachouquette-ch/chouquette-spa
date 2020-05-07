@@ -85,7 +85,7 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ['@nuxtjs/axios', '@nuxtjs/style-resources', 'bootstrap-vue/nuxt'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/style-resources', 'bootstrap-vue/nuxt', 'vue-scrollto/nuxt'],
   styleResources: {
     scss: [
       '~/assets/css/_variables.scss',
