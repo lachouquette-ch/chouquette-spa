@@ -94,7 +94,14 @@ export default {
     this.markerClusterer = new MarkerClusterer(this.map, [], {
       averageCenter: true,
       styles: CLUSTER_STYLES,
-      clusterClass: CLUSTER_CLASS
+      clusterClass: CLUSTER_CLASS,
+      calculator: (markers, clusterIconStylesCount) => {
+        const index = markers.find((marker) => marker.chouquettise) ? 2 : 1
+        return {
+          index,
+          text: markers.length
+        }
+      }
     })
 
     this.loadMap(this.fiches)
@@ -141,6 +148,7 @@ export default {
           title: fiche.title.rendered
         })
         marker.defaultZIndex = fiche.info.chouquettise ? Z_INDEXES.chouquettise : Z_INDEXES.default
+        marker.chouquettise = fiche.info.chouquettise
         marker.setZIndex(marker.defaultZIndex)
         marker.addListener('click', () => {
           this.resetMapObjects()
