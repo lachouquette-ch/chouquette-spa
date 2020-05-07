@@ -7,11 +7,11 @@
 }
 
 .clustericon {
-  @include clustericon
+  @include clustericon;
   background-image: url("/marker_white.png");
 }
 
 .clustericon-chouquettise {
-  @include clustericon
+  @include clustericon;
   background-image: url("/marker_yellow.png");
 }
