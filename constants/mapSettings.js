@@ -38,3 +38,23 @@ export const MAP_OPTIONS = {
   },
   zoomControl: true
 }
+
+export const CLUSTER_STYLES = [
+  {
+    width: 30,
+    height: 30,
+    className: 'custom-clustericon-1'
+  },
+  {
+    width: 40,
+    height: 40,
+    className: 'custom-clustericon-2'
+  },
+  {
+    width: 50,
+    height: 50,
+    className: 'custom-clustericon-3'
+  }
+]
+
+export const CLUSTER_CLASS = 'custom-clustericon'
