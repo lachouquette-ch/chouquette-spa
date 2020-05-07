@@ -12,6 +12,7 @@
             :fiche="fiche"
             :responsive="false"
             class="mx-2 mb-3"
+            @click.native="gotoMarker(fiche)"
           />
         </div>
       </div>
@@ -135,6 +136,15 @@ export default {
     this.loadMap(this.fiches)
   },
   methods: {
+    gotoMarker(fiche) {
+      this.resetMapObjects()
+
+      this.currentMarker = this.markers.get(fiche.id)
+      this.map.setZoom(ZOOM_LEVELS.activated)
+      this.map.setCenter(this.currentMarker.getPosition())
+      this.currentInfoWindow = this.infoWindows.get(fiche.id)
+      this.currentInfoWindow.open(this.map, this.currentMarker)
+    },
     resetMapObjects() {
       if (this.currentMarker) {
         this.currentMarker.setZIndex(this.currentMarker.defaultZIndex)
