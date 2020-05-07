@@ -6,7 +6,7 @@ export const Z_INDEXES = {
 
 export const ZOOM_LEVELS = {
   default: 15,
-  activated: 17
+  activated: 18
 }
 
 export const SWITZERLAND_BOUNDS = {

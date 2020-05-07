@@ -46,7 +46,7 @@ import Vue from 'vue'
 import MarkerClusterer from '@google/markerclustererplus'
 
 import Fiche from '~/components/Fiche'
-import { MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, CLUSTER_CLASS, CLUSTER_STYLES } from '~/constants/mapSettings'
+import { MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, CLUSTER_STYLES } from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
 
 // create class from component to use it in code
