@@ -44,6 +44,23 @@ import FicheInfoWindow from '~/components/FicheInfoWindow'
 // create class from component to use it in code
 const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
 
+// create controls
+function MapControl(handler) {
+  // Set CSS for the control border.
+  const controlButton = document.createElement('button')
+  controlButton.className = 'map-control'
+
+  // Set CSS for the control interior.
+  const controlContent = document.createElement('i')
+  controlContent.className = 'far fa-map'
+  controlButton.appendChild(controlContent)
+
+  // Setup the click event listeners
+  controlButton.addEventListener('click', handler)
+
+  return controlButton
+}
+
 export default {
   components: { Fiche },
   async asyncData({ store, params }) {
@@ -81,6 +98,7 @@ export default {
     this.$store.dispatch('menus/setSelectedCategory', this.category)
   },
   async mounted() {
+    // build map
     try {
       this.google = await this.$googleMaps
       this.map = new this.google.maps.Map(this.$refs.map, {
@@ -91,6 +109,7 @@ export default {
       else throw err
     }
 
+    // create cluster
     this.markerClusterer = new MarkerClusterer(this.map, [], {
       averageCenter: true,
       styles: CLUSTER_STYLES,
@@ -103,6 +122,9 @@ export default {
         }
       }
     })
+
+    const centerControl = new MapControl(() => this.resetMap())
+    this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(centerControl)
 
     this.loadMap(this.fiches)
   },
