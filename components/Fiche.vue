@@ -287,8 +287,6 @@ export default {
   data() {
     return {
       isFlipped: false,
-      featuredMedia: null,
-      criteria: null,
 
       google: null,
       map: null,
@@ -333,6 +331,12 @@ export default {
       const criteriaList = Object.values(this.criteria).flat()
       const termsList = criteriaList.flatMap(({ values }) => values)
       return _.uniqBy(termsList, 'slug')
+    },
+    featuredMedia() {
+      return this.$store.state.media.all[this.fiche.featured_media]
+    },
+    criteria() {
+      return this.$store.state.fiches.criteria[this.fiche.id]
     }
   },
   watch: {
@@ -436,11 +440,8 @@ export default {
     },
     init() {
       this.isFlipped = false
-      this.featuredMedia = this.$store.state.media.all[this.fiche.featured_media]
-      this.criteria = this.$store.state.fiches.criteria[this.fiche.id]
 
       this.initMap()
-
       this.resizeFiche()
     },
     initMap() {

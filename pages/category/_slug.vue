@@ -132,16 +132,20 @@ export default {
           continue
         }
 
+        // build infoWindow content
+        const featuredMedia = this.$store.state.media.all[fiche.featured_media]
         const ficheInfoWindow = new FicheInfoWindowClass({
-          propsData: { fiche }
+          propsData: { fiche, featuredMedia }
         })
         ficheInfoWindow.$mount()
 
+        // create infoWindow
         const infoWindow = new this.google.maps.InfoWindow({
           content: ficheInfoWindow.$el
         })
         this.infoWindows.set(fiche.id, infoWindow)
 
+        // create marker
         const marker = new this.google.maps.Marker({
           icon: fiche.main_category.marker_icon,
           position: fiche.info.location,
