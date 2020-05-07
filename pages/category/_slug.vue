@@ -2,7 +2,10 @@
   <div class="category-page layout-content">
     <div class="fiches">
       <div class="container my-4">
-        <h1 class="text-center mb-4">{{ category.name }}</h1>
+        <div class="text-center mb-4">
+          <h1 class="mb-0">{{ category.name }}</h1>
+          <span class="muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
+        </div>
         <div class="h3">Ma recherche</div>
         <div class="d-flex justify-content-around flex-wrap my-4">
           <Fiche
@@ -58,26 +61,11 @@ import MarkerClusterer from '@google/markerclustererplus'
 import Fiche from '~/components/Fiche'
 import { MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, CLUSTER_STYLES } from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
+import GMapControl from '~/components/GMapControl'
 
-// create class from component to use it in code
+// create classes from components to use it in code
 const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
-
-// create map control
-function MapControl(handler) {
-  // Set CSS for the control border.
-  const controlButton = document.createElement('button')
-  controlButton.className = 'map-control'
-
-  // Set CSS for the control interior.
-  const controlContent = document.createElement('i')
-  controlContent.className = 'far fa-map'
-  controlButton.appendChild(controlContent)
-
-  // Setup the click event listeners
-  controlButton.addEventListener('click', handler)
-
-  return controlButton
-}
+const GMapControlClass = Vue.extend(GMapControl)
 
 export default {
   components: { Fiche },
@@ -148,8 +136,12 @@ export default {
       }
     })
 
-    const centerControl = new MapControl(() => this.resetMap())
-    this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(centerControl)
+    // create map controls
+    const centerControl = new GMapControlClass({
+      propsData: { handler: () => this.resetMap(), content: '<i class="far fa-map"></i>' }
+    })
+    centerControl.$mount()
+    this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(centerControl.$el)
 
     this.loadFiches(this.fiches)
   },
