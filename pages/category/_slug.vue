@@ -4,25 +4,39 @@
       <div class="container my-4">
         <div class="text-center mb-4">
           <h1 class="mb-0">{{ category.name }}</h1>
-          <span class="muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
+          <span class="d-none d-md-inline muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
         </div>
         <div class="h3">Ma recherche</div>
-        <div class="d-flex justify-content-around flex-wrap my-4">
-          <Fiche
-            v-for="fiche in fiches"
-            :ref="`fiche-${fiche.id}`"
-            :key="fiche.id"
-            :fiche="fiche"
-            :responsive="false"
-            class="fiche mx-2 mb-3"
-            @click.native="gotoMarker(fiche)"
-          />
+
+        <!-- for mobile devices -->
+        <div v-swiper="swiperOptions" class="swiper d-md-none">
+          <div class="swiper-wrapper pt-3">
+            <div v-for="fiche in fiches" :key="fiche.id" class="swiper-slide align-self-start" :data-hash="fiche.id">
+              <Fiche ref="fiche" :fiche="fiche" />
+            </div>
+          </div>
+          <div slot="pagination" class="swiper-pagination"></div>
         </div>
-        <button class="btn btn btn-yellow w-100" :disabled="loading || !hasMoreFiche" @click="loadMoreFiches">
-          <b-spinner v-show="loading" small variant="dark-grey" label="chargement" class="mr-2"></b-spinner>
-          <span v-if="hasMoreFiche">Voir plus de fiches</span>
-          <span v-else>T'es arrivé au bout du bout</span>
-        </button>
+
+        <!-- for desktops -->
+        <div class="d-none d-md">
+          <div class="d-flex justify-content-around flex-wrap my-4">
+            <Fiche
+              v-for="fiche in fiches"
+              :ref="`fiche-${fiche.id}`"
+              :key="fiche.id"
+              :fiche="fiche"
+              :responsive="false"
+              class="fiche mx-2 mb-3"
+              @click.native="gotoMarker(fiche)"
+            />
+          </div>
+          <button class="btn btn btn-yellow w-100" :disabled="loading || !hasMoreFiche" @click="loadMoreFiches">
+            <b-spinner v-show="loading" small variant="dark-grey" label="chargement" class="mr-2"></b-spinner>
+            <span v-if="hasMoreFiche">Voir plus de fiches</span>
+            <span v-else>T'es arrivé au bout du bout</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -64,16 +78,19 @@
 import Vue from 'vue'
 import MarkerClusterer from '@google/markerclustererplus'
 import $ from 'jquery'
+import { directive as SwiperDirective } from 'vue-awesome-swiper'
 
 import Fiche from '~/components/Fiche'
 import { MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, CLUSTER_STYLES } from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
+import { DEFAULT } from '~/constants/swiper'
 
 // create classes from components to use it in code
 const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
 
 export default {
   components: { Fiche },
+  directives: { swiper: SwiperDirective },
   async asyncData({ store, params }) {
     const category = await store.dispatch('categories/fetchBySlug', params.slug)
     const subCategories = store.state.categories.children[category.id] // fetched along category
@@ -104,7 +121,9 @@ export default {
       markerClusterer: null,
 
       isMapShown: false,
-      loading: true
+      loading: true,
+
+      swiperOptions: DEFAULT
     }
   },
   computed: {
@@ -117,6 +136,9 @@ export default {
       } else {
         return this.fichesTotal - this.fiches.length
       }
+    },
+    hasSingleFiche() {
+      return this.fiches && this.fiches.length === 1
     }
   },
   created() {
