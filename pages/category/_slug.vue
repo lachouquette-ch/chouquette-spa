@@ -14,7 +14,7 @@
             :key="fiche.id"
             :fiche="fiche"
             :responsive="false"
-            class="mx-2 mb-3"
+            class="fiche mx-2 mb-3"
             @click.native="gotoMarker(fiche)"
           />
         </div>
@@ -57,6 +57,7 @@
 <script>
 import Vue from 'vue'
 import MarkerClusterer from '@google/markerclustererplus'
+import $ from 'jquery'
 
 import Fiche from '~/components/Fiche'
 import { MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, CLUSTER_STYLES } from '~/constants/mapSettings'
@@ -162,6 +163,9 @@ export default {
       if (this.currentInfoWindow) {
         this.currentInfoWindow.close()
       }
+
+      // clear selection
+      $('.fiche').removeClass('selected')
     },
     resetMap() {
       this.resetMapObjects()
@@ -234,6 +238,7 @@ export default {
           this.$scrollTo(ficheElmt.$el, 600, {
             offset: -160
           })
+          $(ficheElmt.$el).addClass('selected')
         })
         this.markers.set(fiche.id, marker)
       }
@@ -251,6 +256,12 @@ export default {
 .fiches {
   @include media-breakpoint-up(md) {
     margin-right: 50vw;
+  }
+}
+
+::v-deep .fiche.selected {
+  article {
+    box-shadow: $box-shadow;
   }
 }
 
