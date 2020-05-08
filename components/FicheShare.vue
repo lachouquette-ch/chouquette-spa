@@ -56,19 +56,18 @@ export default {
   },
   data() {
     return {
-      shareApiAvailable: false
+      shareApiAvailable: false,
+      fichePage: null
     }
   },
   computed: {
     escapedTitle() {
       return this.$options.filters.heDecode(this.fiche.title.rendered)
-    },
-    fichePage() {
-      return window.location.origin + `/fiche/${this.fiche.slug}`
     }
   },
   mounted() {
     this.shareApiAvailable = typeof navigator.share === 'function'
+    this.fichePage = window.location.origin + `/fiche/${this.fiche.slug}`
   },
   methods: {
     shareWith(title, text, url) {

@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       shareApiAvailable: false,
-      currentPage: ''
+      currentPage: null
     }
   },
   computed: {
