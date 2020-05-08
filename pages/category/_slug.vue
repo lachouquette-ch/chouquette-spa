@@ -1,5 +1,5 @@
 <template>
-  <div class="category-page layout-content">
+  <div v-if="category" class="category-page layout-content">
     <div class="fiches">
       <div class="container my-4">
         <div class="text-center mb-4">
@@ -158,35 +158,36 @@ export default {
       this.map = new this.google.maps.Map(this.$refs.map, {
         ...MAP_OPTIONS
       })
+
+      // create cluster
+      this.markerClusterer = new MarkerClusterer(this.map, [], {
+        averageCenter: true,
+        styles: CLUSTER_STYLES,
+        calculator: (markers, clusterIconStylesCount) => {
+          const index = markers.find((marker) => marker.chouquettise) ? 2 : 1
+          return {
+            index,
+            text: markers.length
+          }
+        }
+      })
+
+      // create map controls
+      const centerControlButton = document.createElement('button')
+      centerControlButton.className = 'google-map-control'
+      const centerControlButtonContent = document.createElement('i')
+      centerControlButtonContent.className = 'far fa-map'
+      centerControlButton.appendChild(centerControlButtonContent)
+      centerControlButton.addEventListener('click', () => this.resetMap())
+      this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(centerControlButton)
+
+      this.loadFiches(this.fiches)
     } catch (err) {
       if (err instanceof Error) console.error(err)
       else throw err
+    } finally {
+      this.loading = false
     }
-
-    // create cluster
-    this.markerClusterer = new MarkerClusterer(this.map, [], {
-      averageCenter: true,
-      styles: CLUSTER_STYLES,
-      calculator: (markers, clusterIconStylesCount) => {
-        const index = markers.find((marker) => marker.chouquettise) ? 2 : 1
-        return {
-          index,
-          text: markers.length
-        }
-      }
-    })
-
-    // create map controls
-    const centerControlButton = document.createElement('button')
-    centerControlButton.className = 'google-map-control'
-    const centerControlButtonContent = document.createElement('i')
-    centerControlButtonContent.className = 'far fa-map'
-    centerControlButton.appendChild(centerControlButtonContent)
-    centerControlButton.addEventListener('click', () => this.resetMap())
-    this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(centerControlButton)
-
-    this.loadFiches(this.fiches)
-    this.loading = false
   },
   methods: {
     gotoMarker(fiche) {
