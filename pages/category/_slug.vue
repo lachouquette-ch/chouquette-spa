@@ -1,44 +1,51 @@
 <template>
   <div v-if="category" class="category-page layout-content">
-    <div class="fiches">
-      <div class="container my-4">
-        <div class="text-center mb-4">
-          <h1 class="mb-0">{{ category.name }}</h1>
-          <span class="d-none d-md-inline muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
-        </div>
-        <div class="h3">Ma recherche</div>
+    <div class="fiches my-4">
+      <div class="text-center mb-4">
+        <h1 class="mb-0">{{ category.name }}</h1>
+        <span class="d-none d-md-inline muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
+      </div>
+      <div class="h3 text-center">Ma recherche</div>
 
-        <!-- for mobile devices -->
+      <!-- for mobile devices -->
+      <div class="d-md-none">
         <b-overlay :show="loading" opacity="0.6" blur="none" spinner-variant="yellow">
-          <div v-swiper="swiperOptions" class="swiper d-md-none">
-            <div class="swiper-wrapper pt-3">
-              <div v-for="fiche in fiches" :key="fiche.id" class="swiper-slide align-self-start" :data-hash="fiche.id">
-                <Fiche ref="fiche" :fiche="fiche" />
+          <div class="px-3">
+            <div v-swiper="swiperOptions" class="swiper">
+              <div class="swiper-wrapper pt-3">
+                <div
+                  v-for="fiche in fiches"
+                  :key="fiche.id"
+                  class="swiper-slide align-self-start"
+                  :data-hash="fiche.id"
+                >
+                  <Fiche ref="fiche" :fiche="fiche" />
+                </div>
               </div>
+              <div slot="pagination" class="swiper-pagination"></div>
             </div>
-            <div slot="pagination" class="swiper-pagination"></div>
           </div>
         </b-overlay>
+      </div>
 
-        <!-- for desktops -->
-        <div class="d-none d-md">
-          <div class="d-flex justify-content-around flex-wrap my-4">
-            <Fiche
-              v-for="fiche in fiches"
-              :ref="`fiche-${fiche.id}`"
-              :key="fiche.id"
-              :fiche="fiche"
-              :responsive="false"
-              class="fiche mx-2 mb-3"
-              @click.native="gotoMarker(fiche)"
-            />
-          </div>
-          <button class="btn btn btn-yellow w-100" :disabled="loading || !hasMoreFiche" @click="loadMoreFiches">
-            <b-spinner v-show="loading" small variant="dark-grey" label="chargement" class="mr-2"></b-spinner>
-            <span v-if="hasMoreFiche">Voir plus de fiches</span>
-            <span v-else>T'es arrivé au bout du bout</span>
-          </button>
+      <!-- for desktops -->
+      <div class="d-none d-md-block">
+        <div class="d-flex justify-content-around flex-wrap my-4">
+          <Fiche
+            v-for="fiche in fiches"
+            :ref="`fiche-${fiche.id}`"
+            :key="fiche.id"
+            :fiche="fiche"
+            :responsive="false"
+            class="fiche mx-2 mb-3"
+            @click.native="gotoMarker(fiche)"
+          />
         </div>
+        <button class="btn btn btn-yellow w-100" :disabled="loading || !hasMoreFiche" @click="loadMoreFiches">
+          <b-spinner v-show="loading" small variant="dark-grey" label="chargement" class="mr-2"></b-spinner>
+          <span v-if="hasMoreFiche">Voir plus de fiches</span>
+          <span v-else>T'es arrivé au bout du bout</span>
+        </button>
       </div>
     </div>
 
