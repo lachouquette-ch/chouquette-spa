@@ -33,6 +33,12 @@
 
     <div class="map" :class="{ 'hide-map': !isMapShown }">
       <div ref="map" class="h-100 w-100" />
+      <button v-if="hasMoreFiche" class="map-load-more google-map-control w-auto" :disabled="loading || !hasMoreFiche" @click="loadMoreFiches">
+        <b-overlay spinner-variant="grey" spinner-small :show="loading">
+          <strong>+{{ countNextFiches }}</strong>
+          <sub>Fiches</sub>
+        </b-overlay>
+      </button>
     </div>
 
     <div class="fiches-map-toggle-buttons d-md-none btn-group btn-group-toggle" data-toggle="buttons">
@@ -84,8 +90,7 @@ export default {
       fiches: ficheResult.fiches,
       fichesTotal: ficheResult.total,
       fichesPages: ficheResult.pages,
-      fichesNextPage: 2,
-      fichesLoading: false
+      fichesNextPage: 2
     }
   },
   data() {
@@ -99,12 +104,19 @@ export default {
       markerClusterer: null,
 
       isMapShown: false,
-      loading: false
+      loading: true
     }
   },
   computed: {
     hasMoreFiche() {
       return this.fichesNextPage <= this.fichesPages
+    },
+    countNextFiches() {
+      if (this.fichesNextPage < this.fichesPages) {
+        return Math.ceil(this.fichesTotal / this.fichesPages)
+      } else {
+        return this.fichesTotal - this.fiches.length
+      }
     }
   },
   created() {
@@ -145,6 +157,7 @@ export default {
     this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(centerControlButton)
 
     this.loadFiches(this.fiches)
+    this.loading = false
   },
   methods: {
     gotoMarker(fiche) {
@@ -178,8 +191,14 @@ export default {
       if (this.markers.size === 1) this.currentInfoWindow.open(this.map, this.currentMarker)
     },
     async loadMoreFiches() {
+      if (this.loading) {
+        console.warn('already loading more fiches')
+        return
+      }
+
       if (!this.hasMoreFiche) {
         console.warn('no more fiche to load')
+        return
       }
 
       this.loading = true
@@ -276,6 +295,12 @@ export default {
   @include media-breakpoint-up(md) {
     width: 50vw;
   }
+}
+
+.map-load-more {
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 
 .hide-map {
