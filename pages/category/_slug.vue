@@ -18,12 +18,7 @@
             @click.native="gotoMarker(fiche)"
           />
         </div>
-        <button
-          v-b-visible="loadMoreFiches"
-          class="btn btn-sm btn-yellow w-100"
-          :disabled="loading || !hasMoreFiche"
-          @click="loadMoreFiches"
-        >
+        <button class="btn btn btn-yellow w-100" :disabled="loading || !hasMoreFiche" @click="loadMoreFiches">
           <b-spinner v-show="loading" small variant="dark-grey" label="chargement" class="mr-2"></b-spinner>
           <span v-if="hasMoreFiche">Voir plus de fiches</span>
           <span v-else>T'es arrivé au bout du bout</span>
@@ -33,7 +28,12 @@
 
     <div class="map" :class="{ 'hide-map': !isMapShown }">
       <div ref="map" class="h-100 w-100" />
-      <button v-if="hasMoreFiche" class="map-load-more google-map-control w-auto" :disabled="loading || !hasMoreFiche" @click="loadMoreFiches">
+      <button
+        v-if="hasMoreFiche"
+        class="map-load-more google-map-control w-auto"
+        :disabled="loading || !hasMoreFiche"
+        @click="loadMoreFiches"
+      >
         <b-overlay spinner-variant="grey" spinner-small :show="loading">
           <strong>+{{ countNextFiches }}</strong>
           <sub>Fiches</sub>
