@@ -254,7 +254,16 @@ export default {
         // build infoWindow content
         const featuredMedia = this.$store.state.media.all[fiche.featured_media]
         const ficheInfoWindow = new FicheInfoWindowClass({
-          propsData: { fiche, featuredMedia }
+          propsData: {
+            fiche,
+            featuredMedia,
+            showBtnAction: () => {
+              this.isMapShown = false
+              // find fiche
+              const ficheIndex = this.fiches.findIndex(({ id }) => id === fiche.id)
+              this.$swiper.slideTo(ficheIndex)
+            }
+          }
         })
         ficheInfoWindow.$mount()
 
