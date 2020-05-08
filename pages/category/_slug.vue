@@ -9,14 +9,16 @@
         <div class="h3">Ma recherche</div>
 
         <!-- for mobile devices -->
-        <div v-swiper="swiperOptions" class="swiper d-md-none">
-          <div class="swiper-wrapper pt-3">
-            <div v-for="fiche in fiches" :key="fiche.id" class="swiper-slide align-self-start" :data-hash="fiche.id">
-              <Fiche ref="fiche" :fiche="fiche" />
+        <b-overlay :show="loading" opacity="0.6" blur="none" spinner-variant="yellow">
+          <div v-swiper="swiperOptions" class="swiper d-md-none">
+            <div class="swiper-wrapper pt-3">
+              <div v-for="fiche in fiches" :key="fiche.id" class="swiper-slide align-self-start" :data-hash="fiche.id">
+                <Fiche ref="fiche" :fiche="fiche" />
+              </div>
             </div>
+            <div slot="pagination" class="swiper-pagination"></div>
           </div>
-          <div slot="pagination" class="swiper-pagination"></div>
-        </div>
+        </b-overlay>
 
         <!-- for desktops -->
         <div class="d-none d-md">
@@ -123,7 +125,12 @@ export default {
       isMapShown: false,
       loading: true,
 
-      swiperOptions: DEFAULT
+      swiperOptions: {
+        ...DEFAULT,
+        on: {
+          reachEnd: () => this.loadMoreFiches()
+        }
+      }
     }
   },
   computed: {
