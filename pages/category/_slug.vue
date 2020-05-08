@@ -62,11 +62,9 @@ import $ from 'jquery'
 import Fiche from '~/components/Fiche'
 import { MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, CLUSTER_STYLES } from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
-import GMapControl from '~/components/GMapControl'
 
 // create classes from components to use it in code
 const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
-const GMapControlClass = Vue.extend(GMapControl)
 
 export default {
   components: { Fiche },
@@ -138,11 +136,13 @@ export default {
     })
 
     // create map controls
-    const centerControl = new GMapControlClass({
-      propsData: { handler: () => this.resetMap(), content: '<i class="far fa-map"></i>' }
-    })
-    centerControl.$mount()
-    this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(centerControl.$el)
+    const centerControlButton = document.createElement('button')
+    centerControlButton.className = 'google-map-control'
+    const centerControlButtonContent = document.createElement('i')
+    centerControlButtonContent.className = 'far fa-map'
+    centerControlButton.appendChild(centerControlButtonContent)
+    centerControlButton.addEventListener('click', () => this.resetMap())
+    this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(centerControlButton)
 
     this.loadFiches(this.fiches)
   },
@@ -199,7 +199,7 @@ export default {
     loadFiches(fiches) {
       for (const fiche of fiches) {
         if (!fiche.info || !fiche.info.location) {
-          console.warn(`${fiche} has no location (not info)`)
+          console.warn(`${fiche.slug} has no location (not info)`)
           continue
         }
 
