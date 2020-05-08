@@ -29,12 +29,4 @@ export default {
     font-family: $font-family-heading;
   }
 }
-
-.fiche.highlight {
-  @include media-breakpoint-up(md) {
-    .card {
-      box-shadow: $box-shadow-lg !important;
-    }
-  }
-}
 </style>
