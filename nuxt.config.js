@@ -1,4 +1,5 @@
 import webpack from 'webpack'
+
 require('dotenv').config()
 
 export default {
@@ -70,6 +71,7 @@ export default {
     { src: '~/plugins/jquery.js', mode: 'client' },
     { src: '~/plugins/google-maps.js', mode: 'client' },
     { src: '~/node_modules/vue-awesome-swiper', mode: 'client' },
+    { src: '~/plugins/vue-mq.js' },
     { src: '~/plugins/vuelidate.js' },
     { src: '~/plugins/html-entity-filter.js' },
     { src: '~/plugins/pretty-url-filter.js' },

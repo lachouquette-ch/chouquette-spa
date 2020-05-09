@@ -8,7 +8,7 @@
       <div class="h3 text-center">Ma recherche</div>
 
       <!-- for mobile devices -->
-      <div class="d-md-none">
+      <template v-if="$mq === 'sm'">
         <b-overlay :show="loading" opacity="0.6" blur="none" spinner-variant="yellow">
           <div class="px-3">
             <div v-swiper="swiperOptions" class="swiper">
@@ -26,10 +26,8 @@
             </div>
           </div>
         </b-overlay>
-      </div>
-
-      <!-- for desktops -->
-      <div class="d-none d-md-block">
+      </template>
+      <template v-else>
         <div class="d-flex justify-content-around flex-wrap my-4">
           <Fiche
             v-for="fiche in fiches"
@@ -46,7 +44,7 @@
           <span v-if="hasMoreFiche">Voir plus de fiches</span>
           <span v-else>T'es arrivé au bout du bout</span>
         </button>
-      </div>
+      </template>
     </div>
 
     <div class="map" :class="{ 'hide-map': !isMapShown }">
@@ -84,17 +82,17 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import MarkerClusterer from '@google/markerclustererplus'
-import $ from 'jquery'
-import { directive as SwiperDirective } from 'vue-awesome-swiper'
+  import Vue from 'vue'
+  import MarkerClusterer from '@google/markerclustererplus'
+  import $ from 'jquery'
+  import {directive as SwiperDirective} from 'vue-awesome-swiper'
 
-import Fiche from '~/components/Fiche'
-import { MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, CLUSTER_STYLES } from '~/constants/mapSettings'
-import FicheInfoWindow from '~/components/FicheInfoWindow'
-import { DEFAULT } from '~/constants/swiper'
+  import Fiche from '~/components/Fiche'
+  import {CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS} from '~/constants/mapSettings'
+  import FicheInfoWindow from '~/components/FicheInfoWindow'
+  import {DEFAULT} from '~/constants/swiper'
 
-// create classes from components to use it in code
+  // create classes from components to use it in code
 const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
 
 export default {
