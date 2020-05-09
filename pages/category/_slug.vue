@@ -1,64 +1,77 @@
 <template>
   <div v-if="category" class="category-page layout-content">
     <div class="fiches my-4">
-      <div class="text-center mb-4">
-        <h1 class="mb-0">{{ category.name }}</h1>
-        <span class="d-none d-md-inline muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
-      </div>
-      <div>
-        <div class="text-center">
-          <button v-b-toggle.search href="" class="h3 btn btn-outline-dark-grey" @click.prevent>
-            <span class="mr-2">Ma recherche</span>
-            <i v-if="isSearchVisible" class="fas fa-minus"></i>
-            <i v-else class="fas fa-plus"></i>
-          </button>
+      <div class="container">
+        <div class="text-center mb-4">
+          <h1 class="mb-0">{{ category.name }}</h1>
+          <span class="d-none d-md-inline muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
         </div>
-        <b-collapse id="search" v-model="isSearchVisible">
-          <div class="mt-2 border-bottom">
-            <form class="px-4">
-              <div class="form-group">
-                <select v-model="formSearch.subCategory" class="form-control form-control-sm">
-                  <option :value="null">Que cherches-tu ?</option>
-                  <option v-for="category in subCategories" :key="category.id" :value="category">{{
-                    category.name
-                  }}</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <select v-model="formSearch.location" class="form-control form-control-sm">
-                  <option :value="null">Où veux-tu aller ?</option>
-                  <option
-                    v-for="location in flatLocations"
-                    :key="location.id"
-                    :value="location"
-                    :class="{ 'font-weight-bold': !location.level }"
-                  >
-                    {{ '&nbsp;'.repeat(location.level * 2) }}{{ location.name }}
-                  </option>
-                </select>
-              </div>
-              <fieldset v-for="criteria in criteriaList" :key="criteria.id" class="border my-3 px-3">
-                <legend class="h6 w-auto px-3 m-0">{{ criteria.name }}</legend>
-                <div class="form-row py-2">
-                  <div v-for="value in criteria.values" :key="value.id" class="col-6">
-                    <div class="form-check">
-                      <input
-                        :id="`${criteria.slug}-${value.slug}`"
-                        v-model="value.checked"
-                        type="checkbox"
-                        class="form-check-input"
-                      />
-                      <label class="form-check-label" :for="`${criteria.slug}-${value.slug}`">{{ value.name }}</label>
+        <div>
+          <div class="text-center">
+            <button v-b-toggle.search href="" class="h3 btn btn-outline-dark-grey" @click.prevent>
+              <span class="mr-2">Ma recherche</span>
+              <i v-if="isSearchVisible" class="fas fa-minus"></i>
+              <i v-else class="fas fa-plus"></i>
+            </button>
+          </div>
+          <b-collapse id="search" v-model="isSearchVisible">
+            <div class="mt-2">
+              <form>
+                <div class="form-group">
+                  <select v-model="formSearch.subCategory" class="form-control form-control-sm">
+                    <option :value="null">Que cherches-tu ?</option>
+                    <option v-for="category in subCategories" :key="category.id" :value="category">{{
+                      category.name
+                    }}</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <select v-model="formSearch.location" class="form-control form-control-sm">
+                    <option :value="null">Où veux-tu aller ?</option>
+                    <option
+                      v-for="location in flatLocations"
+                      :key="location.id"
+                      :value="location"
+                      :class="{ 'font-weight-bold': !location.level }"
+                    >
+                      {{ '&nbsp;'.repeat(location.level * 2) }}{{ location.name }}
+                    </option>
+                  </select>
+                </div>
+                <fieldset v-for="criteria in criteriaList" :key="criteria.id" class="border my-3 px-3">
+                  <legend class="h6 w-auto px-3 m-0">{{ criteria.name }}</legend>
+                  <div class="form-row py-2">
+                    <div v-for="value in criteria.values" :key="value.id" class="col-6">
+                      <div class="form-check">
+                        <input
+                          :id="`${criteria.slug}-${value.slug}`"
+                          v-model="value.checked"
+                          type="checkbox"
+                          class="form-check-input"
+                        />
+                        <label class="form-check-label" :for="`${criteria.slug}-${value.slug}`">{{ value.name }}</label>
+                      </div>
                     </div>
                   </div>
+                </fieldset>
+                <div class="form-group">
+                  <input class="form-control" type="text" placeholder="En quelques mots ..." name="search" />
                 </div>
-              </fieldset>
-              <div class="form-group">
-                <input class="form-control" type="text" placeholder="En quelques mots ..." name="search" />
-              </div>
-            </form>
+              </form>
+            </div>
+          </b-collapse>
+          <div v-show="!isSearchVisible">
+            <a
+              v-for="criteria in selectedCriteria"
+              :key="criteria.id"
+              href=""
+              class="badge badge-pill badge-light-grey text-decoration-none mr-1"
+              @click.prevent="criteria.checked = false"
+            >
+              <i class="far fa-times-circle"></i> {{ criteria.name }}
+            </a>
           </div>
-        </b-collapse>
+        </div>
       </div>
 
       <!-- for mobile devices -->
@@ -187,7 +200,7 @@ export default {
 
       // search
       isSearchVisible: true,
-      criteriaList: null,
+      criteriaList: [],
       formSearch: { subCategory: null, location: null },
 
       loading: true,
@@ -222,6 +235,12 @@ export default {
         (locations, { location, subLocations }) => [...locations, location, ...subLocations],
         []
       )
+    },
+    selectedCriteria() {
+      if (!this.criteriaList.length) return []
+      const criteria = this.criteriaList.flatMap(({ values }) => values)
+      console.log('selectedCriteria')
+      return criteria.filter(({ checked }) => checked)
     }
   },
   created() {
