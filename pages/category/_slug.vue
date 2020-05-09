@@ -19,7 +19,7 @@
               <div class="form-group">
                 <select v-model="formSearch.subCategory" class="form-control form-control-sm">
                   <option :value="null">Que cherches-tu ?</option>
-                  <option v-for="category in subCategories" :key="category.id" :value="category.slug">{{
+                  <option v-for="category in subCategories" :key="category.id" :value="category">{{
                     category.name
                   }}</option>
                 </select>
@@ -36,6 +36,25 @@
                     {{ '&nbsp;'.repeat(location.level * 2) }}{{ location.name }}
                   </option>
                 </select>
+              </div>
+              <fieldset v-for="criteria in criteriaList" :key="criteria.id" class="border my-3 px-3">
+                <legend class="h6 w-auto px-3 m-0">{{ criteria.name }}</legend>
+                <div class="form-row py-2">
+                  <div v-for="value in criteria.values" :key="value.id" class="col-6">
+                    <div class="form-check">
+                      <input
+                        :id="`${criteria.slug}-${value.slug}`"
+                        v-model="value.checked"
+                        type="checkbox"
+                        class="form-check-input"
+                      />
+                      <label class="form-check-label" :for="`${criteria.slug}-${value.slug}`">{{ value.name }}</label>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+              <div class="form-group">
+                <input class="form-control" type="text" placeholder="En quelques mots ..." name="search" />
               </div>
             </form>
           </div>
@@ -167,7 +186,8 @@ export default {
       isMapShown: false,
 
       // search
-      isSearchVisible: false,
+      isSearchVisible: true,
+      criteriaList: null,
       formSearch: { subCategory: null, location: null },
 
       loading: true,
@@ -206,6 +226,7 @@ export default {
   },
   created() {
     this.$store.dispatch('menus/setSelectedCategory', this.category)
+    this.loadCriteria(this.category)
   },
   async mounted() {
     // build map
@@ -246,6 +267,9 @@ export default {
     }
   },
   methods: {
+    async loadCriteria(category) {
+      this.criteriaList = await this.$wpAPI.criteria.getForCategory(category.id).then(({ data }) => data)
+    },
     gotoMarker(fiche) {
       this.resetMapObjects()
 
@@ -359,7 +383,7 @@ export default {
 
       this.markerClusterer.addMarkers(Array.from(this.markers.values()))
 
-      // init map
+      // reset map
       this.resetMap()
     }
   }

@@ -2,17 +2,21 @@ const prefix = '/chouquette/v1/criteria'
 
 function criteriaEndpointFactory($axios) {
   return {
-    getForFiche(id) {
-      const URI = `${prefix}/fiche/${id}`
+    getForFiche(ficheId) {
+      const URI = `${prefix}/fiche/${ficheId}`
       return $axios.get(URI)
     },
-    getForFiches(ids) {
+    getForFiches(ficheIds) {
       const URI = `${prefix}/fiche`
       return $axios.get(URI, {
         params: {
-          include: ids.join(',')
+          include: ficheIds.join(',')
         }
       })
+    },
+    getForCategory(categoryId) {
+      const URI = `${prefix}/category/${categoryId}`
+      return $axios.get(URI)
     }
   }
 }
