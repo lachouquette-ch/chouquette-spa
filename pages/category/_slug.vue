@@ -5,7 +5,42 @@
         <h1 class="mb-0">{{ category.name }}</h1>
         <span class="d-none d-md-inline muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
       </div>
-      <div class="h3 text-center">Ma recherche</div>
+      <div>
+        <div class="text-center">
+          <button v-b-toggle.search href="" class="h3 btn btn-outline-dark-grey" @click.prevent>
+            <span class="mr-2">Ma recherche</span>
+            <i v-if="isSearchVisible" class="fas fa-minus"></i>
+            <i v-else class="fas fa-plus"></i>
+          </button>
+        </div>
+        <b-collapse id="search" v-model="isSearchVisible">
+          <div class="mt-2 border-bottom">
+            <form class="px-4">
+              <div class="form-group">
+                <select v-model="formSearch.subCategory" class="form-control form-control-sm">
+                  <option :value="null">Que cherches-tu ?</option>
+                  <option v-for="category in subCategories" :key="category.id" :value="category.slug">{{
+                    category.name
+                  }}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <select v-model="formSearch.location" class="form-control form-control-sm">
+                  <option :value="null">Où veux-tu aller ?</option>
+                  <option
+                    v-for="location in flatLocations"
+                    :key="location.id"
+                    :value="location"
+                    :class="{ 'font-weight-bold': !location.level }"
+                  >
+                    {{ '&nbsp;'.repeat(location.level * 2) }}{{ location.name }}
+                  </option>
+                </select>
+              </div>
+            </form>
+          </div>
+        </b-collapse>
+      </div>
 
       <!-- for mobile devices -->
       <template v-if="$mq === 'sm'">
@@ -86,6 +121,7 @@
   import MarkerClusterer from '@google/markerclustererplus'
   import $ from 'jquery'
   import {directive as SwiperDirective} from 'vue-awesome-swiper'
+  import {mapState} from 'vuex'
 
   import Fiche from '~/components/Fiche'
   import {CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS} from '~/constants/mapSettings'
@@ -110,6 +146,7 @@ export default {
 
     return {
       category,
+      subCategories,
       categoryIds,
       fiches: ficheResult.fiches,
       fichesTotal: ficheResult.total,
@@ -119,6 +156,7 @@ export default {
   },
   data() {
     return {
+      // map
       google: null,
       map: null,
       markers: new Map(),
@@ -126,10 +164,13 @@ export default {
       infoWindows: new Map(),
       currentInfoWindow: null,
       markerClusterer: null,
-
       isMapShown: false,
-      loading: true,
 
+      // search
+      isSearchVisible: false,
+      formSearch: { subCategory: null, location: null },
+
+      loading: true,
       swiperOptions: {
         ...DEFAULT,
         on: {
@@ -151,6 +192,16 @@ export default {
     },
     hasSingleFiche() {
       return this.fiches && this.fiches.length === 1
+    },
+    ...mapState('locations', {
+      locations: 'hierarchy'
+    }),
+    flatLocations() {
+      // first level only
+      return this.locations.reduce(
+        (locations, { location, subLocations }) => [...locations, location, ...subLocations],
+        []
+      )
     }
   },
   created() {
