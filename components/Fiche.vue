@@ -91,7 +91,7 @@
             </div>
             <div class="card-body d-flex flex-column position-relative">
               <h2 class="card-title text-center h4">{{ fiche.title.rendered | heDecode }}</h2>
-              <p class="card-text" v-html="fiche.content.rendered" />
+              <div class="card-text" v-html="fiche.content.rendered"></div>
               <div v-if="fiche.info.chouquettise" class="card-text d-flex justify-content-around mt-auto">
                 <a
                   v-if="fiche.info.mail"
@@ -206,8 +206,8 @@
               </ul>
               <div class="card-text p-3">
                 <div v-if="criteria">
-                  <span v-for="crit in criteriaList" :key="crit.id" class="badge badge-pill badge-light-grey mr-1">{{
-                    crit.name
+                  <span v-for="value in criteriaList" :key="value.id" class="badge badge-pill badge-light-grey mr-1">{{
+                    value.name
                   }}</span>
                 </div>
               </div>
@@ -246,17 +246,17 @@
 </template>
 
 <script>
-import { required, email, minLength } from 'vuelidate/lib/validators'
-import moment from 'moment'
-import _ from 'lodash'
+  import {email, minLength, required} from 'vuelidate/lib/validators'
+  import moment from 'moment'
+  import _ from 'lodash'
 
-import WpMedia from './WpMedia'
-import { MAP_OPTIONS } from '~/constants/mapSettings'
-import modal from '~/mixins/modal'
-import PostShare from '~/components/PostShare'
-import FicheShare from '~/components/FicheShare'
+  import WpMedia from './WpMedia'
+  import {MAP_OPTIONS} from '~/constants/mapSettings'
+  import modal from '~/mixins/modal'
+  import PostShare from '~/components/PostShare'
+  import FicheShare from '~/components/FicheShare'
 
-export default {
+  export default {
   components: { FicheShare, PostShare, WpMedia },
   mixins: [modal],
   props: {
