@@ -136,15 +136,15 @@
             </div>
             <div class="card-footer">
               <FicheShare :fiche="fiche" />
-              <button
+              <a
                 href=""
                 title="Plus de détails"
-                class="btn btn-sm btn-yellow border-grey float-right"
+                class="btn btn-sm btn-outline-secondary float-right"
                 :class="{ 'd-md-none': responsive }"
                 @click.prevent="isFlipped = true"
               >
-                Voir plus
-              </button>
+                Voir <span class="ml-1"><i class="fas fa-plus"></i></span>
+              </a>
             </div>
           </div>
         </div>
@@ -231,7 +231,7 @@
               </nuxt-link>
               <a
                 href=""
-                title="Plus de détails"
+                title="Retour sur les informations principales"
                 class="btn btn-sm btn-outline-secondary float-right"
                 :class="{ 'd-md-none': responsive }"
                 @click.prevent="isFlipped = false"
