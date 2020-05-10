@@ -84,7 +84,7 @@
                   v-for="value in criteria.selectedValues"
                   :key="value.id"
                   href=""
-                  class="badge badge-pill badge-light-grey text-decoration-none mr-1"
+                  class="badge badge-pill badge-light-grey font-weight-normal text-decoration-none mr-1"
                   @click.prevent="toggleValue(criteria, value)"
                 >
                   <i class="far fa-times-circle"></i> {{ value.name }}

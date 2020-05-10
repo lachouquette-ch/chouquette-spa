@@ -206,9 +206,12 @@
               </ul>
               <div class="card-text p-3">
                 <div v-if="criteria">
-                  <span v-for="value in criteriaList" :key="value.id" class="badge badge-pill badge-light-grey mr-1">{{
-                    value.name
-                  }}</span>
+                  <span
+                    v-for="value in criteriaList"
+                    :key="value.id"
+                    class="badge badge-pill badge-light-grey font-weight-normal mr-1"
+                    >{{ value.name }}</span
+                  >
                 </div>
               </div>
               <a
