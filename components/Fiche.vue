@@ -150,7 +150,9 @@
         </div>
         <div ref="ficheBack" class="fiche-back" :class="backClass">
           <div ref="back" class="card bg-white">
-            <div v-show="marker" ref="ficheMap" class="card-header p-0"></div>
+            <div v-if="fiche.info.location" class="card-header p-0">
+              <div v-show="marker" ref="ficheMap" class="h-100"></div>
+            </div>
             <div class="card-body position-relative p-0 pt-2">
               <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
                 <li v-if="fiche.info.website" class="list-group-item ellipses">
