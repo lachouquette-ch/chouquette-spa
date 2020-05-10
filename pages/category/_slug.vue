@@ -69,16 +69,33 @@
                   </div>
                   <div class="form-group">
                     <input
+                      v-model="formSearch.searchText"
                       class="form-control form-control-sm"
                       type="text"
                       placeholder="En quelques mots ..."
                       name="search"
                     />
                   </div>
+                  <button class="btn btn-sm btn-primary w-100">Lance la recherche</button>
                 </form>
               </div>
             </b-collapse>
             <div v-if="!isSearchVisible" :class="{ 'p-2 pt-3': hasSearchCriteria }">
+              <CriteriaBadge
+                v-if="formSearch.subCategory"
+                :name="formSearch.subCategory.name"
+                @remove="formSearch.subCategory = null"
+              />
+              <CriteriaBadge
+                v-if="formSearch.location"
+                :name="formSearch.location.name"
+                @remove="formSearch.location = null"
+              />
+              <CriteriaBadge
+                v-if="formSearch.searchText"
+                :name="formSearch.searchText"
+                @remove="formSearch.searchText = null"
+              />
               <template v-for="criteria in criteriaList">
                 <CriteriaBadge
                   v-for="value in criteria.selectedValues"
@@ -240,7 +257,7 @@ export default {
       )
     },
     hasSearchCriteria() {
-      const hasSearch = Object.values(this.formSearch).find(Boolean)
+      const hasSearch = this.formSearch.subCategory || this.formSearch.location || this.formSearch.searchText
       const hasCriteria = this.criteriaList.find(({ selectedValues }) => _.isEmpty(selectedValues) === false)
       return hasSearch || hasCriteria
     }
