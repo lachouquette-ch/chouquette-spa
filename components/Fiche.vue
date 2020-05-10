@@ -246,17 +246,17 @@
 </template>
 
 <script>
-  import {email, minLength, required} from 'vuelidate/lib/validators'
-  import moment from 'moment'
-  import _ from 'lodash'
+import { email, minLength, required } from 'vuelidate/lib/validators'
+import moment from 'moment'
+import _ from 'lodash'
 
-  import WpMedia from './WpMedia'
-  import {MAP_OPTIONS} from '~/constants/mapSettings'
-  import modal from '~/mixins/modal'
-  import PostShare from '~/components/PostShare'
-  import FicheShare from '~/components/FicheShare'
+import WpMedia from './WpMedia'
+import { MAP_OPTIONS } from '~/constants/mapSettings'
+import modal from '~/mixins/modal'
+import PostShare from '~/components/PostShare'
+import FicheShare from '~/components/FicheShare'
 
-  export default {
+export default {
   components: { FicheShare, PostShare, WpMedia },
   mixins: [modal],
   props: {

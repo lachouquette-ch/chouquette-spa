@@ -170,18 +170,18 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import MarkerClusterer from '@google/markerclustererplus'
-  import $ from 'jquery'
-  import {directive as SwiperDirective} from 'vue-awesome-swiper'
-  import {mapState} from 'vuex'
+import Vue from 'vue'
+import MarkerClusterer from '@google/markerclustererplus'
+import $ from 'jquery'
+import { directive as SwiperDirective } from 'vue-awesome-swiper'
+import { mapState } from 'vuex'
 
-  import Fiche from '~/components/Fiche'
-  import {CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS} from '~/constants/mapSettings'
-  import FicheInfoWindow from '~/components/FicheInfoWindow'
-  import {DEFAULT} from '~/constants/swiper'
+import Fiche from '~/components/Fiche'
+import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS } from '~/constants/mapSettings'
+import FicheInfoWindow from '~/components/FicheInfoWindow'
+import { DEFAULT } from '~/constants/swiper'
 
-  // create classes from components to use it in code
+// create classes from components to use it in code
 const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
 
 export default {
