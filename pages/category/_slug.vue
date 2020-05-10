@@ -118,7 +118,7 @@
                   class="swiper-slide align-self-start"
                   :data-hash="fiche.id"
                 >
-                  <Fiche ref="fiche" :fiche="fiche" :responsive="false" />
+                  <Fiche ref="fiche" class="fiche" :fiche="fiche" :responsive="false" />
                 </div>
               </div>
               <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
@@ -215,7 +215,7 @@ export default {
       infoWindows: new Map(),
       currentInfoWindow: null,
       markerClusterer: null,
-      isMapShown: false,
+      isMapShown: null,
 
       // search
       isSearchVisible: false,
@@ -229,6 +229,14 @@ export default {
         on: {
           reachEnd: () => this.loadMoreFiches()
         }
+      }
+    }
+  },
+  watch: {
+    isMapShown(_, old) {
+      // first occurrence
+      if (old === null) {
+        this.$nextTick(() => this.resetMap())
       }
     }
   },
@@ -394,6 +402,7 @@ export default {
               this.isMapShown = false
               // find fiche
               const ficheIndex = this.fiches.findIndex(({ id }) => id === fiche.id)
+              this.$refs.fiche[ficheIndex].$el.classList.add('selected')
               this.$swiper.slideTo(ficheIndex)
             }
           }
@@ -423,12 +432,6 @@ export default {
 
           this.currentMarker = marker
           this.currentInfoWindow = infoWindow
-
-          const ficheElmt = this.$refs[`fiche-${fiche.id}`][0]
-          this.$scrollTo(ficheElmt.$el, 600, {
-            offset: -160
-          })
-          $(ficheElmt.$el).addClass('selected')
         })
         this.markers.set(fiche.id, marker)
       }

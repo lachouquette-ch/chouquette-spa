@@ -6,7 +6,7 @@
     <a v-if="fiche.info.chouquettise" :href="googleMapsURL" class="" title="Ouvrir avec Google maps" target="_blank">
       <i class="fas fa-map-marker-alt pr-1"></i> Ouvrir dans google maps
     </a>
-    <button class="btn btn-sm btn-outline-secondary d-block d-md-none my-2 mx-auto" @click="showBtnAction">
+    <button class="btn btn-sm btn-outline-secondary d-block my-2 mx-auto" @click="showBtnAction">
       Voir la fiche
     </button>
   </div>
