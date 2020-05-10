@@ -80,15 +80,12 @@
             </b-collapse>
             <div v-if="!isSearchVisible" :class="{ 'p-2 pt-3': hasSearchCriteria }">
               <template v-for="criteria in criteriaList">
-                <a
+                <CriteriaBadge
                   v-for="value in criteria.selectedValues"
                   :key="value.id"
-                  href=""
-                  class="badge badge-pill badge-light-grey font-weight-normal mr-1"
-                  @click.prevent="toggleValue(criteria, value)"
-                >
-                  <i class="far fa-times-circle"></i> {{ value.name }}
-                </a>
+                  :name="value.name"
+                  @remove="toggleValue(criteria, value)"
+                />
               </template>
             </div>
           </div>
@@ -163,12 +160,13 @@ import Fiche from '~/components/Fiche'
 import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS } from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
 import { DEFAULT, RESPONSIVE } from '~/constants/swiper'
+import CriteriaBadge from '~/components/CriteriaBadge'
 
 // create classes from components to use it in code
 const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
 
 export default {
-  components: { Fiche },
+  components: { CriteriaBadge, Fiche },
   directives: { swiper: SwiperDirective },
   async asyncData({ store, params }) {
     const category = await store.dispatch('categories/fetchBySlug', params.slug)
