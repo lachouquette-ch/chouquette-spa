@@ -95,44 +95,18 @@
         </div>
       </div>
 
-      <!-- for mobile devices -->
-      <template v-if="$mq === 'sm'">
-        <b-overlay :show="loading" opacity="0.6" blur="none" spinner-variant="yellow">
-          <div class="px-3">
-            <div v-swiper="swiperOptions" class="swiper">
-              <div class="swiper-wrapper pt-3">
-                <div
-                  v-for="fiche in fiches"
-                  :key="fiche.id"
-                  class="swiper-slide align-self-start"
-                  :data-hash="fiche.id"
-                >
-                  <Fiche ref="fiche" :fiche="fiche" />
-                </div>
+      <b-overlay :show="loading" opacity="0.6" blur="none" spinner-variant="yellow">
+        <div class="px-3">
+          <div v-swiper="swiperOptions" class="swiper">
+            <div class="swiper-wrapper pt-3">
+              <div v-for="fiche in fiches" :key="fiche.id" class="swiper-slide align-self-start" :data-hash="fiche.id">
+                <Fiche ref="fiche" :fiche="fiche" :responsive="false" />
               </div>
-              <div slot="pagination" class="swiper-pagination"></div>
             </div>
+            <div slot="pagination" class="swiper-pagination"></div>
           </div>
-        </b-overlay>
-      </template>
-      <template v-else>
-        <div class="d-flex justify-content-around flex-wrap my-4">
-          <Fiche
-            v-for="fiche in fiches"
-            :ref="`fiche-${fiche.id}`"
-            :key="fiche.id"
-            :fiche="fiche"
-            :responsive="false"
-            class="fiche mx-2 mb-3"
-            @click.native="gotoMarker(fiche)"
-          />
         </div>
-        <button class="btn btn btn-yellow w-100" :disabled="loading || !hasMoreFiche" @click="loadMoreFiches">
-          <b-spinner v-show="loading" small variant="dark-grey" label="chargement" class="mr-2"></b-spinner>
-          <span v-if="hasMoreFiche">Voir plus de fiches</span>
-          <span v-else>T'es arrivé au bout du bout</span>
-        </button>
-      </template>
+      </b-overlay>
     </div>
 
     <div class="map" :class="{ 'hide-map': !isMapShown }">
@@ -180,7 +154,7 @@ import { mapState } from 'vuex'
 import Fiche from '~/components/Fiche'
 import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS } from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
-import { DEFAULT } from '~/constants/swiper'
+import { DEFAULT, RESPONSIVE } from '~/constants/swiper'
 
 // create classes from components to use it in code
 const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
@@ -228,6 +202,7 @@ export default {
       loading: true,
       swiperOptions: {
         ...DEFAULT,
+        ...RESPONSIVE,
         on: {
           reachEnd: () => this.loadMoreFiches()
         }
