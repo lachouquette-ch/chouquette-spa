@@ -3,20 +3,18 @@
     <div class="position-relative">
       <div class="fiches py-4">
         <div class="container">
-          <div class="text-center mb-4">
+          <div class="text-center">
             <h1 class="mb-0">{{ category.name }}</h1>
             <span class="d-none d-md-inline muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
           </div>
-          <div>
-            <div class="text-center">
-              <button v-b-toggle.search href="" class="h3 btn btn-outline-dark-grey" @click.prevent>
-                <span class="mr-2">Ma recherche</span>
-                <i v-if="isSearchVisible" class="fas fa-minus"></i>
-                <i v-else class="fas fa-plus"></i>
-              </button>
-            </div>
+          <div class="search border rounded">
+            <button v-b-toggle.search class="search-button h3 btn btn-light-grey">
+              <span class="mr-2">Ma recherche</span>
+              <i v-if="isSearchVisible" class="fas fa-minus"></i>
+              <i v-else class="fas fa-plus"></i>
+            </button>
             <b-collapse id="search" v-model="isSearchVisible">
-              <div class="mt-2">
+              <div class="px-3 pt-5 pb-2">
                 <form>
                   <div class="form-group">
                     <select v-model="formSearch.subCategory" class="form-control form-control-sm">
@@ -80,7 +78,7 @@
                 </form>
               </div>
             </b-collapse>
-            <div v-show="!isSearchVisible">
+            <div v-if="!isSearchVisible" :class="{ 'p-2 pt-3': hasSearchCriteria }">
               <template v-for="criteria in criteriaList">
                 <a
                   v-for="value in criteria.selectedValues"
@@ -159,6 +157,7 @@ import MarkerClusterer from '@google/markerclustererplus'
 import $ from 'jquery'
 import { directive as SwiperDirective } from 'vue-awesome-swiper'
 import { mapState } from 'vuex'
+import _ from 'lodash'
 
 import Fiche from '~/components/Fiche'
 import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS } from '~/constants/mapSettings'
@@ -206,7 +205,7 @@ export default {
       // search
       isSearchVisible: false,
       criteriaList: [],
-      formSearch: { subCategory: null, location: null },
+      formSearch: { subCategory: null, location: null, text: null },
 
       loading: true,
       swiperOptions: {
@@ -241,6 +240,11 @@ export default {
         (locations, { location, subLocations }) => [...locations, location, ...subLocations],
         []
       )
+    },
+    hasSearchCriteria() {
+      const hasSearch = Object.values(this.formSearch).find(Boolean)
+      const hasCriteria = this.criteriaList.find(({ selectedValues }) => _.isEmpty(selectedValues) === false)
+      return hasSearch || hasCriteria
     }
   },
   created() {
@@ -428,6 +432,16 @@ export default {
   article {
     box-shadow: $box-shadow;
   }
+}
+
+.search {
+  margin: 2rem 0;
+}
+
+.search-button {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .map {
