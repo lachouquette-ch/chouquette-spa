@@ -56,7 +56,7 @@
                     <div v-if="posts" v-swiper:postsSwiper="postSwiperOptions" class="px-1 px-md-5">
                       <div class="swiper-wrapper mt-3">
                         <div v-for="post in posts" :key="post.id" class="swiper-slide">
-                          <nuxt-link :to="{ path: `/${post.slug}` }" class="text-decoration-none">
+                          <nuxt-link :to="{ path: `/${post.slug}` }">
                             <PostCard :post="post" class="mx-auto" />
                           </nuxt-link>
                         </div>

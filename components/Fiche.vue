@@ -154,7 +154,7 @@
             <div class="card-body position-relative p-0 pt-2">
               <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
                 <li v-if="fiche.info.website" class="list-group-item ellipses">
-                  <a :href="fiche.info.website" title="Site Internet" target="_blank" class="text-decoration-none"
+                  <a :href="fiche.info.website" title="Site Internet" target="_blank"
                     ><i class="fas fa-globe"></i> {{ fiche.info.website | prettyURL }}
                   </a>
                 </li>
@@ -163,7 +163,6 @@
                     :href="`tel: ${fiche.info.telephone}`"
                     title="Téléphone"
                     target="_blank"
-                    class="text-decoration-none"
                     ><i class="fas fa-phone"></i> {{ fiche.info.telephone }}
                   </a>
                 </li>
@@ -172,7 +171,6 @@
                     :href="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
                     title="Email"
                     target="_blank"
-                    class="text-decoration-none"
                     ><i class="fas fa-at"></i> {{ fiche.info.mail }}
                   </a>
                 </li>
@@ -187,7 +185,7 @@
                     class="fiche-planning"
                     variant="link"
                     toggle-tag="span"
-                    toggle-class="text-decoration-none text-black d-inline-block p-0 border-0"
+                    toggle-class="text-black d-inline-block p-0 border-0"
                     dropup
                     right
                   >
@@ -227,19 +225,19 @@
                 v-if="fiche.latest_post"
                 :to="{ path: `/${fiche.latest_post.slug}` }"
                 :title="`Lire le dernier article : ${fiche.latest_post.title}`"
-                class=" btn btn-sm btn-outline-secondary text-decoration-none"
+                class=" btn btn-sm btn-outline-secondary"
               >
                 Dernier article
               </nuxt-link>
-              <button
+              <a
                 href=""
                 title="Plus de détails"
-                class="btn btn-sm btn-primary border-secondary float-right"
+                class="btn btn-sm btn-outline-secondary float-right"
                 :class="{ 'd-md-none': responsive }"
                 @click.prevent="isFlipped = false"
               >
                 Retour
-              </button>
+              </a>
             </div>
           </div>
         </div>

@@ -53,7 +53,6 @@
             <nuxt-link
               :to="{ path: `/category/${category.slug}` }"
               :title="category.description"
-              class="text-decoration-none"
             >
               <div class="home-header-category-logo p-3 rounded-circle">
                 <CategoryLogo :category="category" height="60" width="60" color="yellow" />
@@ -81,7 +80,7 @@
             v-for="post in latestPosts"
             :key="post.id"
             :to="{ path: `/${post.slug}` }"
-            class="post-card text-decoration-none"
+            class="post-card"
           >
             <PostCard :post="post" class="mx-auto" />
           </nuxt-link>
@@ -100,7 +99,7 @@
         <div v-show="topPosts" v-swiper="swiperOptions" class="swiper px-md-5">
           <div class="swiper-wrapper pt-3 pt-md-0">
             <div v-for="post in topPosts" :key="post.id" class="swiper-slide">
-              <nuxt-link :to="{ path: `/${post.slug}` }" class="text-decoration-none">
+              <nuxt-link :to="{ path: `/${post.slug}` }">
                 <PostCard :post="post" class="mx-auto" />
               </nuxt-link>
             </div>

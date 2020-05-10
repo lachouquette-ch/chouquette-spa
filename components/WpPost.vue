@@ -17,7 +17,7 @@
         <!-- For medium device -->
         <a
           href=""
-          class="fiche-modal-close d-none d-md-block m-2 text-center text-black text-decoration-none font-weight-bold"
+          class="fiche-modal-close d-none d-md-block m-2 text-center text-black font-weight-bold"
           @click.prevent="close"
           >×</a
         >
@@ -34,7 +34,7 @@
                 class="fiche-modal-close d-md-none bg-white m-2 border-0 rounded-circle text-center"
                 :class="{ 'd-none': $refs.fiche && $refs.fiche[index] && $refs.fiche[index].isFlipped }"
               >
-                <a href="" class="text-black text-decoration-none font-weight-bold" @click.prevent="close">×</a>
+                <a href="" class="text-black font-weight-bold" @click.prevent="close">×</a>
               </div>
             </div>
           </div>
@@ -128,7 +128,7 @@
             <div v-swiper:similarSwiper="swiperPostsOptions" class="swiper px-md-5">
               <div class="swiper-wrapper pt-3 pt-md-0">
                 <div v-for="post in similarPosts" :key="post.id" class="swiper-slide">
-                  <nuxt-link :to="{ path: `/${post.slug}` }" class="text-decoration-none">
+                  <nuxt-link :to="{ path: `/${post.slug}` }">
                     <PostCard :post="post" class="mx-auto" />
                   </nuxt-link>
                 </div>

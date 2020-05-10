@@ -3,7 +3,7 @@
     <span class="mr-2">
       <slot></slot>
     </span>
-    <nuxt-link to="/covid-19" class="btn btn-primary text-decoration-none">Clique ici !</nuxt-link>
+    <nuxt-link to="/covid-19" class="btn btn-primary">Clique ici !</nuxt-link>
   </div>
 </template>
 

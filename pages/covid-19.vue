@@ -7,7 +7,7 @@
           v-for="post in posts"
           :key="post.id"
           :to="{ path: `/${post.slug}` }"
-          class="post-card text-decoration-none"
+          class="post-card"
         >
           <PostCard :post="post" class="mx-auto" />
         </nuxt-link>
