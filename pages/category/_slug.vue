@@ -138,10 +138,9 @@
           title="Afficher plus de fiches"
           @click="loadMoreFiches"
         >
-          <b-overlay spinner-variant="grey" spinner-small :show="loading">
-            <strong>+{{ countNextFiches }}</strong>
-            <sub>Fiches</sub>
-          </b-overlay>
+          <b-spinner v-show="loading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
+          <strong>+{{ countNextFiches }}</strong>
+          <sub>Fiches</sub>
         </button>
       </div>
 
@@ -236,7 +235,10 @@ export default {
     isMapShown(_, old) {
       // first occurrence
       if (old === null) {
-        this.$nextTick(() => this.resetMap())
+        this.$nextTick(() => {
+          this.resetMap()
+          this.resetMap() // twice...
+        })
       }
     }
   },
@@ -383,6 +385,10 @@ export default {
         this.fiches.push(...ficheResult.fiches)
       } finally {
         this.loading = false
+        if (!this.isMapShown) {
+          // need to reinit markerclusterer on next map view
+          this.isMapShown = null
+        }
       }
     },
     loadFiches(fiches) {
@@ -481,8 +487,8 @@ export default {
   @include toggle-buttons;
 
   @include media-breakpoint-up(md) {
-    position: absolute;
-    top: 15px;
+    position: fixed;
+    top: $header-height + $covid-banner-height + 15px;
     bottom: auto;
     left: 15px;
     transform: none;
