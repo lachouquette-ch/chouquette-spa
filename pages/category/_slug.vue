@@ -142,6 +142,7 @@
         class="map-load-more google-map-control w-auto"
         :disabled="loading || !hasMoreFiche"
         @click="loadMoreFiches"
+        title="Afficher plus de fiches"
       >
         <b-overlay spinner-variant="grey" spinner-small :show="loading">
           <strong>+{{ countNextFiches }}</strong>
@@ -286,6 +287,7 @@ export default {
       // create map controls
       const centerControlButton = document.createElement('button')
       centerControlButton.className = 'google-map-control'
+      centerControlButton.title = 'Voir toutes les fiches sur la carte'
       const centerControlButtonContent = document.createElement('i')
       centerControlButtonContent.className = 'far fa-map'
       centerControlButton.appendChild(centerControlButtonContent)
