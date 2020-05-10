@@ -40,6 +40,9 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts" !default;
 
 // Swiper
 $themeColor: $chouquette-yellow;
+:root {
+  --swiper-navigation-color: $chouquette-grey;
+}
 @import "~swiper/swiper";
 @import "~swiper/components/navigation/navigation";
 @import "~swiper/components/pagination/pagination";

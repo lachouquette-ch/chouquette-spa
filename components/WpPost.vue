@@ -38,7 +38,7 @@
               </div>
             </div>
           </div>
-          <div v-if="!hasSingleFiche" slot="pagination" class="swiper-pagination d-md-block"></div>
+          <div v-if="!hasSingleFiche" slot="pagination" class="swiper-pagination"></div>
           <div v-if="!hasSingleFiche" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
           <div v-if="!hasSingleFiche" slot="button-next" class="swiper-button-next d-none d-md-block" />
         </div>

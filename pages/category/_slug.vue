@@ -98,7 +98,7 @@
 
         <b-overlay :show="loading" opacity="0.6" blur="none" spinner-variant="yellow">
           <div class="px-3">
-            <div v-swiper="swiperOptions" class="swiper">
+            <div v-swiper="swiperOptions" class="swiper px-md-5">
               <div class="swiper-wrapper pt-3">
                 <div
                   v-for="fiche in fiches"
@@ -109,7 +109,9 @@
                   <Fiche ref="fiche" :fiche="fiche" :responsive="false" />
                 </div>
               </div>
-              <div slot="pagination" class="swiper-pagination"></div>
+              <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
+              <div v-if="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
+              <div v-if="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
             </div>
           </div>
         </b-overlay>
