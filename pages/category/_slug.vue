@@ -1,145 +1,152 @@
 <template>
   <div v-if="category" class="category-page layout-content">
-    <div class="fiches my-4">
-      <div class="container">
-        <div class="text-center mb-4">
-          <h1 class="mb-0">{{ category.name }}</h1>
-          <span class="d-none d-md-inline muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
-        </div>
-        <div>
-          <div class="text-center">
-            <button v-b-toggle.search href="" class="h3 btn btn-outline-dark-grey" @click.prevent>
-              <span class="mr-2">Ma recherche</span>
-              <i v-if="isSearchVisible" class="fas fa-minus"></i>
-              <i v-else class="fas fa-plus"></i>
-            </button>
+    <div class="position-relative">
+      <div class="fiches py-4">
+        <div class="container">
+          <div class="text-center mb-4">
+            <h1 class="mb-0">{{ category.name }}</h1>
+            <span class="d-none d-md-inline muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
           </div>
-          <b-collapse id="search" v-model="isSearchVisible">
-            <div class="mt-2">
-              <form>
-                <div class="form-group">
-                  <select v-model="formSearch.subCategory" class="form-control form-control-sm">
-                    <option :value="null">Que cherches-tu ?</option>
-                    <option v-for="category in subCategories" :key="category.id" :value="category">
-                      {{ category.name }}
-                    </option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <select v-model="formSearch.location" class="form-control form-control-sm">
-                    <option :value="null">Où veux-tu aller ?</option>
-                    <option
-                      v-for="location in flatLocations"
-                      :key="location.id"
-                      :value="location"
-                      :class="{ 'font-weight-bold': !location.level }"
-                    >
-                      {{ '&nbsp;'.repeat(location.level * 2) }}{{ location.name }}
-                    </option>
-                  </select>
-                </div>
-                <div class="d-bock d-md-none">
-                  <div v-for="criteria in criteriaList" :key="criteria.id" class="form-group">
-                    <select v-model="criteria.selectedValues" class="form-control form-control-sm" multiple>
-                      <option v-for="value in criteria.values" :key="`${criteria.id}-${value.id}`" :value="value">
-                        {{ value.name }}
+          <div>
+            <div class="text-center">
+              <button v-b-toggle.search href="" class="h3 btn btn-outline-dark-grey" @click.prevent>
+                <span class="mr-2">Ma recherche</span>
+                <i v-if="isSearchVisible" class="fas fa-minus"></i>
+                <i v-else class="fas fa-plus"></i>
+              </button>
+            </div>
+            <b-collapse id="search" v-model="isSearchVisible">
+              <div class="mt-2">
+                <form>
+                  <div class="form-group">
+                    <select v-model="formSearch.subCategory" class="form-control form-control-sm">
+                      <option :value="null">Que cherches-tu ?</option>
+                      <option v-for="category in subCategories" :key="category.id" :value="category">
+                        {{ category.name }}
                       </option>
                     </select>
                   </div>
-                </div>
-                <div class="d-none d-md-block">
-                  <fieldset v-for="criteria in criteriaList" :key="criteria.id" class="border my-3 px-3">
-                    <legend class="h6 w-auto px-3 m-0">{{ criteria.name }}</legend>
-                    <div class="form-row py-2">
-                      <div v-for="value in criteria.values" :key="`${criteria.id}-${value.id}`" class="col-6">
-                        <div class="form-check">
-                          <input
-                            :id="`${criteria.slug}-${value.slug}`"
-                            type="checkbox"
-                            class="form-check-input"
-                            :checked="isValueChecked(criteria, value)"
-                            @click="toggleValue(criteria, value)"
-                          />
-                          <label class="form-check-label" :for="`${criteria.slug}-${value.slug}`">
-                            {{ value.name }}
-                          </label>
+                  <div class="form-group">
+                    <select v-model="formSearch.location" class="form-control form-control-sm">
+                      <option :value="null">Où veux-tu aller ?</option>
+                      <option
+                        v-for="location in flatLocations"
+                        :key="location.id"
+                        :value="location"
+                        :class="{ 'font-weight-bold': !location.level }"
+                      >
+                        {{ '&nbsp;'.repeat(location.level * 2) }}{{ location.name }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="d-bock d-md-none">
+                    <div v-for="criteria in criteriaList" :key="criteria.id" class="form-group">
+                      <select v-model="criteria.selectedValues" class="form-control form-control-sm" multiple>
+                        <option v-for="value in criteria.values" :key="`${criteria.id}-${value.id}`" :value="value">
+                          {{ value.name }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="d-none d-md-block">
+                    <fieldset v-for="criteria in criteriaList" :key="criteria.id" class="border my-3 px-3">
+                      <legend class="h6 w-auto px-3 m-0">{{ criteria.name }}</legend>
+                      <div class="form-row py-2">
+                        <div v-for="value in criteria.values" :key="`${criteria.id}-${value.id}`" class="col-6">
+                          <div class="form-check">
+                            <input
+                              :id="`${criteria.slug}-${value.slug}`"
+                              type="checkbox"
+                              class="form-check-input"
+                              :checked="isValueChecked(criteria, value)"
+                              @click="toggleValue(criteria, value)"
+                            />
+                            <label class="form-check-label" :for="`${criteria.slug}-${value.slug}`">
+                              {{ value.name }}
+                            </label>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </fieldset>
-                </div>
-                <div class="form-group">
-                  <input
-                    class="form-control form-control-sm"
-                    type="text"
-                    placeholder="En quelques mots ..."
-                    name="search"
-                  />
-                </div>
-              </form>
+                    </fieldset>
+                  </div>
+                  <div class="form-group">
+                    <input
+                      class="form-control form-control-sm"
+                      type="text"
+                      placeholder="En quelques mots ..."
+                      name="search"
+                    />
+                  </div>
+                </form>
+              </div>
+            </b-collapse>
+            <div v-show="!isSearchVisible">
+              <template v-for="criteria in criteriaList">
+                <a
+                  v-for="value in criteria.selectedValues"
+                  :key="value.id"
+                  href=""
+                  class="badge badge-pill badge-light-grey text-decoration-none mr-1"
+                  @click.prevent="toggleValue(criteria, value)"
+                >
+                  <i class="far fa-times-circle"></i> {{ value.name }}
+                </a>
+              </template>
             </div>
-          </b-collapse>
-          <div v-show="!isSearchVisible">
-            <template v-for="criteria in criteriaList">
-              <a
-                v-for="value in criteria.selectedValues"
-                :key="value.id"
-                href=""
-                class="badge badge-pill badge-light-grey text-decoration-none mr-1"
-                @click.prevent="toggleValue(criteria, value)"
-              >
-                <i class="far fa-times-circle"></i> {{ value.name }}
-              </a>
-            </template>
           </div>
         </div>
+
+        <b-overlay :show="loading" opacity="0.6" blur="none" spinner-variant="yellow">
+          <div class="px-3">
+            <div v-swiper="swiperOptions" class="swiper">
+              <div class="swiper-wrapper pt-3">
+                <div
+                  v-for="fiche in fiches"
+                  :key="fiche.id"
+                  class="swiper-slide align-self-start"
+                  :data-hash="fiche.id"
+                >
+                  <Fiche ref="fiche" :fiche="fiche" :responsive="false" />
+                </div>
+              </div>
+              <div slot="pagination" class="swiper-pagination"></div>
+            </div>
+          </div>
+        </b-overlay>
       </div>
 
-      <b-overlay :show="loading" opacity="0.6" blur="none" spinner-variant="yellow">
-        <div class="px-3">
-          <div v-swiper="swiperOptions" class="swiper">
-            <div class="swiper-wrapper pt-3">
-              <div v-for="fiche in fiches" :key="fiche.id" class="swiper-slide align-self-start" :data-hash="fiche.id">
-                <Fiche ref="fiche" :fiche="fiche" :responsive="false" />
-              </div>
-            </div>
-            <div slot="pagination" class="swiper-pagination"></div>
-          </div>
-        </div>
-      </b-overlay>
-    </div>
+      <div class="map" :class="{ 'd-none': !isMapShown }">
+        <div ref="map" class="h-100 w-100" />
+        <button
+          v-if="hasMoreFiche"
+          class="map-load-more google-map-control bg-yellow w-auto"
+          :disabled="loading || !hasMoreFiche"
+          title="Afficher plus de fiches"
+          @click="loadMoreFiches"
+        >
+          <b-overlay spinner-variant="grey" spinner-small :show="loading">
+            <strong>+{{ countNextFiches }}</strong>
+            <sub>Fiches</sub>
+          </b-overlay>
+        </button>
+      </div>
 
-    <div class="map" :class="{ 'hide-map': !isMapShown }">
-      <div ref="map" class="h-100 w-100" />
-      <button
-        v-if="hasMoreFiche"
-        class="map-load-more google-map-control w-auto"
-        :disabled="loading || !hasMoreFiche"
-        @click="loadMoreFiches"
-        title="Afficher plus de fiches"
-      >
-        <b-overlay spinner-variant="grey" spinner-small :show="loading">
-          <strong>+{{ countNextFiches }}</strong>
-          <sub>Fiches</sub>
-        </b-overlay>
-      </button>
-    </div>
-
-    <div class="fiches-map-toggle-buttons d-md-none btn-group btn-group-toggle" data-toggle="buttons">
-      <label
-        class="btn btn-sm btn-primary border-white border-right-0"
-        :class="{ active: !isMapShown }"
-        @click="isMapShown = false"
-      >
-        <input id="showFiche" type="radio" name="options" :checked="!isMapShown" />Fiches
-      </label>
-      <label
-        class="btn btn-sm btn-primary border-white border-left-0"
-        :class="{ active: isMapShown }"
-        @click="isMapShown = true"
-      >
-        <input id="showMap" type="radio" name="options" :checked="isMapShown" />Carte
-      </label>
+      <div class="fiches-map-toggle-buttons btn-group btn-group-toggle" data-toggle="buttons">
+        <label
+          class="btn btn-sm btn-primary border-white border-right-0"
+          :class="{ active: !isMapShown }"
+          @click="isMapShown = false"
+        >
+          <input id="showFiche" type="radio" name="options" :checked="!isMapShown" />Fiches
+        </label>
+        <label
+          class="btn btn-sm btn-primary border-white border-left-0"
+          :class="{ active: isMapShown }"
+          @click="isMapShown = true"
+        >
+          <input id="showMap" type="radio" name="options" :checked="isMapShown" />Carte
+        </label>
+      </div>
     </div>
   </div>
 </template>
@@ -267,7 +274,7 @@ export default {
       centerControlButtonContent.className = 'far fa-map'
       centerControlButton.appendChild(centerControlButtonContent)
       centerControlButton.addEventListener('click', () => this.resetMap())
-      this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(centerControlButton)
+      this.map.controls[this.google.maps.ControlPosition.RIGHT_TOP].push(centerControlButton)
 
       this.loadFiches(this.fiches)
     } catch (err) {
@@ -415,12 +422,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.fiches {
-  @include media-breakpoint-up(md) {
-    margin-right: 50vw;
-  }
-}
-
 ::v-deep .fiche.selected {
   article {
     box-shadow: $box-shadow;
@@ -434,10 +435,6 @@ export default {
   width: 100%;
   z-index: $zindex-sticky;
   height: calc(100vh - #{$header-height} - #{$covid-banner-height});
-
-  @include media-breakpoint-up(md) {
-    width: 50vw;
-  }
 }
 
 .map-load-more {
@@ -446,13 +443,17 @@ export default {
   left: 0;
 }
 
-.hide-map {
-  @include media-breakpoint-down(sm) {
-    visibility: hidden;
-  }
-}
-
 .fiches-map-toggle-buttons {
   @include toggle-buttons;
+
+  @include media-breakpoint-up(md) {
+    position: absolute;
+    top: 15px;
+    bottom: auto;
+    left: 15px;
+    transform: none;
+
+    width: 150px;
+  }
 }
 </style>
