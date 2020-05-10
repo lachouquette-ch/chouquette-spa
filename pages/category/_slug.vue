@@ -20,9 +20,9 @@
                 <div class="form-group">
                   <select v-model="formSearch.subCategory" class="form-control form-control-sm">
                     <option :value="null">Que cherches-tu ?</option>
-                    <option v-for="category in subCategories" :key="category.id" :value="category">{{
-                      category.name
-                    }}</option>
+                    <option v-for="category in subCategories" :key="category.id" :value="category">
+                      {{ category.name }}
+                    </option>
                   </select>
                 </div>
                 <div class="form-group">
@@ -38,38 +38,59 @@
                     </option>
                   </select>
                 </div>
-                <fieldset v-for="criteria in criteriaList" :key="criteria.id" class="border my-3 px-3">
-                  <legend class="h6 w-auto px-3 m-0">{{ criteria.name }}</legend>
-                  <div class="form-row py-2">
-                    <div v-for="value in criteria.values" :key="value.id" class="col-6">
-                      <div class="form-check">
-                        <input
-                          :id="`${criteria.slug}-${value.slug}`"
-                          v-model="value.checked"
-                          type="checkbox"
-                          class="form-check-input"
-                        />
-                        <label class="form-check-label" :for="`${criteria.slug}-${value.slug}`">{{ value.name }}</label>
+                <div class="d-bock d-md-none">
+                  <div v-for="criteria in criteriaList" :key="criteria.id" class="form-group">
+                    <select v-model="criteria.selectedValues" class="form-control form-control-sm" multiple>
+                      <option v-for="value in criteria.values" :key="`${criteria.id}-${value.id}`" :value="value">
+                        {{ value.name }}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div class="d-none d-md-block">
+                  <fieldset v-for="criteria in criteriaList" :key="criteria.id" class="border my-3 px-3">
+                    <legend class="h6 w-auto px-3 m-0">{{ criteria.name }}</legend>
+                    <div class="form-row py-2">
+                      <div v-for="value in criteria.values" :key="`${criteria.id}-${value.id}`" class="col-6">
+                        <div class="form-check">
+                          <input
+                            :id="`${criteria.slug}-${value.slug}`"
+                            type="checkbox"
+                            class="form-check-input"
+                            :checked="isValueChecked(criteria, value)"
+                            @click="toggleValue(criteria, value)"
+                          />
+                          <label class="form-check-label" :for="`${criteria.slug}-${value.slug}`">
+                            {{ value.name }}
+                          </label>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </fieldset>
+                  </fieldset>
+                </div>
                 <div class="form-group">
-                  <input class="form-control" type="text" placeholder="En quelques mots ..." name="search" />
+                  <input
+                    class="form-control form-control-sm"
+                    type="text"
+                    placeholder="En quelques mots ..."
+                    name="search"
+                  />
                 </div>
               </form>
             </div>
           </b-collapse>
           <div v-show="!isSearchVisible">
-            <a
-              v-for="criteria in selectedCriteria"
-              :key="criteria.id"
-              href=""
-              class="badge badge-pill badge-light-grey text-decoration-none mr-1"
-              @click.prevent="criteria.checked = false"
-            >
-              <i class="far fa-times-circle"></i> {{ criteria.name }}
-            </a>
+            <template v-for="criteria in criteriaList">
+              <a
+                v-for="value in criteria.selectedValues"
+                :key="value.id"
+                href=""
+                class="badge badge-pill badge-light-grey text-decoration-none mr-1"
+                @click.prevent="toggleValue(criteria, value)"
+              >
+                <i class="far fa-times-circle"></i> {{ value.name }}
+              </a>
+            </template>
           </div>
         </div>
       </div>
@@ -199,7 +220,7 @@ export default {
       isMapShown: false,
 
       // search
-      isSearchVisible: true,
+      isSearchVisible: false,
       criteriaList: [],
       formSearch: { subCategory: null, location: null },
 
@@ -235,12 +256,6 @@ export default {
         (locations, { location, subLocations }) => [...locations, location, ...subLocations],
         []
       )
-    },
-    selectedCriteria() {
-      if (!this.criteriaList.length) return []
-      const criteria = this.criteriaList.flatMap(({ values }) => values)
-      console.log('selectedCriteria')
-      return criteria.filter(({ checked }) => checked)
     }
   },
   created() {
@@ -286,8 +301,21 @@ export default {
     }
   },
   methods: {
+    toggleValue(criteria, value) {
+      const valueIndex = criteria.selectedValues.findIndex((el) => el.id === value.id)
+      if (valueIndex === -1) {
+        criteria.selectedValues.push(value)
+      } else {
+        criteria.selectedValues.splice(valueIndex, 1)
+      }
+    },
+    isValueChecked(criteria, value) {
+      return criteria.selectedValues.includes(value)
+    },
     async loadCriteria(category) {
-      this.criteriaList = await this.$wpAPI.criteria.getForCategory(category.id).then(({ data }) => data)
+      const criteriaList = await this.$wpAPI.criteria.getForCategory(category.id).then(({ data }) => data)
+      criteriaList.forEach((criteria) => (criteria.selectedValues = []))
+      this.criteriaList = criteriaList
     },
     gotoMarker(fiche) {
       this.resetMapObjects()
