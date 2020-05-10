@@ -118,7 +118,18 @@
                   class="swiper-slide align-self-start"
                   :data-hash="fiche.id"
                 >
-                  <Fiche ref="fiche" class="fiche" :fiche="fiche" :responsive="false" />
+                  <Fiche ref="fiche" class="fiche" :fiche="fiche" :responsive="false">
+                    <template #front-footer>
+                      <a
+                        href=""
+                        title="Voir sur la carte"
+                        class="btn btn-sm btn-outline-secondary mr-1"
+                        @click.prevent="gotoMarker(fiche)"
+                      >
+                        <span class="mx-1"><i class="fas fa-map-marker-alt"></i></span>
+                      </a>
+                    </template>
+                  </Fiche>
                 </div>
               </div>
               <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
@@ -136,7 +147,7 @@
           class="map-load-more google-map-control bg-yellow w-auto"
           :disabled="loading || !hasMoreFiche"
           title="Afficher plus de fiches"
-          @click="loadMoreFiches"
+          @click="fetchMoreFiches"
         >
           <b-spinner v-show="loading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
           <strong>+{{ countNextFiches }}</strong>
@@ -155,7 +166,7 @@
         <label
           class="btn btn-sm btn-primary border-white border-left-0"
           :class="{ active: isMapShown }"
-          @click="isMapShown = true"
+          @click="showMap"
         >
           <input id="showMap" type="radio" name="options" :checked="isMapShown" />Carte
         </label>
@@ -226,19 +237,8 @@ export default {
         ...DEFAULT,
         ...RESPONSIVE,
         on: {
-          reachEnd: () => this.loadMoreFiches()
+          reachEnd: () => this.fetchMoreFiches()
         }
-      }
-    }
-  },
-  watch: {
-    isMapShown(_, old) {
-      // first occurrence
-      if (old === null) {
-        this.$nextTick(() => {
-          this.resetMap()
-          this.resetMap() // twice...
-        })
       }
     }
   },
@@ -316,6 +316,7 @@ export default {
     }
   },
   methods: {
+    // criteria
     toggleValue(criteria, value) {
       const valueIndex = criteria.selectedValues.findIndex((el) => el.id === value.id)
       if (valueIndex === -1) {
@@ -332,8 +333,23 @@ export default {
       criteriaList.forEach((criteria) => (criteria.selectedValues = []))
       this.criteriaList = criteriaList
     },
+
+    // map
+    showMap() {
+      if (this.isMapShown === null) {
+        console.log('resetMap')
+        this.isMapShown = true
+        this.$nextTick(() => {
+          this.resetMap()
+          this.resetMap()
+        })
+      } else {
+        this.isMapShown = true
+      }
+    },
     gotoMarker(fiche) {
       this.resetMapObjects()
+      this.isMapShown = true
 
       this.currentMarker = this.markers.get(fiche.id)
       this.map.setZoom(ZOOM_LEVELS.activated)
@@ -362,7 +378,9 @@ export default {
 
       if (this.markers.size === 1) this.currentInfoWindow.open(this.map, this.currentMarker)
     },
-    async loadMoreFiches() {
+
+    // fiches
+    async fetchMoreFiches() {
       if (this.loading) {
         console.warn('already loading more fiches')
         return

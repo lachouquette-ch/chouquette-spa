@@ -11,7 +11,7 @@
     <template v-else>
       <b-dropdown size="sm" dropup no-caret variant="outline-secondary" toggle-class="text-black">
         <template #button-content>
-          <span class="mx-1"><i class="fas fa-share-alt"></i></span>
+          <span title="Partager" class="mx-1"><i class="fas fa-share-alt"></i></span>
         </template>
         <template #default>
           <b-dropdown-item

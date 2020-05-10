@@ -135,6 +135,7 @@
               ></a>
             </div>
             <div class="card-footer">
+              <slot name="front-footer"></slot>
               <FicheShare :fiche="fiche" />
               <a
                 href=""
