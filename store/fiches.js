@@ -50,7 +50,8 @@ export const actions = {
   async fetchByCategoryIds({ dispatch, commit }, { categoryIds, page = 1 }) {
     const { data: fiches, headers } = await this.$wpAPI.wp.fiches.get({
       categories: categoryIds.join(','),
-      page
+      page,
+      per_page: 40
     })
 
     // fetch related ressources
