@@ -144,9 +144,9 @@
           </div>
         </div>
 
-        <b-overlay :show="loading" opacity="0.6" blur="none" spinner-variant="yellow">
+        <b-overlay :show="fichesLoading" opacity="0.6" blur="none" spinner-variant="yellow">
           <div class="px-3">
-            <div v-swiper="swiperOptions" class="swiper px-md-5">
+            <div v-swiper="fichesSwiperOptions" class="swiper px-md-5">
               <div class="swiper-wrapper pt-3">
                 <div
                   v-for="fiche in fiches"
@@ -181,11 +181,11 @@
         <button
           v-if="hasMoreFiche"
           class="map-load-more google-map-control bg-yellow w-auto"
-          :disabled="loading || !hasMoreFiche"
+          :disabled="fichesLoading || !hasMoreFiche"
           title="Afficher plus de fiches"
           @click="fetchMoreFiches"
         >
-          <b-spinner v-show="loading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
+          <b-spinner v-show="fichesLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
           <strong>+{{ countNextFiches }}</strong>
           <sub>Fiches</sub>
         </button>
@@ -367,7 +367,7 @@ export default {
       if (err instanceof Error) console.error(err)
       else throw err
     } finally {
-      this.loading = false
+      this.fichesLoading = false
     }
   },
   methods: {
@@ -442,7 +442,7 @@ export default {
 
     // fiches
     async fetchMoreFiches() {
-      if (this.loading) {
+      if (this.fichesLoading) {
         console.warn('already loading more fiches')
         return
       }
@@ -452,7 +452,7 @@ export default {
         return
       }
 
-      this.loading = true
+      this.fichesLoading = true
       try {
         const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
           categoryIds: this.categoryIds,
@@ -464,7 +464,7 @@ export default {
         this.loadFiches(ficheResult.fiches)
         this.fiches.push(...ficheResult.fiches)
       } finally {
-        this.loading = false
+        this.fichesLoading = false
         if (!this.isMapShown) {
           // need to reinit markerclusterer on next map view
           this.isMapShown = null
