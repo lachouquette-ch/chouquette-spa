@@ -47,25 +47,27 @@
                     </div>
                   </div>
                   <div class="d-none d-md-block">
-                    <fieldset v-for="criteria in criteriaList" :key="criteria.id" class="border my-3 px-3">
-                      <legend class="h6 w-auto px-3 m-0">{{ criteria.name }}</legend>
-                      <div class="form-row py-2">
-                        <div v-for="value in criteria.values" :key="`${criteria.id}-${value.id}`" class="col-6">
-                          <div class="form-check">
-                            <input
-                              :id="`${criteria.slug}-${value.slug}`"
-                              type="checkbox"
-                              class="form-check-input"
-                              :checked="isValueChecked(criteria, value)"
-                              @click="toggleValue(criteria, value)"
-                            />
-                            <label class="form-check-label" :for="`${criteria.slug}-${value.slug}`">
-                              {{ value.name }}
-                            </label>
+                    <b-overlay :show="criteriaLoading" opacity="0.6" blur="none" spinner-variant="yellow">
+                      <fieldset v-for="criteria in criteriaList" :key="criteria.id" class="border my-3 px-3">
+                        <legend class="h6 w-auto px-3 m-0">{{ criteria.name }}</legend>
+                        <div class="form-row py-2">
+                          <div v-for="value in criteria.values" :key="`${criteria.id}-${value.id}`" class="col-6">
+                            <div class="form-check">
+                              <input
+                                :id="`${criteria.slug}-${value.slug}`"
+                                type="checkbox"
+                                class="form-check-input"
+                                :checked="isValueChecked(criteria, value)"
+                                @click="toggleValue(criteria, value)"
+                              />
+                              <label class="form-check-label" :for="`${criteria.slug}-${value.slug}`">
+                                {{ value.name }}
+                              </label>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </fieldset>
+                      </fieldset>
+                    </b-overlay>
                   </div>
                   <div class="form-group">
                     <input
@@ -215,6 +217,15 @@ export default {
       fichesNextPage: 2
     }
   },
+  watch: {
+    'formSearch.subCategory'(category) {
+      if (category) {
+        this.loadCriteria(category)
+      } else {
+        this.loadCriteria(this.category)
+      }
+    }
+  },
   data() {
     return {
       // map
@@ -230,6 +241,7 @@ export default {
       // search
       isSearchVisible: false,
       criteriaList: [],
+      criteriaLoading: false,
       formSearch: { subCategory: null, location: null, text: null },
 
       loading: true,
@@ -329,9 +341,14 @@ export default {
       return criteria.selectedValues.includes(value)
     },
     async loadCriteria(category) {
-      const criteriaList = await this.$wpAPI.criteria.getForCategory(category.id).then(({ data }) => data)
-      criteriaList.forEach((criteria) => (criteria.selectedValues = []))
-      this.criteriaList = criteriaList
+      try {
+        this.criteriaLoading = true
+        const criteriaList = await this.$wpAPI.criteria.getForCategory(category.id).then(({ data }) => data)
+        criteriaList.forEach((criteria) => (criteria.selectedValues = []))
+        this.criteriaList = criteriaList
+      } finally {
+        this.criteriaLoading = false
+      }
     },
 
     // map
