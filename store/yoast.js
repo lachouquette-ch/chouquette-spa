@@ -4,22 +4,26 @@ export const state = () => ({
 })
 
 export const actions = {
-  async init({ commit }) {
-    // fetch all redirections
-    const rawRedirects = await this.$wpAPI.yoast.getRedirects().then(({ data }) => data)
+  async init({ state, commit }) {
+    if (state.redirects) {
+      return state.redirects
+    } else {
+      // fetch all redirections
+      const rawRedirects = await this.$wpAPI.yoast.getRedirects().then(({ data }) => data)
 
-    const redirects = rawRedirects.map((redirect) => {
-      const [from, to, status] = redirect.split(' ')
-      return {
-        from: from.replace(/\/$/, ''),
-        to: to.replace(/\/$/, ''),
-        status
-      }
-    })
+      const redirects = rawRedirects.map((redirect) => {
+        const [from, to, status] = redirect.split(' ')
+        return {
+          from: from.replace(/\/$/, ''),
+          to: to.replace(/\/$/, ''),
+          status
+        }
+      })
 
-    commit('SET_REDIRECTS', redirects)
+      commit('SET_REDIRECTS', redirects)
 
-    return [redirects]
+      return redirects
+    }
   },
 
   async fetchHome({ state, commit }) {
