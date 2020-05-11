@@ -8,16 +8,27 @@
             <span class="d-none d-md-inline muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
           </div>
           <div class="search border rounded">
-            <button v-b-toggle.search class="search-button h3 btn btn-light-grey">
-              <span class="mr-2">Ma recherche</span>
-              <i v-if="isSearchVisible" class="fas fa-minus"></i>
-              <i v-else class="fas fa-plus"></i>
-            </button>
+            <div class="btn-group search-button" role="group" aria-label="Recherche">
+              <button v-b-toggle.search class="btn btn-light-grey">
+                <i v-if="isSearchVisible" class="fas fa-minus"></i>
+                <i v-else class="fas fa-plus"></i>
+                <span class="ml-2">Ma recherche</span>
+              </button>
+              <button v-if="$v.formSearch.$dirty" class="btn btn-yellow">
+                <i class="fas fa-redo"></i>
+                <span class="ml-2">Relance</span>
+              </button>
+            </div>
+
             <b-collapse id="search" v-model="isSearchVisible">
               <div class="px-3 pt-5 pb-2">
                 <form>
                   <div class="form-group">
-                    <select v-model="formSearch.subCategory" class="form-control form-control-sm">
+                    <select
+                      v-model="formSearch.subCategory"
+                      class="form-control form-control-sm"
+                      @change="$v.formSearch.$touch"
+                    >
                       <option :value="null">Que cherches-tu ?</option>
                       <option v-for="category in subCategories" :key="category.id" :value="category">
                         {{ category.name }}
@@ -25,7 +36,11 @@
                     </select>
                   </div>
                   <div class="form-group">
-                    <select v-model="formSearch.location" class="form-control form-control-sm">
+                    <select
+                      v-model="formSearch.location"
+                      class="form-control form-control-sm"
+                      @change="$v.formSearch.$touch"
+                    >
                       <option :value="null">Où veux-tu aller ?</option>
                       <option
                         v-for="location in flatLocations"
@@ -39,7 +54,12 @@
                   </div>
                   <div class="d-bock d-md-none">
                     <div v-for="criteria in criteriaList" :key="criteria.id" class="form-group">
-                      <select v-model="criteria.selectedValues" class="form-control form-control-sm" multiple>
+                      <select
+                        v-model="criteria.selectedValues"
+                        class="form-control form-control-sm"
+                        multiple
+                        @change="$v.formSearch.$touch"
+                      >
                         <option v-for="value in criteria.values" :key="`${criteria.id}-${value.id}`" :value="value">
                           {{ value.name }}
                         </option>
@@ -78,7 +98,7 @@
                       name="search"
                     />
                   </div>
-                  <button class="btn btn-sm btn-primary w-100">Lance la recherche</button>
+                  <button class="btn btn-sm btn-primary w-100" :disabled="!$v.formSearch.$dirty">Lance la recherche</button>
                 </form>
               </div>
             </b-collapse>
@@ -86,24 +106,36 @@
               <CriteriaBadge
                 v-if="formSearch.subCategory"
                 :name="formSearch.subCategory.name"
-                @remove="formSearch.subCategory = null"
+                @remove="
+                  formSearch.subCategory = null
+                  $v.formSearch.$touch()
+                "
               />
               <CriteriaBadge
                 v-if="formSearch.location"
                 :name="formSearch.location.name"
-                @remove="formSearch.location = null"
+                @remove="
+                  formSearch.location = null
+                  $v.formSearch.$touch()
+                "
               />
               <CriteriaBadge
                 v-if="formSearch.searchText"
                 :name="formSearch.searchText"
-                @remove="formSearch.searchText = null"
+                @remove="
+                  formSearch.searchText = null
+                  $v.formSearch.$touch()
+                "
               />
               <template v-for="criteria in criteriaList">
                 <CriteriaBadge
                   v-for="value in criteria.selectedValues"
                   :key="value.id"
                   :name="value.name"
-                  @remove="toggleValue(criteria, value)"
+                  @remove="
+                    toggleValue(criteria, value)
+                    $v.formSearch.$touch()
+                  "
                 />
               </template>
             </div>
@@ -217,15 +249,6 @@ export default {
       fichesNextPage: 2
     }
   },
-  watch: {
-    'formSearch.subCategory'(category) {
-      if (category) {
-        this.loadCriteria(category)
-      } else {
-        this.loadCriteria(this.category)
-      }
-    }
-  },
   data() {
     return {
       // map
@@ -240,9 +263,9 @@ export default {
 
       // search
       isSearchVisible: false,
+      formSearch: { subCategory: null, location: null, text: null },
       criteriaList: [],
       criteriaLoading: false,
-      formSearch: { subCategory: null, location: null, text: null },
 
       loading: true,
       swiperOptions: {
@@ -251,6 +274,20 @@ export default {
         on: {
           reachEnd: () => this.fetchMoreFiches()
         }
+      }
+    }
+  },
+  validations() {
+    return {
+      formSearch: {}
+    }
+  },
+  watch: {
+    'formSearch.subCategory'(category) {
+      if (category) {
+        this.loadCriteria(category)
+      } else {
+        this.loadCriteria(this.category)
       }
     }
   },
@@ -330,6 +367,7 @@ export default {
   methods: {
     // criteria
     toggleValue(criteria, value) {
+      this.$v.formSearch.$touch()
       const valueIndex = criteria.selectedValues.findIndex((el) => el.id === value.id)
       if (valueIndex === -1) {
         criteria.selectedValues.push(value)
