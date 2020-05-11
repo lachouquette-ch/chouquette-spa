@@ -337,10 +337,8 @@ export default {
     // map
     showMap() {
       if (this.isMapShown === null) {
-        console.log('resetMap')
         this.isMapShown = true
         this.$nextTick(() => {
-          this.resetMap()
           this.resetMap()
         })
       } else {
@@ -371,6 +369,8 @@ export default {
     resetMap() {
       this.resetMapObjects()
 
+      // need to fit map twice... (magic)
+      this.markerClusterer.fitMapToMarkers()
       this.markerClusterer.fitMapToMarkers()
 
       this.currentMarker = this.markers.values().next().value
