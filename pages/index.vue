@@ -13,9 +13,9 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand d-none d-md-inline ml-md-5" href="/">
+        <nuxt-link to="/" title="Page d'accueil" class="navbar-brand d-none d-md-inline ml-md-5">
           <h2 class="home-header-name">{{ wpName }}</h2>
-        </a>
+        </nuxt-link>
         <div class="home-header-sn mr-md-5">
           <a href="https://www.facebook.com/lachouquettelausanne" title="Facebook" target="_blank"
             ><i class="fab fa-facebook-f"></i
@@ -50,10 +50,7 @@
         </div>
         <div class="d-none d-md-flex flex-row flex-wrap justify-content-center text-center">
           <div v-for="category in categories" :key="category.id" class="home-header-category m-4">
-            <nuxt-link
-              :to="{ path: `/category/${category.slug}` }"
-              :title="category.description"
-            >
+            <nuxt-link :to="{ path: `/category/${category.slug}` }" :title="category.description">
               <div class="home-header-category-logo p-3 rounded-circle">
                 <CategoryLogo :category="category" height="60" width="60" color="yellow" />
               </div>
@@ -76,12 +73,7 @@
           <h2 class="mb-4">Nos derniers articles</h2>
         </div>
         <div v-if="latestPosts" class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
-          <nuxt-link
-            v-for="post in latestPosts"
-            :key="post.id"
-            :to="{ path: `/${post.slug}` }"
-            class="post-card"
-          >
+          <nuxt-link v-for="post in latestPosts" :key="post.id" :to="{ path: `/${post.slug}` }" class="post-card">
             <PostCard :post="post" class="mx-auto" />
           </nuxt-link>
         </div>
