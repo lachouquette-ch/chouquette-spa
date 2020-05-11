@@ -13,7 +13,7 @@ export const ressourceStates = () => ({
  */
 const fetchByIds = async (ressourceRepository, mutationName, { dispatch, commit, state }, ids) => {
   // find which keys aren't in store
-  const unknownIds = _.difference(_.uniq(ids), Object.keys(state.all))
+  const unknownIds = _.differenceBy(_.uniq(ids), Object.keys(state.all), parseInt)
   if (!_.isEmpty(unknownIds)) {
     // fetch those missing ressources and add to store
     const newRessources = await ressourceRepository.getByIds(unknownIds).then(({ data }) => data)
@@ -63,7 +63,9 @@ export const ressourceActions = { fetchById, fetchByIds, fetchBySlug }
 /* Mutations */
 
 const setRessources = (state, ressources) => {
-  ressources.forEach((ressource) => (state.all[ressource.id] = ressource))
+  ressources.forEach((ressource) => {
+    state.all[ressource.id] = ressource
+  })
 }
 const setRessource = (state, ressource) => {
   state.all[ressource.id] = ressource
