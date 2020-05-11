@@ -65,20 +65,20 @@
       </div>
     </nav>
     <div class="post-sidebar-toggle-buttons d-md-none btn-group btn-group-toggle" data-toggle="buttons">
-      <label
+      <button
         class="btn btn-sm btn-primary border-white border-right-0"
         :class="{ active: hideSidebar }"
         @click="hideSidebar = true"
       >
-        <input id="option1" type="radio" name="options" checked />Article
-      </label>
-      <label
+        Article
+      </button>
+      <button
         class="btn btn-sm btn-primary border-white border-left-0"
         :class="{ active: !hideSidebar }"
         @click="hideSidebar = false"
       >
-        <input id="option2" type="radio" name="options" />{{ hasSingleFiche ? 'Fiche' : 'Fiches' }}
-      </label>
+        {{ hasSingleFiche ? 'Fiche' : 'Fiches' }}
+      </button>
     </div>
     <b-overlay :show="!post" spinner-variant="yellow">
       <main role="main" class="post layout-content" :class="{ 'with-sidebar': fiches }">

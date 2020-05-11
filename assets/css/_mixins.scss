@@ -4,4 +4,8 @@
   left: 50%;
   transform: translate(-50%, 0);
   z-index: $zindex-sticky + 1;
+
+  button:focus {
+    box-shadow: none !important;
+  }
 }
