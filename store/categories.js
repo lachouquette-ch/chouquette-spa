@@ -6,11 +6,13 @@ export const state = () => ({
 })
 
 export const actions = {
-  async fetchRelatedRessources({ dispatch, commit }, categories) {
+  async fetchRelatedRessources({ state, dispatch, commit }, categories) {
     // fetch children
     const categoryChildren = categories.map(async (category) => {
-      const children = await this.$wpAPI.wp.categories.get({ parent: category.id }).then(({ data }) => data)
-      commit('SET_CHILDREN', { category, children })
+      if (!state.children[category.id]) {
+        const children = await this.$wpAPI.wp.categories.get({ parent: category.id }).then(({ data }) => data)
+        commit('SET_CHILDREN', { category, children })
+      }
     })
 
     // fetch category logos
@@ -40,6 +42,6 @@ export const mutations = {
     ressourceMutations.setRessource(state, category)
   },
   SET_CHILDREN(state, { category, children }) {
-    children.forEach((child) => (state.children[category.id] = children))
+    state.children[category.id] = children
   }
 }
