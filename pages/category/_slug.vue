@@ -471,7 +471,7 @@ export default {
 
 <style lang="scss" scoped>
 ::v-deep .fiche.selected {
-  article {
+  article .fiche-container {
     box-shadow: $box-shadow;
   }
 }

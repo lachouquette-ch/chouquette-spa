@@ -495,17 +495,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.fiche-front,
-.fiche-back {
+.fiche-container {
   width: 300px;
   max-width: 100%;
 
-  a {
-    color: $black;
-  }
-
   @include media-breakpoint-down(sm) {
     width: 100%;
+  }
+}
+
+.fiche-front,
+.fiche-back {
+  width: 100%;
+
+  a {
+    color: $black;
   }
 
   .card {
