@@ -80,7 +80,7 @@
                 </form>
               </div>
             </b-collapse>
-            <div v-if="!isSearchVisible" :class="{ 'p-2 pt-3': hasSearchCriteria }">
+            <div v-if="!isSearchVisible" :class="{ 'p-2 pt-4': hasSearchCriteria }">
               <CriteriaBadge
                 v-if="formSearch.subCategory"
                 :name="formSearch.subCategory.name"
