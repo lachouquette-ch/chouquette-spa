@@ -1,5 +1,6 @@
 export const state = () => ({
-  redirects: []
+  redirects: null,
+  home: null
 })
 
 export const actions = {
@@ -19,11 +20,25 @@ export const actions = {
     commit('SET_REDIRECTS', redirects)
 
     return [redirects]
+  },
+
+  async fetchHome({ state, commit }) {
+    if (state.home) {
+      return state.home
+    } else {
+      const home = await this.$wpAPI.yoast.getHome().then(({ data }) => data)
+      commit('SET_HOME', home)
+
+      return home
+    }
   }
 }
 
 export const mutations = {
   SET_REDIRECTS(state, redirects) {
     state.redirects = redirects
+  },
+  SET_HOME(state, home) {
+    state.home = home
   }
 }
