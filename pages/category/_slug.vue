@@ -14,7 +14,7 @@
                 <i v-else class="fas fa-plus"></i>
                 <span class="ml-2">Ma recherche</span>
               </button>
-              <button v-if="$v.formSearch.$dirty" class="btn btn-sm btn-yellow">
+              <button v-if="$v.formSearch.$dirty" class="btn btn-sm btn-yellow" @click="searchFiches">
                 <i class="fas fa-redo"></i>
               </button>
             </div>
@@ -98,7 +98,7 @@
                       @blur="$v.formSearch.$touch"
                     />
                   </div>
-                  <button class="btn btn-sm btn-primary w-100" :disabled="!$v.formSearch.$dirty">
+                  <button class="btn btn-sm btn-primary w-100" :disabled="!$v.formSearch.$dirty" @click="searchFiches">
                     Lance la recherche
                   </button>
                 </form>
@@ -220,7 +220,7 @@ import { mapState } from 'vuex'
 import _ from 'lodash'
 
 import Fiche from '~/components/Fiche'
-import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS } from '~/constants/mapSettings'
+import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, LAUSANNE_LAT_LNG } from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
 import { DEFAULT, RESPONSIVE } from '~/constants/swiper'
 import CriteriaBadge from '~/components/CriteriaBadge'
@@ -273,7 +273,6 @@ export default {
       criteriaList: [],
       criteriaLoading: false,
 
-      loading: true,
       fichesLoading: true,
       fichesSwiperOptions: {
         ...DEFAULT,
@@ -363,7 +362,7 @@ export default {
       centerControlButton.addEventListener('click', () => this.resetMap())
       this.map.controls[this.google.maps.ControlPosition.RIGHT_TOP].push(centerControlButton)
 
-      this.loadFiches(this.fiches)
+      this.loadFichesOnMap(this.fiches)
     } catch (err) {
       if (err instanceof Error) console.error(err)
       else throw err
@@ -432,8 +431,12 @@ export default {
       this.resetMapObjects()
 
       // need to fit map twice... (magic)
-      this.markerClusterer.fitMapToMarkers()
-      this.markerClusterer.fitMapToMarkers()
+      if (this.markers.size) {
+        this.markerClusterer.fitMapToMarkers()
+        this.markerClusterer.fitMapToMarkers()
+      } else {
+        this.map.setCenter(LAUSANNE_LAT_LNG)
+      }
 
       this.currentMarker = this.markers.values().next().value
       this.currentInfoWindow = this.infoWindows.values().next().value
@@ -442,14 +445,32 @@ export default {
     },
 
     // fiches
+    searchFiches() {
+      // map
+      this.markers.clear()
+      this.currentMarker = null
+      this.infoWindows.clear()
+      this.currentInfoWindow = null
+      this.markerClusterer.clearMarkers()
+
+      // search
+      this.isSearchVisible = false
+      this.$v.formSearch.$reset()
+
+      // fetchData reset
+      if (this.formSearch.subCategory) {
+        this.categoryIds = [this.formSearch.subCategory.id]
+      } else {
+        this.categoryIds = [this.category.id, ...this.subCategories.map(({ id }) => id)]
+      }
+      this.fiches = []
+      this.fichesNextPage = 1
+
+      this.fetchMoreFiches()
+    },
     async fetchMoreFiches() {
       if (this.fichesLoading) {
         console.warn('already loading more fiches')
-        return
-      }
-
-      if (!this.hasMoreFiche) {
-        console.warn('no more fiche to load')
         return
       }
 
@@ -457,13 +478,17 @@ export default {
       try {
         const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
           categoryIds: this.categoryIds,
+          locationId: this.formSearch.location ? this.formSearch.location.slug : null,
+          search: this.formSearch.searchText || null,
           page: this.fichesNextPage,
           per_page: FICHE_NUMBER_EACH
         })
-        this.fichesNextPage++
 
-        this.loadFiches(ficheResult.fiches)
         this.fiches.push(...ficheResult.fiches)
+        this.fichesTotal = ficheResult.total
+        this.fichesPages = ficheResult.pages
+        this.fichesNextPage++
+        this.loadFichesOnMap(ficheResult.fiches)
       } finally {
         this.fichesLoading = false
         if (!this.isMapShown) {
@@ -472,7 +497,7 @@ export default {
         }
       }
     },
-    loadFiches(fiches) {
+    loadFichesOnMap(fiches) {
       for (const fiche of fiches) {
         if (!fiche.info || !fiche.info.location) {
           console.warn(`${fiche.slug} has no location (not info)`)

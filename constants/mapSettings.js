@@ -16,6 +16,11 @@ export const SWITZERLAND_BOUNDS = {
   east: 11.93019063
 }
 
+export const LAUSANNE_LAT_LNG = {
+  lat: 46.519962,
+  lng: 6.633597
+}
+
 export const MAP_STYLES = {
   featureType: 'poi.business',
   stylers: [{ visibility: 'off' }]
@@ -32,10 +37,7 @@ export const MAP_OPTIONS = {
     strictBounds: false
   },
   styles: MAP_STYLES,
-  center: {
-    lat: 46.519962,
-    lng: 6.633597
-  },
+  center: LAUSANNE_LAT_LNG,
   zoomControl: true
 }
 

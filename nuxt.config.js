@@ -10,7 +10,7 @@ export default {
     mailChimpListId: process.env.MAILCHIMP_LIST_ID,
     googleMapsKey: process.env.GOOGLE_MAPS_KEY
   },
-  mode: 'universal',
+  mode: 'spa',
   /*
    ** Headers of the page
    */
