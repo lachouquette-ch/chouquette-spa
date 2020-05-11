@@ -8,7 +8,7 @@ export const state = () => ({
 export const actions = {
   async init({ state, commit }) {
     if (state.all) {
-      return state.all
+      return [state.all, state.hierarchy]
     } else {
       // fetch all menus
       const locations = await this.$wpAPI.wp.locations
@@ -20,7 +20,7 @@ export const actions = {
         .then(({ data }) => data)
       commit('SET_LOCATIONS', locations)
 
-      return locations
+      return [locations, state.hierarchy]
     }
   }
 }
