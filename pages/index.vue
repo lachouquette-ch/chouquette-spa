@@ -36,7 +36,7 @@
                 class="nav-link text-md-center"
               >
                 <CategoryLogo :category="category" color="white" class="d-inline nav-logo ml-lg-3 mr-2"></CategoryLogo>
-                <span class="text-nowrap">{{ category.name }}</span>
+                <span class="text-nowrap text-white">{{ category.name }}</span>
               </nuxt-link>
             </li>
           </ul>
