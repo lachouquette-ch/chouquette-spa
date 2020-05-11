@@ -274,7 +274,8 @@ export default {
       criteriaLoading: false,
 
       loading: true,
-      swiperOptions: {
+      fichesLoading: true,
+      fichesSwiperOptions: {
         ...DEFAULT,
         ...RESPONSIVE,
         on: {
