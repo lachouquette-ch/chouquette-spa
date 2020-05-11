@@ -161,7 +161,7 @@ export default {
   async asyncData({ app, store }) {
     const [latestPosts, yoast] = await Promise.all([
       store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
-      app.$wpAPI.yoast.getHome().then(({ data }) => data)
+      store.dispatch('yoast/fetchHome')
     ])
 
     return {
