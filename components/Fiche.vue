@@ -162,10 +162,7 @@
                   </a>
                 </li>
                 <li v-if="fiche.info.telephone" class="list-group-item">
-                  <a
-                    :href="`tel: ${fiche.info.telephone}`"
-                    title="Téléphone"
-                    target="_blank"
+                  <a :href="`tel: ${fiche.info.telephone}`" title="Téléphone" target="_blank"
                     ><i class="fas fa-phone"></i> {{ fiche.info.telephone }}
                   </a>
                 </li>
@@ -488,7 +485,11 @@ export default {
     },
     getOpening(dayOfWeek = new Date().getDay()) {
       const opening = this.fiche.info.openings[dayOfWeek]
-      return opening.includes('closed') ? 'fermé' : opening
+      if (opening) {
+        return opening.includes('closed') ? 'fermé' : opening
+      } else {
+        return ''
+      }
     }
   }
 }
