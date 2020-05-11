@@ -192,20 +192,21 @@
       </div>
 
       <div class="fiches-map-toggle-buttons btn-group btn-group-toggle" data-toggle="buttons">
-        <label
+        <button
           class="btn btn-sm btn-primary border-white border-right-0"
           :class="{ active: !isMapShown }"
           @click="isMapShown = false"
         >
-          <input id="showFiche" type="radio" name="options" :checked="!isMapShown" />Fiches
-        </label>
-        <label
+          Fiches
+        </button>
+        <button
           class="btn btn-sm btn-primary border-white border-left-0"
           :class="{ active: isMapShown }"
           @click="showMap"
+          :disabled="!markers.size"
         >
-          <input id="showMap" type="radio" name="options" :checked="isMapShown" />Carte
-        </label>
+          Carte
+        </button>
       </div>
     </div>
   </div>
