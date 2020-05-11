@@ -9,19 +9,18 @@
           </div>
           <div class="search border rounded">
             <div class="btn-group search-button" role="group" aria-label="Recherche">
-              <button v-b-toggle.search class="btn btn-light-grey">
+              <button v-b-toggle.search class="btn btn-sm btn-light-grey">
                 <i v-if="isSearchVisible" class="fas fa-minus"></i>
                 <i v-else class="fas fa-plus"></i>
                 <span class="ml-2">Ma recherche</span>
               </button>
-              <button v-if="$v.formSearch.$dirty" class="btn btn-yellow">
+              <button v-if="$v.formSearch.$dirty" class="btn btn-sm btn-yellow">
                 <i class="fas fa-redo"></i>
-                <span class="ml-2">Relance</span>
               </button>
             </div>
 
             <b-collapse id="search" v-model="isSearchVisible">
-              <div class="px-3 pt-5 pb-2">
+              <div class="px-3 pt-4 pb-2">
                 <form>
                   <div class="form-group">
                     <select
