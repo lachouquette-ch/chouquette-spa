@@ -47,11 +47,11 @@ export const actions = {
     return { fiches, total: parseInt(headers['x-wp-total']), pages: parseInt(headers['x-wp-totalpages']) }
   },
 
-  async fetchByCategoryIds({ dispatch, commit }, { categoryIds, page = 1 }) {
+  async fetchByCategoryIds({ dispatch, commit }, { categoryIds, page = 1, per_page = 10 }) {
     const { data: fiches, headers } = await this.$wpAPI.wp.fiches.get({
       categories: categoryIds.join(','),
       page,
-      per_page: 40
+      per_page
     })
 
     // fetch related ressources

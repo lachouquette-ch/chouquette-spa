@@ -95,9 +95,12 @@
                       type="text"
                       placeholder="En quelques mots ..."
                       name="search"
+                      @blur="$v.formSearch.$touch"
                     />
                   </div>
-                  <button class="btn btn-sm btn-primary w-100" :disabled="!$v.formSearch.$dirty">Lance la recherche</button>
+                  <button class="btn btn-sm btn-primary w-100" :disabled="!$v.formSearch.$dirty">
+                    Lance la recherche
+                  </button>
                 </form>
               </div>
             </b-collapse>
@@ -225,6 +228,8 @@ import CriteriaBadge from '~/components/CriteriaBadge'
 // create classes from components to use it in code
 const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
 
+const FICHE_NUMBER_EACH = 40
+
 export default {
   components: { CriteriaBadge, Fiche },
   directives: { swiper: SwiperDirective },
@@ -235,7 +240,9 @@ export default {
     const subCategoryIds = subCategories.map(({ id }) => id)
     const categoryIds = [category.id, ...subCategoryIds]
     const ficheResult = await store.dispatch('fiches/fetchByCategoryIds', {
-      categoryIds
+      categoryIds,
+      page: 1,
+      per_page: FICHE_NUMBER_EACH
     })
 
     return {
@@ -296,7 +303,7 @@ export default {
     },
     countNextFiches() {
       if (this.fichesNextPage < this.fichesPages) {
-        return Math.ceil(this.fichesTotal / this.fichesPages)
+        return FICHE_NUMBER_EACH
       } else {
         return this.fichesTotal - this.fiches.length
       }
@@ -449,7 +456,8 @@ export default {
       try {
         const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
           categoryIds: this.categoryIds,
-          page: this.fichesNextPage
+          page: this.fichesNextPage,
+          per_page: FICHE_NUMBER_EACH
         })
         this.fichesNextPage++
 
