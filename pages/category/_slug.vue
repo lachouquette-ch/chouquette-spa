@@ -95,7 +95,7 @@
                       type="text"
                       placeholder="En quelques mots ..."
                       name="search"
-                      @blur="$v.formSearch.$touch"
+                      @input.once="$v.formSearch.$touch"
                     />
                   </div>
                   <button class="btn btn-sm btn-primary w-100" :disabled="!$v.formSearch.$dirty" @click="searchFiches">
