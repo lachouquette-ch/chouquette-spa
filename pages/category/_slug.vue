@@ -144,14 +144,14 @@
           </div>
         </div>
 
-        <b-overlay :show="fichesLoading" opacity="0.6" blur="none" spinner-variant="yellow">
+        <b-overlay :show="fichesLoading" variant="white" opacity="0.9" spinner-variant="yellow">
           <div class="px-3">
             <div v-if="fichesSwiperOptions" v-swiper="fichesSwiperOptions" class="swiper px-md-5">
               <div class="swiper-wrapper pt-3">
                 <div
                   v-for="fiche in virtualData.slides"
                   :key="fiche.id"
-                  class="swiper-slide w-auto mx-4"
+                  class="swiper-slide"
                   :style="{ left: `${virtualData.offset}px` }"
                 >
                   <Fiche ref="fiche" class="fiche" :fiche="fiche" :responsive="false">
@@ -498,6 +498,7 @@ export default {
         })
 
         this.fiches.push(...ficheResult.fiches)
+        this.$swiper.slideTo(this.$swiper.previousIndex + 1, 0, false)
         this.fichesTotal = ficheResult.total
         this.fichesPages = ficheResult.pages
         this.fichesNextPage++
@@ -585,6 +586,11 @@ export default {
   position: absolute;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  top: 250px;
 }
 
 .map {
