@@ -154,7 +154,7 @@
                   class="swiper-slide"
                   :style="{ left: `${virtualData.offset}px` }"
                 >
-                  <Fiche ref="fiche" class="fiche" :fiche="fiche" :responsive="false">
+                  <Fiche :ref="`fiche-${fiche.id}`" class="fiche" :fiche="fiche" :responsive="false">
                     <template #front-footer>
                       <a
                         href=""
@@ -528,8 +528,10 @@ export default {
               this.isMapShown = false
               // find fiche
               const ficheIndex = this.fiches.findIndex(({ id }) => id === fiche.id)
-              this.$refs.fiche[ficheIndex].$el.classList.add('selected')
               this.$swiper.slideTo(ficheIndex)
+              this.$nextTick(() => {
+                this.$refs[`fiche-${fiche.id}`][0].$el.classList.add('selected')
+              })
             }
           }
         })
