@@ -146,13 +146,13 @@
 
         <b-overlay :show="fichesLoading" opacity="0.6" blur="none" spinner-variant="yellow">
           <div class="px-3">
-            <div v-swiper="fichesSwiperOptions" class="swiper px-md-5">
+            <div v-if="fichesSwiperOptions" v-swiper="fichesSwiperOptions" class="swiper px-md-5">
               <div class="swiper-wrapper pt-3">
                 <div
-                  v-for="fiche in fiches"
+                  v-for="fiche in virtualData.slides"
                   :key="fiche.id"
-                  class="swiper-slide align-self-start"
-                  :data-hash="fiche.id"
+                  class="swiper-slide w-auto mx-4"
+                  :style="{ left: `${virtualData.offset}px` }"
                 >
                   <Fiche ref="fiche" class="fiche" :fiche="fiche" :responsive="false">
                     <template #front-footer>
@@ -202,8 +202,8 @@
         <button
           class="btn btn-sm btn-primary border-white border-left-0"
           :class="{ active: isMapShown }"
-          @click="showMap"
           :disabled="!markers.size"
+          @click="showMap"
         >
           Carte
         </button>
@@ -275,12 +275,9 @@ export default {
       criteriaLoading: false,
 
       fichesLoading: true,
-      fichesSwiperOptions: {
-        ...DEFAULT,
-        ...RESPONSIVE,
-        on: {
-          reachEnd: () => this.fetchMoreFiches()
-        }
+      fichesSwiperOptions: null,
+      virtualData: {
+        slides: []
       }
     }
   },
@@ -333,6 +330,21 @@ export default {
     this.loadCriteria(this.category)
   },
   async mounted() {
+    this.fichesSwiperOptions = {
+      virtual: {
+        slides: this.fiches,
+        renderExternal: (data) => {
+          // assign virtual slides data
+          this.virtualData = data
+        }
+      },
+      ...DEFAULT,
+      ...RESPONSIVE,
+      on: {
+        reachEnd: () => this.fetchMoreFiches()
+      }
+    }
+
     // build map
     try {
       this.google = await this.$googleMaps
