@@ -144,7 +144,7 @@
           </div>
         </div>
 
-        <b-overlay :show="fichesLoading" variant="white" opacity="0.9" spinner-variant="yellow">
+        <b-overlay :show="fichesLoading" variant="white" opacity="1" spinner-variant="yellow">
           <div class="px-3">
             <div v-if="fichesSwiperOptions" v-swiper="fichesSwiperOptions" class="swiper px-md-5">
               <div class="swiper-wrapper pt-3">
@@ -183,7 +183,7 @@
           class="map-load-more google-map-control bg-yellow w-auto"
           :disabled="fichesLoading || !hasMoreFiche"
           title="Afficher plus de fiches"
-          @click="fetchMoreFiches"
+          @click="fetchFiches"
         >
           <b-spinner v-show="fichesLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
           <strong>+{{ countNextFiches }}</strong>
@@ -338,7 +338,7 @@ export default {
       ...DEFAULT,
       ...RESPONSIVE,
       on: {
-        reachEnd: () => this.fetchMoreFiches()
+        reachEnd: () => this.fetchFiches()
       }
     }
 
@@ -470,11 +470,16 @@ export default {
       // fetchData reset
       this.fichesNextPage = 1
 
-      this.fetchMoreFiches()
+      this.fetchFiches(false)
     },
-    async fetchMoreFiches() {
+    async fetchFiches(append = true) {
       if (this.fichesLoading) {
         console.warn('already loading more fiches')
+        return
+      }
+
+      if (this.fichesNextPage >= this.fichesPages) {
+        console.warn('no more fiches')
         return
       }
 
@@ -501,8 +506,15 @@ export default {
           per_page: FICHE_NUMBER_EACH
         })
 
-        this.fiches.push(...ficheResult.fiches)
-        this.$swiper.slideTo(this.$swiper.previousIndex + 1, 0, false)
+        if (append) {
+          this.fiches.push(...ficheResult.fiches)
+          this.$swiper.slideTo(this.$swiper.previousIndex + 1, 0, false)
+        } else {
+          this.$swiper.virtual.removeAllSlides()
+          this.fiches = ficheResult.fiches
+          this.$swiper.virtual.slides = ficheResult.fiches
+        }
+
         this.fichesTotal = ficheResult.total
         this.fichesPages = ficheResult.pages
         this.fichesNextPage++
