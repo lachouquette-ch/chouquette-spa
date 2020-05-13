@@ -14,8 +14,11 @@
                 <i v-else class="fas fa-plus"></i>
                 <span class="ml-2">Ma recherche</span>
               </button>
-              <button v-if="$v.formSearch.$dirty" class="btn btn-sm btn-yellow" @click="searchFiches">
+              <button v-if="$v.formSearch.$dirty" class="btn btn-sm btn-primary" @click="searchFiches">
                 <i class="fas fa-redo"></i>
+              </button>
+              <button v-if="$v.formSearch.$dirty" class="btn btn-sm btn-secondary" @click="searchFiches">
+                <i class="fas fa-times"></i>
               </button>
             </div>
 
@@ -90,7 +93,7 @@
                   </div>
                   <div class="form-group">
                     <input
-                      v-model="formSearch.searchText"
+                      v-model="formSearch.search"
                       class="form-control form-control-sm"
                       type="text"
                       placeholder="En quelques mots ..."
@@ -98,13 +101,22 @@
                       @input.once="$v.formSearch.$touch"
                     />
                   </div>
-                  <button
-                    class="btn btn-sm btn-primary w-100"
-                    :disabled="!$v.formSearch.$dirty"
-                    @click.prevent="searchFiches"
-                  >
-                    Lance la recherche
-                  </button>
+                  <div class="d-flex">
+                    <button
+                      class="btn btn-sm btn-primary flex-grow-1 mr-2"
+                      :disabled="!$v.formSearch.$dirty"
+                      @click.prevent="searchFiches"
+                    >
+                      Lance la recherche
+                    </button>
+                    <button
+                      class="btn btn-sm btn-secondary ml-2"
+                      :disabled="!$v.formSearch.$dirty"
+                      @click.prevent="searchFiches"
+                    >
+                      Annuler
+                    </button>
+                  </div>
                 </form>
               </div>
             </b-collapse>
@@ -126,10 +138,10 @@
                 "
               />
               <CriteriaBadge
-                v-if="formSearch.searchText"
-                :name="formSearch.searchText"
+                v-if="formSearch.search"
+                :name="formSearch.search"
                 @remove="
-                  formSearch.searchText = null
+                  formSearch.search = null
                   $v.formSearch.$touch()
                 "
               />
@@ -243,7 +255,7 @@ export default {
     const subCategories = store.state.categories.children[rootCategory.id] // fetched along category
 
     // TODO build criteria from query params
-    const criteria = {
+    const initSearch = {
       category: rootCategory.slug,
       location: null,
       search: null,
@@ -251,14 +263,14 @@ export default {
     }
 
     const ficheResult = await store.dispatch('fiches/fetchByCategoryIds', {
-      ...criteria,
+      ...initSearch,
       per_page: FICHE_NUMBER_EACH
     })
 
     return {
       rootCategory,
       subCategories,
-      criteria,
+      initSearch,
       fiches: ficheResult.fiches,
       fichesTotal: ficheResult.total,
       fichesPages: ficheResult.pages,
@@ -279,7 +291,7 @@ export default {
 
       // search
       isSearchVisible: false,
-      formSearch: { subCategory: null, location: null, text: null, criteria: [] },
+      formSearch: { subCategory: null, location: null, search: null, criteria: [] },
       criteriaLoading: false,
 
       // swiper
@@ -469,16 +481,39 @@ export default {
     },
 
     // fiches
+    async searchReset() {
+      // fields
+      this.formSearch.subCategory = this.criteria.category
+      this.formSearch.location = this.criteria.location
+      this.formSearch.search = this.criteria.search
+
+      // criteria
+      await this.loadCriteria(this.criteria.category)
+      this.criteria.criteria.forEach(({ taxonomy, terms }) => {
+        this.formSearch.criteria.find(({ taxonomy: searchTaxonomy }) => searchTaxonomy === taxonomy)
+      })
+    },
     searchFiches() {
       // build new route and navigate to it
+      const query = {}
+      if (this.formSearch.subCategory) {
+        query.category = this.formSearch.subCategory.slug
+      }
+      if (this.formSearch.location) {
+        query.location = this.formSearch.location.slug
+      }
+      if (this.formSearch.search) {
+        query.search = this.formSearch.search
+      }
+
       // build criteria
-      const criteria = this.formSearch.criteria.map(({ taxonomy, selectedValues }) => {
-        return {
-          name: taxonomy,
-          ids: selectedValues.map(({ slug }) => slug)
+      this.formSearch.criteria.forEach(({ taxonomy, selectedValues }) => {
+        if (!_.isEmpty(selectedValues)) {
+          query[taxonomy] = selectedValues.map(({ slug }) => slug).join(',')
         }
       })
-      // router.push({ path: 'register', query: { plan: 'private' } })
+
+      this.$router.push({ query })
     },
     async fetchMoreFiches() {
       if (this.fichesLoading) {
@@ -494,7 +529,7 @@ export default {
       this.fichesLoading = true
       try {
         const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
-          ...this.criteria,
+          ...this.initSearch,
           page: this.fichesNextPage,
           per_page: FICHE_NUMBER_EACH
         })
