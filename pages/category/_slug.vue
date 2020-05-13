@@ -487,7 +487,11 @@ export default {
     // fiches
     async searchReset() {
       // fields
-      this.formSearch.subCategory = this.initSearch.category
+      if (this.initSearch.category === this.rootCategory) {
+        this.formSearch.subCategory = null
+      } else {
+        this.formSearch.subCategory = this.initSearch.category
+      }
       this.formSearch.location = this.initSearch.location
       this.formSearch.search = this.initSearch.search
 
@@ -496,7 +500,7 @@ export default {
       this.formSearch.criteria.forEach((criteria) => {
         const initCriteria = this.initSearch.criteria.find(({ slug }) => slug === criteria.slug)
         if (initCriteria) {
-          criteria.selectedValues = criteria.values.filter(({slug}) => initCriteria.values.includes(slug))
+          criteria.selectedValues = criteria.values.filter(({ slug }) => initCriteria.values.includes(slug))
         }
       })
     },
