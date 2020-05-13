@@ -149,8 +149,8 @@
             <div v-if="fichesSwiperOptions" v-swiper="fichesSwiperOptions" class="swiper px-md-5">
               <div class="swiper-wrapper pt-3">
                 <div
-                  v-for="fiche in virtualData.slides"
-                  :key="fiche.id"
+                  v-for="(fiche, index) in virtualData.slides"
+                  :key="index"
                   class="swiper-slide"
                   :style="{ left: `${virtualData.offset}px` }"
                 >
@@ -183,7 +183,7 @@
           class="map-load-more google-map-control bg-yellow w-auto"
           :disabled="fichesLoading || !hasMoreFiche"
           title="Afficher plus de fiches"
-          @click="fetchFiches"
+          @click="fetchMoreFiches"
         >
           <b-spinner v-show="fichesLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
           <strong>+{{ countNextFiches }}</strong>
@@ -340,7 +340,7 @@ export default {
       ...DEFAULT,
       ...RESPONSIVE,
       on: {
-        reachEnd: () => this.fetchFiches()
+        reachEnd: () => this.fetchMoreFiches()
       }
     }
 
@@ -458,23 +458,9 @@ export default {
 
     // fiches
     searchFiches() {
-      // map
-      this.markers.clear()
-      this.currentMarker = null
-      this.infoWindows.clear()
-      this.currentInfoWindow = null
-      this.markerClusterer.clearMarkers()
-
-      // search
-      this.isSearchVisible = false
-      this.$v.formSearch.$reset()
-
-      // fetchData reset
-      this.fichesNextPage = 1
-
-      this.fetchFiches(false)
+      // build new route and navigate to it
     },
-    async fetchFiches(append = true) {
+    async fetchMoreFiches(append = true) {
       if (this.fichesLoading) {
         console.warn('already loading more fiches')
         return
@@ -511,6 +497,7 @@ export default {
         this.fiches.push(...ficheResult.fiches)
         this.$swiper.slideTo(this.$swiper.previousIndex + 1, 0, false)
         this.loadFichesOnMap(ficheResult.fiches)
+        this.fichesNextPage++
       } finally {
         this.fichesLoading = false
         if (!this.isMapShown) {
