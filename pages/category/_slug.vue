@@ -333,7 +333,9 @@ export default {
         renderExternal: (data) => {
           // assign virtual slides data
           this.virtualData = data
-        }
+        },
+        addSlidesBefore: 2,
+        addSlidesAfter: 2
       },
       ...DEFAULT,
       ...RESPONSIVE,
