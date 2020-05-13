@@ -238,10 +238,8 @@ export default {
     const category = await store.dispatch('categories/fetchBySlug', params.slug)
     const subCategories = store.state.categories.children[category.id] // fetched along category
 
-    const subCategoryIds = subCategories.map(({ id }) => id)
-    const categoryIds = [category.id, ...subCategoryIds]
     const ficheResult = await store.dispatch('fiches/fetchByCategoryIds', {
-      categoryIds,
+      category: category.slug,
       page: 1,
       per_page: FICHE_NUMBER_EACH
     })
