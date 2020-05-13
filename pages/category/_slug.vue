@@ -534,7 +534,7 @@ export default {
         }
       })
 
-      this.$router.push({ path: '/category/bar-et-restaurant', query })
+      this.$router.push({ path: this.$route.path, query })
     },
     async fetchMoreFiches() {
       if (this.fichesLoading) {
