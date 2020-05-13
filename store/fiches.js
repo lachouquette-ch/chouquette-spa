@@ -64,7 +64,6 @@ export const actions = {
     })
 
     Object.assign(queryParams, {
-      tax_relation: 'AND',
       page,
       per_page
     })

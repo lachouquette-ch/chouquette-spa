@@ -480,11 +480,6 @@ export default {
         return
       }
 
-      if (this.fichesNextPage >= this.fichesPages) {
-        console.warn('no more fiches')
-        return
-      }
-
       this.fichesLoading = true
       try {
         // build parameters

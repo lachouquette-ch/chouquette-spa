@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { ressourceStates, ressourceMutations } from './_ressource-helper'
 
 export const state = () => ({
@@ -7,7 +8,7 @@ export const state = () => ({
 
 export const actions = {
   async init({ state, commit }) {
-    if (state.all) {
+    if (!_.isEmpty(state.all)) {
       return [state.all, state.hierarchy]
     } else {
       // fetch all menus
