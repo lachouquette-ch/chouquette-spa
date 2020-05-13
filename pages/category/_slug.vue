@@ -17,7 +17,7 @@
               <button v-if="$v.formSearch.$dirty" class="btn btn-sm btn-primary" @click="searchFiches">
                 <i class="fas fa-redo"></i>
               </button>
-              <button v-if="$v.formSearch.$dirty" class="btn btn-sm btn-secondary" @click="searchFiches">
+              <button v-if="$v.formSearch.$dirty" class="btn btn-sm btn-secondary" @click="searchReset">
                 <i class="fas fa-times"></i>
               </button>
             </div>
@@ -112,7 +112,7 @@
                     <button
                       class="btn btn-sm btn-secondary ml-2"
                       :disabled="!$v.formSearch.$dirty"
-                      @click.prevent="searchFiches"
+                      @click.prevent="searchReset"
                     >
                       Annuler
                     </button>
@@ -254,12 +254,16 @@ export default {
     const rootCategory = await store.dispatch('categories/fetchBySlug', params.slug)
     const subCategories = store.state.categories.children[rootCategory.id] // fetched along category
 
+    // TODO load values
+    const category = rootCategory
+    const location = null
+
     // TODO build criteria from query params
     const initSearch = {
-      category: rootCategory.slug,
-      location: null,
+      category,
+      location,
       search: null,
-      criteria: []
+      criteria: [] // objects {slug: criteria slug, values: [term slug]}
     }
 
     const ficheResult = await store.dispatch('fiches/fetchByCategoryIds', {
@@ -312,7 +316,7 @@ export default {
       if (category) {
         this.loadCriteria(category)
       } else {
-        this.loadCriteria(this.category)
+        this.loadCriteria(this.rootCategory)
       }
     }
   },
@@ -483,14 +487,17 @@ export default {
     // fiches
     async searchReset() {
       // fields
-      this.formSearch.subCategory = this.criteria.category
-      this.formSearch.location = this.criteria.location
-      this.formSearch.search = this.criteria.search
+      this.formSearch.subCategory = this.initSearch.category
+      this.formSearch.location = this.initSearch.location
+      this.formSearch.search = this.initSearch.search
 
       // criteria
-      await this.loadCriteria(this.criteria.category)
-      this.criteria.criteria.forEach(({ taxonomy, terms }) => {
-        this.formSearch.criteria.find(({ taxonomy: searchTaxonomy }) => searchTaxonomy === taxonomy)
+      await this.loadCriteria(this.initSearch.category)
+      this.formSearch.criteria.forEach((criteria) => {
+        const initCriteria = this.initSearch.criteria.find(({ slug }) => slug === criteria.slug)
+        if (initCriteria) {
+          criteria.selectedValues = criteria.values.filter(({slug}) => initCriteria.values.includes(slug))
+        }
       })
     },
     searchFiches() {
