@@ -249,7 +249,6 @@ export default {
     return {
       category,
       subCategories,
-      categoryIds,
       fiches: ficheResult.fiches,
       fichesTotal: ficheResult.total,
       fichesPages: ficheResult.pages,
@@ -471,12 +470,6 @@ export default {
       this.$v.formSearch.$reset()
 
       // fetchData reset
-      if (this.formSearch.subCategory) {
-        this.categoryIds = [this.formSearch.subCategory.id]
-      } else {
-        this.categoryIds = [this.category.id, ...this.subCategories.map(({ id }) => id)]
-      }
-      this.fiches = []
       this.fichesNextPage = 1
 
       this.fetchMoreFiches()
@@ -489,10 +482,23 @@ export default {
 
       this.fichesLoading = true
       try {
+        // build parameters
+        const category = this.formSearch.subCategory ? this.formSearch.subCategory.slug : this.category.slug
+        const location = this.formSearch.location ? this.formSearch.location.slug : null
+        const search = this.formSearch.searchText || null
+
+        const criteria = this.criteriaList.map(({ taxonomy, selectedValues }) => {
+          return {
+            name: taxonomy,
+            ids: selectedValues.map(({ slug }) => slug)
+          }
+        })
+
         const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
-          categoryIds: this.categoryIds,
-          locationId: this.formSearch.location ? this.formSearch.location.slug : null,
-          search: this.formSearch.searchText || null,
+          category,
+          location,
+          search,
+          criteria,
           page: this.fichesNextPage,
           per_page: FICHE_NUMBER_EACH
         })

@@ -49,15 +49,27 @@ export const actions = {
 
   async fetchByCategoryIds(
     { dispatch, commit },
-    { categoryIds, locationId = null, search = null, page = 1, per_page = 10 }
+    { category, location = null, search = null, criteria = [], page = 1, per_page = 10 }
   ) {
-    const { data: fiches, headers } = await this.$wpAPI.wp.fiches.get({
-      categories: categoryIds.join(','),
-      location: locationId,
-      search,
+    const queryParams = {
+      category,
+      location,
+      search
+    }
+
+    criteria.forEach(({ name, ids }) => {
+      if (ids.length) {
+        queryParams[`filter[${name}]`] = ids.join(',')
+      }
+    })
+
+    Object.assign(queryParams, {
+      tax_relation: 'AND',
       page,
       per_page
     })
+
+    const { data: fiches, headers } = await this.$wpAPI.wp.fiches.get(queryParams)
 
     // fetch related ressources
     await dispatch('fetchRelatedRessources', fiches)
