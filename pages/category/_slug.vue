@@ -29,7 +29,10 @@
                     <select
                       v-model="formSearch.subCategory"
                       class="form-control form-control-sm"
-                      @change="$v.formSearch.$touch"
+                      @change="
+                        loadCriteria()
+                        $v.formSearch.$touch
+                      "
                     >
                       <option :value="null">Que cherches-tu ?</option>
                       <option v-for="category in subCategories" :key="category.id" :value="category">
@@ -250,20 +253,26 @@ const FICHE_NUMBER_EACH = 40
 export default {
   components: { CriteriaBadge, Fiche },
   directives: { swiper: SwiperDirective },
-  async asyncData({ store, params }) {
+  async asyncData({ store, params, query }) {
     const rootCategory = await store.dispatch('categories/fetchBySlug', params.slug)
     const subCategories = store.state.categories.children[rootCategory.id] // fetched along category
 
-    // TODO load values
-    const category = rootCategory
-    const location = null
+    // need store initialization to access values
+    await store.dispatch('locations/init')
+
+    // build criteria
+    const criteria = Object.entries(query)
+      .filter(([key]) => key.startsWith('cq_'))
+      .map(([key, value]) => {
+        return { taxonomy: key, values: value.split(',') }
+      })
 
     // TODO build criteria from query params
     const initSearch = {
-      category,
-      location,
-      search: null,
-      criteria: [] // objects {slug: criteria slug, values: [term slug]}
+      category: query.category || rootCategory.slug,
+      location: query.location,
+      search: query.search,
+      criteria
     }
 
     const ficheResult = await store.dispatch('fiches/fetchByCategoryIds', {
@@ -311,15 +320,6 @@ export default {
       formSearch: {}
     }
   },
-  watch: {
-    'formSearch.subCategory'(category) {
-      if (category) {
-        this.loadCriteria(category)
-      } else {
-        this.loadCriteria(this.rootCategory)
-      }
-    }
-  },
   computed: {
     hasMoreFiche() {
       return this.fichesNextPage <= this.fichesPages
@@ -335,11 +335,12 @@ export default {
       return this.fiches && this.fiches.length === 1
     },
     ...mapState('locations', {
-      locations: 'hierarchy'
+      locations: 'all',
+      locationHierarchy: 'hierarchy'
     }),
     flatLocations() {
       // first level only
-      return this.locations.reduce(
+      return this.locationHierarchy.reduce(
         (locations, { location, subLocations }) => [...locations, location, ...subLocations],
         []
       )
@@ -350,11 +351,12 @@ export default {
       return hasSearch || hasCriteria
     }
   },
-  created() {
-    this.$store.dispatch('menus/setSelectedCategory', this.rootCategory)
-    this.loadCriteria(this.rootCategory)
-  },
   async mounted() {
+    // criteria
+    this.$store.dispatch('menus/setSelectedCategory', this.rootCategory)
+    this.searchReset()
+
+    // swiper
     this.fichesSwiperOptions = {
       virtual: {
         slides: this.fiches,
@@ -424,11 +426,16 @@ export default {
     isValueChecked(criteria, value) {
       return criteria.selectedValues.includes(value)
     },
-    async loadCriteria(category) {
+    async loadCriteria() {
       try {
         this.criteriaLoading = true
-        const criteriaList = await this.$wpAPI.criteria.getForCategory(category.id).then(({ data }) => data)
+
+        const categoryId = this.formSearch.subCategory ? this.formSearch.subCategory.id : this.rootCategory.id
+        const criteriaList = await this.$wpAPI.criteria.getForCategory(categoryId).then(({ data }) => data)
+
+        // build selectedValues "add-on"
         criteriaList.forEach((criteria) => (criteria.selectedValues = []))
+
         this.formSearch.criteria = criteriaList
       } finally {
         this.criteriaLoading = false
@@ -487,18 +494,21 @@ export default {
     // fiches
     async searchReset() {
       // fields
-      if (this.initSearch.category === this.rootCategory) {
+      if (this.initSearch.category === this.rootCategory.slug) {
         this.formSearch.subCategory = null
       } else {
-        this.formSearch.subCategory = this.initSearch.category
+        this.formSearch.subCategory = this.subCategories.find(({ slug }) => slug === this.initSearch.category)
       }
+
       this.formSearch.location = this.initSearch.location
+        ? Object.values(this.locations).find(({ slug }) => slug === this.initSearch.location)
+        : null
       this.formSearch.search = this.initSearch.search
 
       // criteria
-      await this.loadCriteria(this.initSearch.category)
+      await this.loadCriteria()
       this.formSearch.criteria.forEach((criteria) => {
-        const initCriteria = this.initSearch.criteria.find(({ slug }) => slug === criteria.slug)
+        const initCriteria = this.initSearch.criteria.find(({ taxonomy }) => taxonomy === criteria.taxonomy)
         if (initCriteria) {
           criteria.selectedValues = criteria.values.filter(({ slug }) => initCriteria.values.includes(slug))
         }
@@ -524,7 +534,7 @@ export default {
         }
       })
 
-      this.$router.push({ query })
+      this.$router.push({ path: '/category/bar-et-restaurant', query })
     },
     async fetchMoreFiches() {
       if (this.fichesLoading) {

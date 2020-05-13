@@ -32,14 +32,13 @@ export const mutations = {
 
     const topLocations = locations.filter(({ parent }) => parent === 0)
     // single level only. Add level property
-    state.hierarchy = topLocations.map((topLocation) => {
+    state.hierarchy = topLocations.map((location) => {
+      location.level = 0
+      const subLocations = locations.filter(({ parent }) => parent === location.id)
+      subLocations.forEach((subLocation) => (subLocation.level = 1))
       return {
-        location: { ...topLocation, level: 0 },
-        subLocations: locations
-          .filter(({ parent }) => parent === topLocation.id)
-          .map((subLocation) => {
-            return { ...subLocation, level: 1 }
-          })
+        location,
+        subLocations
       }
     })
   }

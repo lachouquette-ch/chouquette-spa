@@ -52,14 +52,14 @@ export const actions = {
     { category, location = null, search = null, criteria = [], page = 1, per_page = 10 }
   ) {
     const queryParams = {
-      category: category.slug,
-      location: location && location.slug,
+      category,
+      location,
       search
     }
 
-    criteria.forEach(({ slug, values }) => {
+    criteria.forEach(({ taxonomy, values }) => {
       if (values.length) {
-        queryParams[`filter[${slug}]`] = values.join(',')
+        queryParams[`filter[${taxonomy}]`] = values.join(',')
       }
     })
 
