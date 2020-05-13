@@ -508,18 +508,8 @@ export default {
           per_page: FICHE_NUMBER_EACH
         })
 
-        if (append) {
-          this.fiches.push(...ficheResult.fiches)
-          this.$swiper.slideTo(this.$swiper.previousIndex + 1, 0, false)
-        } else {
-          this.$swiper.virtual.removeAllSlides()
-          this.fiches = ficheResult.fiches
-          this.$swiper.virtual.slides = ficheResult.fiches
-        }
-
-        this.fichesTotal = ficheResult.total
-        this.fichesPages = ficheResult.pages
-        this.fichesNextPage++
+        this.fiches.push(...ficheResult.fiches)
+        this.$swiper.slideTo(this.$swiper.previousIndex + 1, 0, false)
         this.loadFichesOnMap(ficheResult.fiches)
       } finally {
         this.fichesLoading = false
