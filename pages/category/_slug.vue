@@ -1,10 +1,10 @@
 <template>
-  <div v-if="category" class="category-page layout-content">
+  <div class="category-page layout-content">
     <div class="position-relative">
       <div class="fiches py-4">
         <div class="container">
           <div class="text-center">
-            <h1 class="mb-0">{{ category.name }}</h1>
+            <h1 class="mb-0">{{ rootCategory.name }}</h1>
             <span class="d-none d-md-inline muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
           </div>
           <div class="search border rounded">
@@ -52,7 +52,7 @@
                     </select>
                   </div>
                   <div class="d-bock d-md-none">
-                    <div v-for="criteria in criteriaList" :key="criteria.id" class="form-group">
+                    <div v-for="criteria in formSearch.criteria" :key="criteria.id" class="form-group">
                       <select
                         v-model="criteria.selectedValues"
                         class="form-control form-control-sm"
@@ -67,7 +67,7 @@
                   </div>
                   <div class="d-none d-md-block">
                     <b-overlay :show="criteriaLoading" opacity="0.6" blur="none" spinner-variant="yellow">
-                      <fieldset v-for="criteria in criteriaList" :key="criteria.id" class="border my-3 px-3">
+                      <fieldset v-for="criteria in formSearch.criteria" :key="criteria.id" class="border my-3 px-3">
                         <legend class="h6 w-auto px-3 m-0">{{ criteria.name }}</legend>
                         <div class="form-row py-2">
                           <div v-for="value in criteria.values" :key="`${criteria.id}-${value.id}`" class="col-6">
@@ -98,7 +98,11 @@
                       @input.once="$v.formSearch.$touch"
                     />
                   </div>
-                  <button class="btn btn-sm btn-primary w-100" :disabled="!$v.formSearch.$dirty" @click="searchFiches">
+                  <button
+                    class="btn btn-sm btn-primary w-100"
+                    :disabled="!$v.formSearch.$dirty"
+                    @click.prevent="searchFiches"
+                  >
                     Lance la recherche
                   </button>
                 </form>
@@ -129,7 +133,7 @@
                   $v.formSearch.$touch()
                 "
               />
-              <template v-for="criteria in criteriaList">
+              <template v-for="criteria in formSearch.criteria">
                 <CriteriaBadge
                   v-for="value in criteria.selectedValues"
                   :key="value.id"
@@ -235,18 +239,26 @@ export default {
   components: { CriteriaBadge, Fiche },
   directives: { swiper: SwiperDirective },
   async asyncData({ store, params }) {
-    const category = await store.dispatch('categories/fetchBySlug', params.slug)
-    const subCategories = store.state.categories.children[category.id] // fetched along category
+    const rootCategory = await store.dispatch('categories/fetchBySlug', params.slug)
+    const subCategories = store.state.categories.children[rootCategory.id] // fetched along category
+
+    // TODO build criteria from query params
+    const criteria = {
+      category: rootCategory.slug,
+      location: null,
+      search: null,
+      criteria: []
+    }
 
     const ficheResult = await store.dispatch('fiches/fetchByCategoryIds', {
-      category: category.slug,
-      page: 1,
+      ...criteria,
       per_page: FICHE_NUMBER_EACH
     })
 
     return {
-      category,
+      rootCategory,
       subCategories,
+      criteria,
       fiches: ficheResult.fiches,
       fichesTotal: ficheResult.total,
       fichesPages: ficheResult.pages,
@@ -267,10 +279,10 @@ export default {
 
       // search
       isSearchVisible: false,
-      formSearch: { subCategory: null, location: null, text: null },
-      criteriaList: [],
+      formSearch: { subCategory: null, location: null, text: null, criteria: [] },
       criteriaLoading: false,
 
+      // swiper
       fichesLoading: true,
       fichesSwiperOptions: null,
       virtualData: {
@@ -318,13 +330,13 @@ export default {
     },
     hasSearchCriteria() {
       const hasSearch = this.formSearch.subCategory || this.formSearch.location || this.formSearch.searchText
-      const hasCriteria = this.criteriaList.find(({ selectedValues }) => _.isEmpty(selectedValues) === false)
+      const hasCriteria = this.formSearch.criteria.find(({ selectedValues }) => _.isEmpty(selectedValues) === false)
       return hasSearch || hasCriteria
     }
   },
   created() {
-    this.$store.dispatch('menus/setSelectedCategory', this.category)
-    this.loadCriteria(this.category)
+    this.$store.dispatch('menus/setSelectedCategory', this.rootCategory)
+    this.loadCriteria(this.rootCategory)
   },
   async mounted() {
     this.fichesSwiperOptions = {
@@ -401,7 +413,7 @@ export default {
         this.criteriaLoading = true
         const criteriaList = await this.$wpAPI.criteria.getForCategory(category.id).then(({ data }) => data)
         criteriaList.forEach((criteria) => (criteria.selectedValues = []))
-        this.criteriaList = criteriaList
+        this.formSearch.criteria = criteriaList
       } finally {
         this.criteriaLoading = false
       }
@@ -459,8 +471,16 @@ export default {
     // fiches
     searchFiches() {
       // build new route and navigate to it
+      // build criteria
+      const criteria = this.formSearch.criteria.map(({ taxonomy, selectedValues }) => {
+        return {
+          name: taxonomy,
+          ids: selectedValues.map(({ slug }) => slug)
+        }
+      })
+      // router.push({ path: 'register', query: { plan: 'private' } })
     },
-    async fetchMoreFiches(append = true) {
+    async fetchMoreFiches() {
       if (this.fichesLoading) {
         console.warn('already loading more fiches')
         return
@@ -473,23 +493,8 @@ export default {
 
       this.fichesLoading = true
       try {
-        // build parameters
-        const category = this.formSearch.subCategory ? this.formSearch.subCategory.slug : this.category.slug
-        const location = this.formSearch.location ? this.formSearch.location.slug : null
-        const search = this.formSearch.searchText || null
-
-        const criteria = this.criteriaList.map(({ taxonomy, selectedValues }) => {
-          return {
-            name: taxonomy,
-            ids: selectedValues.map(({ slug }) => slug)
-          }
-        })
-
         const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
-          category,
-          location,
-          search,
-          criteria,
+          ...this.criteria,
           page: this.fichesNextPage,
           per_page: FICHE_NUMBER_EACH
         })
