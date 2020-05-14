@@ -10,7 +10,6 @@
       hide-header
       hide-footer
       centered
-      @shown="initModal"
       @hide="closeModal"
     >
       <template #default="{close}">
@@ -21,15 +20,15 @@
           @click.prevent="close"
           >×</a
         >
-        <div v-swiper:ficheSwiper="swiperFichesOptions">
+        <div v-swiper:ficheSwiper="swiperFichesOptions" class="px-md-5">
           <div class="swiper-wrapper mb-3 mt-md-3">
             <div
               v-for="(fiche, index) in fiches"
               :key="fiche.id"
-              class="swiper-slide align-self-center"
+              class="swiper-slide h-auto d-flex align-items-stretch"
               :data-hash="fiche.id"
             >
-              <Fiche ref="fiche" :fiche="fiche" />
+              <Fiche ref="fiche" class="w-100" :fiche="fiche" />
               <div
                 class="fiche-modal-close d-md-none bg-white m-2 border-0 rounded-circle text-center"
                 :class="{ 'd-none': $refs.fiche && $refs.fiche[index] && $refs.fiche[index].isFlipped }"
@@ -275,10 +274,6 @@ export default {
       // start with correct fiche
       this.swiperFichesOptions.initialSlide = index
       this.$bvModal.show('fiche-modal')
-    },
-    initModal() {
-      // resize all
-      this.$refs.fiche.forEach((fiche) => fiche.resizeFiche())
     },
     closeModal() {
       // remove hash reference (if any)

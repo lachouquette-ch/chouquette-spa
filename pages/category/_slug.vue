@@ -1,7 +1,7 @@
 <template>
   <div class="category-page layout-content">
     <div class="position-relative">
-      <div class="fiches py-4">
+      <div class="fiches pt-3 pb-5">
         <div class="container">
           <div class="text-center">
             <h1 class="mb-0">{{ rootCategory.name }}</h1>
@@ -170,7 +170,7 @@
                 <div
                   v-for="(fiche, index) in virtualData.slides"
                   :key="index"
-                  class="swiper-slide"
+                  class="swiper-slide h-auto d-flex align-items-stretch"
                   :style="{ left: `${virtualData.offset}px` }"
                 >
                   <Fiche :ref="`fiche-${fiche.id}`" class="fiche" :fiche="fiche" :responsive="false">
