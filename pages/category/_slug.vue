@@ -257,7 +257,8 @@ export default {
     const rootCategory = await store.dispatch('categories/fetchBySlug', params.slug)
     const subCategories = store.state.categories.children[rootCategory.id] // fetched along category
 
-    // need store initialization to access values
+    // store initialization
+    await store.dispatch('menus/setSelectedCategory', rootCategory)
     await store.dispatch('locations/init')
 
     // build criteria
@@ -267,7 +268,6 @@ export default {
         return { taxonomy: key, values: value.split(',') }
       })
 
-    // TODO build criteria from query params
     const initSearch = {
       category: query.category || rootCategory.slug,
       location: query.location,
@@ -320,6 +320,54 @@ export default {
       formSearch: {}
     }
   },
+  beforeRouteUpdate(to, from, next) {
+    if (to.path === from.path) {
+      // build criteria
+      const criteria = Object.entries(to.query)
+        .filter(([key]) => key.startsWith('cq_'))
+        .map(([key, value]) => {
+          return { taxonomy: key, values: value.split(',') }
+        })
+
+      this.initSearch = {
+        category: to.query.category || this.rootCategory.slug,
+        location: to.query.location,
+        search: to.query.search,
+        criteria
+      }
+
+      // search form
+      this.searchReset()
+
+      this.$store
+        .dispatch('fiches/fetchByCategoryIds', {
+          ...this.initSearch,
+          per_page: FICHE_NUMBER_EACH
+        })
+        .then((ficheResult) => {
+          // fiches
+          this.fiches = ficheResult.fiches
+          this.fichesTotal = ficheResult.total
+          this.fichesPages = ficheResult.pages
+          this.fichesNextPage = 2
+
+          // map
+          this.markers.clear()
+          this.currentMarker = null
+          this.infoWindows.clear()
+          this.currentInfoWindow = null
+          this.markerClusterer.clearMarkers()
+          this.isMapShown = null
+
+          // swiper
+          this.$swiper.virtual.removeAllSlides()
+          this.$swiper.virtual.slides = this.fiches
+          this.$swiper.update()
+          this.$swiper.virtual.update()
+        })
+    }
+    next()
+  },
   computed: {
     hasMoreFiche() {
       return this.fichesNextPage <= this.fichesPages
@@ -353,8 +401,7 @@ export default {
   },
   async mounted() {
     // criteria
-    this.$store.dispatch('menus/setSelectedCategory', this.rootCategory)
-    this.searchReset()
+    await this.searchReset()
 
     // swiper
     this.fichesSwiperOptions = {
@@ -513,6 +560,8 @@ export default {
           criteria.selectedValues = criteria.values.filter(({ slug }) => initCriteria.values.includes(slug))
         }
       })
+
+      this.$v.formSearch.$reset()
     },
     searchFiches() {
       // build new route and navigate to it
@@ -534,7 +583,7 @@ export default {
         }
       })
 
-      this.$router.push({ path: this.$route.path, query })
+      this.$router.push({ query })
     },
     async fetchMoreFiches() {
       if (this.fichesLoading) {
