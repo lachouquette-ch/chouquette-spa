@@ -352,37 +352,42 @@ export default {
     }
   },
   async mounted() {
-    try {
-      this.google = await this.$googleMaps
-      this.map = new this.google.maps.Map(this.$refs.ficheMap, {
-        ...MAP_OPTIONS,
-        gestureHandling: 'none',
-        zoomControl: false
-      })
-    } catch (err) {
-      if (err instanceof Error) console.error(err)
-      else throw err
+    if (this.fiche.info.location) {
+      try {
+        this.google = await this.$googleMaps
+        this.map = new this.google.maps.Map(this.$refs.ficheMap, {
+          ...MAP_OPTIONS,
+          gestureHandling: 'none',
+          zoomControl: false
+        })
+
+        // toggle gesture if fullscreen
+        document.addEventListener(
+          'fullscreenchange',
+          (event) => {
+            if (document.fullscreenElement) {
+              this.map.gestureHandling = 'auto'
+              this.map.zoomControl = true
+            } else {
+              this.map.gestureHandling = 'none'
+              this.map.zoomControl = false
+              // center map
+              this.map.setCenter(this.marker.position)
+              this.infoWindow.open(this.map, this.marker) // force to center on infoWindow too
+            }
+          },
+          { passive: 'true' }
+        )
+      } catch (err) {
+        if (err instanceof Error) {
+          console.error(err)
+        } else {
+          throw err
+        }
+      }
     }
 
     this.init()
-
-    // toggle gesture if fullscreen
-    document.addEventListener(
-      'fullscreenchange',
-      (event) => {
-        if (document.fullscreenElement) {
-          this.map.gestureHandling = 'auto'
-          this.map.zoomControl = true
-        } else {
-          this.map.gestureHandling = 'none'
-          this.map.zoomControl = false
-          // center map
-          this.map.setCenter(this.marker.position)
-          this.infoWindow.open(this.map, this.marker) // force to center on infoWindow too
-        }
-      },
-      { passive: 'true' }
-    )
   },
   methods: {
     openContactModal() {
