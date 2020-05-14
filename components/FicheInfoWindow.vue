@@ -46,6 +46,9 @@ export default {
 
 <style lang="scss" scoped>
 .fiche-infowindow {
+  width: 250px;
+  max-width: 100%;
+
   h2 {
     font-family: $font-family-heading;
   }
