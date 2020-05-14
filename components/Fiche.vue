@@ -70,7 +70,7 @@
         </form>
       </template>
     </b-modal>
-    <article ref="fiche" class="fiche fiche-chouquettise h-100 d-flex justify-content-around align-items-stretch">
+    <article ref="fiche" class="fiche fiche-chouquettise h-100 d-flex justify-content-center align-items-stretch">
       <div ref="ficheFront" class="fiche-front" :class="frontClass">
         <div ref="front" class="card h-100 bg-white">
           <div class="card-header p-0">
@@ -484,18 +484,16 @@ export default {
 <style lang="scss" scoped>
 .fiche-container {
   min-height: 500px;
+}
 
+.fiche-front,
+.fiche-back {
   width: 300px;
   max-width: 100%;
 
   @include media-breakpoint-down(sm) {
     width: 100%;
   }
-}
-
-.fiche-front,
-.fiche-back {
-  width: 100%;
 
   a {
     color: $black;

@@ -21,7 +21,7 @@
           >×</a
         >
         <div v-swiper:ficheSwiper="swiperFichesOptions" class="px-md-5">
-          <div class="swiper-wrapper mb-3 mt-md-3">
+          <div class="swiper-wrapper mt-3">
             <div
               v-for="(fiche, index) in fiches"
               :key="fiche.id"
@@ -206,7 +206,6 @@ export default {
 
       swiperFichesOptions: {
         ...DEFAULT,
-        ...LOOP,
         ...HASH
       },
       swiperPostsOptions: {
@@ -314,13 +313,6 @@ export default {
     line-height: 40px;
 
     font-size: 1.5rem;
-  }
-
-  .swiper-pagination {
-    @include media-breakpoint-down(sm) {
-      bottom: 0;
-      top: auto;
-    }
   }
 }
 
