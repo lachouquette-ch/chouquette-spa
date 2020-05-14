@@ -150,32 +150,39 @@
 
         <b-overlay :show="fichesLoading" variant="white" opacity="1" spinner-variant="yellow">
           <div class="px-3">
-            <div v-if="fichesSwiperOptions" v-swiper="fichesSwiperOptions" class="swiper px-md-5">
-              <div class="swiper-wrapper pt-3">
-                <div
-                  v-for="(fiche, index) in virtualData.slides"
-                  :key="index"
-                  class="swiper-slide h-auto d-flex align-items-stretch"
-                  :style="{ left: `${virtualData.offset}px` }"
-                >
-                  <Fiche :ref="`fiche-${fiche.id}`" class="fiche" :fiche="fiche" :responsive="false">
-                    <template #front-footer>
-                      <a
-                        href=""
-                        title="Voir sur la carte"
-                        class="btn btn-sm btn-outline-secondary mr-1"
-                        @click.prevent="gotoMarker(fiche)"
-                      >
-                        <span class="mx-1"><i class="fas fa-map-marker-alt"></i></span>
-                      </a>
-                    </template>
-                  </Fiche>
+            <template v-if="fiches.length">
+              <div v-if="fichesSwiperOptions" v-swiper="fichesSwiperOptions" class="swiper px-md-5">
+                <div class="swiper-wrapper pt-3">
+                  <div
+                    v-for="(fiche, index) in virtualData.slides"
+                    :key="index"
+                    class="swiper-slide h-auto d-flex align-items-stretch"
+                    :style="{ left: `${virtualData.offset}px` }"
+                  >
+                    <Fiche :ref="`fiche-${fiche.id}`" class="fiche" :fiche="fiche" :responsive="false">
+                      <template #front-footer>
+                        <a
+                          href=""
+                          title="Voir sur la carte"
+                          class="btn btn-sm btn-outline-secondary mr-1"
+                          @click.prevent="gotoMarker(fiche)"
+                        >
+                          <span class="mx-1"><i class="fas fa-map-marker-alt"></i></span>
+                        </a>
+                      </template>
+                    </Fiche>
+                  </div>
                 </div>
+                <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
+                <div v-if="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
+                <div v-if="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
               </div>
-              <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
-              <div v-if="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-              <div v-if="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
-            </div>
+            </template>
+            <template v-else>
+              <span class="h5 d-block text-center">
+                Pas de résultat pour ta recherche <i class="far fa-surprise"></i>. Essaie de changer tes filtres.
+              </span>
+            </template>
           </div>
         </b-overlay>
       </div>
