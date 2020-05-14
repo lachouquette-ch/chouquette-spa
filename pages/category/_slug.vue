@@ -338,6 +338,7 @@ export default {
 
       // search form
       this.searchReset()
+      this.isSearchVisible = false
 
       this.$store
         .dispatch('fiches/fetchByCategoryIds', {
@@ -358,6 +359,7 @@ export default {
           this.currentInfoWindow = null
           this.markerClusterer.clearMarkers()
           this.isMapShown = null
+          this.loadFichesOnMap(this.fiches)
 
           // swiper
           this.$swiper.virtual.removeAllSlides()
