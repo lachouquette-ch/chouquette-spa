@@ -29,10 +29,7 @@
                     <select
                       v-model="formSearch.subCategory"
                       class="form-control form-control-sm"
-                      @change="
-                        loadCriteria()
-                        $v.formSearch.$touch
-                      "
+                      @change="loadCriteria(), $v.formSearch.$touch()"
                     >
                       <option :value="null">Que cherches-tu ?</option>
                       <option v-for="category in subCategories" :key="category.id" :value="category">
@@ -127,36 +124,24 @@
               <CriteriaBadge
                 v-if="formSearch.subCategory"
                 :name="formSearch.subCategory.name"
-                @remove="
-                  formSearch.subCategory = null
-                  $v.formSearch.$touch()
-                "
+                @remove=";(formSearch.subCategory = null), $v.formSearch.$touch()"
               />
               <CriteriaBadge
                 v-if="formSearch.location"
                 :name="formSearch.location.name"
-                @remove="
-                  formSearch.location = null
-                  $v.formSearch.$touch()
-                "
+                @remove=";(formSearch.location = null), $v.formSearch.$touch()"
               />
               <CriteriaBadge
                 v-if="formSearch.search"
                 :name="formSearch.search"
-                @remove="
-                  formSearch.search = null
-                  $v.formSearch.$touch()
-                "
+                @remove=";(formSearch.search = null), $v.formSearch.$touch()"
               />
               <template v-for="criteria in formSearch.criteria">
                 <CriteriaBadge
                   v-for="value in criteria.selectedValues"
                   :key="value.id"
                   :name="value.name"
-                  @remove="
-                    toggleValue(criteria, value)
-                    $v.formSearch.$touch()
-                  "
+                  @remove="toggleValue(criteria, value), $v.formSearch.$touch()"
                 />
               </template>
             </div>
