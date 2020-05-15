@@ -14,7 +14,7 @@
                 <i v-else class="fas fa-plus"></i>
                 <span class="ml-2">Ma recherche</span>
               </button>
-              <b-dropdown size="sm" text="Small" variant="primary" split right>
+              <b-dropdown v-if="$v.formSearch.$dirty" size="sm" text="Small" variant="primary" split right>
                 <template #button-content @click="searchFiches">
                   <i class="fas fa-search"></i>
                   <span class="d-none d-md-inline ml-2">Rechercher</span>
@@ -23,18 +23,11 @@
                   <span class="mr-2">Annuler</span>
                   <span class="float-right"><i class="fas fa-times"></i></span>
                 </b-dropdown-item>
-                <b-dropdown-item href="#" variant="dark-grey" link-class="small">
+                <b-dropdown-item href="#" variant="dark-grey" link-class="small" @click="searchClear">
                   <span class="mr-2">Effacer</span>
                   <span class="float-right"><i class="fas fa-eraser"></i></span>
                 </b-dropdown-item>
               </b-dropdown>
-
-              <button v-if="$v.formSearch.$dirty" class="btn btn-sm btn-primary" @click="searchFiches">
-                <i class="fas fa-redo"></i>
-              </button>
-              <button v-if="$v.formSearch.$dirty" class="btn btn-sm btn-secondary" @click="searchReset">
-                <i class="fas fa-times"></i>
-              </button>
             </div>
 
             <b-collapse id="search" v-model="isSearchVisible">
@@ -126,7 +119,7 @@
                       <span class="ml-2">Rechercher</span>
                     </button>
                     <button
-                      class="btn btn-sm btn-secondary mx-1"
+                      class="btn btn-sm btn-light-grey mx-1"
                       :disabled="!$v.formSearch.$dirty"
                       @click.prevent="searchReset"
                     >
@@ -134,9 +127,8 @@
                       <span class="ml-2">Annuler</span>
                     </button>
                     <button
-                      class="btn btn-sm btn-secondary ml-1"
-                      :disabled="!$v.formSearch.$dirty"
-                      @click.prevent="searchReset"
+                      class="btn btn-sm btn-light-grey ml-1"
+                      @click.prevent="searchClear"
                     >
                       <i class="fas fa-eraser"></i>
                       <span class="ml-2">Effacer</span>
@@ -555,6 +547,17 @@ export default {
     },
 
     // fiches
+    async searchClear() {
+      this.formSearch.subCategory = null
+      await this.loadCriteria()
+      this.formSearch.location = null
+      this.formSearch.search = null
+      this.formSearch.criteria.forEach((criteria) => {
+        criteria.selectedValues = []
+      })
+
+      this.$v.formSearch.$touch()
+    },
     async searchReset() {
       // fields
       if (this.initSearch.category === this.rootCategory.slug) {
@@ -577,6 +580,7 @@ export default {
         }
       })
 
+      this.isSearchVisible = false
       this.$v.formSearch.$reset()
     },
     searchFiches() {
