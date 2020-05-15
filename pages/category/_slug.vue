@@ -399,6 +399,7 @@ export default {
 
     // swiper
     this.fichesSwiperOptions = {
+      centeredSlides: true,
       virtual: {
         slides: this.fiches,
         renderExternal: (data) => {
@@ -628,9 +629,6 @@ export default {
               // find fiche
               const ficheIndex = this.fiches.findIndex(({ id }) => id === fiche.id)
               this.$swiper.slideTo(ficheIndex)
-              this.$nextTick(() => {
-                this.$refs[`fiche-${fiche.id}`][0].$el.classList.add('selected')
-              })
             }
           }
         })
@@ -673,12 +671,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-::v-deep .fiche.selected {
-  article .fiche-container {
-    box-shadow: $box-shadow;
-  }
-}
-
 .search {
   margin: 2rem 0;
 }
