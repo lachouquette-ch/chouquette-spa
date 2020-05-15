@@ -14,6 +14,21 @@
                 <i v-else class="fas fa-plus"></i>
                 <span class="ml-2">Ma recherche</span>
               </button>
+              <b-dropdown size="sm" text="Small" variant="primary" split right>
+                <template #button-content @click="searchFiches">
+                  <i class="fas fa-search"></i>
+                  <span class="d-none d-md-inline ml-2">Rechercher</span>
+                </template>
+                <b-dropdown-item href="#" variant="dark-grey" link-class="small" @click="searchReset">
+                  <span class="mr-2">Annuler</span>
+                  <span class="float-right"><i class="fas fa-times"></i></span>
+                </b-dropdown-item>
+                <b-dropdown-item href="#" variant="dark-grey" link-class="small">
+                  <span class="mr-2">Effacer</span>
+                  <span class="float-right"><i class="fas fa-eraser"></i></span>
+                </b-dropdown-item>
+              </b-dropdown>
+
               <button v-if="$v.formSearch.$dirty" class="btn btn-sm btn-primary" @click="searchFiches">
                 <i class="fas fa-redo"></i>
               </button>
@@ -101,20 +116,30 @@
                       @input.once="$v.formSearch.$touch"
                     />
                   </div>
-                  <div class="d-flex">
+                  <div class="d-flex flex-wrap justify-content-around">
                     <button
-                      class="btn btn-sm btn-primary flex-grow-1 mr-2"
+                      class="btn btn-sm btn-primary mr-1 flex-fill"
                       :disabled="!$v.formSearch.$dirty"
                       @click.prevent="searchFiches"
                     >
-                      Lance la recherche
+                      <i class="fas fa-search"></i>
+                      <span class="ml-2">Rechercher</span>
                     </button>
                     <button
-                      class="btn btn-sm btn-secondary ml-2"
+                      class="btn btn-sm btn-secondary mx-1"
                       :disabled="!$v.formSearch.$dirty"
                       @click.prevent="searchReset"
                     >
-                      Annuler
+                      <i class="fas fa-times"></i>
+                      <span class="ml-2">Annuler</span>
+                    </button>
+                    <button
+                      class="btn btn-sm btn-secondary ml-1"
+                      :disabled="!$v.formSearch.$dirty"
+                      @click.prevent="searchReset"
+                    >
+                      <i class="fas fa-eraser"></i>
+                      <span class="ml-2">Effacer</span>
                     </button>
                   </div>
                 </form>
@@ -203,15 +228,11 @@
       </div>
 
       <div class="fiches-map-toggle-buttons btn-group btn-group-toggle" data-toggle="buttons">
-        <button
-          class="btn btn-sm btn-primary border-white border-right-0"
-          :class="{ active: !isMapShown }"
-          @click="isMapShown = false"
-        >
+        <button class="btn btn-sm btn-primary" :class="{ active: !isMapShown }" @click="isMapShown = false">
           Fiches
         </button>
         <button
-          class="btn btn-sm btn-primary border-white border-left-0"
+          class="btn btn-sm btn-primary"
           :class="{ active: isMapShown }"
           :disabled="!markers.size"
           @click="showMap"
