@@ -1,238 +1,237 @@
 <template>
   <div class="category-page layout-content">
-    <div class="position-relative">
-      <div class="fiches pt-3 pb-5">
-        <div class="container">
-          <div class="text-center">
-            <h1 class="mb-0">{{ rootCategory.name }}</h1>
-            <span class="d-none d-md-inline muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
-          </div>
-          <div class="search border rounded">
-            <div class="btn-group search-button" role="group" aria-label="Recherche">
-              <button v-b-toggle.search class="btn btn-sm btn-light-grey">
-                <i v-if="isSearchVisible" class="fas fa-minus"></i>
-                <i v-else class="fas fa-plus"></i>
-                <span class="ml-2">Ma recherche</span>
-              </button>
-              <b-dropdown v-if="$v.formSearch.$dirty" size="sm" text="Small" variant="primary" split right>
-                <template #button-content @click="searchFiches">
-                  <i class="fas fa-search"></i>
-                  <span class="d-none d-md-inline ml-2">Rechercher</span>
-                </template>
-                <b-dropdown-item href="#" variant="dark-grey" link-class="small" @click="searchReset">
-                  <span class="mr-2">Annuler</span>
-                  <span class="float-right"><i class="fas fa-times"></i></span>
-                </b-dropdown-item>
-                <b-dropdown-item href="#" variant="dark-grey" link-class="small" @click="searchClear">
-                  <span class="mr-2">Effacer</span>
-                  <span class="float-right"><i class="fas fa-eraser"></i></span>
-                </b-dropdown-item>
-              </b-dropdown>
+    <b-overlay :show="loading" variant="white" z-index="2000" spinner-variant="yellow">
+      <div class="position-relative">
+        <div class="fiches pt-3 pb-5">
+          <div class="container">
+            <div class="text-center">
+              <h1 class="mb-0">{{ rootCategory.name }}</h1>
+              <span class="d-none d-md-inline muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
             </div>
+            <div class="search border rounded">
+              <div class="btn-group search-button" role="group" aria-label="Recherche">
+                <button v-b-toggle.search class="btn btn-sm btn-light-grey">
+                  <i v-if="isSearchVisible" class="fas fa-minus"></i>
+                  <i v-else class="fas fa-plus"></i>
+                  <span class="ml-2">Ma recherche</span>
+                </button>
+                <b-dropdown v-if="$v.formSearch.$dirty" size="sm" text="Small" variant="primary" split right>
+                  <template #button-content @click="searchFiches">
+                    <i class="fas fa-search"></i>
+                    <span class="d-none d-md-inline ml-2">Rechercher</span>
+                  </template>
+                  <b-dropdown-item href="#" variant="dark-grey" link-class="small" @click="searchReset">
+                    <span class="mr-2">Annuler</span>
+                    <span class="float-right"><i class="fas fa-times"></i></span>
+                  </b-dropdown-item>
+                  <b-dropdown-item href="#" variant="dark-grey" link-class="small" @click="searchClear">
+                    <span class="mr-2">Effacer</span>
+                    <span class="float-right"><i class="fas fa-eraser"></i></span>
+                  </b-dropdown-item>
+                </b-dropdown>
+              </div>
 
-            <b-collapse id="search" v-model="isSearchVisible">
-              <div class="px-3 pt-4 pb-2">
-                <form>
-                  <div class="form-group">
-                    <select
-                      v-model="formSearch.subCategory"
-                      class="form-control form-control-sm"
-                      @change="loadCriteria(), $v.formSearch.$touch()"
-                    >
-                      <option :value="null">Que cherches-tu ?</option>
-                      <option v-for="category in subCategories" :key="category.id" :value="category">
-                        {{ category.name }}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <select
-                      v-model="formSearch.location"
-                      class="form-control form-control-sm"
-                      @change="$v.formSearch.$touch"
-                    >
-                      <option :value="null">Où veux-tu aller ?</option>
-                      <option
-                        v-for="location in flatLocations"
-                        :key="location.id"
-                        :value="location"
-                        :class="{ 'font-weight-bold': !location.level }"
-                      >
-                        {{ '&nbsp;'.repeat(location.level * 2) }}{{ location.name }}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="d-bock d-md-none">
-                    <div v-for="criteria in formSearch.criteria" :key="criteria.id" class="form-group">
+              <b-collapse id="search" v-model="isSearchVisible">
+                <div class="px-3 pt-4 pb-2">
+                  <form>
+                    <div class="form-group">
                       <select
-                        v-model="criteria.selectedValues"
+                        v-model="formSearch.subCategory"
                         class="form-control form-control-sm"
-                        multiple
-                        @change="$v.formSearch.$touch"
+                        @change="loadCriteria(), $v.formSearch.$touch()"
                       >
-                        <option v-for="value in criteria.values" :key="`${criteria.id}-${value.id}`" :value="value">
-                          {{ value.name }}
+                        <option :value="null">Que cherches-tu ?</option>
+                        <option v-for="category in subCategories" :key="category.id" :value="category">
+                          {{ category.name }}
                         </option>
                       </select>
                     </div>
-                  </div>
-                  <div class="d-none d-md-block">
-                    <b-overlay :show="criteriaLoading" opacity="0.6" blur="none" spinner-variant="yellow">
-                      <fieldset v-for="criteria in formSearch.criteria" :key="criteria.id" class="border my-3 px-3">
-                        <legend class="h6 w-auto px-3 m-0">{{ criteria.name }}</legend>
-                        <div class="form-row py-2">
-                          <div v-for="value in criteria.values" :key="`${criteria.id}-${value.id}`" class="col-6">
-                            <div class="form-check">
-                              <input
-                                :id="`${criteria.slug}-${value.slug}`"
-                                type="checkbox"
-                                class="form-check-input"
-                                :checked="isValueChecked(criteria, value)"
-                                @click="toggleValue(criteria, value)"
-                              />
-                              <label class="form-check-label" :for="`${criteria.slug}-${value.slug}`">
-                                {{ value.name }}
-                              </label>
+                    <div class="form-group">
+                      <select
+                        v-model="formSearch.location"
+                        class="form-control form-control-sm"
+                        @change="$v.formSearch.$touch"
+                      >
+                        <option :value="null">Où veux-tu aller ?</option>
+                        <option
+                          v-for="location in flatLocations"
+                          :key="location.id"
+                          :value="location"
+                          :class="{ 'font-weight-bold': !location.level }"
+                        >
+                          {{ '&nbsp;'.repeat(location.level * 2) }}{{ location.name }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="d-bock d-md-none">
+                      <div v-for="criteria in formSearch.criteria" :key="criteria.id" class="form-group">
+                        <select
+                          v-model="criteria.selectedValues"
+                          class="form-control form-control-sm"
+                          multiple
+                          @change="$v.formSearch.$touch"
+                        >
+                          <option v-for="value in criteria.values" :key="`${criteria.id}-${value.id}`" :value="value">
+                            {{ value.name }}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="d-none d-md-block">
+                      <b-overlay :show="criteriaLoading" opacity="0.6" blur="none" spinner-variant="yellow">
+                        <fieldset v-for="criteria in formSearch.criteria" :key="criteria.id" class="border my-3 px-3">
+                          <legend class="h6 w-auto px-3 m-0">{{ criteria.name }}</legend>
+                          <div class="form-row py-2">
+                            <div v-for="value in criteria.values" :key="`${criteria.id}-${value.id}`" class="col-6">
+                              <div class="form-check">
+                                <input
+                                  :id="`${criteria.slug}-${value.slug}`"
+                                  type="checkbox"
+                                  class="form-check-input"
+                                  :checked="isValueChecked(criteria, value)"
+                                  @click="toggleValue(criteria, value)"
+                                />
+                                <label class="form-check-label" :for="`${criteria.slug}-${value.slug}`">
+                                  {{ value.name }}
+                                </label>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </fieldset>
-                    </b-overlay>
-                  </div>
-                  <div class="form-group">
-                    <input
-                      v-model="formSearch.search"
-                      class="form-control form-control-sm"
-                      type="text"
-                      placeholder="En quelques mots ..."
-                      name="search"
-                      @input.once="$v.formSearch.$touch"
-                    />
-                  </div>
-                  <div class="d-flex flex-wrap justify-content-around">
-                    <button
-                      class="btn btn-sm btn-primary mr-1 flex-fill"
-                      :disabled="!$v.formSearch.$dirty"
-                      @click.prevent="searchFiches"
-                    >
-                      <i class="fas fa-search"></i>
-                      <span class="ml-2">Rechercher</span>
-                    </button>
-                    <button
-                      class="btn btn-sm btn-light-grey mx-1"
-                      :disabled="!$v.formSearch.$dirty"
-                      @click.prevent="searchReset"
-                    >
-                      <i class="fas fa-times"></i>
-                      <span class="ml-2">Annuler</span>
-                    </button>
-                    <button
-                      class="btn btn-sm btn-light-grey ml-1"
-                      @click.prevent="searchClear"
-                    >
-                      <i class="fas fa-eraser"></i>
-                      <span class="ml-2">Effacer</span>
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </b-collapse>
-            <div v-if="!isSearchVisible" :class="{ 'p-2 pt-4': hasSearchCriteria }">
-              <CriteriaBadge
-                v-if="formSearch.subCategory"
-                :name="formSearch.subCategory.name"
-                @remove=";(formSearch.subCategory = null), $v.formSearch.$touch()"
-              />
-              <CriteriaBadge
-                v-if="formSearch.location"
-                :name="formSearch.location.name"
-                @remove=";(formSearch.location = null), $v.formSearch.$touch()"
-              />
-              <CriteriaBadge
-                v-if="formSearch.search"
-                :name="formSearch.search"
-                @remove=";(formSearch.search = null), $v.formSearch.$touch()"
-              />
-              <template v-for="criteria in formSearch.criteria">
+                        </fieldset>
+                      </b-overlay>
+                    </div>
+                    <div class="form-group">
+                      <input
+                        v-model="formSearch.search"
+                        class="form-control form-control-sm"
+                        type="text"
+                        placeholder="En quelques mots ..."
+                        name="search"
+                        @input.once="$v.formSearch.$touch"
+                      />
+                    </div>
+                    <div class="d-flex flex-wrap justify-content-around">
+                      <button
+                        class="btn btn-sm btn-primary mr-1 flex-fill"
+                        :disabled="!$v.formSearch.$dirty"
+                        @click.prevent="searchFiches"
+                      >
+                        <i class="fas fa-search"></i>
+                        <span class="ml-2">Rechercher</span>
+                      </button>
+                      <button
+                        class="btn btn-sm btn-light-grey mx-1"
+                        :disabled="!$v.formSearch.$dirty"
+                        @click.prevent="searchReset"
+                      >
+                        <i class="fas fa-times"></i>
+                        <span class="ml-2">Annuler</span>
+                      </button>
+                      <button class="btn btn-sm btn-light-grey ml-1" @click.prevent="searchClear">
+                        <i class="fas fa-eraser"></i>
+                        <span class="ml-2">Effacer</span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </b-collapse>
+              <div v-if="!isSearchVisible" :class="{ 'p-2 pt-4': hasSearchCriteria }">
                 <CriteriaBadge
-                  v-for="value in criteria.selectedValues"
-                  :key="value.id"
-                  :name="value.name"
-                  @remove="toggleValue(criteria, value), $v.formSearch.$touch()"
+                  v-if="formSearch.subCategory"
+                  :name="formSearch.subCategory.name"
+                  @remove=";(formSearch.subCategory = null), $v.formSearch.$touch()"
                 />
-              </template>
+                <CriteriaBadge
+                  v-if="formSearch.location"
+                  :name="formSearch.location.name"
+                  @remove=";(formSearch.location = null), $v.formSearch.$touch()"
+                />
+                <CriteriaBadge
+                  v-if="formSearch.search"
+                  :name="formSearch.search"
+                  @remove=";(formSearch.search = null), $v.formSearch.$touch()"
+                />
+                <template v-for="criteria in formSearch.criteria">
+                  <CriteriaBadge
+                    v-for="value in criteria.selectedValues"
+                    :key="value.id"
+                    :name="value.name"
+                    @remove="toggleValue(criteria, value), $v.formSearch.$touch()"
+                  />
+                </template>
+              </div>
             </div>
           </div>
+
+          <b-overlay :show="fichesLoading" variant="white" opacity="1" spinner-variant="yellow">
+            <div class="px-3">
+              <template v-if="fiches.length">
+                <div v-if="fichesSwiperOptions" v-swiper="fichesSwiperOptions" class="swiper px-md-5">
+                  <div class="swiper-wrapper pt-3">
+                    <div
+                      v-for="(fiche, index) in virtualData.slides"
+                      :key="index"
+                      class="swiper-slide h-auto d-flex align-items-stretch"
+                      :style="{ left: `${virtualData.offset}px` }"
+                    >
+                      <Fiche :ref="`fiche-${fiche.id}`" class="fiche" :fiche="fiche" :responsive="false">
+                        <template #front-footer>
+                          <a
+                            href=""
+                            title="Voir sur la carte"
+                            class="btn btn-sm btn-outline-secondary mr-1"
+                            @click.prevent="gotoMarker(fiche)"
+                          >
+                            <span class="mx-1"><i class="fas fa-map-marker-alt"></i></span>
+                          </a>
+                        </template>
+                      </Fiche>
+                    </div>
+                  </div>
+                  <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
+                  <div v-if="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
+                  <div v-if="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
+                </div>
+              </template>
+              <template v-else>
+                <span class="h5 d-block text-center">
+                  Pas de résultat pour ta recherche <i class="far fa-surprise"></i>. Essaie de changer tes filtres.
+                </span>
+              </template>
+            </div>
+          </b-overlay>
         </div>
 
-        <b-overlay :show="fichesLoading" variant="white" opacity="1" spinner-variant="yellow">
-          <div class="px-3">
-            <template v-if="fiches.length">
-              <div v-if="fichesSwiperOptions" v-swiper="fichesSwiperOptions" class="swiper px-md-5">
-                <div class="swiper-wrapper pt-3">
-                  <div
-                    v-for="(fiche, index) in virtualData.slides"
-                    :key="index"
-                    class="swiper-slide h-auto d-flex align-items-stretch"
-                    :style="{ left: `${virtualData.offset}px` }"
-                  >
-                    <Fiche :ref="`fiche-${fiche.id}`" class="fiche" :fiche="fiche" :responsive="false">
-                      <template #front-footer>
-                        <a
-                          href=""
-                          title="Voir sur la carte"
-                          class="btn btn-sm btn-outline-secondary mr-1"
-                          @click.prevent="gotoMarker(fiche)"
-                        >
-                          <span class="mx-1"><i class="fas fa-map-marker-alt"></i></span>
-                        </a>
-                      </template>
-                    </Fiche>
-                  </div>
-                </div>
-                <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
-                <div v-if="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-                <div v-if="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
-              </div>
-            </template>
-            <template v-else>
-              <span class="h5 d-block text-center">
-                Pas de résultat pour ta recherche <i class="far fa-surprise"></i>. Essaie de changer tes filtres.
-              </span>
-            </template>
-          </div>
-        </b-overlay>
-      </div>
+        <div class="map" :class="{ 'd-none': !isMapShown }">
+          <div ref="map" class="h-100 w-100" />
+          <button
+            v-if="hasMoreFiche"
+            class="map-load-more google-map-control bg-yellow w-auto"
+            :disabled="fichesLoading || !hasMoreFiche"
+            title="Afficher plus de fiches"
+            @click="fetchMoreFiches"
+          >
+            <b-spinner v-show="fichesLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
+            <strong>+{{ countNextFiches }}</strong>
+            <sub>Fiches</sub>
+          </button>
+        </div>
 
-      <div class="map" :class="{ 'd-none': !isMapShown }">
-        <div ref="map" class="h-100 w-100" />
-        <button
-          v-if="hasMoreFiche"
-          class="map-load-more google-map-control bg-yellow w-auto"
-          :disabled="fichesLoading || !hasMoreFiche"
-          title="Afficher plus de fiches"
-          @click="fetchMoreFiches"
-        >
-          <b-spinner v-show="fichesLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
-          <strong>+{{ countNextFiches }}</strong>
-          <sub>Fiches</sub>
-        </button>
+        <div class="fiches-map-toggle-buttons btn-group btn-group-toggle" data-toggle="buttons">
+          <button class="btn btn-sm btn-primary" :class="{ active: !isMapShown }" @click="isMapShown = false">
+            Fiches
+          </button>
+          <button
+            class="btn btn-sm btn-primary"
+            :class="{ active: isMapShown }"
+            :disabled="!markers.size"
+            @click="showMap"
+          >
+            Carte
+          </button>
+        </div>
       </div>
-
-      <div class="fiches-map-toggle-buttons btn-group btn-group-toggle" data-toggle="buttons">
-        <button class="btn btn-sm btn-primary" :class="{ active: !isMapShown }" @click="isMapShown = false">
-          Fiches
-        </button>
-        <button
-          class="btn btn-sm btn-primary"
-          :class="{ active: isMapShown }"
-          :disabled="!markers.size"
-          @click="showMap"
-        >
-          Carte
-        </button>
-      </div>
-    </div>
+    </b-overlay>
   </div>
 </template>
 
@@ -313,11 +312,13 @@ export default {
       criteriaLoading: false,
 
       // swiper
-      fichesLoading: true,
+      fichesLoading: false,
       fichesSwiperOptions: null,
       virtualData: {
         slides: []
-      }
+      },
+
+      loading: false
     }
   },
   validations() {
@@ -407,6 +408,8 @@ export default {
     }
   },
   async mounted() {
+    this.loading = true
+
     // criteria
     await this.searchReset()
 
@@ -430,42 +433,37 @@ export default {
     }
 
     // build map
-    try {
-      this.google = await this.$googleMaps
-      this.map = new this.google.maps.Map(this.$refs.map, {
-        ...MAP_OPTIONS
-      })
+    this.google = await this.$googleMaps
+    this.map = new this.google.maps.Map(this.$refs.map, {
+      ...MAP_OPTIONS
+    })
 
-      // create cluster
-      this.markerClusterer = new MarkerClusterer(this.map, [], {
-        averageCenter: true,
-        styles: CLUSTER_STYLES,
-        calculator: (markers, clusterIconStylesCount) => {
-          const index = markers.find((marker) => marker.chouquettise) ? 2 : 1
-          return {
-            index,
-            text: markers.length
-          }
+    // create cluster
+    this.markerClusterer = new MarkerClusterer(this.map, [], {
+      averageCenter: true,
+      styles: CLUSTER_STYLES,
+      calculator: (markers, clusterIconStylesCount) => {
+        const index = markers.find((marker) => marker.chouquettise) ? 2 : 1
+        return {
+          index,
+          text: markers.length
         }
-      })
+      }
+    })
 
-      // create map controls
-      const centerControlButton = document.createElement('button')
-      centerControlButton.className = 'google-map-control'
-      centerControlButton.title = 'Voir toutes les fiches sur la carte'
-      const centerControlButtonContent = document.createElement('i')
-      centerControlButtonContent.className = 'far fa-map'
-      centerControlButton.appendChild(centerControlButtonContent)
-      centerControlButton.addEventListener('click', () => this.resetMap())
-      this.map.controls[this.google.maps.ControlPosition.RIGHT_TOP].push(centerControlButton)
+    // create map controls
+    const centerControlButton = document.createElement('button')
+    centerControlButton.className = 'google-map-control'
+    centerControlButton.title = 'Voir toutes les fiches sur la carte'
+    const centerControlButtonContent = document.createElement('i')
+    centerControlButtonContent.className = 'far fa-map'
+    centerControlButton.appendChild(centerControlButtonContent)
+    centerControlButton.addEventListener('click', () => this.resetMap())
+    this.map.controls[this.google.maps.ControlPosition.RIGHT_TOP].push(centerControlButton)
 
-      this.loadFichesOnMap(this.fiches)
-    } catch (err) {
-      if (err instanceof Error) console.error(err)
-      else throw err
-    } finally {
-      this.fichesLoading = false
-    }
+    this.loadFichesOnMap(this.fiches)
+
+    this.loading = false
   },
   methods: {
     // criteria
