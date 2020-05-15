@@ -150,7 +150,7 @@
       </div>
       <div ref="ficheBack" class="fiche-back" :class="backClass">
         <div ref="back" class="card h-100 bg-white">
-          <div v-if="fiche.info.location" class="card-header p-0">
+          <div v-if="fiche.info.location && map" class="card-header p-0">
             <div v-show="marker" ref="ficheMap" class="h-100"></div>
           </div>
           <div class="card-body position-relative p-0 pt-2">
@@ -377,11 +377,7 @@ export default {
           { passive: 'true' }
         )
       } catch (err) {
-        if (err instanceof Error) {
-          console.error(err)
-        } else {
-          throw err
-        }
+        console.error(err)
       }
     }
 
