@@ -16,9 +16,11 @@
                   <span class="ml-2">Ma recherche</span>
                 </button>
                 <b-dropdown v-if="$v.formSearch.$dirty" size="sm" text="Small" variant="primary" split right>
-                  <template #button-content @click="searchFiches">
-                    <i class="fas fa-search"></i>
-                    <span class="d-none d-md-inline ml-2">Rechercher</span>
+                  <template #button-content>
+                    <div @click="searchFiches">
+                      <i class="fas fa-search"></i>
+                      <span class="d-none d-md-inline ml-2">Rechercher</span>
+                    </div>
                   </template>
                   <b-dropdown-item href="#" variant="dark-grey" link-class="small" @click="searchReset">
                     <span class="mr-2">Annuler</span>
@@ -330,6 +332,8 @@ export default {
   },
   beforeRouteUpdate(to, from, next) {
     if (to.path === from.path) {
+      this.loading = true
+
       // build criteria
       const criteria = Object.entries(to.query)
         .filter(([key]) => key.startsWith('cq_'))
@@ -375,6 +379,8 @@ export default {
           this.$swiper.update()
           this.$swiper.virtual.update()
         })
+
+      this.loading = false
     }
     next()
   },
@@ -704,6 +710,7 @@ export default {
   position: absolute;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: $zindex-dropdown;
 }
 
 .swiper-button-prev,
