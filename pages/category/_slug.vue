@@ -64,18 +64,20 @@
                       </select>
                     </div>
                     <div class="d-bock d-md-none">
-                      <div v-for="criteria in formSearch.criteria" :key="criteria.id" class="form-group">
-                        <select
-                          v-model="criteria.selectedValues"
-                          class="form-control form-control-sm"
-                          multiple
-                          @change="$v.formSearch.$touch"
-                        >
-                          <option v-for="value in criteria.values" :key="`${criteria.id}-${value.id}`" :value="value">
-                            {{ value.name }}
-                          </option>
-                        </select>
-                      </div>
+                      <b-overlay :show="criteriaLoading" opacity="0.6" blur="none" spinner-variant="yellow">
+                        <div v-for="criteria in formSearch.criteria" :key="criteria.id" class="form-group">
+                          <select
+                            v-model="criteria.selectedValues"
+                            class="form-control form-control-sm"
+                            multiple
+                            @change="$v.formSearch.$touch"
+                          >
+                            <option v-for="value in criteria.values" :key="`${criteria.id}-${value.id}`" :value="value">
+                              {{ value.name }}
+                            </option>
+                          </select>
+                        </div>
+                      </b-overlay>
                     </div>
                     <div class="d-none d-md-block">
                       <b-overlay :show="criteriaLoading" opacity="0.6" blur="none" spinner-variant="yellow">
