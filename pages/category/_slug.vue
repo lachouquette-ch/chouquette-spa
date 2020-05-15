@@ -1,6 +1,6 @@
 <template>
   <div class="category-page layout-content">
-    <b-overlay :show="loading" variant="white" z-index="2000" spinner-variant="yellow">
+    <b-overlay :show="loading" variant="white" opacity="1" z-index="2000" spinner-variant="yellow">
       <div class="position-relative">
         <div class="fiches pt-3 pb-5">
           <div class="container">
@@ -332,8 +332,6 @@ export default {
   },
   beforeRouteUpdate(to, from, next) {
     if (to.path === from.path) {
-      this.loading = true
-
       // build criteria
       const criteria = Object.entries(to.query)
         .filter(([key]) => key.startsWith('cq_'))
@@ -348,39 +346,7 @@ export default {
         criteria
       }
 
-      // search form
-      this.searchReset()
-      this.isSearchVisible = false
-
-      this.$store
-        .dispatch('fiches/fetchByCategoryIds', {
-          ...this.initSearch,
-          per_page: FICHE_NUMBER_EACH
-        })
-        .then((ficheResult) => {
-          // fiches
-          this.fiches = ficheResult.fiches
-          this.fichesTotal = ficheResult.total
-          this.fichesPages = ficheResult.pages
-          this.fichesNextPage = 2
-
-          // map
-          this.markers.clear()
-          this.currentMarker = null
-          this.infoWindows.clear()
-          this.currentInfoWindow = null
-          this.markerClusterer.clearMarkers()
-          this.isMapShown = null
-          this.loadFichesOnMap(this.fiches)
-
-          // swiper
-          this.$swiper.virtual.removeAllSlides()
-          this.$swiper.virtual.slides = this.fiches
-          this.$swiper.update()
-          this.$swiper.virtual.update()
-        })
-
-      this.loading = false
+      this.reload()
     }
     next()
   },
@@ -474,6 +440,42 @@ export default {
     this.loading = false
   },
   methods: {
+    async reload() {
+      this.loading = true
+
+      // search form
+      await this.searchReset()
+      this.isSearchVisible = false
+
+      const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
+        ...this.initSearch,
+        per_page: FICHE_NUMBER_EACH
+      })
+
+      // fiches
+      this.fiches = ficheResult.fiches
+      this.fichesTotal = ficheResult.total
+      this.fichesPages = ficheResult.pages
+      this.fichesNextPage = 2
+
+      // map
+      this.markers.clear()
+      this.currentMarker = null
+      this.infoWindows.clear()
+      this.currentInfoWindow = null
+      this.markerClusterer.clearMarkers()
+      this.isMapShown = null
+      this.loadFichesOnMap(this.fiches)
+
+      // swiper
+      this.$swiper.virtual.removeAllSlides()
+      this.$swiper.virtual.slides = this.fiches
+      this.$swiper.update()
+      this.$swiper.virtual.update()
+
+      this.loading = false
+    },
+
     // criteria
     toggleValue(criteria, value) {
       this.$v.formSearch.$touch()
