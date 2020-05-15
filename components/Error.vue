@@ -42,4 +42,8 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+a {
+  text-decoration: underline;
+}
+</style>
