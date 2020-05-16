@@ -266,8 +266,9 @@ export default {
     const subCategories = store.state.categories.children[rootCategory.id] // fetched along category
 
     // store initialization
-    await store.dispatch('menus/setSelectedCategory', rootCategory)
     await store.dispatch('locations/init')
+    await store.dispatch('menus/init')
+    await store.dispatch('menus/setSelectedCategory', rootCategory)
 
     // build criteria
     const criteria = Object.entries(query)
@@ -348,7 +349,9 @@ export default {
 
       this.reload()
     }
-    next()
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.dispatch('menus/clearSelectedCategory').then(() => next())
   },
   computed: {
     hasMoreFiche() {

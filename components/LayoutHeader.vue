@@ -92,7 +92,7 @@
               :to="{ path: `/category/${category.slug}` }"
               :title="category.description"
               class="nav-link text-md-center"
-              :class="{ 'text-yellow': isSelectedCategory(category) }"
+              :class="{ 'text-yellow': category.isSelected }"
             >
               <CategoryLogo
                 :category="category"
@@ -145,8 +145,7 @@ export default {
   },
   computed: {
     ...mapState('menus', {
-      categories: 'headerCategories',
-      selectedCategory: 'selectedCategory'
+      categories: 'headerCategories'
     })
   },
   created() {
@@ -154,19 +153,14 @@ export default {
       // reset component
       this.$bvModal.hide('search-modal')
       $('#navbarChouquette').collapse('hide')
-      this.$store.dispatch('menus/clearSelectedCategory')
     })
   },
   methods: {
     search(text) {
       this.$router.push(`/search/${text}`)
     },
-    isSelectedCategory(category) {
-      if (!this.selectedCategory) return false
-      return this.selectedCategory.id === category.id
-    },
     logoColor(category) {
-      return category === this.hoverCategory || this.isSelectedCategory(category) ? 'yellow' : 'white'
+      return category.isSelected || this.hoverCategory === category ? 'yellow' : 'white'
     }
   }
 }
