@@ -2,7 +2,7 @@
   <div v-if="fiche" class="fiche-page layout-content container-fluid mx-auto my-5">
     <h1 class="text-center my-4">{{ fiche.title.rendered | heDecode }}</h1>
     <main role="main">
-      <Fiche :fiche="fiche" />
+      <Fiche :fiche="fiche" no-ref-link />
     </main>
   </div>
 </template>

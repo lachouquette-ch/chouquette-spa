@@ -158,7 +158,7 @@
       </div>
       <div ref="ficheBack" class="fiche-back" :class="backClass">
         <div ref="back" class="card h-100 bg-white">
-          <div v-if="fiche.info.location && map" class="card-header p-0">
+          <div v-if="fiche.info.location" class="card-header p-0">
             <div v-show="marker" ref="ficheMap" class="h-100"></div>
           </div>
           <div class="card-body position-relative p-0 pt-2">
@@ -229,6 +229,7 @@
           </div>
           <div class="card-footer">
             <nuxt-link
+              v-if="!noRefLink"
               :to="{ path: `/fiche/${fiche.slug}` }"
               title="Page de la fiche"
               class=" btn btn-sm btn-outline-secondary"
@@ -273,7 +274,8 @@ export default {
     responsive: {
       type: Boolean,
       default: true
-    }
+    },
+    noRefLink: Boolean
   },
   validations: {
     formFiche: {
