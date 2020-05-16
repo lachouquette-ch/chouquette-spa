@@ -310,14 +310,14 @@ export default {
     frontClass() {
       return {
         flipped: !this.noUnfolding && this.isFlipped,
-        'flipped-folding': this.noUnfolding && this.isFlipped,
+        'flipped-unfolded': this.noUnfolding && this.isFlipped,
         'mx-md-3': this.noUnfolding
       }
     },
     backClass() {
       return {
         flipped: this.noUnfolding && !this.isFlipped,
-        'flipped-folding': !this.noUnfolding && !this.isFlipped,
+        'flipped-unfolded': !this.noUnfolding && !this.isFlipped,
         'mx-md-3': this.noUnfolding
       }
     },
@@ -527,7 +527,7 @@ export default {
     visibility: hidden;
   }
 
-  &.flipped-folding {
+  &.flipped-unfolded {
     @include media-breakpoint-down(sm) {
       position: absolute;
       visibility: hidden;
