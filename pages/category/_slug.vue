@@ -178,7 +178,7 @@
                       class="swiper-slide h-auto d-flex align-items-stretch"
                       :style="{ left: `${virtualData.offset}px` }"
                     >
-                      <Fiche :ref="`fiche-${fiche.id}`" class="fiche" :fiche="fiche" no-unfolding>
+                      <Fiche :ref="`fiche-${fiche.id}`" class="fiche" :fiche="fiche" no-unfold>
                         <template v-if="map" #front-footer>
                           <a
                             href=""

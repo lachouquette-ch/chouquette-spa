@@ -52,7 +52,7 @@
         <h2 class="post-sidebar-title h5 m-0">{{ hasSingleFiche ? 'La fiche' : "Cités dans l'article" }} :</h2>
       </div>
       <div v-if="fiches">
-        <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" no-unfolding />
+        <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" no-unfold />
         <FicheThumbnail
           v-for="(fiche, index) in fiches"
           v-else
@@ -169,7 +169,7 @@ import Fiche from '../components/Fiche'
 import yoast from '~/mixins/yoast'
 import gutenberg from '~/mixins/gutenberg'
 
-import { DEFAULT, LOOP, RESPONSIVE, HASH } from '~/constants/swiper'
+import { DEFAULT, RESPONSIVE, HASH } from '~/constants/swiper'
 import Newsletter from '~/components/Newsletter'
 
 export default {
