@@ -72,11 +72,11 @@
         <div class="text-center">
           <h2 class="mb-4">Nos derniers articles</h2>
         </div>
-        <div v-if="latestPosts" class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
+        <main v-if="latestPosts" class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
           <nuxt-link v-for="post in latestPosts" :key="post.id" :to="{ path: `/${post.slug}` }" class="post-card">
             <PostCard :post="post" class="mx-auto" />
           </nuxt-link>
-        </div>
+        </main>
       </div>
 
       <div class="my-5">

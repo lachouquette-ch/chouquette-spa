@@ -104,7 +104,7 @@
 
           <section class="gutenberg-content container pt-4 mb-5">
             <h1 class="pt-2 mb-4 text-center">{{ post.title.rendered | heDecode }}</h1>
-            <main v-html="post.content.rendered" />
+            <div v-html="post.content.rendered" />
           </section>
 
           <section class="post-author container mb-5">

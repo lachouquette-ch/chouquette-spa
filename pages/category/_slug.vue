@@ -168,7 +168,7 @@
           </div>
 
           <b-overlay :show="fichesLoading" variant="white" opacity="1" spinner-variant="yellow">
-            <div class="px-3">
+            <main class="px-3">
               <template v-if="fiches.length">
                 <div v-if="fichesSwiperOptions" v-swiper="fichesSwiperOptions" class="swiper px-md-5">
                   <div class="swiper-wrapper pt-3">
@@ -202,7 +202,7 @@
                   Pas de résultat pour ta recherche <i class="far fa-surprise"></i>. Essaie de changer tes filtres.
                 </span>
               </template>
-            </div>
+            </main>
           </b-overlay>
         </div>
 
