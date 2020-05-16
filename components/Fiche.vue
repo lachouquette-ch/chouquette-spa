@@ -136,6 +136,14 @@
           <div class="card-footer">
             <slot name="front-footer"></slot>
             <FicheShare :fiche="fiche" />
+            <nuxt-link
+              v-if="fiche.latest_post"
+              :to="{ path: `/${fiche.latest_post.slug}` }"
+              :title="`Lire le dernier article : ${fiche.latest_post.title}`"
+              class=" btn btn-sm btn-outline-secondary"
+            >
+              <i class="far fa-newspaper"></i>
+            </nuxt-link>
             <a
               href=""
               title="Plus de détails"
@@ -221,12 +229,12 @@
           </div>
           <div class="card-footer">
             <nuxt-link
-              v-if="fiche.latest_post"
-              :to="{ path: `/${fiche.latest_post.slug}` }"
-              :title="`Lire le dernier article : ${fiche.latest_post.title}`"
+              :to="{ path: `/fiche/${fiche.slug}` }"
+              title="Page de la fiche"
               class=" btn btn-sm btn-outline-secondary"
             >
-              Dernier article
+              <i class="fas fa-external-link-alt"></i>
+              <span class="ml-1">Ouvrir la fiche</span>
             </nuxt-link>
             <a
               href=""
