@@ -183,7 +183,7 @@
                           <a
                             href=""
                             title="Voir sur la carte"
-                            class="btn btn-sm btn-outline-secondary mr-1"
+                            class="btn btn-sm btn-outline-secondary"
                             @click.prevent="gotoMarker(fiche)"
                           >
                             <span class="mx-1"><i class="fas fa-map-marker-alt"></i></span>
@@ -702,6 +702,11 @@ export default {
 
       // reset map
       this.resetMap()
+    }
+  },
+  head() {
+    return {
+      title: this.rootCategory.name
     }
   }
 }

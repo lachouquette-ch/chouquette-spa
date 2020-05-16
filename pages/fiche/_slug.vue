@@ -1,6 +1,6 @@
 <template>
-  <div v-if="fiche" class="fiche-page layout-content container-fluid mx-auto my-5">
-    <h1 class="text-center my-4">{{ fiche.title.rendered | heDecode }}</h1>
+  <div class="fiche-page layout-content container my-4">
+    <h1 class="text-center mb-4">{{ fiche.title.rendered | heDecode }}</h1>
     <main role="main">
       <Fiche :fiche="fiche" no-ref-link />
     </main>
@@ -9,16 +9,29 @@
 
 <script>
 import Fiche from '../../components/Fiche'
+import yoast from '~/mixins/yoast'
 
 export default {
   components: { Fiche },
+  mixins: [yoast],
+  async asyncData({ app, params }) {
+    const fiche = await app.$wpAPI.wp.fiches.getBySlug(params.slug).then(({ data }) => data[0])
+
+    return {
+      fiche
+    }
+  },
   data() {
     return {
       fiche: null
     }
   },
-  async created() {
-    this.fiche = await this.$wpAPI.wp.fiches.getBySlug(this.$route.params.slug).then(({ data }) => data[0])
+  head() {
+    return {
+      title: this.$options.filters.heDecode(this.fiche.title.rendered),
+      meta: this.yoastMetaConfig(this.fiche.yoast_meta),
+      script: this.yoastJsonLDConfig(this.fiche.yoast_json_ld)
+    }
   }
 }
 </script>
