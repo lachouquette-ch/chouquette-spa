@@ -311,14 +311,14 @@ export default {
       return {
         flipped: !this.noUnfold && this.isFlipped,
         'flipped-unfolded': this.noUnfold && this.isFlipped,
-        'mx-md-3': this.noUnfold
+        'mx-md-3': !this.noUnfold
       }
     },
     backClass() {
       return {
         flipped: this.noUnfold && !this.isFlipped,
         'flipped-unfolded': !this.noUnfold && !this.isFlipped,
-        'mx-md-3': this.noUnfold
+        'mx-md-3': !this.noUnfold
       }
     },
     currentURL() {
