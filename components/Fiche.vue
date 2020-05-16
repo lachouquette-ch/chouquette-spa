@@ -148,7 +148,7 @@
               href=""
               title="Plus de détails"
               class="btn btn-sm btn-outline-secondary float-right"
-              :class="{ 'd-md-none': noUnfold }"
+              :class="{ 'd-md-none': flatEnable }"
               @click.prevent="isFlipped = true"
             >
               Voir <span class="ml-1"><i class="fas fa-plus"></i></span>
@@ -241,7 +241,7 @@
               href=""
               title="Retour sur les informations principales"
               class="btn btn-sm btn-outline-secondary float-right"
-              :class="{ 'd-md-none': noUnfold }"
+              :class="{ 'd-md-none': flatEnable }"
               @click.prevent="isFlipped = false"
             >
               Retour
@@ -271,7 +271,7 @@ export default {
       type: Object,
       required: true
     },
-    noUnfold: Boolean,
+    flatEnable: Boolean,
     noRefLink: Boolean
   },
   validations: {
@@ -309,16 +309,16 @@ export default {
   computed: {
     frontClass() {
       return {
-        flipped: !this.noUnfold && this.isFlipped,
-        'flipped-unfolded': this.noUnfold && this.isFlipped,
-        'mx-md-3': !this.noUnfold
+        hide: this.isFlipped,
+        'flat-enable': this.flatEnable,
+        'mx-md-3': this.flatEnable
       }
     },
     backClass() {
       return {
-        flipped: this.noUnfold && !this.isFlipped,
-        'flipped-unfolded': !this.noUnfold && !this.isFlipped,
-        'mx-md-3': !this.noUnfold
+        hide: !this.isFlipped,
+        'flat-enable': this.flatEnable,
+        'mx-md-3': this.flatEnable
       }
     },
     currentURL() {
@@ -491,6 +491,18 @@ export default {
 
 .fiche-front,
 .fiche-back {
+  &.hide:not(.flat-enable) {
+    position: absolute;
+    visibility: hidden;
+  }
+
+  &.hide.flat-enable {
+    @include media-breakpoint-down(sm) {
+      position: absolute;
+      visibility: hidden;
+    }
+  }
+
   width: 300px;
   max-width: 100%;
 
@@ -520,18 +532,6 @@ export default {
 
   .card-footer {
     height: 56px;
-  }
-
-  &.flipped {
-    position: absolute;
-    visibility: hidden;
-  }
-
-  &.flipped-unfolded {
-    @include media-breakpoint-down(sm) {
-      position: absolute;
-      visibility: hidden;
-    }
   }
 }
 

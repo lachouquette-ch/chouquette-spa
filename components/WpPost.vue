@@ -28,7 +28,7 @@
               class="swiper-slide h-auto d-flex align-items-stretch"
               :data-hash="fiche.id"
             >
-              <Fiche ref="fiche" class="w-100" :fiche="fiche" />
+              <Fiche ref="fiche" class="w-100" :fiche="fiche" flatEnable />
               <div
                 class="fiche-modal-close d-md-none bg-white m-2 border-0 rounded-circle text-center"
                 :class="{ 'd-none': $refs.fiche && $refs.fiche[index] && $refs.fiche[index].isFlipped }"
@@ -52,7 +52,7 @@
         <h2 class="post-sidebar-title h5 m-0">{{ hasSingleFiche ? 'La fiche' : "Cités dans l'article" }} :</h2>
       </div>
       <div v-if="fiches">
-        <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" no-unfold />
+        <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" />
         <FicheThumbnail
           v-for="(fiche, index) in fiches"
           v-else
