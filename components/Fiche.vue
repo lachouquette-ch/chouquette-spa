@@ -1,5 +1,5 @@
 <template>
-  <div class="fiche-container">
+  <div class="fiche-container d-flex">
     <b-modal ref="ficheModal" title-class="w-100 text-center" hide-footer centered @shown="focusOn('message')">
       <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
       <template v-slot:default>
@@ -70,9 +70,9 @@
         </form>
       </template>
     </b-modal>
-    <article ref="fiche" class="fiche fiche-chouquettise h-100 d-flex justify-content-center align-items-stretch">
-      <div ref="ficheFront" class="fiche-front" :class="frontClass">
-        <div ref="front" class="card h-100 bg-white">
+    <article ref="fiche" class="fiche fiche-chouquettise w-100 d-flex justify-content-center align-items-stretch">
+      <div ref="ficheFront" class="fiche-front h-100 d-flex" :class="frontClass">
+        <div ref="front" class="h-100 w-100 card bg-white">
           <div class="card-header p-0">
             <WpMedia
               v-if="featuredMedia"
@@ -156,8 +156,8 @@
           </div>
         </div>
       </div>
-      <div ref="ficheBack" class="fiche-back" :class="backClass">
-        <div ref="back" class="card h-100 bg-white">
+      <div ref="ficheBack" class="fiche-back h-100 d-flex" :class="backClass">
+        <div ref="back" class="h-100 w-100 card bg-white">
           <div v-if="fiche.info.location" class="card-header p-0">
             <div v-show="marker" ref="ficheMap" class="h-100"></div>
           </div>
