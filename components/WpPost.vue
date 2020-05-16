@@ -52,7 +52,7 @@
         <h2 class="post-sidebar-title h5 m-0">{{ hasSingleFiche ? 'La fiche' : "Cités dans l'article" }} :</h2>
       </div>
       <div v-if="fiches">
-        <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" :responsive="false" />
+        <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" no-unfolding />
         <FicheThumbnail
           v-for="(fiche, index) in fiches"
           v-else

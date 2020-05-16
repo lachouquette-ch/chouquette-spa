@@ -37,7 +37,7 @@
                     <div v-if="fiches" v-swiper:fichesSwiper="ficheSwiperOptions" class="px-1 px-md-5">
                       <div class="swiper-wrapper mt-3">
                         <div v-for="fiche in fiches" :key="fiche.id" class="swiper-slide">
-                          <Fiche :fiche="fiche" :responsive="false" />
+                          <Fiche :fiche="fiche" no-unfolding />
                         </div>
                       </div>
                       <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />

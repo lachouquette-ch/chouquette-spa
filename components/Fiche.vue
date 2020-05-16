@@ -148,7 +148,7 @@
               href=""
               title="Plus de détails"
               class="btn btn-sm btn-outline-secondary float-right"
-              :class="{ 'd-md-none': responsive }"
+              :class="{ 'd-md-none': noUnfolding }"
               @click.prevent="isFlipped = true"
             >
               Voir <span class="ml-1"><i class="fas fa-plus"></i></span>
@@ -241,7 +241,7 @@
               href=""
               title="Retour sur les informations principales"
               class="btn btn-sm btn-outline-secondary float-right"
-              :class="{ 'd-md-none': responsive }"
+              :class="{ 'd-md-none': noUnfolding }"
               @click.prevent="isFlipped = false"
             >
               Retour
@@ -271,10 +271,7 @@ export default {
       type: Object,
       required: true
     },
-    responsive: {
-      type: Boolean,
-      default: true
-    },
+    noUnfolding: Boolean,
     noRefLink: Boolean
   },
   validations: {
@@ -312,16 +309,16 @@ export default {
   computed: {
     frontClass() {
       return {
-        flipped: !this.responsive && this.isFlipped,
-        'flipped-responsive': this.responsive && this.isFlipped,
-        'mx-md-3': this.responsive
+        flipped: !this.noUnfolding && this.isFlipped,
+        'flipped-folding': this.noUnfolding && this.isFlipped,
+        'mx-md-3': this.noUnfolding
       }
     },
     backClass() {
       return {
-        flipped: !this.responsive && !this.isFlipped,
-        'flipped-responsive': this.responsive && !this.isFlipped,
-        'mx-md-3': this.responsive
+        flipped: this.noUnfolding && !this.isFlipped,
+        'flipped-folding': !this.noUnfolding && !this.isFlipped,
+        'mx-md-3': this.noUnfolding
       }
     },
     currentURL() {
@@ -530,7 +527,7 @@ export default {
     visibility: hidden;
   }
 
-  &.flipped-responsive {
+  &.flipped-folding {
     @include media-breakpoint-down(sm) {
       position: absolute;
       visibility: hidden;
