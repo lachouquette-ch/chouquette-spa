@@ -29,6 +29,7 @@ export default {
     showBtnAction: {
       type: Function,
       default: () => {
+        // eslint-disable-next-line no-console
         console.log('Show btn action')
       }
     }

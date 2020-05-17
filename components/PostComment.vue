@@ -14,6 +14,7 @@
         <time :datetime="comment.date">Le {{ commentDate }}</time>
       </div>
     </header>
+    <!-- eslint-disable-next-line vue/no-v-html -->
     <section class="comment-content" v-html="comment.content.rendered" />
     <section>
       <a href="" class="text-chouquette-grey" @click.prevent="toggleReplyToComment">{{ replyLinkText }}</a>

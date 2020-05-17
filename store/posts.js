@@ -6,8 +6,10 @@ export const state = () => ({
 
 export const actions = {
   async fetchRelatedRessources({ dispatch }, posts) {
+    /* eslint-disable camelcase */
     const categoryIds = posts.flatMap(({ top_categories }) => top_categories)
     const mediaIds = posts.map(({ featured_media }) => featured_media).filter(Boolean)
+    /* eslint-enable camelcase */
 
     await Promise.all([
       dispatch('categories/fetchByIds', categoryIds, { root: true }),

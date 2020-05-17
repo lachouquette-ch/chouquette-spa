@@ -90,6 +90,7 @@
           </div>
           <div class="card-body d-flex flex-column position-relative">
             <h2 class="card-title text-center h4">{{ fiche.title.rendered | heDecode }}</h2>
+            <!-- eslint-disable-next-line vue/no-v-html -->
             <div class="card-text" v-html="fiche.content.rendered"></div>
             <div v-if="fiche.info.chouquettise" class="card-text d-flex justify-content-around mt-auto">
               <a
@@ -375,6 +376,7 @@ export default {
           { passive: 'true' }
         )
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error(err)
       }
     }

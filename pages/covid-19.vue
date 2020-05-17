@@ -3,12 +3,7 @@
     <template #footer>
       <h2 class="text-center my-3">Le kit du bon confineur</h2>
       <div v-if="posts" class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
-        <nuxt-link
-          v-for="post in posts"
-          :key="post.id"
-          :to="{ path: `/${post.slug}` }"
-          class="post-card"
-        >
+        <nuxt-link v-for="post in posts" :key="post.id" :to="{ path: `/${post.slug}` }" class="post-card">
           <PostCard :post="post" class="mx-auto" />
         </nuxt-link>
       </div>

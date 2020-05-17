@@ -4,6 +4,7 @@
       <div v-if="page" class="row">
         <div class="col gutenberg-content">
           <h1 class="text-center mb-4">{{ page.title.rendered | heDecode }}</h1>
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <div v-html="page.content.rendered" />
         </div>
       </div>

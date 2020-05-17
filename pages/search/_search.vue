@@ -180,6 +180,7 @@ export default {
     async loadMorePosts() {
       // stop if last page
       if (this.postsNextPage > this.postsPages) {
+        // eslint-disable-next-line no-console
         console.warn('no more pages for posts')
         return
       }
@@ -199,6 +200,7 @@ export default {
     async loadMoreFiches() {
       // stop if last page
       if (this.fichesNextPage > this.fichesPages) {
+        // eslint-disable-next-line no-console
         console.warn('no more pages for fiches')
         return
       }

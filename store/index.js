@@ -9,7 +9,7 @@ export const actions = {
   async nuxtServerInit({ state, commit, dispatch }) {
     /* Fetch wordpress settings data */
     if (!state.name) {
-      const settings = await this.$wpAPI._.get().then(({data}) => data)
+      const settings = await this.$wpAPI._.get().then(({ data }) => data)
       commit('SET_SETTINGS', settings)
     }
 

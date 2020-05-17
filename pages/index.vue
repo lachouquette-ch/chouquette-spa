@@ -126,6 +126,17 @@ export default {
   directives: { swiper: SwiperDirective },
   layout: 'no-header',
   mixins: [yoast],
+  async asyncData({ app, store }) {
+    const [latestPosts, yoast] = await Promise.all([
+      store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
+      store.dispatch('yoast/fetchHome')
+    ])
+
+    return {
+      latestPosts,
+      yoast
+    }
+  },
   data() {
     return {
       topPosts: null,
@@ -139,16 +150,6 @@ export default {
       }
     }
   },
-  mounted() {
-    // execute anchor fixing
-    const linkAnchorFixedHeader = require('~/assets/scripts/link-anchor-fixed-header')
-    linkAnchorFixedHeader(70)
-  },
-  created() {
-    this.$store.dispatch('posts/fetchByTagSlug', { slug: 'tops', number: TOP_POSTS_NUM }).then((posts) => {
-      this.topPosts = posts
-    })
-  },
   computed: {
     ...mapState({
       wpName: 'name',
@@ -158,16 +159,15 @@ export default {
       categories: 'headerCategories'
     })
   },
-  async asyncData({ app, store }) {
-    const [latestPosts, yoast] = await Promise.all([
-      store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
-      store.dispatch('yoast/fetchHome')
-    ])
-
-    return {
-      latestPosts,
-      yoast
-    }
+  mounted() {
+    // execute anchor fixing
+    const linkAnchorFixedHeader = require('~/assets/scripts/link-anchor-fixed-header')
+    linkAnchorFixedHeader(70)
+  },
+  created() {
+    this.$store.dispatch('posts/fetchByTagSlug', { slug: 'tops', number: TOP_POSTS_NUM }).then((posts) => {
+      this.topPosts = posts
+    })
   },
   head() {
     return {

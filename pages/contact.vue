@@ -101,7 +101,7 @@
           </div>
         </div>
         <button type="submit" class="btn btn-primary" :disabled="loading">
-          <b-spinner small v-show="loading" variant="yellow" label="chargement" class="mr-2"></b-spinner>
+          <b-spinner v-show="loading" small variant="yellow" label="chargement" class="mr-2"></b-spinner>
           Envoyer
         </button>
         <span class="float-right"><em>* champs obligatoires</em></span>

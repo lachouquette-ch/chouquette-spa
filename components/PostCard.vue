@@ -3,13 +3,7 @@
     <div class="card-img-top">
       <WpMedia v-if="featuredMedia" :media="featuredMedia" size="medium_large" />
       <div class="card-category rounded-circle bg-white shadow">
-        <CategoryLogo
-          v-if="topCategory"
-          :category="topCategory"
-          width="35"
-          height="35"
-          color="black"
-        />
+        <CategoryLogo v-if="topCategory" :category="topCategory" width="35" height="35" color="black" />
       </div>
     </div>
     <div class="card-body">

@@ -14,6 +14,7 @@
             <div class="card-body text-center">
               <h3 class="card-title">{{ member.name }}</h3>
               <p class="card-text small text-muted">{{ member.title }}</p>
+              <!-- eslint-disable-next-line vue/no-v-html -->
               <p class="card-text" v-html="member.description" />
             </div>
           </div>

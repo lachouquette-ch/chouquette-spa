@@ -28,7 +28,7 @@
               class="swiper-slide h-auto d-flex align-items-stretch"
               :data-hash="fiche.id"
             >
-              <Fiche ref="fiche" class="w-100" :fiche="fiche" flatEnable />
+              <Fiche ref="fiche" class="w-100" :fiche="fiche" flat-enable />
               <div
                 class="fiche-modal-close d-md-none bg-white m-2 border-0 rounded-circle text-center"
                 :class="{ 'd-none': $refs.fiche && $refs.fiche[index] && $refs.fiche[index].isFlipped }"
@@ -104,6 +104,7 @@
 
           <section class="gutenberg-content container pt-4 mb-5">
             <h1 class="pt-2 mb-4 text-center">{{ post.title.rendered | heDecode }}</h1>
+            <!-- eslint-disable-next-line vue/no-v-html -->
             <div v-html="post.content.rendered" />
           </section>
 
@@ -126,9 +127,9 @@
             <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
             <div v-swiper:similarSwiper="swiperPostsOptions" class="swiper px-md-5">
               <div class="swiper-wrapper pt-3 pt-md-0">
-                <div v-for="post in similarPosts" :key="post.id" class="swiper-slide">
-                  <nuxt-link :to="{ path: `/${post.slug}` }">
-                    <PostCard :post="post" class="mx-auto" />
+                <div v-for="similarPost in similarPosts" :key="similarPost.id" class="swiper-slide">
+                  <nuxt-link :to="{ path: `/${similarPost.slug}` }">
+                    <PostCard :post="similarPost" class="mx-auto" />
                   </nuxt-link>
                 </div>
               </div>
@@ -202,7 +203,7 @@ export default {
       similarPosts: null,
 
       hideSidebar: true,
-      fiche: null,
+      selectedFiche: null,
 
       swiperFichesOptions: {
         ...DEFAULT,
@@ -269,7 +270,7 @@ export default {
   },
   methods: {
     viewFiche(fiche, index) {
-      this.fiche = fiche
+      this.selectedFiche = fiche
       // start with correct fiche
       this.swiperFichesOptions.initialSlide = index
       this.$bvModal.show('fiche-modal')

@@ -21,6 +21,7 @@ export const actions = {
     }
 
     // fetch featured media
+    // eslint-disable-next-line camelcase
     const mediaIds = fiches.map(({ featured_media }) => featured_media).filter(Boolean)
 
     await Promise.all([criteriaList, dispatch('media/fetchByIds', mediaIds, { root: true })])
@@ -60,6 +61,7 @@ export const actions = {
 
   async fetchByCategoryIds(
     { dispatch, commit },
+    // eslint-disable-next-line camelcase
     { category, location = null, search = null, criteria = [], page = 1, per_page = 10 }
   ) {
     const queryParams = {

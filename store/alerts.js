@@ -7,6 +7,7 @@ const AlertType = ['primary', 'secondary', 'success', 'danger', 'warning', 'info
 export const actions = {
   addAction({ commit, state }, { type, message }) {
     if (!AlertType.includes(type)) {
+      // eslint-disable-next-line no-console
       console.error(`Unkown alert type '${type}'`)
       return
     }

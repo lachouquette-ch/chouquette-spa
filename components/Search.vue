@@ -52,7 +52,8 @@ import { mapState } from 'vuex'
 export default {
   props: {
     buttonClass: {
-      type: String
+      type: String,
+      default: null
     },
     filterCol: {
       type: String,

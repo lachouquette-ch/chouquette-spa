@@ -443,6 +443,7 @@ export default {
 
       this.loadFichesOnMap(this.fiches)
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error(err)
     }
 
@@ -626,11 +627,13 @@ export default {
     },
     async fetchMoreFiches() {
       if (this.fichesLoading) {
+        // eslint-disable-next-line no-console
         console.warn('already loading more fiches')
         return
       }
 
       if (this.fichesNextPage > this.fichesPages) {
+        // eslint-disable-next-line no-console
         console.warn('no more pages')
         return
       }
@@ -657,6 +660,7 @@ export default {
     loadFichesOnMap(fiches) {
       for (const fiche of fiches) {
         if (!fiche.info || !fiche.info.location) {
+          // eslint-disable-next-line no-console
           console.warn(`${fiche.slug} has no location (not info)`)
           continue
         }

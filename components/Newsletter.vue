@@ -29,7 +29,7 @@
                 </div>
                 <div class="col-lg-4">
                   <button type="submit" name="subscribe" class="btn btn-dark-grey w-100" :disabled="loading">
-                    <b-spinner small v-show="loading" variant="yellow" label="chargement" class="mr-2"></b-spinner>
+                    <b-spinner v-show="loading" small variant="yellow" label="chargement" class="mr-2"></b-spinner>
                     Je m'inscris !
                   </button>
                 </div>

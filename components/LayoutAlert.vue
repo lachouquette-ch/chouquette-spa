@@ -8,6 +8,7 @@
       :variant="alert.type"
       @dismissed="removeAlert(alert)"
     >
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <span v-html="alert.message" />
     </b-alert>
   </div>

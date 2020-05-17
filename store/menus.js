@@ -30,6 +30,7 @@ export const actions = {
       const categoryItems = headerMenu.items.filter(({ object }) => {
         return object === 'category'
       })
+      // eslint-disable-next-line camelcase
       const categoryIds = categoryItems.map(({ object_id }) => object_id)
       const categories = await dispatch('categories/fetchByIds', categoryIds, { root: true })
       commit('SET_HEADER_CATEGORIES', categories)

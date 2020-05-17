@@ -12,6 +12,7 @@
       width="64"
     />
     <div class="media-body ml-1 p-1">
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <h3 class="my-1 h6" v-html="fiche.title.rendered"></h3>
     </div>
     <span class="fiche-link"><i class="fas fa-external-link-alt"></i></span>

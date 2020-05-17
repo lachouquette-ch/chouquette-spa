@@ -1,3 +1,5 @@
+import $ from 'jquery'
+
 module.exports = (offsetHeightPx = 160) => {
   //  from https://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header
   ;(function(document, history, location) {
@@ -30,13 +32,13 @@ module.exports = (offsetHeightPx = 160) => {
        * @return {Boolean} - Was the href an anchor.
        */
       scrollIfAnchor(href, pushToHistory) {
-        let match, anchorOffset
+        let anchorOffset
 
         if (!this.ANCHOR_REGEX.test(href)) {
           return false
         }
 
-        match = document.getElementById(href.slice(1))
+        const match = document.getElementById(href.slice(1))
 
         if (match) {
           anchorOffset = $(match).offset().top - this.getFixedOffset()
