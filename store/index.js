@@ -8,8 +8,10 @@ export const state = () => ({
 export const actions = {
   async nuxtServerInit({ state, commit, dispatch }) {
     /* Fetch wordpress settings data */
-    const settings = await this.$wpAPI._.get().then(({ data }) => data)
-    commit('SET_SETTINGS', settings)
+    if (!state.name) {
+      const settings = await this.$wpAPI._.get().then(({data}) => data)
+      commit('SET_SETTINGS', settings)
+    }
 
     /* Fetch yoast redirect */
     await dispatch('yoast/init')
