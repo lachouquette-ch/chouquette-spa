@@ -349,6 +349,8 @@ export default {
 
       this.reload()
     }
+
+    next()
   },
   beforeRouteLeave(to, from, next) {
     this.$store.dispatch('menus/clearSelectedCategory').then(() => next())
