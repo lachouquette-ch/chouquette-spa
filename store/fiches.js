@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { ressourceStates, ressourceActions, ressourceMutations } from './_ressource-helper'
 
 export const state = () => ({
@@ -6,12 +7,18 @@ export const state = () => ({
 })
 
 export const actions = {
-  async fetchRelatedRessources({ dispatch, commit }, fiches) {
+  async fetchRelatedRessources({ state, dispatch, commit }, fiches) {
     // fetch criteria
     const ficheIds = fiches.map(({ id }) => id)
-    const criteriaList = this.$wpAPI.criteria.getForFiches(ficheIds).then(({ data }) => {
-      commit('SET_CRITERIA_LIST', data)
-    })
+    const unknownIds = _.differenceBy(_.uniq(ficheIds), Object.keys(state.criteria), parseInt)
+    let criteriaList
+    if (!_.isEmpty(unknownIds)) {
+      criteriaList = this.$wpAPI.criteria.getForFiches(unknownIds).then(({ data }) => {
+        commit('SET_CRITERIA_LIST', data)
+      })
+    } else {
+      criteriaList = Promise.resolve()
+    }
 
     // fetch featured media
     const mediaIds = fiches.map(({ featured_media }) => featured_media).filter(Boolean)
