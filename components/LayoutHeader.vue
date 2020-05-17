@@ -160,7 +160,7 @@ export default {
       this.$router.push(`/search/${text}`)
     },
     isSelected(category) {
-      return this.hoverCategory === category || (this.selectedCategory && this.selectedCategory.id === category.id)
+      return this.hoverCategory === category || this.selectedCategory === category
     }
   }
 }

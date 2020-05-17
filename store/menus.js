@@ -64,7 +64,11 @@ export const mutations = {
     })
   },
   SET_SELECTED_CATEGORY(state, category) {
-    state.selectedCategory = category
+    const selectedCategory = state.headerCategories.find((headerCategory) => headerCategory.id === category.id)
+    if (!selectedCategory) {
+      throw new Error(`Couldn't find ${category.name} in header`)
+    }
+    state.selectedCategory = selectedCategory
   },
   UNSET_SELECTED_CATEGORY(state) {
     state.selectedCategory = null
