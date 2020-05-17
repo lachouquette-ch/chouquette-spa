@@ -4,15 +4,24 @@
     <main role="main">
       <Fiche :fiche="fiche" no-ref-link />
     </main>
+    <div v-if="posts" class="mt-4">
+      <h2 class="text-center mb-4">Les articles</h2>
+      <div class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
+        <nuxt-link v-for="post in posts" :key="post.id" :to="{ path: `/${post.slug}` }" class="post-card">
+          <PostCard :post="post" class="mx-auto" />
+        </nuxt-link>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import Fiche from '../../components/Fiche'
+import Fiche from '~/components/Fiche'
+import PostCard from '~/components/PostCard'
 import yoast from '~/mixins/yoast'
 
 export default {
-  components: { Fiche },
+  components: { Fiche, PostCard },
   mixins: [yoast],
   async asyncData({ app, params }) {
     const fiche = await app.$wpAPI.wp.fiches.getBySlug(params.slug).then(({ data }) => data[0])
@@ -23,8 +32,14 @@ export default {
   },
   data() {
     return {
-      fiche: null
+      fiche: null,
+      posts: []
     }
+  },
+  async created() {
+    const postIds = this.fiche.linked_posts.map(({ id }) => id)
+
+    this.posts = await this.$store.dispatch('posts/fetchByIds', postIds)
   },
   head() {
     return {
