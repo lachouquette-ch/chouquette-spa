@@ -26,6 +26,10 @@ export const actions = {
     await Promise.all([criteriaList, dispatch('media/fetchByIds', mediaIds, { root: true })])
   },
 
+  async fetchBySlug(context, slug) {
+    return await ressourceActions.fetchBySlug(this.$wpAPI.wp.fiches, 'SET_FICHE', context, slug)
+  },
+
   async fetchByIds(context, ids) {
     const fiches = await ressourceActions.fetchByIds(this.$wpAPI.wp.fiches, 'SET_FICHES', context, ids)
 

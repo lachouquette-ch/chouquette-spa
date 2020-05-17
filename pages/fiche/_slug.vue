@@ -23,8 +23,8 @@ import yoast from '~/mixins/yoast'
 export default {
   components: { Fiche, PostCard },
   mixins: [yoast],
-  async asyncData({ app, params }) {
-    const fiche = await app.$wpAPI.wp.fiches.getBySlug(params.slug).then(({ data }) => data[0])
+  async asyncData({ store, params }) {
+    const fiche = await store.dispatch('fiches/fetchBySlug', params.slug)
 
     return {
       fiche
