@@ -639,14 +639,13 @@ export default {
       try {
         const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
           ...this.initSearch,
-          page: this.fichesNextPage,
+          page: this.fichesNextPage++,
           per_page: FICHE_NUMBER_EACH
         })
 
         this.fiches.push(...ficheResult.fiches)
         this.$swiper.slideTo(this.$swiper.previousIndex + 1, 0, false)
         this.loadFichesOnMap(ficheResult.fiches)
-        this.fichesNextPage++
       } finally {
         this.fichesLoading = false
         if (!this.isMapShown) {

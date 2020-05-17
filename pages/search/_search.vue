@@ -32,51 +32,47 @@
             <div v-if="fiches && fiches.length" class="row">
               <div class="col">
                 <h2 class="text-center">{{ fichesTotal }} fiche(s)</h2>
-                <client-only>
-                  <b-overlay :show="fichesLoading" opacity="0.6" blur="none" spinner-variant="yellow">
-                    <div v-if="fichesSwiperOptions" v-swiper:fichesSwiper="fichesSwiperOptions" class="swiper px-md-5">
-                      <div class="swiper-wrapper mt-3">
-                        <div
-                          v-for="fiche in fichesVirtualData.slides"
-                          :key="fiche.id"
-                          class="swiper-slide h-auto d-flex align-items-stretch"
-                          :style="{ left: `${fichesVirtualData.offset}px` }"
-                        >
-                          <Fiche :fiche="fiche" />
-                        </div>
+                <b-overlay :show="fichesLoading" variant="white" opacity="1" spinner-variant="yellow">
+                  <div v-if="fichesSwiperOptions" v-swiper:fichesSwiper="fichesSwiperOptions" class="swiper px-md-5">
+                    <div class="swiper-wrapper mt-3">
+                      <div
+                        v-for="fiche in fichesVirtualData.slides"
+                        :key="fiche.id"
+                        class="swiper-slide h-auto d-flex align-items-stretch"
+                        :style="{ left: `${fichesVirtualData.offset}px` }"
+                      >
+                        <Fiche :fiche="fiche" />
                       </div>
-                      <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
-                      <div v-if="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-                      <div v-if="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
                     </div>
-                  </b-overlay>
-                </client-only>
+                    <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
+                    <div v-if="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
+                    <div v-if="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
+                  </div>
+                </b-overlay>
               </div>
             </div>
             <div v-if="posts && posts.length" class="row mt-5 mb-4">
               <div class="col">
                 <h2 class="text-center">{{ postsTotal }} articles(s)</h2>
-                <client-only>
-                  <b-overlay :show="postsLoading" opacity="0.6" blur="none" spinner-variant="yellow">
-                    <div v-if="postsSwiperOptions" v-swiper:postsSwiper="postsSwiperOptions" class="swiper px-md-5">
-                      <div class="swiper-wrapper pt-3">
-                        <div
-                          v-for="post in postsVirtualData.slides"
-                          :key="post.id"
-                          class="swiper-slide h-auto d-flex align-items-stretch"
-                          :style="{ left: `${postsVirtualData.offset}px` }"
-                        >
-                          <nuxt-link :to="{ path: `/${post.slug}` }">
-                            <PostCard :post="post" class="mx-auto" />
-                          </nuxt-link>
-                        </div>
+                <b-overlay :show="postsLoading" variant="white" opacity="1" spinner-variant="yellow">
+                  <div v-if="postsSwiperOptions" v-swiper:postsSwiper="postsSwiperOptions" class="swiper px-md-5">
+                    <div class="swiper-wrapper pt-3">
+                      <div
+                        v-for="post in postsVirtualData.slides"
+                        :key="post.id"
+                        class="swiper-slide h-auto d-flex align-items-stretch"
+                        :style="{ left: `${postsVirtualData.offset}px` }"
+                      >
+                        <nuxt-link :to="{ path: `/${post.slug}` }">
+                          <PostCard :post="post" class="mx-auto" />
+                        </nuxt-link>
                       </div>
-                      <div v-if="!!posts.length" slot="pagination" class="swiper-pagination" />
-                      <div v-if="!!posts.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-                      <div v-if="!!posts.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
                     </div>
-                  </b-overlay>
-                </client-only>
+                    <div v-if="!!posts.length" slot="pagination" class="swiper-pagination" />
+                    <div v-if="!!posts.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
+                    <div v-if="!!posts.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
+                  </div>
+                </b-overlay>
               </div>
             </div>
           </div>
@@ -183,7 +179,10 @@ export default {
   methods: {
     async loadMorePosts() {
       // stop if last page
-      if (this.postsNextPage > this.postsPages) return
+      if (this.postsNextPage > this.postsPages) {
+        console.warn('no more pages for posts')
+        return
+      }
 
       try {
         this.postsLoading = true
@@ -192,14 +191,17 @@ export default {
           page: this.postsNextPage++
         })
         this.posts.push(...newPosts.posts)
-        this.postsSwiper.update()
+        this.postsSwiper.slideTo(this.postsSwiper.previousIndex + 1, 0, false)
       } finally {
         this.postsLoading = false
       }
     },
     async loadMoreFiches() {
       // stop if last page
-      if (this.fichesNextPage > this.fichesPages) return
+      if (this.fichesNextPage > this.fichesPages) {
+        console.warn('no more pages for fiches')
+        return
+      }
 
       try {
         this.fichesLoading = true
@@ -208,7 +210,7 @@ export default {
           page: this.fichesNextPage++
         })
         this.fiches.push(...newFiches.fiches)
-        this.fichesSwiper.update()
+        this.fichesSwiper.slideTo(this.fichesSwiper.previousIndex + 1, 0, false)
       } finally {
         this.fichesLoading = false
       }
