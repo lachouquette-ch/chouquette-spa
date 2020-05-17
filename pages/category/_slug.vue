@@ -477,10 +477,12 @@ export default {
       this.loadFichesOnMap(this.fiches)
 
       // swiper
-      this.$swiper.virtual.removeAllSlides()
-      this.$swiper.virtual.slides = this.fiches
-      this.$swiper.update()
-      this.$swiper.virtual.update()
+      if (this.$swiper.virtual) {
+        this.$swiper.virtual.removeAllSlides()
+        this.$swiper.virtual.slides = this.fiches
+        this.$swiper.update()
+        this.$swiper.virtual.update()
+      }
 
       this.loading = false
     },
