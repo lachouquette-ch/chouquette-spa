@@ -137,9 +137,9 @@
             <slot name="front-footer"></slot>
             <FicheShare :fiche="fiche" />
             <nuxt-link
-              v-if="fiche.latest_post"
-              :to="{ path: `/${fiche.latest_post.slug}` }"
-              :title="`Lire le dernier article : ${fiche.latest_post.title}`"
+              v-if="latestPost"
+              :to="{ path: `/${latestPost.slug}` }"
+              :title="`Lire le dernier article : ${latestPost.title}`"
               class=" btn btn-sm btn-outline-secondary"
             >
               <i class="far fa-newspaper"></i>
@@ -323,6 +323,9 @@ export default {
     },
     currentURL() {
       return process.client ? window.location.host : ''
+    },
+    latestPost() {
+      return _.isEmpty(this.fiche.linked_posts) ? null : this.fiche.linked_posts[0]
     },
     fichePrice() {
       return ['$'.repeat(this.fiche.info.cost), '$'.repeat(5 - this.fiche.info.cost)]
