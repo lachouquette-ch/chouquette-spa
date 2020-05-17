@@ -4,6 +4,7 @@ const FOOTER_SLUG = 'chouquette-footer'
 export const state = () => ({
   header: null,
   headerCategories: [],
+  selectedCategory: null,
 
   footer: null,
   footerPages: []
@@ -41,7 +42,6 @@ export const actions = {
   },
 
   setSelectedCategory({ commit }, category) {
-    commit('UNSET_SELECTED_CATEGORY')
     commit('SET_SELECTED_CATEGORY', category)
   },
 
@@ -64,14 +64,9 @@ export const mutations = {
     })
   },
   SET_SELECTED_CATEGORY(state, category) {
-    const selectedCategory = state.headerCategories.find((headerCategory) => headerCategory.id === category.id)
-    if (selectedCategory) {
-      selectedCategory.isSelected = true
-    }
+    state.selectedCategory = category
   },
   UNSET_SELECTED_CATEGORY(state) {
-    state.headerCategories.forEach((category) => {
-      category.isSelected = false
-    })
+    state.selectedCategory = null
   }
 }

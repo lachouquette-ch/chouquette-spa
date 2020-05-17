@@ -92,14 +92,13 @@
               :to="{ path: `/category/${category.slug}` }"
               :title="category.description"
               class="nav-link text-md-center"
-              :class="{ 'text-yellow': category.isSelected }"
             >
               <CategoryLogo
                 :category="category"
-                :color="logoColor(category)"
+                :color="isSelected(category) ? 'yellow' : 'white'"
                 class="d-inline nav-logo ml-lg-3 mr-2"
               ></CategoryLogo>
-              <span class="text-nowrap">{{ category.name }}</span>
+              <span class="text-nowrap" :class="{ 'text-yellow': isSelected(category) }">{{ category.name }}</span>
             </nuxt-link>
           </li>
         </ul>
@@ -145,7 +144,8 @@ export default {
   },
   computed: {
     ...mapState('menus', {
-      categories: 'headerCategories'
+      categories: 'headerCategories',
+      selectedCategory: 'selectedCategory'
     })
   },
   created() {
@@ -159,8 +159,8 @@ export default {
     search(text) {
       this.$router.push(`/search/${text}`)
     },
-    logoColor(category) {
-      return category.isSelected || this.hoverCategory === category ? 'yellow' : 'white'
+    isSelected(category) {
+      return this.hoverCategory === category || (this.selectedCategory && this.selectedCategory.id === category.id)
     }
   }
 }
