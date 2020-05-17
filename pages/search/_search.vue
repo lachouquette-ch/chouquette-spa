@@ -34,9 +34,14 @@
                 <h2 class="text-center">{{ fichesTotal }} fiche(s)</h2>
                 <client-only>
                   <b-overlay :show="fichesLoading" opacity="0.6" blur="none" spinner-variant="yellow">
-                    <div v-if="fiches" v-swiper:fichesSwiper="ficheSwiperOptions" class="px-1 px-md-5">
+                    <div v-if="fichesSwiperOptions" v-swiper:fichesSwiper="fichesSwiperOptions" class="swiper px-md-5">
                       <div class="swiper-wrapper mt-3">
-                        <div v-for="fiche in fiches" :key="fiche.id" class="swiper-slide">
+                        <div
+                          v-for="fiche in fichesVirtualData.slides"
+                          :key="fiche.id"
+                          class="swiper-slide h-auto d-flex align-items-stretch"
+                          :style="{ left: `${fichesVirtualData.offset}px` }"
+                        >
                           <Fiche :fiche="fiche" />
                         </div>
                       </div>
@@ -53,9 +58,14 @@
                 <h2 class="text-center">{{ postsTotal }} articles(s)</h2>
                 <client-only>
                   <b-overlay :show="postsLoading" opacity="0.6" blur="none" spinner-variant="yellow">
-                    <div v-if="posts" v-swiper:postsSwiper="postSwiperOptions" class="px-1 px-md-5">
-                      <div class="swiper-wrapper mt-3">
-                        <div v-for="post in posts" :key="post.id" class="swiper-slide">
+                    <div v-if="postsSwiperOptions" v-swiper:postsSwiper="postsSwiperOptions" class="swiper px-md-5">
+                      <div class="swiper-wrapper pt-3">
+                        <div
+                          v-for="post in postsVirtualData.slides"
+                          :key="post.id"
+                          class="swiper-slide h-auto d-flex align-items-stretch"
+                          :style="{ left: `${postsVirtualData.offset}px` }"
+                        >
                           <nuxt-link :to="{ path: `/${post.slug}` }">
                             <PostCard :post="post" class="mx-auto" />
                           </nuxt-link>
@@ -89,37 +99,28 @@ export default {
   components: { Newsletter, PostCard, Fiche, Search },
   directives: { swiper: SwiperDirective },
   data() {
-    const swiperOptions = {
-      ...DEFAULT,
-      ...RESPONSIVE
-    }
     return {
       search: this.$route.params.search,
 
       fiches: null,
+      fichesSwiperOptions: null,
+      fichesVirtualData: {
+        slides: []
+      },
       fichesTotal: null,
       fichesPages: null,
       fichesNextPage: 2,
       fichesLoading: false,
 
       posts: null,
+      postsSwiperOptions: null,
+      postsVirtualData: {
+        slides: []
+      },
       postsTotal: null,
       postsPages: null,
       postsNextPage: 2,
-      postsLoading: false,
-
-      postSwiperOptions: {
-        ...swiperOptions,
-        on: {
-          reachEnd: () => this.loadMorePosts()
-        }
-      },
-      ficheSwiperOptions: {
-        ...swiperOptions,
-        on: {
-          reachEnd: () => this.loadMoreFiches()
-        }
-      }
+      postsLoading: false
     }
   },
   computed: {
@@ -130,19 +131,53 @@ export default {
       return this.totalResultCount > 50
     }
   },
-  async created() {
+  async mounted() {
     await new Promise((resolve) => setTimeout(resolve, 10000))
 
     this.$store.dispatch('posts/fetchByText', { search: this.search }).then((postResult) => {
       this.posts = postResult.posts
       this.postsTotal = postResult.total
       this.postsPages = postResult.pages
+
+      this.postsSwiperOptions = {
+        virtual: {
+          slides: this.posts,
+          renderExternal: (data) => {
+            // assign virtual slides data
+            this.postsVirtualData = data
+          },
+          addSlidesBefore: 2,
+          addSlidesAfter: 2
+        },
+        ...DEFAULT,
+        ...RESPONSIVE,
+        on: {
+          reachEnd: () => this.loadMorePosts()
+        }
+      }
     })
 
     this.$store.dispatch('fiches/fetchByText', { search: this.search }).then((ficheResult) => {
       this.fiches = ficheResult.fiches
       this.fichesTotal = ficheResult.total
       this.fichesPages = ficheResult.pages
+
+      this.fichesSwiperOptions = {
+        virtual: {
+          slides: this.fiches,
+          renderExternal: (data) => {
+            // assign virtual slides data
+            this.fichesVirtualData = data
+          },
+          addSlidesBefore: 2,
+          addSlidesAfter: 2
+        },
+        ...DEFAULT,
+        ...RESPONSIVE,
+        on: {
+          reachEnd: () => this.loadMoreFiches()
+        }
+      }
     })
   },
   methods: {
@@ -189,5 +224,10 @@ export default {
 <style lang="scss" scoped>
 .search-results {
   min-height: 50vh;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  top: 250px;
 }
 </style>
