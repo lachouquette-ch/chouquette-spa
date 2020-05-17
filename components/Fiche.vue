@@ -344,18 +344,6 @@ export default {
       return this.$store.state.fiches.criteria[this.fiche.id]
     }
   },
-  watch: {
-    fiche() {
-      // remove marker
-      if (this.marker) {
-        this.marker.setMap(null)
-        this.marker = null
-        this.infoWindow = null
-      }
-
-      this.init()
-    }
-  },
   async mounted() {
     if (this.fiche.info.location) {
       try {
@@ -456,7 +444,7 @@ export default {
         this.marker = null
       }
       // add marker
-      if (this.map && this.fiche.info.location) {
+      if (this.map) {
         this.infoWindow = new this.google.maps.InfoWindow({
           content: `<div class="text-center">${this.fiche.info.location.address}</div>`
         })

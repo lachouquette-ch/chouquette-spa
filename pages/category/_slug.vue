@@ -173,8 +173,8 @@
                 <div v-if="fichesSwiperOptions" v-swiper="fichesSwiperOptions" class="swiper px-md-5">
                   <div class="swiper-wrapper pt-3">
                     <div
-                      v-for="(fiche, index) in virtualData.slides"
-                      :key="index"
+                      v-for="fiche in virtualData.slides"
+                      :key="fiche.id"
                       class="swiper-slide h-auto d-flex align-items-stretch"
                       :style="{ left: `${virtualData.offset}px` }"
                     >
