@@ -628,7 +628,7 @@ export default {
         return
       }
 
-      if (this.fichesNextPage >= this.fichesPages) {
+      if (this.fichesNextPage > this.fichesPages) {
         console.warn('no more pages')
         return
       }
