@@ -45,7 +45,6 @@ export default {
     return {
       title: this.$options.filters.heDecode(this.fiche.title.rendered),
       meta: this.yoastMetaProperties(this.fiche.yoast_meta)
-      // script: this.yoastJsonLDConfig(this.fiche.yoast_json_ld)
     }
   }
 }
