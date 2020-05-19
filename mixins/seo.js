@@ -1,4 +1,9 @@
 export default {
+  computed: {
+    currentURL() {
+      return `${process.env.baseUrl}${this.$route.fullPath}`
+    }
+  },
   methods: {
     yoastMetaProperties(yoastMeta) {
       const metaProperties = yoastMeta.map((metaProperty) => {
@@ -12,25 +17,24 @@ export default {
       // hack URL
       const ogURL = metaProperties.find(({ property }) => property === 'og:url')
       if (ogURL) {
-        ogURL.content = window.location.href
+        ogURL.content = this.currentURL
       } else {
         metaProperties.push({
           hid: 'og:url',
           property: 'og:url',
-          content: window.location.href
+          content: this.currentURL
         })
       }
 
       return metaProperties
     },
     jsonLDScript(...additionnalContext) {
-      const logo = `${window.location.origin}/logo.png`
       const companyContext = {
         '@context': 'http://www.schema.org',
         '@type': 'Organization',
         name: 'La Chouquette',
-        url: 'https://lachouquette.ch',
-        logo,
+        url: process.env.baseUrl,
+        logo: `${process.env.baseUrl}/logo.png`,
         foundingDate: '2014',
         founders: [
           {
@@ -56,9 +60,22 @@ export default {
         sameAs: ['https://www.facebook.com/lachouquettelausanne/', 'https://www.instagram.com/lachouquettelausanne']
       }
 
+      const webSiteContext = {
+        '@context': 'http://schema.org',
+        '@type': 'WebSite',
+        name: 'La Chouquette',
+        url: process.env.baseUrl,
+        sameAs: ['https://www.facebook.com/lachouquettelausanne/', 'https://www.instagram.com/lachouquettelausanne'],
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: `process.env.baseUrl/search/{search_term}`,
+          'query-input': 'required name=search_term'
+        }
+      }
+
       const jsonLD = {
         type: 'application/ld+json',
-        json: [companyContext, ...additionnalContext]
+        json: [companyContext, webSiteContext, ...additionnalContext]
       }
 
       return jsonLD

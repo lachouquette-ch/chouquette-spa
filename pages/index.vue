@@ -126,7 +126,7 @@ export default {
   directives: { swiper: SwiperDirective },
   layout: 'no-header',
   mixins: [seo],
-  async asyncData({ app, store }) {
+  async asyncData({ store }) {
     const [latestPosts, yoast] = await Promise.all([
       store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
       store.dispatch('yoast/fetchHome')
@@ -177,7 +177,7 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: `${window.location.origin}/logo.png`
+          content: `${process.env.baseUrl}/logo.png`
         }
       ],
       script: [this.jsonLDScript()]
