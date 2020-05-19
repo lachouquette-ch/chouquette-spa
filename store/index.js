@@ -1,8 +1,7 @@
 export const state = () => ({
   name: null,
   description: null,
-  url: null,
-  home: null
+  wordpressUrl: null
 })
 
 export const actions = {
@@ -29,7 +28,6 @@ export const mutations = {
   SET_SETTINGS(state, { name, description, url, home }) {
     state.name = name
     state.description = description
-    state.url = url
-    state.home = home
+    state.wordpressUrl = url
   }
 }
