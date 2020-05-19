@@ -172,7 +172,14 @@ export default {
   head() {
     return {
       title: this.yoast.yoast_title,
-      meta: this.yoastMetaConfig(this.yoast.yoast_meta),
+      meta: [
+        ...this.yoastMetaConfig(this.yoast.yoast_meta),
+        {
+          hid: 'og:image',
+          property: 'og:image',
+          content: `${window.location.origin}/logo.png`
+        }
+      ],
       script: this.yoastJsonLDConfig(this.yoast.yoast_json_ld)
     }
   }
