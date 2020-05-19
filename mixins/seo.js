@@ -5,6 +5,10 @@ export default {
     }
   },
   methods: {
+    yoastGetDescription(yoastMeta) {
+      const ogDescription = yoastMeta.find(({ property }) => property === 'og:description')
+      return ogDescription || ''
+    },
     yoastMetaProperties(yoastMeta) {
       const metaProperties = yoastMeta.map((metaProperty) => {
         return {
@@ -52,12 +56,10 @@ export default {
           addressRegion: 'Vaud',
           addressCountry: 'Suisse'
         },
-        contactPoint: {
-          '@type': 'ContactPoint',
-          contactType: 'Information',
-          email: 'hello@lachouquette.ch'
-        },
-        sameAs: ['https://www.facebook.com/lachouquettelausanne/', 'https://www.instagram.com/lachouquettelausanne']
+        sameAs: [
+          'https://www.facebook.com/lachouquettelausanne',
+          'https://www.instagram.com/lachouquettelausanne/?hl=fr'
+        ]
       }
 
       const webSiteContext = {
@@ -65,10 +67,13 @@ export default {
         '@type': 'WebSite',
         name: 'La Chouquette',
         url: process.env.baseUrl,
-        sameAs: ['https://www.facebook.com/lachouquettelausanne/', 'https://www.instagram.com/lachouquettelausanne'],
+        sameAs: [
+          'https://www.facebook.com/lachouquettelausanne',
+          'https://www.instagram.com/lachouquettelausanne/?hl=fr'
+        ],
         potentialAction: {
           '@type': 'SearchAction',
-          target: `process.env.baseUrl/search/{search_term}`,
+          target: `${process.env.baseUrl}/search/{search_term}`,
           'query-input': 'required name=search_term'
         }
       }

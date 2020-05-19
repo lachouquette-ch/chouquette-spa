@@ -34,10 +34,17 @@ export default {
   },
   head() {
     return {
-      title: this.$options.filters.heDecode(this.page.title.rendered),
+      title: this.page.yoast_title,
       link: this.gutenbergLinks(),
-      meta: this.yoastMetaProperties(this.page.yoast_meta)
-      // script: this.yoastJsonLDConfig(this.page.yoast_json_ld)
+      meta: this.yoastMetaProperties(this.page.yoast_meta),
+      script: [
+        this.jsonLDScript({
+          '@context': 'http://schema.org',
+          '@type': 'WebPage',
+          name: this.page.yoast_title,
+          description: this.yoastGetDescription(this.page.yoast_meta)
+        })
+      ]
     }
   }
 }
