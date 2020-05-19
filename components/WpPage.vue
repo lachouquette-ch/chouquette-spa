@@ -19,13 +19,13 @@
 </template>
 
 <script>
-import yoast from '~/mixins/yoast'
+import seo from '~/mixins/seo'
 import gutenberg from '~/mixins/gutenberg'
 import Newsletter from '~/components/Newsletter'
 
 export default {
   components: { Newsletter },
-  mixins: [yoast, gutenberg],
+  mixins: [seo, gutenberg],
   props: {
     page: {
       type: Object,
@@ -36,8 +36,8 @@ export default {
     return {
       title: this.$options.filters.heDecode(this.page.title.rendered),
       link: this.gutenbergLinks(),
-      meta: this.yoastMetaConfig(this.page.yoast_meta),
-      script: this.yoastJsonLDConfig(this.page.yoast_json_ld)
+      meta: this.yoastMetaProperties(this.page.yoast_meta)
+      // script: this.yoastJsonLDConfig(this.page.yoast_json_ld)
     }
   }
 }

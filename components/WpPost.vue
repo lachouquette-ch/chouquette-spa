@@ -167,7 +167,7 @@ import WpAvatar from '../components/WpAvatar'
 import PostCommentReply from '../components/PostCommentReply'
 import FicheThumbnail from '../components/FicheThumbnail'
 import Fiche from '../components/Fiche'
-import yoast from '~/mixins/yoast'
+import seo from '~/mixins/seo'
 import gutenberg from '~/mixins/gutenberg'
 
 import { DEFAULT, RESPONSIVE, HASH } from '~/constants/swiper'
@@ -186,7 +186,7 @@ export default {
     PostShare
   },
   directives: { swiper: SwiperDirective },
-  mixins: [gutenberg, yoast],
+  mixins: [gutenberg, seo],
   props: {
     post: {
       type: Object,
@@ -284,8 +284,8 @@ export default {
     return {
       title: this.$options.filters.heDecode(this.post.yoast_title),
       link: this.gutenbergLinks(),
-      meta: this.yoastMetaConfig(this.post.yoast_meta),
-      script: this.yoastJsonLDConfig(this.post.yoast_json_ld)
+      meta: this.yoastMetaProperties(this.post.yoast_meta)
+      // script: this.yoastJsonLDConfig(this.post.yoast_json_ld)
     }
   }
 }

@@ -18,11 +18,11 @@
 <script>
 import Fiche from '~/components/Fiche'
 import PostCard from '~/components/PostCard'
-import yoast from '~/mixins/yoast'
+import seo from '~/mixins/seo'
 
 export default {
   components: { Fiche, PostCard },
-  mixins: [yoast],
+  mixins: [seo],
   async asyncData({ store, params }) {
     const fiche = await store.dispatch('fiches/fetchBySlug', params.slug)
 
@@ -44,8 +44,8 @@ export default {
   head() {
     return {
       title: this.$options.filters.heDecode(this.fiche.title.rendered),
-      meta: this.yoastMetaConfig(this.fiche.yoast_meta),
-      script: this.yoastJsonLDConfig(this.fiche.yoast_json_ld)
+      meta: this.yoastMetaProperties(this.fiche.yoast_meta)
+      // script: this.yoastJsonLDConfig(this.fiche.yoast_json_ld)
     }
   }
 }

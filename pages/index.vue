@@ -116,7 +116,7 @@ import Search from '~/components/Search'
 import Newsletter from '~/components/Newsletter'
 
 import { AUTO_PLAY, DEFAULT, RESPONSIVE } from '~/constants/swiper'
-import yoast from '~/mixins/yoast'
+import seo from '~/mixins/seo'
 
 const LATEST_POSTS_NUM = 6
 const TOP_POSTS_NUM = 8
@@ -125,7 +125,7 @@ export default {
   components: { PostCard, CategoryLogo, Search, Newsletter },
   directives: { swiper: SwiperDirective },
   layout: 'no-header',
-  mixins: [yoast],
+  mixins: [seo],
   async asyncData({ app, store }) {
     const [latestPosts, yoast] = await Promise.all([
       store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
@@ -173,14 +173,14 @@ export default {
     return {
       title: this.yoast.yoast_title,
       meta: [
-        ...this.yoastMetaConfig(this.yoast.yoast_meta),
+        ...this.yoastMetaProperties(this.yoast.yoast_meta),
         {
           hid: 'og:image',
           property: 'og:image',
           content: `${window.location.origin}/logo.png`
         }
       ],
-      script: this.yoastJsonLDConfig(this.yoast.yoast_json_ld)
+      script: [this.jsonLDScript()]
     }
   }
 }
