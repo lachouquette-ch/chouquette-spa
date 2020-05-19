@@ -7,7 +7,7 @@ export default {
   methods: {
     yoastGetDescription(yoastMeta) {
       const ogDescription = yoastMeta.find(({ property }) => property === 'og:description')
-      return ogDescription || ''
+      return ogDescription ? this.$options.filters.heDecode(ogDescription.content) : ''
     },
     yoastMetaProperties(yoastMeta) {
       const metaProperties = yoastMeta.map((metaProperty) => {

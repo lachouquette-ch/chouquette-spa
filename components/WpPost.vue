@@ -284,8 +284,24 @@ export default {
     return {
       title: this.$options.filters.heDecode(this.post.yoast_title),
       link: this.gutenbergLinks(),
-      meta: this.yoastMetaProperties(this.post.yoast_meta)
-      // script: this.yoastJsonLDConfig(this.post.yoast_json_ld)
+      meta: this.yoastMetaProperties(this.post.yoast_meta),
+      script: [
+        this.jsonLDScript({
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: this.$options.filters.heDecode(this.post.title.rendered),
+          image: this.post.featured_img,
+          author: this.post.author_meta.display_name,
+          publisher: {
+            '@type': 'Organization',
+            name: 'La Chouquette'
+          },
+          url: this.currentURL,
+          datePublished: this.post.date,
+          dateModified: this.post.modified,
+          description: this.yoastGetDescription(this.post.yoast_meta)
+        })
+      ]
     }
   }
 }

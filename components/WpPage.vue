@@ -34,14 +34,14 @@ export default {
   },
   head() {
     return {
-      title: this.page.yoast_title,
+      title: this.$options.filters.heDecode(this.page.yoast_title),
       link: this.gutenbergLinks(),
       meta: this.yoastMetaProperties(this.page.yoast_meta),
       script: [
         this.jsonLDScript({
           '@context': 'http://schema.org',
           '@type': 'WebPage',
-          name: this.page.yoast_title,
+          name: this.$options.filters.heDecode(this.page.yoast_title),
           description: this.yoastGetDescription(this.page.yoast_meta)
         })
       ]
