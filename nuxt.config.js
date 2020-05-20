@@ -58,6 +58,7 @@ export default {
   router: {
     middleware: 'redirect'
   },
+  serverMiddleware: ['redirect-ssl', '~/middleware/url-resolve'],
   /*
    ** Customize the progress-bar color
    */
