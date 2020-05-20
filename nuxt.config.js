@@ -75,7 +75,6 @@ export default {
     { src: '~/plugins/jquery.js', mode: 'client' },
     { src: '~/plugins/google-maps.js', mode: 'client' },
     { src: '~/node_modules/vue-awesome-swiper', mode: 'client' },
-    { src: '~/plugins/google-analytics.js', mode: 'client' },
     { src: '~/plugins/vuelidate.js' },
     { src: '~/plugins/html-entity-filter.js' },
     { src: '~/plugins/pretty-url-filter.js' },
@@ -87,7 +86,7 @@ export default {
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
-    '@nuxtjs/google-analytics'
+    ['@nuxtjs/google-analytics', { id: 'UA-47894326-1' }]
   ],
   /*
    ** Nuxt.js modules
