@@ -195,7 +195,8 @@ export default {
     fiches: {
       type: Array,
       required: true
-    }
+    },
+    preview: Boolean
   },
   data() {
     return {
@@ -239,10 +240,12 @@ export default {
     }
   },
   async created() {
-    ;[this.comments, this.similarPosts] = await Promise.all([
-      this.$wpAPI.wp.comments.getByPost(this.post.id).then(({ data }) => data),
-      this.$store.dispatch('posts/fetchSimilar', this.post)
-    ])
+    if (!this.preview) {
+      ;[this.comments, this.similarPosts] = await Promise.all([
+        this.$wpAPI.wp.comments.getByPost(this.post.id).then(({ data }) => data),
+        this.$store.dispatch('posts/fetchSimilar', this.post)
+      ])
+    }
   },
   mounted() {
     // show fiche if previously selected

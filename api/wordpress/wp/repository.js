@@ -25,9 +25,9 @@ class Repository {
     return this.$axios.get(this.prefix + '/', { params: queryParams })
   }
 
-  getById(id, queryParams = {}) {
+  getById(id, queryParams = {}, config = {}) {
     const URI = `${this.prefix}/${id}?_embed=true`
-    return this.$axios.get(URI, { params: queryParams })
+    return this.$axios.get(URI, { params: queryParams, ...config })
   }
 }
 

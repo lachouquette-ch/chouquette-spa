@@ -30,6 +30,11 @@ class PostRepository extends Repository {
     }
     return super.getById(id, queryParams)
   }
+
+  getPreview(id, nonce) {
+    const config = { withCredentials: true, headers: { 'X-WP-Nonce': nonce } }
+    return super.getById(id, { _embed: true }, config)
+  }
 }
 
 export default PostRepository
