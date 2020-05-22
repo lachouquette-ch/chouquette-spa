@@ -1,7 +1,7 @@
 <template>
   <div class="category-page layout-content">
-    <b-overlay :show="loading" variant="white" opacity="1" z-index="2000" spinner-variant="yellow">
-      <div class="position-relative">
+    <b-overlay :show="loading" variant="white" opacity="1" z-index="1030" spinner-variant="yellow">
+      <div class="position-relative min-vh-100">
         <div class="fiches pt-3 pb-5">
           <div class="container">
             <div class="text-center">
