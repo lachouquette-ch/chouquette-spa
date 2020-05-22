@@ -1,75 +1,75 @@
 <template>
   <div class="fiche-container d-flex">
-    <!--    <b-modal ref="ficheModal" title-class="w-100 text-center" hide-footer centered @shown="focusOn('message')">-->
-    <!--      <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>-->
-    <!--      <template v-slot:default>-->
-    <!--        <form @submit.prevent="postMessage(isContactModal)">-->
-    <!--          <label v-if="isContactModal">-->
-    <!--            Une question, une demande, une réservation... écris-lui un petit mot directement ici-->
-    <!--            <i class="far fa-smile"></i>-->
-    <!--          </label>-->
-    <!--          <label v-else>-->
-    <!--            Une erreur, une remarque, une suggestion sur la fiche ? Merci de nous en faire part-->
-    <!--            <i class="far fa-smile"></i>-->
-    <!--          </label>-->
-    <!--          <div class="form-group">-->
-    <!--            <label v-if="isContactModal" for="ficheModalText">Ton message *</label>-->
-    <!--            <label v-else for="ficheModalText">Ton commentaire *</label>-->
-    <!--            <textarea-->
-    <!--              id="ficheModalText"-->
-    <!--              ref="message"-->
-    <!--              v-model="formFiche.message"-->
-    <!--              class="form-control"-->
-    <!--              :class="{ 'is-invalid': $v.formFiche.message.$error }"-->
-    <!--              rows="8"-->
-    <!--              @blur="$v.formFiche.message.$touch"-->
-    <!--            ></textarea>-->
-    <!--            <div v-if="!$v.formFiche.message.required" class="invalid-feedback">-->
-    <!--              Il faut un contenu à ton message-->
-    <!--            </div>-->
-    <!--            <div v-if="!$v.formFiche.message.minText" class="invalid-feedback">-->
-    <!--              Ton message doit avoir un minimum de contenu-->
-    <!--            </div>-->
-    <!--          </div>-->
-    <!--          <div class="form-group">-->
-    <!--            <label for="ficheModalName">Ton prénom / nom *</label>-->
-    <!--            <input-->
-    <!--              id="ficheModalName"-->
-    <!--              v-model="formFiche.name"-->
-    <!--              name="name"-->
-    <!--              class="form-control"-->
-    <!--              :class="{ 'is-invalid': $v.formFiche.name.$error }"-->
-    <!--              @blur="$v.formFiche.name.$touch"-->
-    <!--            />-->
-    <!--            <div v-if="!$v.formFiche.name.required" class="invalid-feedback">-->
-    <!--              Merci de nous indiquer ton ptit nom-->
-    <!--            </div>-->
-    <!--          </div>-->
-    <!--          <div class="form-group">-->
-    <!--            <label for="ficheModalMail">Ton mail *</label>-->
-    <!--            <input-->
-    <!--              id="ficheModalMail"-->
-    <!--              v-model="formFiche.email"-->
-    <!--              type="email"-->
-    <!--              name="email"-->
-    <!--              class="form-control"-->
-    <!--              :class="{ 'is-invalid': $v.formFiche.email.$error }"-->
-    <!--              @blur="$v.formFiche.email.$touch"-->
-    <!--            />-->
-    <!--            <div v-if="!$v.formFiche.email.required" class="invalid-feedback">-->
-    <!--              Merci de nous indiquer ton email (ne sera pas afficher)-->
-    <!--            </div>-->
-    <!--            <div v-if="!$v.formFiche.email.email" class="invalid-feedback">-->
-    <!--              Ton email doit être valide-->
-    <!--            </div>-->
-    <!--          </div>-->
-    <!--          <button class="btn btn-primary w-100" type="submit" :disabled="loading">-->
-    <!--            <b-spinner v-show="loading" small variant="yellow" label="chargement" class="mr-2"></b-spinner>-->
-    <!--            Envoyer-->
-    <!--          </button>-->
-    <!--        </form>-->
-    <!--      </template>-->
-    <!--    </b-modal>-->
+    <b-modal ref="ficheModal" title-class="w-100 text-center" hide-footer centered @shown="focusOn('message')">
+      <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
+      <template v-slot:default>
+        <form @submit.prevent="postMessage(isContactModal)">
+          <label v-if="isContactModal">
+            Une question, une demande, une réservation... écris-lui un petit mot directement ici
+            <i class="far fa-smile"></i>
+          </label>
+          <label v-else>
+            Une erreur, une remarque, une suggestion sur la fiche ? Merci de nous en faire part
+            <i class="far fa-smile"></i>
+          </label>
+          <div class="form-group">
+            <label v-if="isContactModal" for="ficheModalText">Ton message *</label>
+            <label v-else for="ficheModalText">Ton commentaire *</label>
+            <textarea
+              id="ficheModalText"
+              ref="message"
+              v-model="formFiche.message"
+              class="form-control"
+              :class="{ 'is-invalid': $v.formFiche.message.$error }"
+              rows="8"
+              @blur="$v.formFiche.message.$touch"
+            ></textarea>
+            <div v-if="!$v.formFiche.message.required" class="invalid-feedback">
+              Il faut un contenu à ton message
+            </div>
+            <div v-if="!$v.formFiche.message.minText" class="invalid-feedback">
+              Ton message doit avoir un minimum de contenu
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="ficheModalName">Ton prénom / nom *</label>
+            <input
+              id="ficheModalName"
+              v-model="formFiche.name"
+              name="name"
+              class="form-control"
+              :class="{ 'is-invalid': $v.formFiche.name.$error }"
+              @blur="$v.formFiche.name.$touch"
+            />
+            <div v-if="!$v.formFiche.name.required" class="invalid-feedback">
+              Merci de nous indiquer ton ptit nom
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="ficheModalMail">Ton mail *</label>
+            <input
+              id="ficheModalMail"
+              v-model="formFiche.email"
+              type="email"
+              name="email"
+              class="form-control"
+              :class="{ 'is-invalid': $v.formFiche.email.$error }"
+              @blur="$v.formFiche.email.$touch"
+            />
+            <div v-if="!$v.formFiche.email.required" class="invalid-feedback">
+              Merci de nous indiquer ton email (ne sera pas afficher)
+            </div>
+            <div v-if="!$v.formFiche.email.email" class="invalid-feedback">
+              Ton email doit être valide
+            </div>
+          </div>
+          <button class="btn btn-primary w-100" type="submit" :disabled="loading">
+            <b-spinner v-show="loading" small variant="yellow" label="chargement" class="mr-2"></b-spinner>
+            Envoyer
+          </button>
+        </form>
+      </template>
+    </b-modal>
     <article ref="fiche" class="fiche fiche-chouquettise w-100 d-flex justify-content-center align-items-stretch">
       <div ref="ficheFront" class="fiche-front h-100 d-flex" :class="frontClass">
         <div ref="front" class="h-100 w-100 card bg-white">
