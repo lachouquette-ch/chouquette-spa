@@ -1,75 +1,75 @@
 <template>
   <div class="fiche-container d-flex">
-    <b-modal ref="ficheModal" title-class="w-100 text-center" hide-footer centered @shown="focusOn('message')">
-      <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
-      <template v-slot:default>
-        <form @submit.prevent="postMessage(isContactModal)">
-          <label v-if="isContactModal">
-            Une question, une demande, une réservation... écris-lui un petit mot directement ici
-            <i class="far fa-smile"></i>
-          </label>
-          <label v-else>
-            Une erreur, une remarque, une suggestion sur la fiche ? Merci de nous en faire part
-            <i class="far fa-smile"></i>
-          </label>
-          <div class="form-group">
-            <label v-if="isContactModal" for="ficheModalText">Ton message *</label>
-            <label v-else for="ficheModalText">Ton commentaire *</label>
-            <textarea
-              id="ficheModalText"
-              ref="message"
-              v-model="formFiche.message"
-              class="form-control"
-              :class="{ 'is-invalid': $v.formFiche.message.$error }"
-              rows="8"
-              @blur="$v.formFiche.message.$touch"
-            ></textarea>
-            <div v-if="!$v.formFiche.message.required" class="invalid-feedback">
-              Il faut un contenu à ton message
-            </div>
-            <div v-if="!$v.formFiche.message.minText" class="invalid-feedback">
-              Ton message doit avoir un minimum de contenu
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="ficheModalName">Ton prénom / nom *</label>
-            <input
-              id="ficheModalName"
-              v-model="formFiche.name"
-              name="name"
-              class="form-control"
-              :class="{ 'is-invalid': $v.formFiche.name.$error }"
-              @blur="$v.formFiche.name.$touch"
-            />
-            <div v-if="!$v.formFiche.name.required" class="invalid-feedback">
-              Merci de nous indiquer ton ptit nom
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="ficheModalMail">Ton mail *</label>
-            <input
-              id="ficheModalMail"
-              v-model="formFiche.email"
-              type="email"
-              name="email"
-              class="form-control"
-              :class="{ 'is-invalid': $v.formFiche.email.$error }"
-              @blur="$v.formFiche.email.$touch"
-            />
-            <div v-if="!$v.formFiche.email.required" class="invalid-feedback">
-              Merci de nous indiquer ton email (ne sera pas afficher)
-            </div>
-            <div v-if="!$v.formFiche.email.email" class="invalid-feedback">
-              Ton email doit être valide
-            </div>
-          </div>
-          <button class="btn btn-primary w-100" type="submit" :disabled="loading">
-            <b-spinner v-show="loading" small variant="yellow" label="chargement" class="mr-2"></b-spinner>
-            Envoyer
-          </button>
-        </form>
-      </template>
-    </b-modal>
+    <!--    <b-modal ref="ficheModal" title-class="w-100 text-center" hide-footer centered @shown="focusOn('message')">-->
+    <!--      <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>-->
+    <!--      <template v-slot:default>-->
+    <!--        <form @submit.prevent="postMessage(isContactModal)">-->
+    <!--          <label v-if="isContactModal">-->
+    <!--            Une question, une demande, une réservation... écris-lui un petit mot directement ici-->
+    <!--            <i class="far fa-smile"></i>-->
+    <!--          </label>-->
+    <!--          <label v-else>-->
+    <!--            Une erreur, une remarque, une suggestion sur la fiche ? Merci de nous en faire part-->
+    <!--            <i class="far fa-smile"></i>-->
+    <!--          </label>-->
+    <!--          <div class="form-group">-->
+    <!--            <label v-if="isContactModal" for="ficheModalText">Ton message *</label>-->
+    <!--            <label v-else for="ficheModalText">Ton commentaire *</label>-->
+    <!--            <textarea-->
+    <!--              id="ficheModalText"-->
+    <!--              ref="message"-->
+    <!--              v-model="formFiche.message"-->
+    <!--              class="form-control"-->
+    <!--              :class="{ 'is-invalid': $v.formFiche.message.$error }"-->
+    <!--              rows="8"-->
+    <!--              @blur="$v.formFiche.message.$touch"-->
+    <!--            ></textarea>-->
+    <!--            <div v-if="!$v.formFiche.message.required" class="invalid-feedback">-->
+    <!--              Il faut un contenu à ton message-->
+    <!--            </div>-->
+    <!--            <div v-if="!$v.formFiche.message.minText" class="invalid-feedback">-->
+    <!--              Ton message doit avoir un minimum de contenu-->
+    <!--            </div>-->
+    <!--          </div>-->
+    <!--          <div class="form-group">-->
+    <!--            <label for="ficheModalName">Ton prénom / nom *</label>-->
+    <!--            <input-->
+    <!--              id="ficheModalName"-->
+    <!--              v-model="formFiche.name"-->
+    <!--              name="name"-->
+    <!--              class="form-control"-->
+    <!--              :class="{ 'is-invalid': $v.formFiche.name.$error }"-->
+    <!--              @blur="$v.formFiche.name.$touch"-->
+    <!--            />-->
+    <!--            <div v-if="!$v.formFiche.name.required" class="invalid-feedback">-->
+    <!--              Merci de nous indiquer ton ptit nom-->
+    <!--            </div>-->
+    <!--          </div>-->
+    <!--          <div class="form-group">-->
+    <!--            <label for="ficheModalMail">Ton mail *</label>-->
+    <!--            <input-->
+    <!--              id="ficheModalMail"-->
+    <!--              v-model="formFiche.email"-->
+    <!--              type="email"-->
+    <!--              name="email"-->
+    <!--              class="form-control"-->
+    <!--              :class="{ 'is-invalid': $v.formFiche.email.$error }"-->
+    <!--              @blur="$v.formFiche.email.$touch"-->
+    <!--            />-->
+    <!--            <div v-if="!$v.formFiche.email.required" class="invalid-feedback">-->
+    <!--              Merci de nous indiquer ton email (ne sera pas afficher)-->
+    <!--            </div>-->
+    <!--            <div v-if="!$v.formFiche.email.email" class="invalid-feedback">-->
+    <!--              Ton email doit être valide-->
+    <!--            </div>-->
+    <!--          </div>-->
+    <!--          <button class="btn btn-primary w-100" type="submit" :disabled="loading">-->
+    <!--            <b-spinner v-show="loading" small variant="yellow" label="chargement" class="mr-2"></b-spinner>-->
+    <!--            Envoyer-->
+    <!--          </button>-->
+    <!--        </form>-->
+    <!--      </template>-->
+    <!--    </b-modal>-->
     <article ref="fiche" class="fiche fiche-chouquettise w-100 d-flex justify-content-center align-items-stretch">
       <div ref="ficheFront" class="fiche-front h-100 d-flex" :class="frontClass">
         <div ref="front" class="h-100 w-100 card bg-white">
@@ -157,99 +157,99 @@
           </div>
         </div>
       </div>
-      <div ref="ficheBack" class="fiche-back h-100 d-flex" :class="backClass">
-        <div ref="back" class="h-100 w-100 card bg-white">
-          <div v-if="fiche.info.location" class="card-header p-0">
-            <div v-show="marker" ref="ficheMap" class="h-100"></div>
-          </div>
-          <div class="card-body position-relative p-0 pt-2">
-            <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
-              <li v-if="fiche.info.website" class="list-group-item ellipses">
-                <a :href="fiche.info.website" title="Site Internet" target="_blank"
-                  ><i class="fas fa-globe"></i> {{ fiche.info.website | prettyURL }}
-                </a>
-              </li>
-              <li v-if="fiche.info.telephone" class="list-group-item">
-                <a :href="`tel: ${fiche.info.telephone}`" title="Téléphone" target="_blank"
-                  ><i class="fas fa-phone"></i> {{ fiche.info.telephone }}
-                </a>
-              </li>
-              <li v-if="fiche.info.mail" class="list-group-item ellipses">
-                <a
-                  :href="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
-                  title="Email"
-                  target="_blank"
-                  ><i class="fas fa-at"></i> {{ fiche.info.mail }}
-                </a>
-              </li>
-              <li v-if="fiche.info.cost" class="list-group-item">
-                <label class="mb-0">Prix :</label>
-                <span class="fiche-price fiche-price-selected">{{ fichePrice[0] }}</span
-                ><span class="fiche-price">{{ fichePrice[1] }}</span>
-              </li>
-              <li v-if="fiche.info.openings" class="list-group-item">
-                <label class="mb-0">Horaires :</label>
-                <b-dropdown
-                  class="fiche-planning"
-                  variant="link"
-                  toggle-tag="span"
-                  toggle-class="text-black d-inline-block p-0 border-0"
-                  dropup
-                  right
-                >
-                  <template v-slot:button-content> {{ getOpening() }} ({{ currentDayOfWeek }}) </template>
-                  <template v-slot:default>
-                    <b-dropdown-text><label class="mb-0">Lundi</label>{{ getOpening(1) }}</b-dropdown-text>
-                    <b-dropdown-text><label class="mb-0">Mardi</label>{{ getOpening(2) }}</b-dropdown-text>
-                    <b-dropdown-text><label class="mb-0">Mercredi</label>{{ getOpening(3) }}</b-dropdown-text>
-                    <b-dropdown-text><label class="mb-0">Jeudi</label>{{ getOpening(4) }}</b-dropdown-text>
-                    <b-dropdown-text><label class="mb-0">Vendredi</label>{{ getOpening(5) }}</b-dropdown-text>
-                    <b-dropdown-text><label class="mb-0">Samedi</label>{{ getOpening(6) }}</b-dropdown-text>
-                    <b-dropdown-text><label class="mb-0">Dimanche</label>{{ getOpening(0) }}</b-dropdown-text>
-                  </template>
-                </b-dropdown>
-              </li>
-            </ul>
-            <div class="card-text p-3">
-              <div v-if="criteria">
-                <span
-                  v-for="value in criteriaList"
-                  :key="value.id"
-                  class="badge badge-pill badge-light-grey font-weight-normal mr-1"
-                  >{{ value.name }}</span
-                >
-              </div>
-            </div>
-            <a
-              title="Reporter une précision ou erreur sur la fiche"
-              href=""
-              class="fiche-report"
-              @click.prevent="openReportModal"
-              ><i class="fas fa-exclamation-circle"></i
-            ></a>
-          </div>
-          <div class="card-footer">
-            <nuxt-link
-              v-if="!noRefLink"
-              :to="{ path: `/fiche/${fiche.slug}` }"
-              title="Page de la fiche"
-              class=" btn btn-sm btn-outline-secondary"
-            >
-              <i class="fas fa-external-link-alt"></i>
-              <span class="ml-1">Ouvrir la fiche</span>
-            </nuxt-link>
-            <a
-              href=""
-              title="Retour sur les informations principales"
-              class="btn btn-sm btn-outline-secondary float-right"
-              :class="{ 'd-md-none': flatEnable }"
-              @click.prevent="isFlipped = false"
-            >
-              Retour
-            </a>
-          </div>
-        </div>
-      </div>
+      <!--      <div ref="ficheBack" class="fiche-back h-100 d-flex" :class="backClass">-->
+      <!--        <div ref="back" class="h-100 w-100 card bg-white">-->
+      <!--          <div v-if="fiche.info.location" class="card-header p-0">-->
+      <!--            <div v-show="marker" ref="ficheMap" class="h-100"></div>-->
+      <!--          </div>-->
+      <!--          <div class="card-body position-relative p-0 pt-2">-->
+      <!--            <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">-->
+      <!--              <li v-if="fiche.info.website" class="list-group-item ellipses">-->
+      <!--                <a :href="fiche.info.website" title="Site Internet" target="_blank"-->
+      <!--                  ><i class="fas fa-globe"></i> {{ fiche.info.website | prettyURL }}-->
+      <!--                </a>-->
+      <!--              </li>-->
+      <!--              <li v-if="fiche.info.telephone" class="list-group-item">-->
+      <!--                <a :href="`tel: ${fiche.info.telephone}`" title="Téléphone" target="_blank"-->
+      <!--                  ><i class="fas fa-phone"></i> {{ fiche.info.telephone }}-->
+      <!--                </a>-->
+      <!--              </li>-->
+      <!--              <li v-if="fiche.info.mail" class="list-group-item ellipses">-->
+      <!--                <a-->
+      <!--                  :href="`mailto:${fiche.info.mail}?body=%0A-&#45;&#45;%0AEnvoy%C3%A9%20depuis%20${currentURL}`"-->
+      <!--                  title="Email"-->
+      <!--                  target="_blank"-->
+      <!--                  ><i class="fas fa-at"></i> {{ fiche.info.mail }}-->
+      <!--                </a>-->
+      <!--              </li>-->
+      <!--              <li v-if="fiche.info.cost" class="list-group-item">-->
+      <!--                <label class="mb-0">Prix :</label>-->
+      <!--                <span class="fiche-price fiche-price-selected">{{ fichePrice[0] }}</span-->
+      <!--                ><span class="fiche-price">{{ fichePrice[1] }}</span>-->
+      <!--              </li>-->
+      <!--              <li v-if="fiche.info.openings" class="list-group-item">-->
+      <!--                <label class="mb-0">Horaires :</label>-->
+      <!--                <b-dropdown-->
+      <!--                  class="fiche-planning"-->
+      <!--                  variant="link"-->
+      <!--                  toggle-tag="span"-->
+      <!--                  toggle-class="text-black d-inline-block p-0 border-0"-->
+      <!--                  dropup-->
+      <!--                  right-->
+      <!--                >-->
+      <!--                  <template v-slot:button-content> {{ getOpening() }} ({{ currentDayOfWeek }}) </template>-->
+      <!--                  <template v-slot:default>-->
+      <!--                    <b-dropdown-text><label class="mb-0">Lundi</label>{{ getOpening(1) }}</b-dropdown-text>-->
+      <!--                    <b-dropdown-text><label class="mb-0">Mardi</label>{{ getOpening(2) }}</b-dropdown-text>-->
+      <!--                    <b-dropdown-text><label class="mb-0">Mercredi</label>{{ getOpening(3) }}</b-dropdown-text>-->
+      <!--                    <b-dropdown-text><label class="mb-0">Jeudi</label>{{ getOpening(4) }}</b-dropdown-text>-->
+      <!--                    <b-dropdown-text><label class="mb-0">Vendredi</label>{{ getOpening(5) }}</b-dropdown-text>-->
+      <!--                    <b-dropdown-text><label class="mb-0">Samedi</label>{{ getOpening(6) }}</b-dropdown-text>-->
+      <!--                    <b-dropdown-text><label class="mb-0">Dimanche</label>{{ getOpening(0) }}</b-dropdown-text>-->
+      <!--                  </template>-->
+      <!--                </b-dropdown>-->
+      <!--              </li>-->
+      <!--            </ul>-->
+      <!--            <div class="card-text p-3">-->
+      <!--              <div v-if="criteria">-->
+      <!--                <span-->
+      <!--                  v-for="value in criteriaList"-->
+      <!--                  :key="value.id"-->
+      <!--                  class="badge badge-pill badge-light-grey font-weight-normal mr-1"-->
+      <!--                  >{{ value.name }}</span-->
+      <!--                >-->
+      <!--              </div>-->
+      <!--            </div>-->
+      <!--            <a-->
+      <!--              title="Reporter une précision ou erreur sur la fiche"-->
+      <!--              href=""-->
+      <!--              class="fiche-report"-->
+      <!--              @click.prevent="openReportModal"-->
+      <!--              ><i class="fas fa-exclamation-circle"></i-->
+      <!--            ></a>-->
+      <!--          </div>-->
+      <!--          <div class="card-footer">-->
+      <!--            <nuxt-link-->
+      <!--              v-if="!noRefLink"-->
+      <!--              :to="{ path: `/fiche/${fiche.slug}` }"-->
+      <!--              title="Page de la fiche"-->
+      <!--              class=" btn btn-sm btn-outline-secondary"-->
+      <!--            >-->
+      <!--              <i class="fas fa-external-link-alt"></i>-->
+      <!--              <span class="ml-1">Ouvrir la fiche</span>-->
+      <!--            </nuxt-link>-->
+      <!--            <a-->
+      <!--              href=""-->
+      <!--              title="Retour sur les informations principales"-->
+      <!--              class="btn btn-sm btn-outline-secondary float-right"-->
+      <!--              :class="{ 'd-md-none': flatEnable }"-->
+      <!--              @click.prevent="isFlipped = false"-->
+      <!--            >-->
+      <!--              Retour-->
+      <!--            </a>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </div>-->
     </article>
   </div>
 </template>
