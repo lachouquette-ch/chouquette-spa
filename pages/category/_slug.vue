@@ -401,6 +401,7 @@ export default {
           // assign virtual slides data
           this.virtualData = data
         },
+        cache: false,
         addSlidesBefore: 2,
         addSlidesAfter: 2
       },
