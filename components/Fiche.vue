@@ -150,106 +150,106 @@
               title="Plus de détails"
               class="btn btn-sm btn-outline-secondary float-right"
               :class="{ 'd-md-none': flatEnable }"
-              @click.prevent="isFlipped = true"
+              @click.prevent="flipFiche"
             >
               Voir <span class="ml-1"><i class="fas fa-plus"></i></span>
             </a>
           </div>
         </div>
       </div>
-      <!--      <div ref="ficheBack" class="fiche-back h-100 d-flex" :class="backClass">-->
-      <!--        <div ref="back" class="h-100 w-100 card bg-white">-->
-      <!--          <div v-if="fiche.info.location" class="card-header p-0">-->
-      <!--            <div v-show="marker" ref="ficheMap" class="h-100"></div>-->
-      <!--          </div>-->
-      <!--          <div class="card-body position-relative p-0 pt-2">-->
-      <!--            <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">-->
-      <!--              <li v-if="fiche.info.website" class="list-group-item ellipses">-->
-      <!--                <a :href="fiche.info.website" title="Site Internet" target="_blank"-->
-      <!--                  ><i class="fas fa-globe"></i> {{ fiche.info.website | prettyURL }}-->
-      <!--                </a>-->
-      <!--              </li>-->
-      <!--              <li v-if="fiche.info.telephone" class="list-group-item">-->
-      <!--                <a :href="`tel: ${fiche.info.telephone}`" title="Téléphone" target="_blank"-->
-      <!--                  ><i class="fas fa-phone"></i> {{ fiche.info.telephone }}-->
-      <!--                </a>-->
-      <!--              </li>-->
-      <!--              <li v-if="fiche.info.mail" class="list-group-item ellipses">-->
-      <!--                <a-->
-      <!--                  :href="`mailto:${fiche.info.mail}?body=%0A-&#45;&#45;%0AEnvoy%C3%A9%20depuis%20${currentURL}`"-->
-      <!--                  title="Email"-->
-      <!--                  target="_blank"-->
-      <!--                  ><i class="fas fa-at"></i> {{ fiche.info.mail }}-->
-      <!--                </a>-->
-      <!--              </li>-->
-      <!--              <li v-if="fiche.info.cost" class="list-group-item">-->
-      <!--                <label class="mb-0">Prix :</label>-->
-      <!--                <span class="fiche-price fiche-price-selected">{{ fichePrice[0] }}</span-->
-      <!--                ><span class="fiche-price">{{ fichePrice[1] }}</span>-->
-      <!--              </li>-->
-      <!--              <li v-if="fiche.info.openings" class="list-group-item">-->
-      <!--                <label class="mb-0">Horaires :</label>-->
-      <!--                <b-dropdown-->
-      <!--                  class="fiche-planning"-->
-      <!--                  variant="link"-->
-      <!--                  toggle-tag="span"-->
-      <!--                  toggle-class="text-black d-inline-block p-0 border-0"-->
-      <!--                  dropup-->
-      <!--                  right-->
-      <!--                >-->
-      <!--                  <template v-slot:button-content> {{ getOpening() }} ({{ currentDayOfWeek }}) </template>-->
-      <!--                  <template v-slot:default>-->
-      <!--                    <b-dropdown-text><label class="mb-0">Lundi</label>{{ getOpening(1) }}</b-dropdown-text>-->
-      <!--                    <b-dropdown-text><label class="mb-0">Mardi</label>{{ getOpening(2) }}</b-dropdown-text>-->
-      <!--                    <b-dropdown-text><label class="mb-0">Mercredi</label>{{ getOpening(3) }}</b-dropdown-text>-->
-      <!--                    <b-dropdown-text><label class="mb-0">Jeudi</label>{{ getOpening(4) }}</b-dropdown-text>-->
-      <!--                    <b-dropdown-text><label class="mb-0">Vendredi</label>{{ getOpening(5) }}</b-dropdown-text>-->
-      <!--                    <b-dropdown-text><label class="mb-0">Samedi</label>{{ getOpening(6) }}</b-dropdown-text>-->
-      <!--                    <b-dropdown-text><label class="mb-0">Dimanche</label>{{ getOpening(0) }}</b-dropdown-text>-->
-      <!--                  </template>-->
-      <!--                </b-dropdown>-->
-      <!--              </li>-->
-      <!--            </ul>-->
-      <!--            <div class="card-text p-3">-->
-      <!--              <div v-if="criteria">-->
-      <!--                <span-->
-      <!--                  v-for="value in criteriaList"-->
-      <!--                  :key="value.id"-->
-      <!--                  class="badge badge-pill badge-light-grey font-weight-normal mr-1"-->
-      <!--                  >{{ value.name }}</span-->
-      <!--                >-->
-      <!--              </div>-->
-      <!--            </div>-->
-      <!--            <a-->
-      <!--              title="Reporter une précision ou erreur sur la fiche"-->
-      <!--              href=""-->
-      <!--              class="fiche-report"-->
-      <!--              @click.prevent="openReportModal"-->
-      <!--              ><i class="fas fa-exclamation-circle"></i-->
-      <!--            ></a>-->
-      <!--          </div>-->
-      <!--          <div class="card-footer">-->
-      <!--            <nuxt-link-->
-      <!--              v-if="!noRefLink"-->
-      <!--              :to="{ path: `/fiche/${fiche.slug}` }"-->
-      <!--              title="Page de la fiche"-->
-      <!--              class=" btn btn-sm btn-outline-secondary"-->
-      <!--            >-->
-      <!--              <i class="fas fa-external-link-alt"></i>-->
-      <!--              <span class="ml-1">Ouvrir la fiche</span>-->
-      <!--            </nuxt-link>-->
-      <!--            <a-->
-      <!--              href=""-->
-      <!--              title="Retour sur les informations principales"-->
-      <!--              class="btn btn-sm btn-outline-secondary float-right"-->
-      <!--              :class="{ 'd-md-none': flatEnable }"-->
-      <!--              @click.prevent="isFlipped = false"-->
-      <!--            >-->
-      <!--              Retour-->
-      <!--            </a>-->
-      <!--          </div>-->
-      <!--        </div>-->
-      <!--      </div>-->
+      <div v-if="loadBack" ref="ficheBack" class="fiche-back h-100 d-flex" :class="backClass">
+        <div ref="back" class="h-100 w-100 card bg-white">
+          <div v-if="fiche.info.location" class="card-header p-0">
+            <div v-show="marker" ref="ficheMap" class="h-100"></div>
+          </div>
+          <div class="card-body position-relative p-0 pt-2">
+            <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
+              <li v-if="fiche.info.website" class="list-group-item ellipses">
+                <a :href="fiche.info.website" title="Site Internet" target="_blank"
+                  ><i class="fas fa-globe"></i> {{ fiche.info.website | prettyURL }}
+                </a>
+              </li>
+              <li v-if="fiche.info.telephone" class="list-group-item">
+                <a :href="`tel: ${fiche.info.telephone}`" title="Téléphone" target="_blank"
+                  ><i class="fas fa-phone"></i> {{ fiche.info.telephone }}
+                </a>
+              </li>
+              <li v-if="fiche.info.mail" class="list-group-item ellipses">
+                <a
+                  :href="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
+                  title="Email"
+                  target="_blank"
+                  ><i class="fas fa-at"></i> {{ fiche.info.mail }}
+                </a>
+              </li>
+              <li v-if="fiche.info.cost" class="list-group-item">
+                <label class="mb-0">Prix :</label>
+                <span class="fiche-price fiche-price-selected">{{ fichePrice[0] }}</span
+                ><span class="fiche-price">{{ fichePrice[1] }}</span>
+              </li>
+              <li v-if="fiche.info.openings" class="list-group-item">
+                <label class="mb-0">Horaires :</label>
+                <b-dropdown
+                  class="fiche-planning"
+                  variant="link"
+                  toggle-tag="span"
+                  toggle-class="text-black d-inline-block p-0 border-0"
+                  dropup
+                  right
+                >
+                  <template v-slot:button-content> {{ getOpening() }} ({{ currentDayOfWeek }}) </template>
+                  <template v-slot:default>
+                    <b-dropdown-text><label class="mb-0">Lundi</label>{{ getOpening(1) }}</b-dropdown-text>
+                    <b-dropdown-text><label class="mb-0">Mardi</label>{{ getOpening(2) }}</b-dropdown-text>
+                    <b-dropdown-text><label class="mb-0">Mercredi</label>{{ getOpening(3) }}</b-dropdown-text>
+                    <b-dropdown-text><label class="mb-0">Jeudi</label>{{ getOpening(4) }}</b-dropdown-text>
+                    <b-dropdown-text><label class="mb-0">Vendredi</label>{{ getOpening(5) }}</b-dropdown-text>
+                    <b-dropdown-text><label class="mb-0">Samedi</label>{{ getOpening(6) }}</b-dropdown-text>
+                    <b-dropdown-text><label class="mb-0">Dimanche</label>{{ getOpening(0) }}</b-dropdown-text>
+                  </template>
+                </b-dropdown>
+              </li>
+            </ul>
+            <div class="card-text p-3">
+              <div v-if="criteria">
+                <span
+                  v-for="value in criteriaList"
+                  :key="value.id"
+                  class="badge badge-pill badge-light-grey font-weight-normal mr-1"
+                  >{{ value.name }}</span
+                >
+              </div>
+            </div>
+            <a
+              title="Reporter une précision ou erreur sur la fiche"
+              href=""
+              class="fiche-report"
+              @click.prevent="openReportModal"
+              ><i class="fas fa-exclamation-circle"></i
+            ></a>
+          </div>
+          <div class="card-footer">
+            <nuxt-link
+              v-if="!noRefLink"
+              :to="{ path: `/fiche/${fiche.slug}` }"
+              title="Page de la fiche"
+              class=" btn btn-sm btn-outline-secondary"
+            >
+              <i class="fas fa-external-link-alt"></i>
+              <span class="ml-1">Ouvrir la fiche</span>
+            </nuxt-link>
+            <a
+              href=""
+              title="Retour sur les informations principales"
+              class="btn btn-sm btn-outline-secondary float-right"
+              :class="{ 'd-md-none': flatEnable }"
+              @click.prevent="flipFiche"
+            >
+              Retour
+            </a>
+          </div>
+        </div>
+      </div>
     </article>
   </div>
 </template>
@@ -292,6 +292,7 @@ export default {
   },
   data() {
     return {
+      loadBack: false,
       isFlipped: false,
 
       google: null,
@@ -308,6 +309,21 @@ export default {
     }
   },
   computed: {
+    // property helper
+    featuredMedia() {
+      return this.$store.state.media.all[this.fiche.featured_media]
+    },
+    criteria() {
+      return this.$store.state.fiches.criteria[this.fiche.id]
+    },
+    latestPost() {
+      return _.isEmpty(this.fiche.linked_posts) ? null : this.fiche.linked_posts[0]
+    },
+    currentURL() {
+      return process.client ? window.location.host : ''
+    },
+
+    // css
     frontClass() {
       return {
         hide: this.isFlipped,
@@ -322,12 +338,8 @@ export default {
         'mx-md-3': this.flatEnable
       }
     },
-    currentURL() {
-      return process.client ? window.location.host : ''
-    },
-    latestPost() {
-      return _.isEmpty(this.fiche.linked_posts) ? null : this.fiche.linked_posts[0]
-    },
+
+    // computation
     fichePrice() {
       return ['$'.repeat(this.fiche.info.cost), '$'.repeat(5 - this.fiche.info.cost)]
     },
@@ -340,50 +352,92 @@ export default {
       const criteriaList = Object.values(this.criteria).flat()
       const termsList = criteriaList.flatMap(({ values }) => values)
       return _.uniqBy(termsList, 'slug')
-    },
-    featuredMedia() {
-      return this.$store.state.media.all[this.fiche.featured_media]
-    },
-    criteria() {
-      return this.$store.state.fiches.criteria[this.fiche.id]
     }
   },
-  async mounted() {
-    if (this.fiche.info.location) {
-      try {
-        this.google = await this.$googleMaps
-        this.map = new this.google.maps.Map(this.$refs.ficheMap, {
-          ...MAP_OPTIONS,
-          gestureHandling: 'none',
-          zoomControl: false
-        })
-
-        // toggle gesture if fullscreen
-        document.addEventListener(
-          'fullscreenchange',
-          (event) => {
-            if (document.fullscreenElement) {
-              this.map.gestureHandling = 'auto'
-              this.map.zoomControl = true
-            } else {
-              this.map.gestureHandling = 'none'
-              this.map.zoomControl = false
-              // center map
-              this.map.setCenter(this.marker.position)
-              this.infoWindow.open(this.map, this.marker) // force to center on infoWindow too
-            }
-          },
-          { passive: 'true' }
-        )
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error(err)
-      }
+  mounted() {
+    if (this.flatEnable) {
+      this.buildMap()
+      this.loadBack = true
     }
-
-    this.init()
   },
   methods: {
+    // map
+    async buildMap() {
+      if (this.fiche.info.location) {
+        try {
+          this.google = await this.$googleMaps
+          this.map = new this.google.maps.Map(this.$refs.ficheMap, {
+            ...MAP_OPTIONS,
+            gestureHandling: 'none',
+            zoomControl: false
+          })
+
+          this.buildLocation()
+
+          // toggle gesture if fullscreen
+          document.addEventListener(
+            'fullscreenchange',
+            (event) => {
+              if (document.fullscreenElement) {
+                this.map.gestureHandling = 'auto'
+                this.map.zoomControl = true
+              } else {
+                this.map.gestureHandling = 'none'
+                this.map.zoomControl = false
+                // center map
+                this.map.setCenter(this.marker.position)
+                this.infoWindow.open(this.map, this.marker) // force to center on infoWindow too
+              }
+            },
+            { passive: 'true' }
+          )
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.error(err)
+        }
+      }
+    },
+    buildLocation() {
+      // remove marker in any
+      if (this.marker) {
+        this.marker.setMap(null)
+        this.marker = null
+      }
+      // add marker
+      if (this.map) {
+        this.infoWindow = new this.google.maps.InfoWindow({
+          content: `<div class="text-center">${this.fiche.info.location.address}</div>`
+        })
+        this.marker = new this.google.maps.Marker({
+          animation: this.google.maps.Animation.DROP,
+          icon: this.fiche.main_category.marker_icon,
+          map: this.map,
+          position: this.fiche.info.location,
+          title: this.$options.filters.heDecode(this.fiche.title.rendered)
+        })
+
+        this.map.setCenter(this.marker.getPosition())
+        this.infoWindow.open(this.map, this.marker)
+      }
+    },
+
+    flipFiche() {
+      if (!this.loadBack) {
+        this.buildMap()
+        this.loadBack = true
+      }
+      this.isFlipped = !this.isFlipped
+    },
+    getOpening(dayOfWeek = new Date().getDay()) {
+      const opening = this.fiche.info.openings[dayOfWeek]
+      if (opening) {
+        return opening.includes('closed') ? 'fermé' : opening
+      } else {
+        return ''
+      }
+    },
+
+    // modals
     openContactModal() {
       this.isContactModal = true
       this.$refs.ficheModal.toggle()
@@ -435,42 +489,6 @@ export default {
         } finally {
           this.loading = false
         }
-      }
-    },
-    init() {
-      this.isFlipped = false
-
-      this.initMap()
-    },
-    initMap() {
-      // remove marker in any
-      if (this.marker) {
-        this.marker.setMap(null)
-        this.marker = null
-      }
-      // add marker
-      if (this.map) {
-        this.infoWindow = new this.google.maps.InfoWindow({
-          content: `<div class="text-center">${this.fiche.info.location.address}</div>`
-        })
-        this.marker = new this.google.maps.Marker({
-          animation: this.google.maps.Animation.DROP,
-          icon: this.fiche.main_category.marker_icon,
-          map: this.map,
-          position: this.fiche.info.location,
-          title: this.$options.filters.heDecode(this.fiche.title.rendered)
-        })
-
-        this.map.setCenter(this.marker.getPosition())
-        this.infoWindow.open(this.map, this.marker)
-      }
-    },
-    getOpening(dayOfWeek = new Date().getDay()) {
-      const opening = this.fiche.info.openings[dayOfWeek]
-      if (opening) {
-        return opening.includes('closed') ? 'fermé' : opening
-      } else {
-        return ''
       }
     }
   }
