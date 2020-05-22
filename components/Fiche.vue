@@ -514,7 +514,7 @@ export default {
     }
   }
 
-  width: 300px;
+  width: 330px;
   max-width: 100%;
 
   @include media-breakpoint-down(sm) {
