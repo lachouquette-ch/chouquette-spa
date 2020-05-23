@@ -356,8 +356,8 @@ export default {
   },
   mounted() {
     if (this.flatEnable) {
-      this.buildMap()
       this.loadBack = true
+      this.$nextTick(this.buildMap)
     }
   },
   methods: {
