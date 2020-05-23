@@ -91,7 +91,10 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ['@nuxtjs/axios', '@nuxtjs/style-resources', 'bootstrap-vue/nuxt', 'vue-scrollto/nuxt'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/style-resources', 'bootstrap-vue/nuxt', 'vue-scrollto/nuxt', '@nuxtjs/sentry'],
+  sentry: {
+    dsn: 'https://aaf0c41235c44040ae01dcd356fb3e6f@o397059.ingest.sentry.io/5251223', // Enter your project's DSN here
+  },
   styleResources: {
     scss: [
       '~/assets/css/_variables.scss',
