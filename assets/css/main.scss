@@ -46,3 +46,8 @@ $themeColor: $chouquette-yellow;
 @import "~swiper/swiper";
 @import "~swiper/components/navigation/navigation";
 @import "~swiper/components/pagination/pagination";
+
+// CookieConsent
+$cookieconstent-background: $chouquette-dark-grey;
+@import "~vue-cookieconsent-component/src/scss/cookie-consent";
+@import "~vue-cookieconsent-component/src/scss/cookie-consent-bottom";

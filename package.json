@@ -29,6 +29,7 @@
     "slick-carousel": "^1.8.1",
     "swiper": "^5.3.6",
     "vue-awesome-swiper": "^4.1.1",
+    "vue-cookieconsent-component": "^1.2.0",
     "vue-mailchimp-subscribe": "^1.1.0",
     "vue-recaptcha-v3": "^1.9.0",
     "vue-scrollto": "^2.18.1",
