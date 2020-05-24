@@ -10,13 +10,13 @@
     <client-only>
       <cookie-consent>
         <template slot="message">
-          <span class="text-white">
+          <span class="text-white mx-3">
             Ici, on aime les Cookies <i class="fas fa-cookie-bite"></i>, mais pas plus qu'il n'en faut !
-            <nuxt-link to="/politique-de-confidentialite" class="btn btn-outline-yellow mx-2">En savoir plus</nuxt-link>
+            <nuxt-link to="/politique-de-confidentialite" class="text-yellow">En savoir plus</nuxt-link>
           </span>
         </template>
         <template slot="button">
-          <button class="btn btn-yellow mx-2">J'accepte</button>
+          <button class="btn btn-yellow px-3 mt-2 mt-md-0">J'accepte</button>
         </template>
       </cookie-consent>
     </client-only>
