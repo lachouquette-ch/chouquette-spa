@@ -124,7 +124,8 @@ export default {
     transpile: [
       ({ isClient }) => isClient && 'query-string',
       ({ isClient }) => isClient && 'split-on-first',
-      ({ isClient }) => isClient && 'strict-uri-encode'
+      ({ isClient }) => isClient && 'strict-uri-encode',
+      'vue-cookieconsent-component'
     ],
     plugins: [
       new webpack.ProvidePlugin({
