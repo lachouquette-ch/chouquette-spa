@@ -1,8 +1,8 @@
 <template>
   <div class="category-page layout-content">
     <b-overlay :show="loading" variant="white" opacity="1" z-index="1030" spinner-variant="yellow">
-      <div class="position-relative min-vh-100">
-        <div class="fiches pt-3 pb-5">
+      <div class="position-relative" style="min-height: 75vh">
+        <div class="fiches py-3">
           <div class="container">
             <div class="text-center">
               <h1 class="mb-0">{{ rootCategory.name }}</h1>
@@ -171,7 +171,7 @@
             <main class="px-3">
               <template v-if="fiches.length">
                 <div v-if="fichesSwiperOptions" v-swiper="fichesSwiperOptions" class="swiper px-md-5">
-                  <div class="swiper-wrapper pt-3">
+                  <div class="swiper-wrapper my-3">
                     <div
                       v-for="fiche in virtualData.slides"
                       :key="fiche.id"
@@ -394,14 +394,12 @@ export default {
 
     // swiper
     this.fichesSwiperOptions = {
-      centeredSlides: true,
       virtual: {
         slides: this.fiches,
         renderExternal: (data) => {
           // assign virtual slides data
           this.virtualData = data
         },
-        cache: false,
         addSlidesBefore: 2,
         addSlidesAfter: 2
       },
@@ -677,6 +675,13 @@ export default {
               // find fiche
               const ficheIndex = this.fiches.findIndex(({ id }) => id === fiche.id)
               this.$swiper.slideTo(ficheIndex)
+              this.$nextTick(() => {
+                $('.fiche.selected').removeClass('selected')
+                const ficheComponent = this.$refs[`fiche-${fiche.id}`][0]
+                if (ficheComponent) {
+                  $(ficheComponent.$el).addClass('selected')
+                }
+              })
             }
           }
         })
@@ -753,6 +758,12 @@ export default {
   position: absolute;
   bottom: 0;
   left: 0;
+}
+
+.fiche.selected {
+  @include media-breakpoint-up(md) {
+    box-shadow: $box-shadow !important;
+  }
 }
 
 .fiches-map-toggle-buttons {
