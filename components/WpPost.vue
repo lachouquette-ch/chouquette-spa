@@ -45,7 +45,7 @@
     </b-modal>
     <nav
       v-if="fiches && fiches.length"
-      class="post-sidebar bg-white pb-5 pb-md-1 border-right border-grey"
+      class="post-sidebar bg-white pb-5 pb-md-2 border-right border-grey"
       :class="{ 'hide-sidebar': hideSidebar }"
     >
       <div class="post-sidebar-header d-none d-md-block text-center my-4">
@@ -346,7 +346,7 @@ export default {
   overflow-y: auto;
 
   @include media-breakpoint-up(md) {
-    width: 320px;
+    width: 350px;
 
     -webkit-overflow-scrolling: touch;
 
@@ -380,7 +380,7 @@ export default {
 
 .post.with-sidebar {
   @include media-breakpoint-up(md) {
-    margin-left: 320px;
+    margin-left: 350px;
   }
 }
 
