@@ -1,6 +1,13 @@
 <template>
   <div class="fiche-container d-flex mx-auto">
-    <b-modal ref="ficheModal" title-class="w-100 text-center" hide-footer centered @shown="focusOn('message')">
+    <b-modal
+      ref="ficheModal"
+      title-class="w-100 text-center"
+      hide-footer
+      centered
+      @shown="focusOn('message')"
+      @close="resetModal"
+    >
       <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
       <template v-slot:default>
         <form @submit.prevent="postMessage(isContactModal)">
@@ -64,7 +71,7 @@
             </div>
           </div>
           <button class="btn btn-primary w-100" type="submit" :disabled="loading">
-            <b-spinner v-show="loading" small variant="yellow" label="chargement" class="mr-2"></b-spinner>
+            <b-spinner v-show="loading" small variant="black" label="chargement" class="mr-2"></b-spinner>
             Envoyer
           </button>
         </form>
@@ -446,6 +453,10 @@ export default {
       this.isContactModal = false
       this.$refs.ficheModal.toggle()
     },
+    resetModal() {
+      this.formFiche.message = null
+      this.$v.formFiche.$reset()
+    },
     async postMessage(isContactForm) {
       this.$v.formFiche.$touch()
       if (!this.$v.formFiche.$invalid) {
@@ -481,8 +492,7 @@ export default {
             })
           }
 
-          this.formFiche.message = null
-          this.$v.formFiche.$reset()
+          this.resetModal()
           this.$refs.ficheModal.hide()
         } catch (err) {
           this.$store.dispatch('alerts/addAction', { type: 'danger', message: err })
