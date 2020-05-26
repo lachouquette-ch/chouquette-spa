@@ -44,7 +44,7 @@
       </template>
     </b-modal>
     <nav
-      v-if="fiches"
+      v-if="fiches && fiches.length"
       class="post-sidebar bg-white pb-5 pb-md-1 border-right border-grey"
       :class="{ 'hide-sidebar': hideSidebar }"
     >
@@ -80,7 +80,7 @@
       </button>
     </div>
     <b-overlay :show="!post" spinner-variant="yellow">
-      <main role="main" class="post layout-content" :class="{ 'with-sidebar': fiches }">
+      <main role="main" class="post layout-content" :class="{ 'with-sidebar': fiches && fiches.length }">
         <article v-if="post" :id="post.id">
           <header class="post-header container-fluid px-0 mb-6">
             <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
