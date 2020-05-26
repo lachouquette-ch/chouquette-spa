@@ -1,5 +1,5 @@
 <template>
-  <div class="fiche-container d-flex">
+  <div class="fiche-container d-flex mx-auto">
     <b-modal ref="ficheModal" title-class="w-100 text-center" hide-footer centered @shown="focusOn('message')">
       <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
       <template v-slot:default>
@@ -516,10 +516,6 @@ export default {
 
   width: 330px;
   max-width: 100%;
-
-  @include media-breakpoint-down(sm) {
-    width: 100%;
-  }
 
   a {
     color: $black;
