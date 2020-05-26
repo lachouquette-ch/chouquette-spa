@@ -561,7 +561,6 @@ export default {
 
 .card-header {
   height: 200px;
-  max-height: 25vh;
 }
 .fiche-front .card-header {
   background-size: cover;
