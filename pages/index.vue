@@ -313,7 +313,7 @@ h3.home-header-menu-description {
   position: relative;
   visibility: hidden;
 
-  top: -1 * $covid-banner-height - 15px;
+  top: -1 * $covid-banner-height;
 }
 
 .home-tops {
