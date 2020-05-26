@@ -2,7 +2,7 @@
   <div class="fiche-page layout-content container my-4">
     <h1 class="text-center mb-4">{{ fiche.title.rendered | heDecode }}</h1>
     <main role="main">
-      <Fiche :fiche="fiche" no-ref-link />
+      <Fiche :fiche="fiche" no-ref-link flat-enable />
     </main>
     <div v-if="posts" class="mt-4">
       <h2 class="text-center mb-4">Les articles</h2>
