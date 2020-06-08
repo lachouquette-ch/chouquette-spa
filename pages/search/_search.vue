@@ -44,9 +44,9 @@
                         <Fiche :fiche="fiche" />
                       </div>
                     </div>
-                    <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
-                    <div v-if="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-                    <div v-if="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
+                    <div slot="pagination" class="swiper-pagination" />
+                    <div slot="button-prev" class="swiper-button-prev d-none d-md-block" />
+                    <div slot="button-next" class="swiper-button-next d-none d-md-block" />
                   </div>
                 </b-overlay>
               </div>
@@ -68,9 +68,9 @@
                         </nuxt-link>
                       </div>
                     </div>
-                    <div v-if="!!posts.length" slot="pagination" class="swiper-pagination" />
-                    <div v-if="!!posts.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-                    <div v-if="!!posts.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
+                    <div slot="pagination" class="swiper-pagination" />
+                    <div slot="button-prev" class="swiper-button-prev d-none d-md-block" />
+                    <div slot="button-next" class="swiper-button-next d-none d-md-block" />
                   </div>
                 </b-overlay>
               </div>

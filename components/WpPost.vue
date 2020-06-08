@@ -37,9 +37,9 @@
               </div>
             </div>
           </div>
-          <div v-if="!hasSingleFiche" slot="pagination" class="swiper-pagination"></div>
-          <div v-if="!hasSingleFiche" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-          <div v-if="!hasSingleFiche" slot="button-next" class="swiper-button-next d-none d-md-block" />
+          <div v-show="!hasSingleFiche" slot="pagination" class="swiper-pagination"></div>
+          <div v-show="!hasSingleFiche" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
+          <div v-show="!hasSingleFiche" slot="button-next" class="swiper-button-next d-none d-md-block" />
         </div>
       </template>
     </b-modal>
