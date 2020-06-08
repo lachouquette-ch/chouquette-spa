@@ -5,7 +5,7 @@ require('dotenv').config()
 export default {
   env: {
     baseUrl: process.env.URL || 'https://lachouquette.ch',
-    wpBaseUrl: process.env.WP_URL,
+    wpBaseUrl: process.env.WP_URL || 'https.//lachouquette.ch',
     recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
     mailChimpUserId: process.env.MAILCHIMP_USER_ID,
     mailChimpListId: process.env.MAILCHIMP_LIST_ID,
