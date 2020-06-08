@@ -171,7 +171,7 @@
           </div>
           <div class="card-body position-relative p-0 pt-2">
             <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
-              <li v-if="fiche.info.website" class="list-group-item ellipses">
+              <li v-if="fiche.info.website" class="list-group-item text-nowrap text-truncate">
                 <a :href="fiche.info.website" title="Site Internet" target="_blank"
                   ><i class="fas fa-globe"></i> {{ fiche.info.website | prettyURL }}
                 </a>
@@ -181,7 +181,7 @@
                   ><i class="fas fa-phone"></i> {{ fiche.info.telephone }}
                 </a>
               </li>
-              <li v-if="fiche.info.mail" class="list-group-item ellipses">
+              <li v-if="fiche.info.mail" class="list-group-item text-nowrap text-truncate">
                 <a
                   :href="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
                   title="Email"
@@ -539,12 +539,6 @@ export default {
 
   .card-body {
     min-height: unset;
-
-    .list-group-item.ellipses {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
   }
 
   .card-footer {
