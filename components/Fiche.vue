@@ -201,7 +201,7 @@
                   variant="link"
                   toggle-tag="span"
                   toggle-class="text-black d-inline-block p-0 border-0"
-                  :dropup="fiche.info.location"
+                  :dropup="!!fiche.info.location"
                   right
                 >
                   <template v-slot:button-content> {{ getOpening() }} ({{ currentDayOfWeek }}) </template>
