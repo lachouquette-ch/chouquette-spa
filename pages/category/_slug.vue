@@ -169,39 +169,35 @@
 
           <b-overlay :show="fichesLoading" variant="white" opacity="1" spinner-variant="yellow">
             <main class="px-3">
-              <template v-if="fiches.length">
-                <div v-if="fichesSwiperOptions" v-swiper="fichesSwiperOptions" class="swiper px-md-5">
-                  <div class="swiper-wrapper my-3">
-                    <div
-                      v-for="fiche in virtualData.slides"
-                      :key="fiche.id"
-                      class="swiper-slide h-auto d-flex align-items-stretch"
-                      :style="{ left: `${virtualData.offset}px` }"
-                    >
-                      <Fiche :ref="`fiche-${fiche.id}`" class="fiche" :fiche="fiche">
-                        <template v-if="map" #front-footer>
-                          <a
-                            href=""
-                            title="Voir sur la carte"
-                            class="btn btn-sm btn-outline-secondary"
-                            @click.prevent="gotoMarker(fiche)"
-                          >
-                            <span class="mx-1"><i class="fas fa-map-marker-alt"></i></span>
-                          </a>
-                        </template>
-                      </Fiche>
-                    </div>
+              <div v-if="fichesSwiperOptions" v-swiper="fichesSwiperOptions" class="swiper px-md-5">
+                <div class="swiper-wrapper my-3">
+                  <div
+                    v-for="fiche in virtualData.slides"
+                    :key="fiche.id"
+                    class="swiper-slide h-auto d-flex align-items-stretch"
+                    :style="{ left: `${virtualData.offset}px` }"
+                  >
+                    <Fiche :ref="`fiche-${fiche.id}`" class="fiche" :fiche="fiche">
+                      <template v-if="map" #front-footer>
+                        <a
+                          href=""
+                          title="Voir sur la carte"
+                          class="btn btn-sm btn-outline-secondary"
+                          @click.prevent="gotoMarker(fiche)"
+                        >
+                          <span class="mx-1"><i class="fas fa-map-marker-alt"></i></span>
+                        </a>
+                      </template>
+                    </Fiche>
                   </div>
-                  <div v-if="!!fiches.length" slot="pagination" class="swiper-pagination" />
-                  <div v-if="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-                  <div v-if="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
                 </div>
-              </template>
-              <template v-else>
-                <span class="h5 d-block text-center">
-                  Pas de résultat pour ta recherche <i class="far fa-surprise"></i>. Essaie de changer tes filtres.
-                </span>
-              </template>
+                <div v-show="!!fiches.length" slot="pagination" class="swiper-pagination" />
+                <div v-show="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
+                <div v-show="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
+              </div>
+              <span v-if="!fiches.length" class="h5 d-block text-center">
+                Pas de résultat pour ta recherche <i class="far fa-surprise"></i>. Essaie de changer tes filtres.
+              </span>
             </main>
           </b-overlay>
         </div>
@@ -477,12 +473,10 @@ export default {
       this.loadFichesOnMap(this.fiches)
 
       // swiper
-      if (this.$swiper.virtual) {
-        this.$swiper.virtual.removeAllSlides()
-        this.$swiper.virtual.slides = this.fiches
-        this.$swiper.update()
-        this.$swiper.virtual.update()
-      }
+      this.$swiper.virtual.removeAllSlides()
+      this.$swiper.virtual.slides = this.fiches
+      this.$swiper.virtual.update()
+      this.$swiper.slideTo(0)
 
       this.loading = false
     },
