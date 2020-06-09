@@ -48,19 +48,21 @@
       class="post-sidebar bg-white pb-5 pb-md-2 border-right border-grey"
       :class="{ 'hide-sidebar': hideSidebar }"
     >
-      <div class="post-sidebar-header d-none d-md-block text-center my-4">
-        <h2 class="post-sidebar-title h5 m-0">{{ hasSingleFiche ? 'La fiche' : "Cités dans l'article" }} :</h2>
-      </div>
-      <div v-if="fiches">
-        <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" />
-        <FicheThumbnail
-          v-for="(fiche, index) in fiches"
-          v-else
-          :key="fiche.id"
-          :fiche="fiche"
-          class="my-2 mx-3 mx-md-2 position-relative"
-          @click.native="viewFiche(fiche, index)"
-        />
+      <div class="my-4">
+        <div class="post-sidebar-header d-none d-md-block text-center mb-4">
+          <h2 class="post-sidebar-title h5 m-0">{{ hasSingleFiche ? 'La fiche' : "Cités dans l'article" }} :</h2>
+        </div>
+        <div v-if="fiches">
+          <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" />
+          <FicheThumbnail
+            v-for="(fiche, index) in fiches"
+            v-else
+            :key="fiche.id"
+            :fiche="fiche"
+            class="my-2 mx-3 mx-md-2 position-relative"
+            @click.native="viewFiche(fiche, index)"
+          />
+        </div>
       </div>
     </nav>
     <div class="post-sidebar-toggle-buttons d-md-none btn-group btn-group-toggle" data-toggle="buttons">
@@ -376,6 +378,8 @@ export default {
 
 .post-sidebar-toggle-buttons {
   @include toggle-buttons;
+
+  position: fixed;
 }
 
 .post.with-sidebar {
