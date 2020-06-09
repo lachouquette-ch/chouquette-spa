@@ -5,7 +5,7 @@
         class="btn btn-sm btn-outline-secondary text-black"
         @click.prevent="shareWith('Fiche sur La Chouquette', escapedTitle, fichePage)"
       >
-        <span class="mr-2"><i class="fas fa-share-alt"></i></span>
+        <span class="mx-1"><i class="fas fa-share-alt"></i></span>
       </button>
     </template>
     <template v-else>
