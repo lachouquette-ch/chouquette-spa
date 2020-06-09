@@ -217,7 +217,12 @@
           </button>
         </div>
 
-        <div v-if="map" class="fiches-map-toggle-buttons btn-group btn-group-toggle" data-toggle="buttons">
+        <div
+          v-if="map"
+          class="fiches-map-toggle-buttons btn-group btn-group-toggle"
+          :class="{ 'fiches-map-toggle-buttons-map': isMapShown }"
+          data-toggle="buttons"
+        >
           <button class="btn btn-sm btn-primary" :class="{ active: !isMapShown }" @click="isMapShown = false">
             Fiches
           </button>
@@ -744,7 +749,7 @@ export default {
   bottom: 0;
   right: 0;
   width: 100%;
-  z-index: $zindex-sticky;
+  z-index: $zindex-fixed + 1;
   height: calc(100vh - #{$header-height} - #{$covid-banner-height});
 }
 
@@ -762,6 +767,13 @@ export default {
 
 .fiches-map-toggle-buttons {
   @include toggle-buttons;
+
+  z-index: $zindex-fixed + 1;
+
+  &-map {
+    position: fixed;
+    bottom: 0;
+  }
 
   @include media-breakpoint-up(md) {
     position: fixed;
