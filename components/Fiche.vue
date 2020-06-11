@@ -167,7 +167,7 @@
       <div v-if="loadBack" ref="ficheBack" class="fiche-back h-100 d-flex" :class="backClass">
         <div ref="back" class="h-100 w-100 card bg-white">
           <div v-if="fiche.info.location" class="card-header p-0">
-            <div v-show="marker" ref="ficheMap" class="h-100"></div>
+            <div ref="ficheMap" class="h-100"></div>
           </div>
           <div class="card-body position-relative p-0 pt-2">
             <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
@@ -430,8 +430,8 @@ export default {
 
     flipFiche() {
       if (!this.loadBack) {
-        this.buildMap()
         this.loadBack = true
+        this.$nextTick(this.buildMap)
       }
       this.isFlipped = !this.isFlipped
     },
