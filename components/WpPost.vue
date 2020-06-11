@@ -426,7 +426,7 @@ export default {
 
 .post-header-sn-share {
   position: absolute;
-  bottom: calc(-2rem - 15px);
+  bottom: calc(-1.6rem - 15px);
   right: 10px;
 }
 

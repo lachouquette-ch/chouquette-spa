@@ -1,12 +1,8 @@
 <template>
   <div id="share">
     <template v-if="shareApiAvailable">
-      Partage cet article
-      <a
-        class="text-primary"
-        title="Autres"
-        @click.prevent="shareWith('Article de La Chouquette', escapedTitle, currentPage)"
-        ><i class="fas fa-share-alt-square"></i
+      <a title="Autres" @click.prevent="shareWith('Article de La Chouquette', escapedTitle, currentPage)"
+        ><i class="fas fa-share-alt"></i
       ></a>
     </template>
     <template v-else>
@@ -71,7 +67,7 @@ export default {
 
 <style lang="scss" scoped>
 a {
-  font-size: 2rem;
+  font-size: 1.6rem;
   margin: 0 3px;
 }
 </style>
