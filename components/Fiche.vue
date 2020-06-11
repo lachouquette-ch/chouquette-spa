@@ -356,7 +356,7 @@ export default {
         .format('dddd')
     },
     criteriaList() {
-      const criteriaList = Object.values(this.criteria).flat()
+      const criteriaList = _.flatten(Object.values(this.criteria))
       const termsList = criteriaList.flatMap(({ values }) => values)
       return _.uniqBy(termsList, 'slug')
     }
