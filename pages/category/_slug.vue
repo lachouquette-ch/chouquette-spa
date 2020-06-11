@@ -68,7 +68,9 @@
                     <div class="d-bock d-md-none">
                       <b-overlay :show="criteriaLoading" opacity="0.6" blur="none" spinner-variant="yellow">
                         <div v-for="criteria in formSearch.criteria" :key="criteria.id" class="form-group">
+                          <label :for="criteria.taxonomy" class="small mb-0">{{ criteria.name }}</label>
                           <select
+                            :id="criteria.taxonomy"
                             v-model="criteria.selectedValues"
                             class="form-control form-control-sm"
                             multiple
