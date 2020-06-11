@@ -65,7 +65,11 @@
         </div>
       </div>
     </nav>
-    <div class="post-sidebar-toggle-buttons d-md-none btn-group btn-group-toggle" data-toggle="buttons">
+    <div
+      v-if="fiches && fiches.length"
+      class="post-sidebar-toggle-buttons d-md-none btn-group btn-group-toggle"
+      data-toggle="buttons"
+    >
       <button
         class="btn btn-sm btn-primary border-white border-right-0"
         :class="{ active: hideSidebar }"
