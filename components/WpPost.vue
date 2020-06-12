@@ -14,12 +14,13 @@
     >
       <template #default="{close}">
         <!-- For medium device -->
-        <a
-          href=""
-          class="fiche-modal-close d-none d-md-block m-2 text-center text-black font-weight-bold"
-          @click.prevent="close"
-          >×</a
-        >
+        <a href="" class="fiche-modal-close d-none d-md-block m-2 text-center text-black" @click.prevent="close"
+          ><i class="fas fa-times"></i
+        ></a>
+        <button href="" class="fiche-modal-close d-md-none btn btn-sm btn-white" @click.prevent="close">
+          <span class="mr-1"><i class="fas fa-times"></i></span>
+          Fermer
+        </button>
         <div v-swiper:ficheSwiper="swiperFichesOptions" class="px-md-5">
           <div class="swiper-wrapper mt-3">
             <div
@@ -29,12 +30,6 @@
               :data-hash="fiche.id"
             >
               <Fiche ref="fiche" class="w-100" :fiche="fiche" flat-enable />
-              <div
-                class="fiche-modal-close d-md-none bg-white m-2 border-0 rounded-circle text-center"
-                :class="{ 'd-none': $refs.fiche && $refs.fiche[index] && $refs.fiche[index].isFlipped }"
-              >
-                <a href="" class="text-black font-weight-bold" @click.prevent="close">×</a>
-              </div>
             </div>
           </div>
           <div v-show="!hasSingleFiche" slot="pagination" class="swiper-pagination"></div>
@@ -331,16 +326,22 @@ export default {
   .fiche-modal-close {
     position: absolute;
     top: 0;
-    right: 0;
-
-    height: 40px;
-    width: 40px;
-
     z-index: 2;
 
-    line-height: 40px;
+    @include media-breakpoint-down(sm) {
+      top: 1rem;
+      left: 50%;
 
-    font-size: 1.5rem;
+      transform: translateX(-50%);
+    }
+
+    @include media-breakpoint-up(md) {
+      right: 0;
+
+      height: 40px;
+      width: 40px;
+      line-height: 40px;
+    }
   }
 }
 
