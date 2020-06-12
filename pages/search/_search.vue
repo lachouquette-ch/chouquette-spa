@@ -29,50 +29,52 @@
                 C'est beaucoup ! <a v-b-modal.searchModal href="" @click.prevent>Affine ta recherche</a>
               </div>
             </div>
-            <div v-if="fiches && fiches.length" class="row">
-              <div class="col">
-                <h2 class="text-center">{{ fichesTotal }} fiche(s)</h2>
-                <b-overlay :show="fichesLoading" variant="white" opacity="1" spinner-variant="yellow">
-                  <div v-if="fichesSwiperOptions" v-swiper:fichesSwiper="fichesSwiperOptions" class="swiper px-md-5">
-                    <div class="swiper-wrapper mt-3">
-                      <div
-                        v-for="fiche in fichesVirtualData.slides"
-                        :key="fiche.id"
-                        class="swiper-slide h-auto d-flex align-items-stretch"
-                        :style="{ left: `${fichesVirtualData.offset}px` }"
-                      >
-                        <Fiche :fiche="fiche" />
+            <div class="mb-4">
+              <div v-if="fiches && fiches.length" class="row">
+                <div class="col">
+                  <h2 class="text-center">{{ fichesTotal }} fiche(s)</h2>
+                  <b-overlay :show="fichesLoading" variant="white" opacity="1" spinner-variant="yellow">
+                    <div v-if="fichesSwiperOptions" v-swiper:fichesSwiper="fichesSwiperOptions" class="swiper px-md-5">
+                      <div class="swiper-wrapper mt-3">
+                        <div
+                          v-for="fiche in fichesVirtualData.slides"
+                          :key="fiche.id"
+                          class="swiper-slide h-auto d-flex align-items-stretch"
+                          :style="{ left: `${fichesVirtualData.offset}px` }"
+                        >
+                          <Fiche :fiche="fiche" />
+                        </div>
                       </div>
+                      <div slot="pagination" class="swiper-pagination" />
+                      <div slot="button-prev" class="swiper-button-prev d-none d-md-block" />
+                      <div slot="button-next" class="swiper-button-next d-none d-md-block" />
                     </div>
-                    <div slot="pagination" class="swiper-pagination" />
-                    <div slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-                    <div slot="button-next" class="swiper-button-next d-none d-md-block" />
-                  </div>
-                </b-overlay>
+                  </b-overlay>
+                </div>
               </div>
-            </div>
-            <div v-if="posts && posts.length" class="row mt-5 mb-4">
-              <div class="col">
-                <h2 class="text-center">{{ postsTotal }} articles(s)</h2>
-                <b-overlay :show="postsLoading" variant="white" opacity="1" spinner-variant="yellow">
-                  <div v-if="postsSwiperOptions" v-swiper:postsSwiper="postsSwiperOptions" class="swiper px-md-5">
-                    <div class="swiper-wrapper pt-3">
-                      <div
-                        v-for="post in postsVirtualData.slides"
-                        :key="post.id"
-                        class="swiper-slide h-auto d-flex align-items-stretch"
-                        :style="{ left: `${postsVirtualData.offset}px` }"
-                      >
-                        <nuxt-link :to="{ path: `/${post.slug}` }" class="w-100">
-                          <PostCard :post="post" class="mx-auto" />
-                        </nuxt-link>
+              <div v-if="posts && posts.length" class="row mt-4">
+                <div class="col">
+                  <h2 class="text-center">{{ postsTotal }} articles(s)</h2>
+                  <b-overlay :show="postsLoading" variant="white" opacity="1" spinner-variant="yellow">
+                    <div v-if="postsSwiperOptions" v-swiper:postsSwiper="postsSwiperOptions" class="swiper px-md-5">
+                      <div class="swiper-wrapper pt-3">
+                        <div
+                          v-for="post in postsVirtualData.slides"
+                          :key="post.id"
+                          class="swiper-slide h-auto d-flex align-items-stretch"
+                          :style="{ left: `${postsVirtualData.offset}px` }"
+                        >
+                          <nuxt-link :to="{ path: `/${post.slug}` }" class="w-100">
+                            <PostCard :post="post" class="mx-auto" />
+                          </nuxt-link>
+                        </div>
                       </div>
+                      <div slot="pagination" class="swiper-pagination" />
+                      <div slot="button-prev" class="swiper-button-prev d-none d-md-block" />
+                      <div slot="button-next" class="swiper-button-next d-none d-md-block" />
                     </div>
-                    <div slot="pagination" class="swiper-pagination" />
-                    <div slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-                    <div slot="button-next" class="swiper-button-next d-none d-md-block" />
-                  </div>
-                </b-overlay>
+                  </b-overlay>
+                </div>
               </div>
             </div>
           </div>
