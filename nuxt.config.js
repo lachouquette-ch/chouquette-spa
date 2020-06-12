@@ -91,7 +91,13 @@ export default {
   /*
    ** Nuxt.js modules
    */
-  modules: ['@nuxtjs/axios', '@nuxtjs/style-resources', 'bootstrap-vue/nuxt', 'vue-scrollto/nuxt', '@nuxtjs/sentry'],
+  modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/style-resources',
+    'bootstrap-vue/nuxt',
+    ['vue-scrollto/nuxt', { offset: -1 * (80 + 70) }], // fix default offset (do not work for home page)
+    '@nuxtjs/sentry'
+  ],
   sentry: {
     dsn: 'https://aaf0c41235c44040ae01dcd356fb3e6f@o397059.ingest.sentry.io/5251223',
     disabled: process.env.NODE_ENV === 'development'

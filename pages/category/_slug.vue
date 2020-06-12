@@ -176,7 +176,7 @@
           </div>
 
           <b-overlay :show="fichesLoading" variant="white" opacity="1" spinner-variant="yellow">
-            <main class="px-3">
+            <main id="category-main" class="px-3">
               <div v-if="fichesSwiperOptions" v-swiper="fichesSwiperOptions" class="swiper px-md-5">
                 <div class="swiper-wrapper my-3">
                   <div
@@ -690,6 +690,8 @@ export default {
                 if (ficheComponent) {
                   $(ficheComponent.$el).addClass('selected')
                 }
+
+                this.$scrollTo(document.getElementById('category-main'))
               })
             }
           }
