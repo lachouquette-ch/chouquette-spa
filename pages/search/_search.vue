@@ -12,8 +12,8 @@
     >
       <Search ref="searchBox" button-class="w-100" filter-col="col-12" />
     </b-modal>
-    <div class="layout-content">
-      <b-overlay :show="!fiches && !posts" opacity="0.6" blur="none" spinner-variant="yellow">
+    <div class="layout-content d-flex flex-column">
+      <b-overlay :show="!fiches && !posts" opacity="0.6" blur="none" spinner-variant="yellow" class="flex-grow-1">
         <template #overlay>
           <div class="text-center">
             <h2 class="mb-3">On cherche pour toi... <i class="fas fa-binoculars"></i></h2>
