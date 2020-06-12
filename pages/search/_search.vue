@@ -63,7 +63,7 @@
                         class="swiper-slide h-auto d-flex align-items-stretch"
                         :style="{ left: `${postsVirtualData.offset}px` }"
                       >
-                        <nuxt-link :to="{ path: `/${post.slug}` }">
+                        <nuxt-link :to="{ path: `/${post.slug}` }" class="w-100">
                           <PostCard :post="post" class="mx-auto" />
                         </nuxt-link>
                       </div>
