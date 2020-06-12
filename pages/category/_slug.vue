@@ -9,7 +9,7 @@
               <span class="d-none d-md-inline muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
             </div>
             <div class="search border rounded">
-              <div class="btn-group search-button" role="group" aria-label="Recherche">
+              <div class="btn-group search-button text-nowrap" role="group" aria-label="Recherche">
                 <button v-b-toggle.search class="btn btn-sm btn-light-grey">
                   <i v-if="isSearchVisible" class="fas fa-minus"></i>
                   <i v-else class="fas fa-plus"></i>
@@ -18,7 +18,7 @@
                 <b-dropdown v-if="$v.formSearch.$dirty" size="sm" text="Small" variant="primary" split right>
                   <template #button-content>
                     <div @click="searchFiches">
-                      <i class="fas fa-search"></i>
+                      <span class="ml-2"><i class="fas fa-search"></i></span>
                       <span class="d-none d-md-inline ml-2">Rechercher</span>
                     </div>
                   </template>
@@ -232,6 +232,7 @@
           data-toggle="buttons"
         >
           <button class="btn btn-sm btn-primary" :class="{ active: !isMapShown }" @click="isMapShown = false">
+            <span class="mr-1"><i class="far fa-file-alt"></i></span>
             Fiches
           </button>
           <button
@@ -240,6 +241,7 @@
             :disabled="!markers.size"
             @click="showMap"
           >
+            <span class="mr-1"><i class="fas fa-map-marked-alt"></i></span>
             Carte
           </button>
         </div>
