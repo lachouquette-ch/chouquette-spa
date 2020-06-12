@@ -75,6 +75,7 @@
         :class="{ active: hideSidebar }"
         @click="hideSidebar = true"
       >
+        <span class="mr-1"><i class="far fa-newspaper"></i></span>
         Article
       </button>
       <button
@@ -82,6 +83,7 @@
         :class="{ active: !hideSidebar }"
         @click="hideSidebar = false"
       >
+        <span class="mx-1"><i class="far fa-file-alt"></i></span>
         {{ hasSingleFiche ? 'Fiche' : 'Fiches' }}
       </button>
     </div>
