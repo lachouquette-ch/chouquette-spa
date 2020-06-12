@@ -116,26 +116,26 @@
                         @input.once="$v.formSearch.$touch"
                       />
                     </div>
-                    <div class="d-flex flex-wrap justify-content-around">
+                    <div class="d-flex justify-content-around">
                       <button
                         class="btn btn-sm btn-primary mr-1 flex-fill"
                         :disabled="!$v.formSearch.$dirty"
                         @click.prevent="searchFiches"
                       >
-                        <i class="fas fa-search"></i>
-                        <span class="ml-2">Rechercher</span>
+                        <span class="mr-2"><i class="fas fa-search"></i></span>
+                        <span>Rechercher</span>
                       </button>
                       <button
-                        class="btn btn-sm btn-light-grey mx-1"
+                        class="btn btn-sm btn-light-grey mr-1"
                         :disabled="!$v.formSearch.$dirty"
                         @click.prevent="searchReset"
                       >
-                        <i class="fas fa-times"></i>
-                        <span class="ml-2">Annuler</span>
+                        <span class="mr-2"><i class="fas fa-times"></i></span>
+                        <span>Annuler</span>
                       </button>
                       <button class="btn btn-sm btn-light-grey ml-1" @click.prevent="searchClear">
-                        <i class="fas fa-eraser"></i>
-                        <span class="ml-2">Effacer</span>
+                        <span class="mr-2"><i class="fas fa-eraser"></i></span>
+                        <span>Effacer</span>
                       </button>
                     </div>
                   </form>
