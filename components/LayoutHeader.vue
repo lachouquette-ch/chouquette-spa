@@ -170,6 +170,7 @@ export default {
 .navbar-chouquette-light {
   top: $covid-banner-height;
   background-color: $chouquette-darker-grey;
+  z-index: $zindex-fixed + 2;
 
   .navbar-brand {
     line-height: $header-height;
