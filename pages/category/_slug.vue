@@ -36,8 +36,10 @@
               <b-collapse id="search" v-model="isSearchVisible">
                 <div class="px-3 pt-4 pb-2">
                   <form>
-                    <div class="form-group">
+                    <div class="form-group mb-0 mb-md-3">
+                      <label for="subcategory" class="small mb-0 d-md-none">Sous catégorie</label>
                       <select
+                        id="subcategory"
                         v-model="formSearch.subCategory"
                         class="form-control form-control-sm"
                         @change="loadCriteria(), $v.formSearch.$touch()"
@@ -48,8 +50,10 @@
                         </option>
                       </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-0 mb-md-3">
+                      <label for="location" class="small mb-0 d-md-none">Lieu</label>
                       <select
+                        id="location"
                         v-model="formSearch.location"
                         class="form-control form-control-sm"
                         @change="$v.formSearch.$touch"
@@ -67,7 +71,7 @@
                     </div>
                     <div class="d-bock d-md-none">
                       <b-overlay :show="criteriaLoading" opacity="0.6" blur="none" spinner-variant="yellow">
-                        <div v-for="criteria in formSearch.criteria" :key="criteria.id" class="form-group">
+                        <div v-for="criteria in formSearch.criteria" :key="criteria.id" class="form-group mb-0 mb-md-3">
                           <label :for="criteria.taxonomy" class="small mb-0">{{ criteria.name }}</label>
                           <select
                             :id="criteria.taxonomy"
@@ -107,7 +111,9 @@
                       </b-overlay>
                     </div>
                     <div class="form-group">
+                      <label for="search" class="small mb-0 d-md-none">Recherche libre</label>
                       <input
+                        id="search"
                         v-model="formSearch.search"
                         class="form-control form-control-sm"
                         type="text"
