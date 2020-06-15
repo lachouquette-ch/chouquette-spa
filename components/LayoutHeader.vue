@@ -93,11 +93,11 @@
               :title="category.description"
               class="nav-link text-md-center"
             >
-              <CategoryLogo
+              <WpMediaCategory
                 :category="category"
                 :color="isSelected(category) ? 'yellow' : 'white'"
                 class="d-inline nav-logo ml-lg-3 mr-2"
-              ></CategoryLogo>
+              />
               <span class="text-nowrap" :class="{ 'text-yellow': isSelected(category) }">{{ category.name }}</span>
             </nuxt-link>
           </li>
@@ -128,12 +128,12 @@ import { mapState } from 'vuex'
 import $ from 'jquery'
 
 import VueMailchimpSubscribe from 'vue-mailchimp-subscribe/dist/vue-mailchimp-subscribe'
-import CategoryLogo from './CategoryLogo'
+import WpMediaCategory from './WpMediaCategory'
 import modal from '~/mixins/modal'
 import newsletter from '~/mixins/newsletter'
 
 export default {
-  components: { CategoryLogo, VueMailchimpSubscribe },
+  components: { WpMediaCategory, VueMailchimpSubscribe },
   mixins: [modal, newsletter],
   data() {
     return {

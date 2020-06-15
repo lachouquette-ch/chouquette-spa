@@ -3,7 +3,7 @@
     <div class="card-img-top">
       <WpMedia v-if="featuredMedia" :media="featuredMedia" size="medium_large" />
       <div class="card-category rounded-circle bg-white shadow">
-        <CategoryLogo v-if="topCategory" :category="topCategory" width="35" height="35" color="black" />
+        <WpMediaCategory v-if="topCategory" :category="topCategory" width="35" height="35" color="black" />
       </div>
     </div>
     <div class="card-body">
@@ -15,11 +15,11 @@
 </template>
 
 <script>
-import CategoryLogo from './CategoryLogo'
+import WpMediaCategory from './WpMediaCategory'
 import WpMedia from '~/components/WpMedia'
 
 export default {
-  components: { WpMedia, CategoryLogo },
+  components: { WpMedia, WpMediaCategory },
   props: {
     post: {
       required: true,

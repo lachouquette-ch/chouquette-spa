@@ -35,7 +35,7 @@
                 :title="category.description"
                 class="nav-link text-md-center"
               >
-                <CategoryLogo :category="category" color="white" class="d-inline nav-logo ml-lg-3 mr-2"></CategoryLogo>
+                <WpMediaCategory :category="category" color="white" class="d-inline nav-logo ml-lg-3 mr-2" />
                 <span class="text-nowrap text-white">{{ category.name }}</span>
               </nuxt-link>
             </li>
@@ -52,7 +52,7 @@
           <div v-for="category in categories" :key="category.id" class="home-header-category m-4">
             <nuxt-link :to="{ path: `/category/${category.slug}` }" :title="category.description">
               <div class="home-header-category-logo p-3 rounded-circle">
-                <CategoryLogo :category="category" height="60" width="60" color="yellow" />
+                <WpMediaCategory :category="category" height="60" width="60" color="yellow" />
               </div>
               <h2 class="my-2">{{ category.name }}</h2>
             </nuxt-link>
@@ -110,7 +110,7 @@
 import { mapState } from 'vuex'
 
 import { directive as SwiperDirective } from 'vue-awesome-swiper'
-import CategoryLogo from '~/components/CategoryLogo'
+import WpMediaCategory from '~/components/WpMediaCategory'
 import PostCard from '~/components/PostCard'
 import Search from '~/components/Search'
 import Newsletter from '~/components/Newsletter'
@@ -122,7 +122,7 @@ const LATEST_POSTS_NUM = 6
 const TOP_POSTS_NUM = 8
 
 export default {
-  components: { PostCard, CategoryLogo, Search, Newsletter },
+  components: { PostCard, WpMediaCategory, Search, Newsletter },
   directives: { swiper: SwiperDirective },
   layout: 'no-header',
   mixins: [seo],
