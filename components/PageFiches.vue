@@ -598,6 +598,11 @@ export default {
       this.$router.push({ query })
     },
     async fetchMoreFiches() {
+      if (this.loading) {
+        console.warn('loading first fiches')
+        return
+      }
+
       if (this.fichesLoading) {
         // eslint-disable-next-line no-console
         console.warn('already loading more fiches')
