@@ -16,7 +16,7 @@
 
 <script>
 import PageFiches from '~/components/PageFiches'
-import PER_PAGE_NUMBER from '~/constants/default'
+import { PER_PAGE_NUMBER } from '~/constants/default'
 
 export default {
   components: { PageFiches },

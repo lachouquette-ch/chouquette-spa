@@ -260,7 +260,7 @@ import Fiche from '~/components/Fiche'
 import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, LAUSANNE_LAT_LNG } from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
 import { DEFAULT, RESPONSIVE } from '~/constants/swiper'
-import PER_PAGE_NUMBER from '~/constants/default'
+import { PER_PAGE_NUMBER } from '~/constants/default'
 import CriteriaBadge from '~/components/CriteriaBadge'
 
 // create classes from components to use it in code
