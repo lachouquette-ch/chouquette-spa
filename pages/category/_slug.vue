@@ -74,10 +74,10 @@ export default {
           return { taxonomy: key, values: value.split(',') }
         })
 
-      this.$refs.category.category = to.query.category || this.rootCategory.slug
-      this.$refs.category.location = to.query.location
-      this.$refs.category.search = to.query.search
-      this.$refs.category.criteria = criteria
+      this.$refs.category.defaultCategory = to.query.category || this.rootCategory.slug
+      this.$refs.category.defaultLocation = to.query.location
+      this.$refs.category.defaultSearch = to.query.search
+      this.$refs.category.defaultCriteria = criteria
 
       this.$refs.category.reload()
     }

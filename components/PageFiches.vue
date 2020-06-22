@@ -4,7 +4,7 @@
       <div class="fiches py-3">
         <div class="container">
           <div class="text-center">
-            <h1 class="mb-0">{{ rootCategory.name }}</h1>
+            <h1 class="mb-0">{{ title }}</h1>
             <span class="d-none d-md-inline muted">{{ fichesTotal }} résultats ({{ fiches.length }} affichés)</span>
           </div>
           <div class="search border rounded">
@@ -271,6 +271,7 @@ export default {
   directives: { swiper: SwiperDirective },
   props: {
     rootCategory: Object,
+    rootLocation: Object,
 
     initCategory: String,
     initLocation: String,
@@ -284,11 +285,11 @@ export default {
   data() {
     return {
       // initialize component
-      category: this.initCategory,
-      subCategories: this.$store.state.categories.children[this.rootCategory.id], // fetched along category
-      location: this.initLocation,
-      search: this.initSearch,
-      criteria: this.initCriteria,
+      defaultCategory: this.initCategory,
+      subCategories: [],
+      defaultLocation: this.initLocation,
+      defaultSearch: this.initSearch,
+      defaultCriteria: this.initCriteria,
 
       fiches: this.initFiches,
       fichesTotal: this.initFichesTotal,
@@ -329,6 +330,9 @@ export default {
       locations: 'all',
       locationHierarchy: 'hierarchy'
     }),
+    title() {
+      return this.rootCategory ? this.rootCategory.name : this.rootLocation.name
+    },
     hasMoreFiche() {
       return this.fichesNextPage <= this.fichesPages
     },
@@ -357,6 +361,9 @@ export default {
   },
   async mounted() {
     this.loading = true
+
+    // create lists
+    this.subCategories = this.$store.state.categories.children[this.rootCategory.id] // fetched along category
 
     // criteria
     await this.searchReset()
@@ -428,10 +435,10 @@ export default {
       this.isSearchVisible = false
 
       const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
-        category: this.category,
-        location: this.location,
-        search: this.search,
-        criteria: this.criteria,
+        category: this.defaultCategory,
+        location: this.defaultLocation,
+        search: this.defaultSearch,
+        criteria: this.defaultCriteria,
         per_page: PER_PAGE_NUMBER
       })
 
@@ -551,21 +558,21 @@ export default {
     },
     async searchReset() {
       // fields
-      if (this.category === this.rootCategory.slug) {
+      if (this.defaultCategory === this.rootCategory.slug) {
         this.formSearch.category = null
       } else {
-        this.formSearch.category = this.subCategories.find(({ slug }) => slug === this.category)
+        this.formSearch.category = this.subCategories.find(({ slug }) => slug === this.defaultCategory)
       }
 
-      this.formSearch.location = this.location
-        ? Object.values(this.locations).find(({ slug }) => slug === this.location)
+      this.formSearch.location = this.defaultLocation
+        ? Object.values(this.locations).find(({ slug }) => slug === this.defaultLocation)
         : null
-      this.formSearch.search = this.search
+      this.formSearch.search = this.defaultSearch
 
       // criteria
       await this.loadCriteria()
       this.formSearch.criteria.forEach((criteria) => {
-        const initCriteria = this.criteria.find(({ taxonomy }) => taxonomy === criteria.taxonomy)
+        const initCriteria = this.defaultCriteria.find(({ taxonomy }) => taxonomy === criteria.taxonomy)
         if (initCriteria) {
           criteria.selectedValues = criteria.values.filter(({ slug }) => initCriteria.values.includes(slug))
         }
@@ -617,10 +624,10 @@ export default {
       this.fichesLoading = true
       try {
         const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
-          category: this.category,
-          location: this.location,
-          search: this.search,
-          criteria: this.criteria,
+          category: this.defaultCategory,
+          location: this.defaultLocation,
+          search: this.defaultSearch,
+          criteria: this.defaultCriteria,
           page: this.fichesNextPage++,
           per_page: PER_PAGE_NUMBER
         })
