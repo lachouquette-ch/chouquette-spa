@@ -16,8 +16,7 @@
 
 <script>
 import PageFiches from '~/components/PageFiches'
-
-const FICHE_NUMBER_EACH = 40
+import PER_PAGE_NUMBER from '~/constants/default'
 
 export default {
   components: { PageFiches },
@@ -44,7 +43,7 @@ export default {
       initLocation,
       initSearch,
       initCriteria,
-      per_page: FICHE_NUMBER_EACH
+      per_page: PER_PAGE_NUMBER
     })
 
     return {

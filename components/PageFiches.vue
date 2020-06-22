@@ -260,12 +260,11 @@ import Fiche from '~/components/Fiche'
 import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, LAUSANNE_LAT_LNG } from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
 import { DEFAULT, RESPONSIVE } from '~/constants/swiper'
+import PER_PAGE_NUMBER from '~/constants/default'
 import CriteriaBadge from '~/components/CriteriaBadge'
 
 // create classes from components to use it in code
 const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
-
-const FICHE_NUMBER_EACH = 40
 
 export default {
   components: { CriteriaBadge, Fiche },
@@ -335,7 +334,7 @@ export default {
     },
     countNextFiches() {
       if (this.fichesNextPage < this.fichesPages) {
-        return FICHE_NUMBER_EACH
+        return PER_PAGE_NUMBER
       } else {
         return this.fichesTotal - this.fiches.length
       }
@@ -433,7 +432,7 @@ export default {
         location: this.location,
         search: this.search,
         criteria: this.criteria,
-        per_page: FICHE_NUMBER_EACH
+        per_page: PER_PAGE_NUMBER
       })
 
       // fiches
@@ -623,7 +622,7 @@ export default {
           search: this.search,
           criteria: this.criteria,
           page: this.fichesNextPage++,
-          per_page: FICHE_NUMBER_EACH
+          per_page: PER_PAGE_NUMBER
         })
 
         this.fiches.push(...ficheResult.fiches)
