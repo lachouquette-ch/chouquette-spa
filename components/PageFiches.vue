@@ -55,7 +55,7 @@
                       </option>
                     </select>
                   </div>
-                  <div class="form-group mb-0 mb-md-3">
+                  <div v-if="locations" class="form-group mb-0 mb-md-3">
                     <label for="location" class="small mb-0 d-md-none">Lieu</label>
                     <select
                       id="location"
