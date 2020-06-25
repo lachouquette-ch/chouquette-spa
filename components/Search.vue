@@ -5,7 +5,7 @@
         <select ref="locationFilter" v-model="formSearch.location" class="form-control" title="Où veux-tu aller ?">
           <option :value="null">Où veux-tu aller ?</option>
           <option
-            v-for="location in flatLocations"
+            v-for="location in locations"
             :key="location.id"
             :value="location"
             :class="{ 'font-weight-bold': !location.level }"
@@ -62,6 +62,8 @@ export default {
   },
   data() {
     return {
+      locations: [],
+
       formSearch: {
         category: null,
         location: null,
@@ -69,20 +71,14 @@ export default {
       }
     }
   },
+  async mounted() {
+    await this.$store.dispatch('locations/init')
+    this.locations = await this.$store.dispatch('locations/flatLocations')
+  },
   computed: {
     ...mapState('menus', {
       categories: 'headerCategories'
-    }),
-    ...mapState('locations', {
-      locations: 'hierarchy'
-    }),
-    flatLocations() {
-      // first level only
-      return this.locations.reduce(
-        (locations, { location, subLocations }) => [...locations, location, ...subLocations],
-        []
-      )
-    }
+    })
   },
   validations: {
     formSearch: {

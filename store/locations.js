@@ -3,7 +3,7 @@ import { ressourceStates, ressourceMutations } from './_ressource-helper'
 
 export const state = () => ({
   ...ressourceStates(),
-  hierarchy: []
+  hierarchy: {}
 })
 
 export const actions = {
@@ -23,6 +23,30 @@ export const actions = {
 
       return [locations, state.hierarchy]
     }
+  },
+
+  fetchBySlug({ state }, slug) {
+    const key = _.findKey(state.all, ({ slug: locationSlug }) => locationSlug === slug)
+    if (key) {
+      return state.all[key]
+    } else {
+      return null
+    }
+  },
+
+  findChildren({ state }, location) {
+    return state.hierarchy[location.id]
+  },
+
+  /**
+   * Return an array with all locations sorted as a hierarchy
+   */
+  flatLocations({ state }) {
+    const result = []
+    for (const [parentId, children] of Object.entries(state.hierarchy)) {
+      result.push(state.all[parentId], ...children)
+    }
+    return result
   }
 }
 
@@ -32,14 +56,11 @@ export const mutations = {
 
     const topLocations = locations.filter(({ parent }) => parent === 0)
     // single level only. Add level property
-    state.hierarchy = topLocations.map((location) => {
+    topLocations.forEach((location) => {
       location.level = 0
       const subLocations = locations.filter(({ parent }) => parent === location.id)
       subLocations.forEach((subLocation) => (subLocation.level = 1))
-      return {
-        location,
-        subLocations
-      }
+      state.hierarchy[location.id] = subLocations
     })
   }
 }

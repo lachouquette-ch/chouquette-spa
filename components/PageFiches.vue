@@ -36,15 +36,21 @@
               <div class="px-3 pt-4 pb-2">
                 <form>
                   <div class="form-group mb-0 mb-md-3">
-                    <label for="subcategory" class="small mb-0 d-md-none">Sous catégorie</label>
+                    <label for="category" class="small mb-0 d-md-none">Sous catégorie</label>
                     <select
-                      id="subcategory"
+                      id="category"
                       v-model="formSearch.category"
                       class="form-control form-control-sm"
                       @change="loadCriteria(), $v.formSearch.$touch()"
                     >
                       <option :value="null">Que cherches-tu ?</option>
-                      <option v-for="category in subCategories" :key="category.id" :value="category">
+                      <option
+                        v-for="category in categories"
+                        :key="category.id"
+                        :value="category"
+                        :class="{ 'font-weight-bold': !rootCategory && !category.level }"
+                      >
+                        <template v-if="!rootCategory">{{ '&nbsp;'.repeat(category.level * 2) }}</template>
                         {{ category.name }}
                       </option>
                     </select>
@@ -59,12 +65,13 @@
                     >
                       <option :value="null">Où veux-tu aller ?</option>
                       <option
-                        v-for="location in flatLocations"
+                        v-for="location in locations"
                         :key="location.id"
                         :value="location"
-                        :class="{ 'font-weight-bold': !location.level }"
+                        :class="{ 'font-weight-bold': !rootLocation && !location.level }"
                       >
-                        {{ '&nbsp;'.repeat(location.level * 2) }}{{ location.name }}
+                        <template v-if="!rootLocation">{{ '&nbsp;'.repeat(location.level * 2) }}</template>
+                        {{ location.name }}
                       </option>
                     </select>
                   </div>
@@ -273,10 +280,10 @@ export default {
     rootCategory: Object,
     rootLocation: Object,
 
-    initCategory: String,
-    initLocation: String,
-    initSearch: String,
-    initCriteria: Array,
+    queryCategory: String,
+    queryLocation: String,
+    querySearch: String,
+    queryCriteria: Array,
 
     initFiches: Array,
     initFichesTotal: Number,
@@ -285,11 +292,12 @@ export default {
   data() {
     return {
       // initialize component
-      defaultCategory: this.initCategory,
-      subCategories: [],
-      defaultLocation: this.initLocation,
-      defaultSearch: this.initSearch,
-      defaultCriteria: this.initCriteria,
+      defaultCategory: this.queryCategory,
+      categories: [],
+      defaultLocation: this.queryLocation,
+      locations: [],
+      defaultSearch: this.querySearch,
+      defaultCriteria: this.queryCriteria,
 
       fiches: this.initFiches,
       fichesTotal: this.initFichesTotal,
@@ -327,8 +335,15 @@ export default {
   },
   computed: {
     ...mapState('locations', {
-      locations: 'all',
+      locationAll: 'all',
       locationHierarchy: 'hierarchy'
+    }),
+    ...mapState('categories', {
+      categoryAll: 'all',
+      categoryHierarchy: 'hierarchy'
+    }),
+    ...mapState('menus', {
+      categoryMenu: 'headerCategories'
     }),
     title() {
       return this.rootCategory ? this.rootCategory.name : this.rootLocation.name
@@ -346,13 +361,6 @@ export default {
     hasSingleFiche() {
       return this.fiches && this.fiches.length === 1
     },
-    flatLocations() {
-      // first level only
-      return this.locationHierarchy.reduce(
-        (locations, { location, subLocations }) => [...locations, location, ...subLocations],
-        []
-      )
-    },
     hasSearchCriteria() {
       const hasSearch = this.formSearch.category || this.formSearch.location || this.formSearch.searchText
       const hasCriteria = this.formSearch.criteria.find(({ selectedValues }) => _.isEmpty(selectedValues) === false)
@@ -363,7 +371,22 @@ export default {
     this.loading = true
 
     // create lists
-    this.subCategories = this.$store.state.categories.children[this.rootCategory.id] // fetched along category
+    if (this.rootCategory) {
+      this.categories = await this.$store.dispatch('categories/findChildren', this.rootCategory)
+    } else {
+      this.categories = Object.entries(this.categoryHierarchy).flatMap(([categoryId, children]) => [
+        this.categoryAll[categoryId],
+        ...children
+      ])
+    }
+    if (this.rootLocation) {
+      this.locations = await this.$store.dispatch('locations/findChildren', this.rootLocation)
+    } else {
+      this.locations = Object.entries(this.locationHierarchy).flatMap(([locationId, children]) => [
+        this.locationAll[locationId],
+        ...children
+      ])
+    }
 
     // criteria
     await this.searchReset()
@@ -426,7 +449,7 @@ export default {
   },
   methods: {
     async reload() {
-      this.subCategories = this.$store.state.categories.children[this.rootCategory.id] // fetched along category
+      // this.categories = this.categoryHierarchy[this.rootCategory.id] // fetched along category
 
       this.loading = true
 
@@ -483,8 +506,16 @@ export default {
       try {
         this.criteriaLoading = true
 
-        const categoryId = this.formSearch.category ? this.formSearch.category.id : this.rootCategory.id
-        const criteriaList = await this.$wpAPI.criteria.getForCategory(categoryId).then(({ data }) => data)
+        let categoryId = null
+        if (this.formSearch.category) {
+          categoryId = this.formSearch.category.id
+        } else if (this.rootCategory) {
+          categoryId = this.rootCategory.id
+        }
+
+        const criteriaList = categoryId
+          ? await this.$wpAPI.criteria.getForCategory(categoryId).then(({ data }) => data)
+          : []
 
         // build selectedValues "add-on"
         criteriaList.forEach((criteria) => (criteria.selectedValues = []))
@@ -558,15 +589,26 @@ export default {
     },
     async searchReset() {
       // fields
-      if (this.defaultCategory === this.rootCategory.slug) {
-        this.formSearch.category = null
+      if (this.rootCategory) {
+        this.formSearch.category =
+          this.defaultCategory === this.rootCategory.slug
+            ? null
+            : this.categories.find(({ slug }) => slug === this.defaultCategory)
       } else {
-        this.formSearch.category = this.subCategories.find(({ slug }) => slug === this.defaultCategory)
+        this.formSearch.category = this.defaultCategory
+          ? this.categories.find(({ slug }) => slug === this.defaultCategory)
+          : null
       }
-
-      this.formSearch.location = this.defaultLocation
-        ? Object.values(this.locations).find(({ slug }) => slug === this.defaultLocation)
-        : null
+      if (this.rootLocation) {
+        this.formSearch.location =
+          this.defaultLocation === this.rootLocation.slug
+            ? null
+            : this.locations.find(({ slug }) => slug === this.defaultLocation)
+      } else {
+        this.formSearch.location = this.defaultLocation
+          ? this.locations.find(({ slug }) => slug === this.defaultLocation)
+          : null
+      }
       this.formSearch.search = this.defaultSearch
 
       // criteria

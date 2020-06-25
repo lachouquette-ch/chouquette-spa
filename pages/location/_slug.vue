@@ -2,7 +2,7 @@
   <div class="category-page layout-content">
     <PageFiches
       ref="category"
-      :root-category="rootCategory"
+      :root-location="rootLocation"
       :query-category="queryCategory"
       :query-location="queryLocation"
       :query-search="querySearch"
@@ -21,16 +21,15 @@ import { PER_PAGE_NUMBER } from '~/constants/default'
 export default {
   components: { PageFiches },
   async asyncData({ store, params, query }) {
-    const rootCategory = await store.dispatch('categories/fetchBySlug', params.slug)
-
     // store initialization
     await store.dispatch('locations/init')
     await store.dispatch('menus/init')
-    await store.dispatch('menus/setSelectedCategory', rootCategory)
+
+    const rootLocation = await store.dispatch('locations/fetchBySlug', params.slug)
 
     // build criteria
-    const queryCategory = query.category || rootCategory.slug
-    const queryLocation = query.location
+    const queryLocation = query.location || rootLocation.slug
+    const queryCategory = query.category
     const querySearch = query.search
     const queryCriteria = Object.entries(query)
       .filter(([key]) => key.startsWith('cq_'))
@@ -47,7 +46,7 @@ export default {
     })
 
     return {
-      rootCategory,
+      rootLocation,
 
       queryCategory,
       queryLocation,
@@ -74,8 +73,8 @@ export default {
           return { taxonomy: key, values: value.split(',') }
         })
 
-      this.$refs.category.defaultCategory = to.query.category || this.rootCategory.slug
-      this.$refs.category.defaultLocation = to.query.location
+      this.$refs.category.defaultLocation = to.query.location || this.rootLocation.slug
+      this.$refs.category.defaultCategory = to.query.category
       this.$refs.category.defaultSearch = to.query.search
       this.$refs.category.defaultCriteria = criteria
 
@@ -84,12 +83,9 @@ export default {
 
     next()
   },
-  beforeRouteLeave(to, from, next) {
-    this.$store.dispatch('menus/clearSelectedCategory').then(() => next())
-  },
   head() {
     return {
-      title: this.rootCategory.name
+      title: this.rootLocation.name
     }
   }
 }

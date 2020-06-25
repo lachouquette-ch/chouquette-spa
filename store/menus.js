@@ -48,6 +48,13 @@ export const actions = {
 
   clearSelectedCategory({ commit }) {
     commit('UNSET_SELECTED_CATEGORY')
+  },
+
+  /**
+   * Return an array with all header categories and subcategories
+   */
+  flatHeaderCategories({ state, dispatch }) {
+    return dispatch('categories/flatCategories', state.headerCategories, { root: true })
   }
 }
 
