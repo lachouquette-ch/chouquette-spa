@@ -92,7 +92,7 @@ export default {
       if (!this.formSearch.$invalid) {
         const query = this.formSearch.searchText ? { s: this.formSearch.searchText } : {}
         if (this.formSearch.category) {
-          if (this.formSearch.location) query.l = this.formSearch.location.slug
+          if (this.formSearch.location) query.location = this.formSearch.location.slug
           this.$router.push({ path: `/category/${this.formSearch.category.slug}`, query })
         } else if (this.formSearch.location) {
           this.$router.push({ path: `/location/${this.formSearch.location.slug}`, query })
