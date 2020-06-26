@@ -11,7 +11,7 @@ export default {
     mailChimpListId: process.env.MAILCHIMP_LIST_ID,
     googleMapsKey: process.env.GOOGLE_MAPS_KEY
   },
-  mode: 'spa',
+  mode: 'universal',
   /*
    ** Headers of the page
    */
@@ -85,7 +85,7 @@ export default {
    */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
-    // '@nuxtjs/eslint-module',
+    '@nuxtjs/eslint-module',
     ['@nuxtjs/google-analytics', { id: 'UA-47894326-1' }]
   ],
   /*
