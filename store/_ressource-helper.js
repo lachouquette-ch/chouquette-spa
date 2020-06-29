@@ -9,7 +9,7 @@ export const ressourceStates = () => ({
 /* Actions */
 
 /**
- * Try to get ressources from store (camche). Fetch missing ressources if any, store them and fetch its related ressources
+ * Try to get ressources from store (cache). Fetch missing ressources if any, store them and fetch its related ressources
  */
 const fetchByIds = async (ressourceRepository, mutationName, { dispatch, commit, state }, ids) => {
   // find which keys aren't in store
@@ -23,7 +23,7 @@ const fetchByIds = async (ressourceRepository, mutationName, { dispatch, commit,
     await dispatch('fetchRelatedRessources', newRessources)
   }
 
-  return ids.map((id) => state.all[id])
+  return _.compact(ids.map((id) => state.all[id]))
 }
 
 /**
