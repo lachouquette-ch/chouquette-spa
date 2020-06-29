@@ -24,7 +24,7 @@
         <div v-swiper:ficheSwiper="swiperFichesOptions" class="px-md-5">
           <div class="swiper-wrapper mt-3">
             <div
-              v-for="(fiche, index) in fiches"
+              v-for="fiche in fiches"
               :key="fiche.id"
               class="swiper-slide h-auto d-flex align-items-stretch"
               :data-hash="fiche.id"
