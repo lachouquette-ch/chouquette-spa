@@ -191,6 +191,11 @@ export default {
         minText: minLength(10)
       }
     }
+  },
+  head() {
+    return {
+      title: "Contacte un membre de l'équipe La Chouquette"
+    }
   }
 }
 </script>
