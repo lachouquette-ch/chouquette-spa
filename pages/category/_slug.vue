@@ -89,7 +89,7 @@ export default {
   },
   head() {
     return {
-      title: this.rootCategory.name
+      title: this.rootCategory.name + ' - ' + this.rootCategory.description
     }
   }
 }
