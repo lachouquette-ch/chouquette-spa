@@ -21,9 +21,6 @@
         :href="`https://twitter.com/share?text=${escapedTitle}&url=${encodeURI(currentPage)}`"
         ><i class="fab fa-twitter-square"></i
       ></a>
-      <a style="color: #25d366" title="Whatsapp" target="_blank" :href="`https://wa.me/?text=${encodeURI(currentPage)}`"
-        ><i class="fab fa-whatsapp-square"></i
-      ></a>
       <a
         style="color: #b7b7b7"
         title="Email"
