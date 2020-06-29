@@ -71,14 +71,14 @@ export default {
       }
     }
   },
-  async mounted() {
-    await this.$store.dispatch('locations/init')
-    this.locations = await this.$store.dispatch('locations/flatLocations')
-  },
   computed: {
     ...mapState('menus', {
       categories: 'headerCategories'
     })
+  },
+  async mounted() {
+    await this.$store.dispatch('locations/init')
+    this.locations = await this.$store.dispatch('locations/flatLocations')
   },
   validations: {
     formSearch: {

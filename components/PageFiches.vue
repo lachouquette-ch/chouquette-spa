@@ -277,6 +277,7 @@ export default {
   components: { CriteriaBadge, Fiche },
   directives: { swiper: SwiperDirective },
   props: {
+    /* eslint-disable vue/require-default-prop */
     rootCategory: Object,
     rootLocation: Object,
 
@@ -288,6 +289,7 @@ export default {
     initFiches: Array,
     initFichesTotal: Number,
     initFichesPages: Number
+    /* eslint-enable vue/require-default-prop */
   },
   data() {
     return {
@@ -647,6 +649,7 @@ export default {
     },
     async fetchMoreFiches() {
       if (this.loading) {
+        // eslint-disable-next-line no-console
         console.warn('loading first fiches')
         return
       }
