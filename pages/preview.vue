@@ -12,14 +12,14 @@ import WpPage from '~/components/WpPage'
 export default {
   components: {
     WpPage,
-    WpPost
+    WpPost,
   },
   data() {
     return {
       pageType: null,
       page: null,
       post: null,
-      fiches: []
+      fiches: [],
     }
   },
   async created() {
@@ -42,7 +42,7 @@ export default {
     } else {
       this.$nuxt.error({ statusCode: 404, message: 'Could not preview this type of content' })
     }
-  }
+  },
 }
 </script>
 

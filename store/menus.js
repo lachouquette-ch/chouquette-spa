@@ -7,7 +7,7 @@ export const state = () => ({
   selectedCategory: null,
 
   footer: null,
-  footerPages: []
+  footerPages: [],
 })
 
 export const actions = {
@@ -55,7 +55,7 @@ export const actions = {
    */
   flatHeaderCategories({ state, dispatch }) {
     return dispatch('categories/flatCategories', state.headerCategories, { root: true })
-  }
+  },
 }
 
 export const mutations = {
@@ -80,5 +80,5 @@ export const mutations = {
   },
   UNSET_SELECTED_CATEGORY(state) {
     state.selectedCategory = null
-  }
+  },
 }

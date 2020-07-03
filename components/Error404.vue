@@ -10,7 +10,7 @@
 import Search from './Search'
 
 export default {
-  components: { Search }
+  components: { Search },
 }
 </script>
 

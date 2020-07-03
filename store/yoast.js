@@ -1,6 +1,6 @@
 export const state = () => ({
   redirects: null,
-  home: null
+  home: null,
 })
 
 export const actions = {
@@ -16,7 +16,7 @@ export const actions = {
         return {
           from: from.replace(/\/$/, ''),
           to: to.replace(/\/$/, ''),
-          status
+          status,
         }
       })
 
@@ -35,7 +35,7 @@ export const actions = {
 
       return home
     }
-  }
+  },
 }
 
 export const mutations = {
@@ -44,5 +44,5 @@ export const mutations = {
   },
   SET_HOME(state, home) {
     state.home = home
-  }
+  },
 }

@@ -186,20 +186,20 @@ export default {
     PostComment,
     WPMedia,
     PostCard,
-    PostShare
+    PostShare,
   },
   directives: { swiper: SwiperDirective },
   mixins: [gutenberg, seo],
   props: {
     post: {
       type: Object,
-      required: true
+      required: true,
     },
     fiches: {
       type: Array,
-      required: true
+      required: true,
     },
-    preview: Boolean
+    preview: Boolean,
   },
   data() {
     return {
@@ -211,12 +211,12 @@ export default {
 
       swiperFichesOptions: {
         ...DEFAULT,
-        ...HASH
+        ...HASH,
       },
       swiperPostsOptions: {
         ...DEFAULT,
-        ...RESPONSIVE
-      }
+        ...RESPONSIVE,
+      },
     }
   },
   computed: {
@@ -240,13 +240,13 @@ export default {
     },
     rootLevelComments() {
       return this.comments.filter(({ parent }) => parent === 0)
-    }
+    },
   },
   async created() {
     if (!this.preview) {
       ;[this.comments, this.similarPosts] = await Promise.all([
         this.$wpAPI.wp.comments.getByPost(this.post.id).then(({ data }) => data),
-        this.$store.dispatch('posts/fetchSimilar', this.post)
+        this.$store.dispatch('posts/fetchSimilar', this.post),
       ])
     }
   },
@@ -284,7 +284,7 @@ export default {
     closeModal() {
       // remove hash reference (if any)
       history.replaceState(null, null, '#')
-    }
+    },
   },
   head() {
     return {
@@ -300,16 +300,16 @@ export default {
           author: this.post.author_meta.display_name,
           publisher: {
             '@type': 'Organization',
-            name: 'La Chouquette'
+            name: 'La Chouquette',
           },
           url: this.currentURL,
           datePublished: this.post.date,
           dateModified: this.post.modified,
-          description: this.yoastGetDescription(this.post.yoast_meta)
-        })
-      ]
+          description: this.yoastGetDescription(this.post.yoast_meta),
+        }),
+      ],
     }
-  }
+  },
 }
 </script>
 

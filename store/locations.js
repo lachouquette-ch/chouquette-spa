@@ -3,7 +3,7 @@ import { ressourceStates, ressourceMutations } from './_ressource-helper'
 
 export const state = () => ({
   ...ressourceStates(),
-  hierarchy: {}
+  hierarchy: {},
 })
 
 export const actions = {
@@ -16,7 +16,7 @@ export const actions = {
         .get({
           hide_empty: true,
           orderby: 'count',
-          order: 'desc'
+          order: 'desc',
         })
         .then(({ data }) => data)
       commit('SET_LOCATIONS', locations)
@@ -47,7 +47,7 @@ export const actions = {
       result.push(state.all[parentId], ...children)
     }
     return result
-  }
+  },
 }
 
 export const mutations = {
@@ -62,5 +62,5 @@ export const mutations = {
       subLocations.forEach((subLocation) => (subLocation.level = 1))
       state.hierarchy[location.id] = subLocations
     })
-  }
+  },
 }

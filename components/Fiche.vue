@@ -148,7 +148,7 @@
               v-if="latestPost"
               :to="{ path: `/${latestPost.slug}` }"
               :title="`Lire le dernier article : ${latestPost.title}`"
-              class=" btn btn-sm btn-outline-secondary"
+              class="btn btn-sm btn-outline-secondary"
             >
               <i class="far fa-newspaper"></i>
             </nuxt-link>
@@ -240,7 +240,7 @@
               v-if="!noRefLink"
               :to="{ path: `/fiche/${fiche.slug}` }"
               title="Page de la fiche"
-              class=" btn btn-sm btn-outline-secondary"
+              class="btn btn-sm btn-outline-secondary"
             >
               <i class="fas fa-external-link-alt"></i>
               <span class="ml-1">Ouvrir la fiche</span>
@@ -277,25 +277,25 @@ export default {
   props: {
     fiche: {
       type: Object,
-      required: true
+      required: true,
     },
     flatEnable: Boolean,
-    noRefLink: Boolean
+    noRefLink: Boolean,
   },
   validations: {
     formFiche: {
       name: {
-        required
+        required,
       },
       email: {
         required,
-        email
+        email,
       },
       message: {
         required,
-        minText: minLength(10)
-      }
-    }
+        minText: minLength(10),
+      },
+    },
   },
   data() {
     return {
@@ -310,9 +310,9 @@ export default {
       formFiche: {
         name: null,
         email: null,
-        message: null
+        message: null,
       },
-      loading: false
+      loading: false,
     }
   },
   computed: {
@@ -335,14 +335,14 @@ export default {
       return {
         hide: this.isFlipped,
         'flat-enable': this.flatEnable,
-        'mx-md-3': this.flatEnable
+        'mx-md-3': this.flatEnable,
       }
     },
     backClass() {
       return {
         hide: !this.isFlipped,
         'flat-enable': this.flatEnable,
-        'mx-md-3': this.flatEnable
+        'mx-md-3': this.flatEnable,
       }
     },
 
@@ -351,15 +351,13 @@ export default {
       return ['$'.repeat(this.fiche.info.cost), '$'.repeat(5 - this.fiche.info.cost)]
     },
     currentDayOfWeek() {
-      return moment()
-        .locale('fr-CH')
-        .format('dddd')
+      return moment().locale('fr-CH').format('dddd')
     },
     criteriaList() {
       const criteriaList = _.flatten(Object.values(this.criteria))
       const termsList = criteriaList.flatMap(({ values }) => values)
       return _.uniqBy(termsList, 'slug')
-    }
+    },
   },
   mounted() {
     if (this.flatEnable) {
@@ -376,7 +374,7 @@ export default {
           this.map = new this.google.maps.Map(this.$refs.ficheMap, {
             ...MAP_OPTIONS,
             gestureHandling: 'none',
-            zoomControl: false
+            zoomControl: false,
           })
 
           this.buildLocation()
@@ -413,14 +411,14 @@ export default {
       // add marker
       if (this.map) {
         this.infoWindow = new this.google.maps.InfoWindow({
-          content: `<div class="text-center">${this.fiche.info.location.address}</div>`
+          content: `<div class="text-center">${this.fiche.info.location.address}</div>`,
         })
         this.marker = new this.google.maps.Marker({
           animation: this.google.maps.Animation.DROP,
           icon: this.fiche.main_category.marker_icon,
           map: this.map,
           position: this.fiche.info.location,
-          title: this.$options.filters.heDecode(this.fiche.title.rendered)
+          title: this.$options.filters.heDecode(this.fiche.title.rendered),
         })
 
         this.map.setCenter(this.marker.getPosition())
@@ -470,7 +468,7 @@ export default {
           name: this.formFiche.name,
           email: this.formFiche.email,
           message: this.formFiche.message,
-          recaptcha: token
+          recaptcha: token,
         }
 
         // post report
@@ -481,14 +479,14 @@ export default {
               type: 'success',
               message: `Nous avons bien envoyé ton message à ${this.$options.filters.heDecode(
                 this.fiche.title.rendered
-              )}.`
+              )}.`,
             })
           } else {
             await this.$wpAPI.wp.fiches.postReport(this.fiche.id, data)
             this.$store.dispatch('alerts/addAction', {
               type: 'success',
               message:
-                'Ton message nous est bien parvenu : merci :-). Nous modifierons le contenu de la fiche sous peu.'
+                'Ton message nous est bien parvenu : merci :-). Nous modifierons le contenu de la fiche sous peu.',
             })
           }
 
@@ -500,8 +498,8 @@ export default {
           this.loading = false
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

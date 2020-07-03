@@ -139,14 +139,14 @@ export default {
     return {
       hoverCategory: null,
       baseURL: process.env.wpBaseUrl,
-      searchText: ''
+      searchText: '',
     }
   },
   computed: {
     ...mapState('menus', {
       categories: 'headerCategories',
-      selectedCategory: 'selectedCategory'
-    })
+      selectedCategory: 'selectedCategory',
+    }),
   },
   created() {
     this.$root.$on('routeChanged', () => {
@@ -161,8 +161,8 @@ export default {
     },
     isSelected(category) {
       return this.hoverCategory === category || this.selectedCategory === category
-    }
-  }
+    },
+  },
 }
 </script>
 

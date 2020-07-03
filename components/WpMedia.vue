@@ -18,7 +18,7 @@ export default {
   props: {
     media: {
       required: true,
-      type: Object
+      type: Object,
     },
     size: {
       type: String,
@@ -26,16 +26,16 @@ export default {
       validator(value) {
         // The value must match one of thumbnail sizes https://developer.wordpress.org/reference/functions/the_post_thumbnail/
         return THUMBNAIL_SIZES.includes(value)
-      }
+      },
     },
     noSrcSet: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
-      mediaDetails: null
+      mediaDetails: null,
     }
   },
   computed: {
@@ -47,12 +47,12 @@ export default {
             return `${sizeData.source_url} ${sizeData.width}w`
           })
           .join(', ')
-    }
+    },
   },
   watch: {
     media() {
       this.init()
-    }
+    },
   },
   created() {
     this.init()
@@ -64,8 +64,8 @@ export default {
       const selectedSizes = _.intersection(wantedSizeOrHigher, Object.keys(this.media.media_details.sizes))
       if (!_.isEmpty(selectedSizes)) this.mediaDetails = this.media.media_details.sizes[selectedSizes.shift()]
       else this.mediaDetails = this.media.media_details.sizes.full
-    }
-  }
+    },
+  },
 }
 </script>
 

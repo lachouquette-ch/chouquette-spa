@@ -34,7 +34,7 @@ export default {
     if (process.client) {
       store.dispatch('nuxtServerInit')
     }
-  }
+  },
 }
 </script>
 

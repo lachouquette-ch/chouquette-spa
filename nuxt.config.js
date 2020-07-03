@@ -9,7 +9,7 @@ export default {
     recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
     mailChimpUserId: process.env.MAILCHIMP_USER_ID,
     mailChimpListId: process.env.MAILCHIMP_LIST_ID,
-    googleMapsKey: process.env.GOOGLE_MAPS_KEY
+    googleMapsKey: process.env.GOOGLE_MAPS_KEY,
   },
   mode: 'universal',
   /*
@@ -17,7 +17,7 @@ export default {
    */
   head: {
     htmlAttrs: {
-      lang: 'fr'
+      lang: 'fr',
     },
     title: process.env.npm_package_name || '',
     meta: [
@@ -26,9 +26,9 @@ export default {
       {
         hid: 'description',
         name: 'description',
-        content: process.env.npm_package_description || ''
+        content: process.env.npm_package_description || '',
       },
-      { name: 'theme-color', content: '#f2e808' }
+      { name: 'theme-color', content: '#f2e808' },
     ],
     link: [
       // favicons
@@ -51,12 +51,12 @@ export default {
 
       {
         rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css?family=Lobster+Two|Shadows+Into+Light+Two|Lato&display=swap'
-      }
-    ]
+        href: 'https://fonts.googleapis.com/css?family=Lobster+Two|Shadows+Into+Light+Two|Lato&display=swap',
+      },
+    ],
   },
   router: {
-    middleware: 'redirect'
+    middleware: 'redirect',
   },
   /*
    ** Customize the progress-bar color
@@ -78,7 +78,7 @@ export default {
     { src: '~/plugins/vuelidate.js' },
     { src: '~/plugins/html-entity-filter.js' },
     { src: '~/plugins/pretty-url-filter.js' },
-    { src: '~/plugins/wordpress-API.js' }
+    { src: '~/plugins/wordpress-API.js' },
   ],
   /*
    ** Nuxt.js dev-modules
@@ -86,7 +86,7 @@ export default {
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
-    ['@nuxtjs/google-analytics', { id: 'UA-47894326-1' }]
+    ['@nuxtjs/google-analytics', { id: 'UA-47894326-1' }],
   ],
   /*
    ** Nuxt.js modules
@@ -96,11 +96,11 @@ export default {
     '@nuxtjs/style-resources',
     'bootstrap-vue/nuxt',
     ['vue-scrollto/nuxt', { offset: -1 * (80 + 70) }], // fix default offset (do not work for home page)
-    '@nuxtjs/sentry'
+    '@nuxtjs/sentry',
   ],
   sentry: {
     dsn: 'https://aaf0c41235c44040ae01dcd356fb3e6f@o397059.ingest.sentry.io/5251223',
-    disabled: process.env.NODE_ENV === 'development'
+    disabled: process.env.NODE_ENV === 'development',
   },
   styleResources: {
     scss: [
@@ -108,8 +108,8 @@ export default {
       '~/assets/css/_mixins.scss',
       '~/node_modules/bootstrap/scss/_functions.scss',
       '~/node_modules/bootstrap/scss/_variables.scss',
-      '~/node_modules/bootstrap/scss/_mixins.scss'
-    ]
+      '~/node_modules/bootstrap/scss/_mixins.scss',
+    ],
   },
   bootstrapVue: {
     bootstrapCSS: false,
@@ -120,9 +120,9 @@ export default {
       'OverlayPlugin',
       'DropdownPlugin',
       'CollapsePlugin',
-      'SpinnerPlugin'
+      'SpinnerPlugin',
     ],
-    directivePlugins: ['VBVisiblePlugin']
+    directivePlugins: ['VBVisiblePlugin'],
   },
   /*
    ** Build configuration
@@ -132,14 +132,14 @@ export default {
       ({ isClient }) => isClient && 'query-string',
       ({ isClient }) => isClient && 'split-on-first',
       ({ isClient }) => isClient && 'strict-uri-encode',
-      'vue-cookieconsent-component'
+      'vue-cookieconsent-component',
     ],
     plugins: [
       new webpack.ProvidePlugin({
         $: 'jquery',
         jQuery: 'jquery',
-        'jquery-ui': 'jquery-ui/jquery-ui.js'
-      })
-    ]
-  }
+        'jquery-ui': 'jquery-ui/jquery-ui.js',
+      }),
+    ],
+  },
 }

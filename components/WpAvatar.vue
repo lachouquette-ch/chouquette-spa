@@ -9,20 +9,20 @@ export default {
   props: {
     avatarUrls: {
       required: true,
-      type: Object
+      type: Object,
     },
     size: {
       type: Number,
       default: 32,
       validator(value) {
         return AVATAR_SIZES.includes(value)
-      }
-    }
+      },
+    },
   },
   data() {
     return {
       urlSrc: '',
-      urlSrcSet: ''
+      urlSrcSet: '',
     }
   },
   created() {
@@ -31,7 +31,7 @@ export default {
 
     this.urlSrc = url.replace(avatarUrlRegExp, `?s=${this.size}`)
     this.urlSrcSet = url.replace(avatarUrlRegExp, `?s=${this.size * 2}`) + ' 2x'
-  }
+  },
 }
 </script>
 

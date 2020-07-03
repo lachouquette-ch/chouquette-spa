@@ -3,7 +3,7 @@ import _ from 'lodash'
 /* States */
 
 export const ressourceStates = () => ({
-  all: {}
+  all: {},
 })
 
 /* Actions */

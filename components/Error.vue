@@ -31,14 +31,14 @@ export default {
   props: {
     message: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      messageVisible: null
+      messageVisible: null,
     }
-  }
+  },
 }
 </script>
 

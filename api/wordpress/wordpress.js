@@ -11,7 +11,7 @@ function wordpressEndpointFactory($axios) {
     criteria: criteriaEndpointFactory($axios),
     contact: contactEndpointFactory($axios),
     yoast: yoastEndpointFactory($axios),
-    _: $axios
+    _: $axios,
   }
 }
 

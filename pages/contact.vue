@@ -130,9 +130,9 @@ export default {
         email: null,
         subject: null,
         to: null,
-        message: null
+        message: null,
       },
-      loading: false
+      loading: false,
     }
   },
   methods: {
@@ -149,12 +149,12 @@ export default {
 
           await this.$wpAPI.contact.postMessage({
             ...this.formContact,
-            recaptcha: token
+            recaptcha: token,
           })
 
           this.$store.dispatch('alerts/addAction', {
             type: 'success',
-            message: 'Ton message nous est bien parvenu : merci :-). On te répondra dès que possible.'
+            message: 'Ton message nous est bien parvenu : merci :-). On te répondra dès que possible.',
           })
 
           // clear form
@@ -168,35 +168,35 @@ export default {
           this.loading = false
         }
       }
-    }
+    },
   },
   validations: {
     formContact: {
       name: {
-        required
+        required,
       },
       email: {
         required,
-        email
+        email,
       },
       subject: {
-        required
+        required,
       },
       to: {
         required,
-        mustMatchRecipients
+        mustMatchRecipients,
       },
       message: {
         required,
-        minText: minLength(10)
-      }
-    }
+        minText: minLength(10),
+      },
+    },
   },
   head() {
     return {
-      title: "Contacte un membre de l'équipe La Chouquette"
+      title: "Contacte un membre de l'équipe La Chouquette",
     }
-  }
+  },
 }
 </script>
 

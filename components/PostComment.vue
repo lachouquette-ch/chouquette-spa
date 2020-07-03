@@ -45,20 +45,20 @@ export default {
   props: {
     post: {
       type: Number,
-      required: true
+      required: true,
     },
     comment: {
       type: Object,
-      required: true
+      required: true,
     },
     comments: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      replyToComment: false
+      replyToComment: false,
     }
   },
   computed: {
@@ -66,19 +66,17 @@ export default {
       return this.comments.filter(({ parent }) => parent === this.comment.id)
     },
     commentDate() {
-      return moment(this.comment.date)
-        .locale('fr-CH')
-        .format('dddd DD MMMM YYYY à k:mm')
+      return moment(this.comment.date).locale('fr-CH').format('dddd DD MMMM YYYY à k:mm')
     },
     replyLinkText() {
       return this.replyToComment ? 'Cacher ma réponse à ce commentaire' : 'Répondre à ce commentaire'
-    }
+    },
   },
   methods: {
     toggleReplyToComment() {
       this.replyToComment = !this.replyToComment
-    }
-  }
+    },
+  },
 }
 </script>
 

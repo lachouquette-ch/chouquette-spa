@@ -7,7 +7,7 @@ function yoastEndpointFactory($axios) {
     },
     getHome() {
       return $axios.get(`${prefix}/home`)
-    }
+    },
   }
 }
 

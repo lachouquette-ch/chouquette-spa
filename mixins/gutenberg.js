@@ -24,22 +24,22 @@ export default {
       const jQuery = require('jquery')
 
       // accordion
-      jQuery(document).ready(function($) {
-        $('.advgb-accordion-wrapper').each(function() {
+      jQuery(document).ready(function ($) {
+        $('.advgb-accordion-wrapper').each(function () {
           $(this).accordion({
             header: '> div > .advgb-accordion-header',
             heightStyle: 'content',
             collapsible: true,
-            active: $(this).data('collapsed') ? false : 0
+            active: $(this).data('collapsed') ? false : 0,
           })
         })
       })
 
       // slider
-      jQuery(document).ready(function($) {
+      jQuery(document).ready(function ($) {
         $('.advgb-images-slider-block .advgb-images-slider:not(.slick-initialized)').slick({
           dots: true,
-          adaptiveHeight: true
+          adaptiveHeight: true,
         })
       })
     })
@@ -54,44 +54,44 @@ export default {
         {
           rel: 'stylesheet',
           hid: 'blocks_library-css',
-          href: `${process.env.wpBaseUrl}/wp-includes/css/dist/block-library/style.min.css`
+          href: `${process.env.wpBaseUrl}/wp-includes/css/dist/block-library/style.min.css`,
         },
         {
           rel: 'stylesheet',
           hid: 'advgb_blocks_styles-css',
-          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/blocks_styles/blocks.css?ver=5.3.2`
+          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/blocks_styles/blocks.css?ver=5.3.2`,
         },
         {
           rel: 'stylesheet',
           hid: 'advgb_material_icon_font-css',
-          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/fonts/material-icons.min.css?ver=5.3.2`
+          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/fonts/material-icons.min.css?ver=5.3.2`,
         },
         {
           rel: 'stylesheet',
           hid: 'advgb_colorbox_style-css',
-          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/colorbox.css?ver=2.3.5`
+          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/colorbox.css?ver=2.3.5`,
         },
         {
           rel: 'stylesheet',
           hid: 'advgb_slick_style-css',
-          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/slick.css?ver=5.3.2`
+          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/slick.css?ver=5.3.2`,
         },
         {
           rel: 'stylesheet',
           hid: 'advgb_slick_theme_style-css',
-          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/slick-theme.css?ver=5.3.2`
+          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/slick-theme.css?ver=5.3.2`,
         },
         {
           rel: 'stylesheet',
           hid: 'advgb_bulma_styles-css',
-          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/bulma.min.css?ver=5.3.2`
+          href: `${process.env.wpBaseUrl}/wp-content/plugins/advanced-gutenberg/assets/css/bulma.min.css?ver=5.3.2`,
         },
         {
           rel: 'stylesheet',
           hid: 'dashicons-css',
-          href: `${process.env.wpBaseUrl}/wp-includes/css/dashicons.css?ver=5.3.2`
-        }
+          href: `${process.env.wpBaseUrl}/wp-includes/css/dashicons.css?ver=5.3.2`,
+        },
       ]
-    }
-  }
+    },
+  },
 }

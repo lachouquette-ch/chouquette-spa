@@ -29,8 +29,8 @@ export default {
   props: {
     page: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   head() {
     return {
@@ -42,11 +42,11 @@ export default {
           '@context': 'http://schema.org',
           '@type': 'WebPage',
           name: this.$options.filters.heDecode(this.page.yoast_title),
-          description: this.yoastGetDescription(this.page.yoast_meta)
-        })
-      ]
+          description: this.yoastGetDescription(this.page.yoast_meta),
+        }),
+      ],
     }
-  }
+  },
 }
 </script>
 

@@ -1,5 +1,5 @@
 export const state = () => ({
-  all: []
+  all: [],
 })
 
 const AlertType = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark']
@@ -14,13 +14,13 @@ export const actions = {
 
     commit('SET_ALERT', {
       type,
-      message
+      message,
     })
   },
   removeAction({ commit, state }, alert) {
     const index = state.all.findIndex((el) => el.type === alert.type && el.message === alert.message)
     commit('REMOVE_ALERT', index)
-  }
+  },
 }
 
 export const mutations = {
@@ -29,5 +29,5 @@ export const mutations = {
   },
   REMOVE_ALERT(state, index) {
     state.all.splice(index, 1)
-  }
+  },
 }

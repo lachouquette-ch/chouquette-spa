@@ -129,12 +129,12 @@ export default {
   async asyncData({ store }) {
     const [latestPosts, yoast] = await Promise.all([
       store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
-      store.dispatch('yoast/fetchHome')
+      store.dispatch('yoast/fetchHome'),
     ])
 
     return {
       latestPosts,
-      yoast
+      yoast,
     }
   },
   data() {
@@ -146,18 +146,18 @@ export default {
       swiperOptions: {
         ...DEFAULT,
         ...AUTO_PLAY,
-        ...RESPONSIVE
-      }
+        ...RESPONSIVE,
+      },
     }
   },
   computed: {
     ...mapState({
       wpName: 'name',
-      wpDescription: 'description'
+      wpDescription: 'description',
     }),
     ...mapState('menus', {
-      categories: 'headerCategories'
-    })
+      categories: 'headerCategories',
+    }),
   },
   mounted() {
     // execute anchor fixing
@@ -177,12 +177,12 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: `${process.env.baseUrl}/logo.png`
-        }
+          content: `${process.env.baseUrl}/logo.png`,
+        },
       ],
-      script: [this.jsonLDScript()]
+      script: [this.jsonLDScript()],
     }
-  }
+  },
 }
 </script>
 

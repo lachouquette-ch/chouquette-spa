@@ -97,12 +97,12 @@ export default {
   props: {
     post: {
       type: Number,
-      required: true
+      required: true,
     },
     parent: {
       type: Number,
-      default: null
-    }
+      default: null,
+    },
   },
   data() {
     return {
@@ -110,9 +110,9 @@ export default {
         name: null,
         email: null,
         webSite: null,
-        comment: null
+        comment: null,
       },
-      loading: false
+      loading: false,
     }
   },
   methods: {
@@ -132,13 +132,13 @@ export default {
             author_name: this.formComment.name,
             author_email: this.formComment.email,
             content: this.formComment.comment,
-            recaptcha: token
+            recaptcha: token,
           })
           .then((result) => {
             this.$store.dispatch('alerts/addAction', {
               type: 'success',
               message:
-                'Ton commentaire nous est bien parvenu : merci :-). Il sera visible dès validation de notre part.'
+                'Ton commentaire nous est bien parvenu : merci :-). Il sera visible dès validation de notre part.',
             })
 
             // clear form
@@ -152,26 +152,26 @@ export default {
           )
           .finally(() => (this.loading = false))
       }
-    }
+    },
   },
   validations: {
     formComment: {
       name: {
-        required
+        required,
       },
       email: {
         required,
-        email
+        email,
       },
       webSite: {
-        url
+        url,
       },
       comment: {
         required,
-        minText: minLength(10)
-      }
-    }
-  }
+        minText: minLength(10),
+      },
+    },
+  },
 }
 </script>
 

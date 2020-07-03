@@ -1,6 +1,6 @@
 <template>
   <b-overlay :show="loading" variant="white" opacity="1" z-index="1030" spinner-variant="yellow">
-    <div class="position-relative" style="min-height: 75vh">
+    <div class="position-relative" style="min-height: 75vh;">
       <div class="fiches py-3">
         <div class="container">
           <div class="text-center">
@@ -288,7 +288,7 @@ export default {
 
     initFiches: Array,
     initFichesTotal: Number,
-    initFichesPages: Number
+    initFichesPages: Number,
     /* eslint-enable vue/require-default-prop */
   },
   data() {
@@ -324,28 +324,28 @@ export default {
       fichesLoading: false,
       fichesSwiperOptions: null,
       virtualData: {
-        slides: []
+        slides: [],
       },
 
-      loading: false
+      loading: false,
     }
   },
   validations() {
     return {
-      formSearch: {}
+      formSearch: {},
     }
   },
   computed: {
     ...mapState('locations', {
       locationAll: 'all',
-      locationHierarchy: 'hierarchy'
+      locationHierarchy: 'hierarchy',
     }),
     ...mapState('categories', {
       categoryAll: 'all',
-      categoryHierarchy: 'hierarchy'
+      categoryHierarchy: 'hierarchy',
     }),
     ...mapState('menus', {
-      categoryMenu: 'headerCategories'
+      categoryMenu: 'headerCategories',
     }),
     title() {
       return this.rootCategory ? this.rootCategory.name : this.rootLocation.name
@@ -367,7 +367,7 @@ export default {
       const hasSearch = this.formSearch.category || this.formSearch.location || this.formSearch.searchText
       const hasCriteria = this.formSearch.criteria.find(({ selectedValues }) => _.isEmpty(selectedValues) === false)
       return hasSearch || hasCriteria
-    }
+    },
   },
   async mounted() {
     this.loading = true
@@ -378,7 +378,7 @@ export default {
     } else {
       this.categories = Object.entries(this.categoryHierarchy).flatMap(([categoryId, children]) => [
         this.categoryAll[categoryId],
-        ...children
+        ...children,
       ])
     }
     if (this.rootLocation) {
@@ -386,7 +386,7 @@ export default {
     } else {
       this.locations = Object.entries(this.locationHierarchy).flatMap(([locationId, children]) => [
         this.locationAll[locationId],
-        ...children
+        ...children,
       ])
     }
 
@@ -402,20 +402,20 @@ export default {
           this.virtualData = data
         },
         addSlidesBefore: 2,
-        addSlidesAfter: 2
+        addSlidesAfter: 2,
       },
       ...DEFAULT,
       ...RESPONSIVE,
       on: {
-        reachEnd: () => this.fetchMoreFiches()
-      }
+        reachEnd: () => this.fetchMoreFiches(),
+      },
     }
 
     // build map
     try {
       this.google = await this.$googleMaps
       this.map = new this.google.maps.Map(this.$refs.map, {
-        ...MAP_OPTIONS
+        ...MAP_OPTIONS,
       })
 
       // create cluster
@@ -426,9 +426,9 @@ export default {
           const index = markers.find((marker) => marker.chouquettise) ? 2 : 1
           return {
             index,
-            text: markers.length
+            text: markers.length,
           }
-        }
+        },
       })
 
       // create map controls
@@ -464,7 +464,7 @@ export default {
         location: this.defaultLocation,
         search: this.defaultSearch,
         criteria: this.defaultCriteria,
-        per_page: PER_PAGE_NUMBER
+        per_page: PER_PAGE_NUMBER,
       })
 
       // fiches
@@ -674,7 +674,7 @@ export default {
           search: this.defaultSearch,
           criteria: this.defaultCriteria,
           page: this.fichesNextPage++,
-          per_page: PER_PAGE_NUMBER
+          per_page: PER_PAGE_NUMBER,
         })
 
         this.fiches.push(...ficheResult.fiches)
@@ -716,14 +716,14 @@ export default {
 
                 this.$scrollTo(document.getElementById('category-main'))
               })
-            }
-          }
+            },
+          },
         })
         ficheInfoWindow.$mount()
 
         // create infoWindow
         const infoWindow = new this.google.maps.InfoWindow({
-          content: ficheInfoWindow.$el
+          content: ficheInfoWindow.$el,
         })
         this.infoWindows.set(fiche.id, infoWindow)
 
@@ -731,7 +731,7 @@ export default {
         const marker = new this.google.maps.Marker({
           icon: fiche.main_category.marker_icon,
           position: fiche.info.location,
-          title: this.$options.filters.heDecode(fiche.title.rendered)
+          title: this.$options.filters.heDecode(fiche.title.rendered),
         })
         marker.defaultZIndex = fiche.info.chouquettise ? Z_INDEXES.chouquettise : Z_INDEXES.default
         marker.chouquettise = fiche.info.chouquettise
@@ -752,8 +752,8 @@ export default {
 
       // reset map
       this.resetMap()
-    }
-  }
+    },
+  },
 }
 </script>
 

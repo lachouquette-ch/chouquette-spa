@@ -1,7 +1,7 @@
 import { ressourceStates, ressourceActions, ressourceMutations } from './_ressource-helper'
 
 export const state = () => ({
-  ...ressourceStates()
+  ...ressourceStates(),
 })
 
 export const actions = {
@@ -13,7 +13,7 @@ export const actions = {
 
     await Promise.all([
       dispatch('categories/fetchByIds', categoryIds, { root: true }),
-      dispatch('media/fetchByIds', mediaIds, { root: true })
+      dispatch('media/fetchByIds', mediaIds, { root: true }),
     ])
   },
 
@@ -21,7 +21,7 @@ export const actions = {
     const posts = await this.$wpAPI.wp.posts
       .get({
         sticky: true,
-        per_page: number
+        per_page: number,
       })
       .then(({ data }) => data)
     const remainingPostCount = number - posts.length
@@ -44,7 +44,7 @@ export const actions = {
     const posts = await this.$wpAPI.wp.posts
       .get({
         tags: tag.id,
-        per_page: number
+        per_page: number,
       })
       .then(({ data }) => data)
 
@@ -60,7 +60,7 @@ export const actions = {
       .get({
         tags: post.tags.join(','),
         exclude: post.id,
-        per_page: 6
+        per_page: 6,
       })
       .then(({ data }) => data)
 
@@ -82,7 +82,7 @@ export const actions = {
   async fetchByText({ dispatch, commit }, { search, page = 1 }) {
     const { data: posts, headers } = await this.$wpAPI.wp.posts.get({
       search,
-      page
+      page,
     })
 
     // fetch related ressources
@@ -90,7 +90,7 @@ export const actions = {
 
     commit('SET_POSTS', posts)
     return { posts, total: parseInt(headers['x-wp-total']), pages: parseInt(headers['x-wp-totalpages']) }
-  }
+  },
 }
 
 export const mutations = {
@@ -99,5 +99,5 @@ export const mutations = {
   },
   SET_POST(state, posts) {
     ressourceMutations.setRessource(state, posts)
-  }
+  },
 }

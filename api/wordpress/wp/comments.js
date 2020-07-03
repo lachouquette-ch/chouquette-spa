@@ -12,7 +12,7 @@ class CommentRepository extends Repository {
   getByPost(postId) {
     return this.get({
       post: postId,
-      per_page: 100
+      per_page: 100,
     })
   }
 }

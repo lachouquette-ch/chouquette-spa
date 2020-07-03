@@ -23,19 +23,19 @@ export default {
   props: {
     post: {
       required: true,
-      type: Object
-    }
+      type: Object,
+    },
   },
   data() {
     return {
       topCategory: null,
-      featuredMedia: null
+      featuredMedia: null,
     }
   },
   created() {
     this.topCategory = this.$store.state.categories.all[this.post.top_categories[0]]
     if (this.post.featured_media) this.featuredMedia = this.$store.state.media.all[this.post.featured_media]
-  }
+  },
 }
 </script>
 

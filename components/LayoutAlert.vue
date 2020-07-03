@@ -20,14 +20,14 @@ import { mapState } from 'vuex'
 export default {
   computed: {
     ...mapState('alerts', {
-      alerts: 'all'
-    })
+      alerts: 'all',
+    }),
   },
   methods: {
     removeAlert(alert) {
       this.$store.dispatch('alerts/removeAction', alert)
-    }
-  }
+    },
+  },
 }
 </script>
 

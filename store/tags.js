@@ -1,7 +1,7 @@
 import { ressourceStates, ressourceActions, ressourceMutations } from './_ressource-helper'
 
 export const state = () => ({
-  ...ressourceStates()
+  ...ressourceStates(),
 })
 
 export const actions = {
@@ -10,11 +10,11 @@ export const actions = {
   },
   async fetchBySlug(context, slug) {
     return await ressourceActions.fetchBySlug(this.$wpAPI.wp.tags, 'SET_TAG', context, slug)
-  }
+  },
 }
 
 export const mutations = {
   SET_TAG(state, tag) {
     ressourceMutations.setRessource(state, tag)
-  }
+  },
 }

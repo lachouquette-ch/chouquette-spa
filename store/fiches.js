@@ -3,7 +3,7 @@ import { ressourceStates, ressourceActions, ressourceMutations } from './_ressou
 
 export const state = () => ({
   criteria: {},
-  ...ressourceStates()
+  ...ressourceStates(),
 })
 
 export const actions = {
@@ -49,7 +49,7 @@ export const actions = {
   async fetchByText({ dispatch, commit }, { search, page = 1 }) {
     const { data: fiches, headers } = await this.$wpAPI.wp.fiches.get({
       search,
-      page
+      page,
     })
 
     // fetch related ressources
@@ -67,7 +67,7 @@ export const actions = {
     const queryParams = {
       category,
       location,
-      search
+      search,
     }
 
     criteria.forEach(({ taxonomy, values }) => {
@@ -78,7 +78,7 @@ export const actions = {
 
     Object.assign(queryParams, {
       page,
-      per_page
+      per_page,
     })
 
     const { data: fiches, headers } = await this.$wpAPI.wp.fiches.get(queryParams)
@@ -88,7 +88,7 @@ export const actions = {
 
     commit('SET_FICHES', fiches)
     return { fiches, total: parseInt(headers['x-wp-total']), pages: parseInt(headers['x-wp-totalpages']) }
-  }
+  },
 }
 
 export const mutations = {
@@ -100,5 +100,5 @@ export const mutations = {
   },
   SET_CRITERIA_LIST(state, criteriaList) {
     state.criteria = Object.assign({}, state.criteria, criteriaList)
-  }
+  },
 }

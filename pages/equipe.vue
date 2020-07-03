@@ -31,21 +31,21 @@ import WpPage from '~/components/WpPage'
 export default {
   components: {
     WpPage,
-    WpAvatar
+    WpAvatar,
   },
   async asyncData({ app }) {
     return {
-      page: await app.$wpAPI.wp.pages.getBySlug('equipe').then(({ data }) => data[0])
+      page: await app.$wpAPI.wp.pages.getBySlug('equipe').then(({ data }) => data[0]),
     }
   },
   data() {
     return {
-      team: null
+      team: null,
     }
   },
   async created() {
     this.team = await this.$wpAPI.wp.users.getTeam().then(({ data }) => data)
-  }
+  },
 }
 </script>
 

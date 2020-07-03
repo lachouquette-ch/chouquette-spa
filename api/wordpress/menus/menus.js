@@ -8,7 +8,7 @@ function menusEndpointFactory($axios) {
     getById(id) {
       const URI = `${prefix}/menus/${id}`
       return $axios.get(URI)
-    }
+    },
   }
 }
 

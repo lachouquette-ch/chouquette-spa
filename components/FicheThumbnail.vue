@@ -27,17 +27,17 @@ export default {
   props: {
     fiche: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
-      featuredMedia: null
+      featuredMedia: null,
     }
   },
   mounted() {
     this.featuredMedia = this.$store.state.media.all[this.fiche.featured_media]
-  }
+  },
 }
 </script>
 

@@ -1,6 +1,6 @@
 module.exports = (offsetHeightPx = 160) => {
   //  from https://stackoverflow.com/questions/10732690/offsetting-an-html-anchor-to-adjust-for-fixed-header
-  ;(function(document, history, location) {
+  ;(function (document, history, location) {
     const $ = require('jquery')
 
     const HISTORY_SUPPORT = !!(history && history.pushState)
@@ -71,7 +71,7 @@ module.exports = (offsetHeightPx = 160) => {
         if (this.scrollIfAnchor(elem.getAttribute('href'), true)) {
           e.preventDefault()
         }
-      }
+      },
     }
 
     $(document).ready($.proxy(anchorScrolls, 'init'))

@@ -2,7 +2,7 @@ export default {
   computed: {
     currentURL() {
       return `${process.env.baseUrl}${this.$route.fullPath}`
-    }
+    },
   },
   methods: {
     yoastGetDescription(yoastMeta) {
@@ -14,7 +14,7 @@ export default {
         return {
           ...metaProperty,
           content: this.$options.filters.heDecode(metaProperty.content),
-          hid: metaProperty.name || metaProperty.property
+          hid: metaProperty.name || metaProperty.property,
         }
       })
 
@@ -26,7 +26,7 @@ export default {
         metaProperties.push({
           hid: 'og:url',
           property: 'og:url',
-          content: this.currentURL
+          content: this.currentURL,
         })
       }
 
@@ -43,23 +43,23 @@ export default {
         founders: [
           {
             '@type': 'Person',
-            name: 'Cyrielle'
+            name: 'Cyrielle',
           },
           {
             '@type': 'Person',
-            name: 'Fabrice'
-          }
+            name: 'Fabrice',
+          },
         ],
         address: {
           '@type': 'PostalAddress',
           addressLocality: 'Lausanne',
           addressRegion: 'Vaud',
-          addressCountry: 'Suisse'
+          addressCountry: 'Suisse',
         },
         sameAs: [
           'https://www.facebook.com/lachouquettelausanne',
-          'https://www.instagram.com/lachouquettelausanne/?hl=fr'
-        ]
+          'https://www.instagram.com/lachouquettelausanne/?hl=fr',
+        ],
       }
 
       const webSiteContext = {
@@ -69,21 +69,21 @@ export default {
         url: process.env.baseUrl,
         sameAs: [
           'https://www.facebook.com/lachouquettelausanne',
-          'https://www.instagram.com/lachouquettelausanne/?hl=fr'
+          'https://www.instagram.com/lachouquettelausanne/?hl=fr',
         ],
         potentialAction: {
           '@type': 'SearchAction',
           target: `${process.env.baseUrl}/search/{search_term}`,
-          'query-input': 'required name=search_term'
-        }
+          'query-input': 'required name=search_term',
+        },
       }
 
       const jsonLD = {
         type: 'application/ld+json',
-        json: [companyContext, webSiteContext, ...additionnalContext]
+        json: [companyContext, webSiteContext, ...additionnalContext],
       }
 
       return jsonLD
-    }
-  }
+    },
+  },
 }

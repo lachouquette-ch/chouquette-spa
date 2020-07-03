@@ -1,7 +1,7 @@
 export const state = () => ({
   name: null,
   description: null,
-  wordpressUrl: null
+  wordpressUrl: null,
 })
 
 export const actions = {
@@ -21,7 +21,7 @@ export const actions = {
     await dispatch('menus/init')
     // fetch locations
     await dispatch('locations/init')
-  }
+  },
 }
 
 export const mutations = {
@@ -29,5 +29,5 @@ export const mutations = {
     state.name = name
     state.description = description
     state.wordpressUrl = url
-  }
+  },
 }

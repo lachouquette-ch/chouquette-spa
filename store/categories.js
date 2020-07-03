@@ -3,7 +3,7 @@ import { ressourceStates, ressourceActions, ressourceMutations } from './_ressou
 
 export const state = () => ({
   ...ressourceStates(),
-  hierarchy: {}
+  hierarchy: {},
 })
 
 export const actions = {
@@ -40,7 +40,7 @@ export const actions = {
 
   flatCategories({ state }, categories) {
     return categories.flatMap((category) => [...state.hierarchy[category.id]])
-  }
+  },
 }
 
 export const mutations = {
@@ -59,5 +59,5 @@ export const mutations = {
       children.forEach((subCategory) => (subCategory.level = 1))
       state.hierarchy[category.id] = children
     }
-  }
+  },
 }

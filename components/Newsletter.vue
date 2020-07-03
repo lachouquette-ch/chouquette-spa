@@ -48,7 +48,7 @@ import newsletter from '~/mixins/newsletter'
 
 export default {
   components: { VueMailchimpSubscribe },
-  mixins: [newsletter]
+  mixins: [newsletter],
 }
 </script>
 

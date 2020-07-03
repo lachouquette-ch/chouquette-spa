@@ -14,7 +14,7 @@ import WpPage from '~/components/WpPage'
 export default {
   components: {
     WpPage,
-    WpPost
+    WpPost,
   },
   async asyncData({ app, store, params, error }) {
     // first try as a page
@@ -22,7 +22,7 @@ export default {
     if (page) {
       return {
         pageType: 'page',
-        page
+        page,
       }
     }
 
@@ -40,14 +40,14 @@ export default {
     return {
       pageType: 'post',
       post,
-      fiches
+      fiches,
     }
   },
   data() {
     return {
-      pageType: null
+      pageType: null,
     }
-  }
+  },
 }
 </script>
 

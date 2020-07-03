@@ -20,19 +20,19 @@ export default {
   props: {
     fiche: {
       type: Object,
-      required: true
+      required: true,
     },
     featuredMedia: {
       type: Object,
-      required: true
+      required: true,
     },
     showBtnAction: {
       type: Function,
       default: () => {
         // eslint-disable-next-line no-console
         console.log('Show btn action')
-      }
-    }
+      },
+    },
   },
   computed: {
     address() {
@@ -40,8 +40,8 @@ export default {
     },
     googleMapsURL() {
       return `https://maps.google.com/?q=${this.fiche.info.location.address}`
-    }
-  }
+    },
+  },
 }
 </script>
 

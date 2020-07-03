@@ -18,19 +18,19 @@ import PostCard from '~/components/PostCard'
 export default {
   components: {
     WpPage,
-    PostCard
+    PostCard,
   },
   async asyncData({ app, store }) {
     const [page, posts] = await Promise.all([
       app.$wpAPI.wp.pages.getBySlug('covid-19').then(({ data }) => data[0]),
-      store.dispatch('posts/fetchByTagSlug', { slug: 'covid-19' })
+      store.dispatch('posts/fetchByTagSlug', { slug: 'covid-19' }),
     ])
 
     return {
       page,
-      posts
+      posts,
     }
-  }
+  },
 }
 </script>
 

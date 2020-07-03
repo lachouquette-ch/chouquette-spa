@@ -1,7 +1,7 @@
 import { ressourceStates, ressourceActions, ressourceMutations } from './_ressource-helper'
 
 export const state = () => ({
-  ...ressourceStates()
+  ...ressourceStates(),
 })
 
 export const actions = {
@@ -13,7 +13,7 @@ export const actions = {
   },
   async fetchById(context, id) {
     return await ressourceActions.fetchById(this.$wpAPI.wp.media, 'SET_MEDIA', context, id)
-  }
+  },
 }
 
 export const mutations = {
@@ -22,5 +22,5 @@ export const mutations = {
   },
   SET_MEDIA(state, media) {
     ressourceMutations.setRessource(state, media)
-  }
+  },
 }

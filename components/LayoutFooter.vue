@@ -36,17 +36,17 @@ import moment from 'moment'
 export default {
   data() {
     return {
-      baseURL: process.env.wpBaseUrl
+      baseURL: process.env.wpBaseUrl,
     }
   },
   computed: {
     ...mapState('menus', {
-      pages: 'footerPages'
+      pages: 'footerPages',
     }),
     currentYear() {
       return moment().format('YYYY')
-    }
-  }
+    },
+  },
 }
 </script>
 

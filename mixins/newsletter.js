@@ -2,7 +2,7 @@ export default {
   data() {
     return {
       mailChimpUserId: process.env.mailChimpUserId,
-      mailChimpListId: process.env.mailChimpListId
+      mailChimpListId: process.env.mailChimpListId,
     }
   },
   methods: {
@@ -13,6 +13,6 @@ export default {
     onMailchimpSubscriptionSuccess() {
       this.$store.dispatch('alerts/addAction', { type: 'success', message: "Tu t'es bien inscris, merci !" })
       this.$bvModal.hide('mailchimp-subscribe')
-    }
-  }
+    },
+  },
 }

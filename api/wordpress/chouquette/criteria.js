@@ -10,14 +10,14 @@ function criteriaEndpointFactory($axios) {
       const URI = `${prefix}/fiche`
       return $axios.get(URI, {
         params: {
-          include: ficheIds.join(',')
-        }
+          include: ficheIds.join(','),
+        },
       })
     },
     getForCategory(categoryId) {
       const URI = `${prefix}/category/${categoryId}`
       return $axios.get(URI)
-    }
+    },
   }
 }
 

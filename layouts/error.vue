@@ -15,12 +15,12 @@ export default {
   props: {
     error: {
       type: Object,
-      default: null
-    }
+      default: null,
+    },
   },
   data() {
     return {
-      from: null
+      from: null,
     }
   },
   computed: {
@@ -37,12 +37,12 @@ export default {
     },
     message() {
       return this.error.message
-    }
+    },
   },
   created() {
     // eslint-disable-next-line no-console
     console.error(this.message, this.error)
-  }
+  },
 }
 </script>
 

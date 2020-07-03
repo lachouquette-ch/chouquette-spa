@@ -103,7 +103,7 @@ export default {
       fiches: null,
       fichesSwiperOptions: null,
       fichesVirtualData: {
-        slides: []
+        slides: [],
       },
       fichesTotal: null,
       fichesPages: null,
@@ -113,12 +113,12 @@ export default {
       posts: null,
       postsSwiperOptions: null,
       postsVirtualData: {
-        slides: []
+        slides: [],
       },
       postsTotal: null,
       postsPages: null,
       postsNextPage: 2,
-      postsLoading: false
+      postsLoading: false,
     }
   },
   computed: {
@@ -127,7 +127,7 @@ export default {
     },
     tooManyResultats() {
       return this.totalResultCount > 50
-    }
+    },
   },
   async mounted() {
     await new Promise((resolve) => setTimeout(resolve, 10000))
@@ -145,13 +145,13 @@ export default {
             this.postsVirtualData = data
           },
           addSlidesBefore: 2,
-          addSlidesAfter: 2
+          addSlidesAfter: 2,
         },
         ...DEFAULT,
         ...RESPONSIVE,
         on: {
-          reachEnd: () => this.loadMorePosts()
-        }
+          reachEnd: () => this.loadMorePosts(),
+        },
       }
     })
 
@@ -168,13 +168,13 @@ export default {
             this.fichesVirtualData = data
           },
           addSlidesBefore: 2,
-          addSlidesAfter: 2
+          addSlidesAfter: 2,
         },
         ...DEFAULT,
         ...RESPONSIVE,
         on: {
-          reachEnd: () => this.loadMoreFiches()
-        }
+          reachEnd: () => this.loadMoreFiches(),
+        },
       }
     })
   },
@@ -191,7 +191,7 @@ export default {
         this.postsLoading = true
         const newPosts = await this.$store.dispatch('posts/fetchByText', {
           search: this.search,
-          page: this.postsNextPage++
+          page: this.postsNextPage++,
         })
         this.posts.push(...newPosts.posts)
         this.postsSwiper.slideTo(this.postsSwiper.previousIndex + 1, 0, false)
@@ -211,7 +211,7 @@ export default {
         this.fichesLoading = true
         const newFiches = await this.$store.dispatch('fiches/fetchByText', {
           search: this.search,
-          page: this.fichesNextPage++
+          page: this.fichesNextPage++,
         })
         this.fiches.push(...newFiches.fiches)
         this.fichesSwiper.slideTo(this.fichesSwiper.previousIndex + 1, 0, false)
@@ -222,8 +222,8 @@ export default {
     initSearch() {
       this.$refs.searchBox.formSearch.searchText = this.search
       this.$refs.searchBox.$refs.textFilter.focus()
-    }
-  }
+    },
+  },
 }
 </script>
 

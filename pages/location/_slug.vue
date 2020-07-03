@@ -42,7 +42,7 @@ export default {
       location: queryLocation,
       search: querySearch,
       criteria: queryCriteria,
-      per_page: PER_PAGE_NUMBER
+      per_page: PER_PAGE_NUMBER,
     })
 
     return {
@@ -56,12 +56,12 @@ export default {
       initFiches: ficheResult.fiches,
       initFichesTotal: ficheResult.total,
       initFichesPages: ficheResult.pages,
-      initFichesNextPage: 2
+      initFichesNextPage: 2,
     }
   },
   data() {
     return {
-      test: 'default'
+      test: 'default',
     }
   },
   beforeRouteUpdate(to, from, next) {
@@ -85,9 +85,9 @@ export default {
   },
   head() {
     return {
-      title: this.rootLocation.name
+      title: this.rootLocation.name,
     }
-  }
+  },
 }
 </script>
 

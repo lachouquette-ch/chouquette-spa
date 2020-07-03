@@ -4,7 +4,7 @@ function contactEndpointFactory($axios) {
   return {
     postMessage(message) {
       return $axios.post(prefix, message)
-    }
+    },
   }
 }
 

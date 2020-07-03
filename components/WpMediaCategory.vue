@@ -14,24 +14,24 @@ export default {
   props: {
     category: {
       type: Object,
-      required: true
+      required: true,
     },
     color: {
       type: String,
       required: true,
-      validator: isColorValid
-    }
+      validator: isColorValid,
+    },
   },
   data: () => {
     return {
-      media: null
+      media: null,
     }
   },
   watch: {
     color(newColor) {
       if (!isColorValid) throw new TypeError(`${newColor} is not a valid color`)
       this.initMedia()
-    }
+    },
   },
   created() {
     this.initMedia()
@@ -40,8 +40,8 @@ export default {
     initMedia() {
       const mediaId = this.category.logos[`logo_${this.color}`]
       this.media = this.$store.state.media.all[mediaId]
-    }
-  }
+    },
+  },
 }
 </script>
 

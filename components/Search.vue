@@ -53,12 +53,12 @@ export default {
   props: {
     buttonClass: {
       type: String,
-      default: null
+      default: null,
     },
     filterCol: {
       type: String,
-      default: 'col-md-4'
-    }
+      default: 'col-md-4',
+    },
   },
   data() {
     return {
@@ -67,14 +67,14 @@ export default {
       formSearch: {
         category: null,
         location: null,
-        searchText: null
-      }
+        searchText: null,
+      },
     }
   },
   computed: {
     ...mapState('menus', {
-      categories: 'headerCategories'
-    })
+      categories: 'headerCategories',
+    }),
   },
   async mounted() {
     await this.$store.dispatch('locations/init')
@@ -84,8 +84,8 @@ export default {
     formSearch: {
       oneField() {
         return !!this.formSearch.location || !!this.formSearch.category || !!this.formSearch.searchText
-      }
-    }
+      },
+    },
   },
   methods: {
     search() {
@@ -100,8 +100,8 @@ export default {
           this.$router.push(`/search/${this.formSearch.searchText}`)
         }
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

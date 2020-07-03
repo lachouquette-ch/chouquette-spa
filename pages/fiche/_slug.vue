@@ -27,13 +27,13 @@ export default {
     const fiche = await store.dispatch('fiches/fetchBySlug', params.slug)
 
     return {
-      fiche
+      fiche,
     }
   },
   data() {
     return {
       fiche: null,
-      posts: []
+      posts: [],
     }
   },
   async created() {
@@ -44,9 +44,9 @@ export default {
   head() {
     return {
       title: this.$options.filters.heDecode(this.fiche.title.rendered),
-      meta: this.yoastMetaProperties(this.fiche.yoast_meta)
+      meta: this.yoastMetaProperties(this.fiche.yoast_meta),
     }
-  }
+  },
 }
 </script>
 
