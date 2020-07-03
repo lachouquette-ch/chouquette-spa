@@ -304,6 +304,7 @@ export default {
       fiches: this.initFiches,
       fichesTotal: this.initFichesTotal,
       fichesPages: this.initFichesPages,
+      fichesNextPage: 2,
 
       // map
       google: null,
