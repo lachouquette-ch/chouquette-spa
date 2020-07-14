@@ -56,10 +56,7 @@ export default {
           addressRegion: 'Vaud',
           addressCountry: 'Suisse',
         },
-        sameAs: [
-          'https://www.facebook.com/lachouquettelausanne',
-          'https://www.instagram.com/lachouquettelausanne/?hl=fr',
-        ],
+        sameAs: ['https://www.facebook.com/lachouquettelausanne', 'https://www.instagram.com/lachouquette.ch/?hl=fr'],
       }
 
       const webSiteContext = {
@@ -67,10 +64,7 @@ export default {
         '@type': 'WebSite',
         name: 'La Chouquette',
         url: process.env.baseUrl,
-        sameAs: [
-          'https://www.facebook.com/lachouquettelausanne',
-          'https://www.instagram.com/lachouquettelausanne/?hl=fr',
-        ],
+        sameAs: ['https://www.facebook.com/lachouquettelausanne', 'https://www.instagram.com/lachouquette.ch/?hl=fr'],
         potentialAction: {
           '@type': 'SearchAction',
           target: `${process.env.baseUrl}/search/{search_term}`,

@@ -107,7 +107,7 @@
           <a href="https://www.facebook.com/lachouquettelausanne" title="Facebook" target="_blank"
             ><i class="fab fa-facebook-f"></i
           ></a>
-          <a href="https://www.instagram.com/lachouquettelausanne" title="Instagram" target="_blank"
+          <a href="https://www.instagram.com/lachouquette.ch" title="Instagram" target="_blank"
             ><i class="fab fa-instagram ml-3"></i
           ></a>
           <a v-b-modal.mailchimp-subscribe href="" title="Newsletter" @click.prevent
