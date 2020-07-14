@@ -2,11 +2,13 @@
   <footer class="footer container-fluid text-center">
     <div class="footer-top row pt-4">
       <div class="col">
-        <img
-          class="mx-auto"
-          :src="`${baseURL}/wp-content/uploads/2019/03/logo_white-300x276.png`"
-          alt="Logo Chouquette"
-        />
+        <nuxt-link to="/" title="Page d'accueil">
+          <img
+            class="mx-auto"
+            :src="`${baseURL}/wp-content/uploads/2019/03/logo_white-300x276.png`"
+            alt="Logo Chouquette"
+          />
+        </nuxt-link>
         <div class="my-3">
           <div>
             <ul class="footer-top-menu px-2">
