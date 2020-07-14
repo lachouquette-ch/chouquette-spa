@@ -45,7 +45,9 @@
     >
       <div class="my-4">
         <div class="post-sidebar-header d-none d-md-block text-center mb-4">
-          <h2 class="post-sidebar-title h5 m-0">{{ hasSingleFiche ? 'La fiche' : "Cités dans l'article" }} :</h2>
+          <h2 class="post-sidebar-title h5 m-0">
+            {{ hasSingleFiche ? "La fiche de l'article" : 'Les fiches citées dans cet article' }} :
+          </h2>
         </div>
         <div v-if="fiches">
           <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" />
