@@ -113,7 +113,6 @@
           <a v-b-modal.mailchimp-subscribe href="" title="Newsletter" @click.prevent
             ><i class="far fa-envelope ml-3"></i
           ></a>
-          <a :href="`${baseURL}/feed/atom/`" title="RSS" target="_blank"><i class="fas fa-rss ml-3"></i></a>
           <a v-b-modal.search-modal href="" title="Recherche" class="d-none d-md-inline-block" @click.prevent
             ><i class="fas fa-search ml-3"></i
           ></a>

@@ -24,7 +24,6 @@
             ><i class="fab fa-instagram ml-4"></i
           ></a>
           <a href="#newsletter" title="Newsletter"><i class="far fa-envelope ml-4"></i></a>
-          <a :href="`${baseURL}/feed/atom/`" title="RSS" target="_blank"><i class="fas fa-rss ml-4"></i></a>
         </div>
 
         <div id="navbarChouquette" class="collapse navbar-collapse">
