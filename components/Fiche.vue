@@ -92,7 +92,7 @@
               class="fiche-category-icon rounded-circle"
               :class="fiche.info.chouquettise ? 'bg-yellow' : 'bg-white'"
             >
-              <img :src="fiche.main_category.logo" alt="" title="Sur le pouce" width="35" height="35" />
+              <img :src="fiche.main_category.logo" alt="" :title="fiche.main_category.name" width="35" height="35" />
             </span>
           </div>
           <div class="card-body d-flex flex-column position-relative">
