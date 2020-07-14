@@ -231,25 +231,22 @@
         </button>
       </div>
 
-      <div
-        v-if="map"
-        class="fiches-map-toggle-buttons btn-group btn-group-toggle"
-        :class="{ 'fiches-map-toggle-buttons-map': isMapShown }"
-        data-toggle="buttons"
-      >
-        <button class="btn btn-sm btn-primary" :class="{ active: !isMapShown }" @click="isMapShown = false">
-          <span class="mr-1"><i class="far fa-file-alt"></i></span>
-          Fiches
-        </button>
-        <button
-          class="btn btn-sm btn-primary"
-          :class="{ active: isMapShown }"
-          :disabled="!markers.size"
-          @click="showMap"
-        >
-          <span class="mr-1"><i class="fas fa-map-marked-alt"></i></span>
-          Carte
-        </button>
+      <div v-if="map" :class="{ 'fiches-map-toggle-buttons-map': isMapShown }" class="fiches-map-toggle-buttons">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <button class="btn btn-sm btn-primary" :class="{ active: !isMapShown }" @click="isMapShown = false">
+            <span class="mr-1"><i class="far fa-file-alt"></i></span>
+            Fiches
+          </button>
+          <button
+            class="btn btn-sm btn-primary"
+            :class="{ active: isMapShown }"
+            :disabled="!markers.size"
+            @click="showMap"
+          >
+            <span class="mr-1"><i class="fas fa-map-marked-alt"></i></span>
+            Carte
+          </button>
+        </div>
       </div>
     </div>
   </b-overlay>

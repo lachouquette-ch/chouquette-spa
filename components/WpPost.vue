@@ -62,27 +62,25 @@
         </div>
       </div>
     </nav>
-    <div
-      v-if="fiches && fiches.length"
-      class="post-sidebar-toggle-buttons d-md-none btn-group btn-group-toggle"
-      data-toggle="buttons"
-    >
-      <button
-        class="btn btn-sm btn-primary border-white border-right-0"
-        :class="{ active: hideSidebar }"
-        @click="hideSidebar = true"
-      >
-        <span class="mr-1"><i class="far fa-newspaper"></i></span>
-        Article
-      </button>
-      <button
-        class="btn btn-sm btn-primary border-white border-left-0"
-        :class="{ active: !hideSidebar }"
-        @click="hideSidebar = false"
-      >
-        <span class="mx-1"><i class="far fa-file-alt"></i></span>
-        {{ hasSingleFiche ? 'Fiche' : 'Fiches' }}
-      </button>
+    <div v-if="fiches && fiches.length" class="post-sidebar-toggle-buttons d-md-none">
+      <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <button
+          class="btn btn-sm btn-primary border-white border-right-0"
+          :class="{ active: hideSidebar }"
+          @click="hideSidebar = true"
+        >
+          <span class="mr-1"><i class="far fa-newspaper"></i></span>
+          Article
+        </button>
+        <button
+          class="btn btn-sm btn-primary border-white border-left-0"
+          :class="{ active: !hideSidebar }"
+          @click="hideSidebar = false"
+        >
+          <span class="mx-1"><i class="far fa-file-alt"></i></span>
+          {{ hasSingleFiche ? 'Fiche' : 'Fiches' }}
+        </button>
+      </div>
     </div>
     <b-overlay :show="!post" spinner-variant="yellow">
       <main role="main" class="post layout-content" :class="{ 'with-sidebar': fiches && fiches.length }">
