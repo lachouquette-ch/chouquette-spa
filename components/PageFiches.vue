@@ -181,39 +181,36 @@
           </div>
         </div>
 
-        <b-overlay :show="fichesLoading" variant="white" opacity="1" spinner-variant="yellow">
-          <main id="category-main" class="px-3">
-            <div v-if="fichesSwiperOptions" v-swiper="fichesSwiperOptions" class="swiper px-md-5">
-              <div class="swiper-wrapper my-3">
-                <div
-                  v-for="fiche in virtualData.slides"
-                  :key="fiche.id"
-                  class="swiper-slide h-auto d-flex align-items-stretch"
-                  :style="{ left: `${virtualData.offset}px` }"
+        <main id="category-main">
+          <div class="d-flex flex-wrap justify-content-around">
+            <Fiche v-for="fiche in fiches" :key="fiche.id" :ref="`fiche-${fiche.id}`" class="fiche m-3" :fiche="fiche">
+              <template v-if="map" #front-footer>
+                <a
+                  href=""
+                  title="Voir sur la carte"
+                  class="btn btn-sm btn-outline-secondary"
+                  @click.prevent="gotoMarker(fiche)"
                 >
-                  <Fiche :ref="`fiche-${fiche.id}`" class="fiche" :fiche="fiche">
-                    <template v-if="map" #front-footer>
-                      <a
-                        href=""
-                        title="Voir sur la carte"
-                        class="btn btn-sm btn-outline-secondary"
-                        @click.prevent="gotoMarker(fiche)"
-                      >
-                        <span class="mx-1"><i class="fas fa-map-marker-alt"></i></span>
-                      </a>
-                    </template>
-                  </Fiche>
-                </div>
-              </div>
-              <div v-show="!!fiches.length" slot="pagination" class="swiper-pagination" />
-              <div v-show="!!fiches.length" slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-              <div v-show="!!fiches.length" slot="button-next" class="swiper-button-next d-none d-md-block" />
-            </div>
-            <span v-if="!fiches.length" class="h5 d-block text-center">
+                  <span class="mx-1"><i class="fas fa-map-marker-alt"></i></span>
+                </a>
+              </template>
+            </Fiche>
+          </div>
+          <div class="d-block text-center">
+            <button
+              v-if="fiches.length"
+              class="btn btn-outline-secondary my-3 w-50"
+              :disabled="fichesLoading || !hasMoreFiche"
+              @click="fetchMoreFiches"
+            >
+              <b-spinner v-show="fichesLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
+              Plus de résultats
+            </button>
+            <span v-else class="h5">
               Pas de résultat pour ta recherche <i class="far fa-surprise"></i>. Essaie de changer tes filtres.
             </span>
-          </main>
-        </b-overlay>
+          </div>
+        </main>
       </div>
 
       <div class="map" :class="{ 'd-none': !isMapShown }">
@@ -263,7 +260,6 @@ import _ from 'lodash'
 import Fiche from '~/components/Fiche'
 import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, LAUSANNE_LAT_LNG } from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
-import { DEFAULT, RESPONSIVE } from '~/constants/swiper'
 import { PER_PAGE_NUMBER } from '~/constants/default'
 import CriteriaBadge from '~/components/CriteriaBadge'
 
@@ -318,13 +314,7 @@ export default {
       formSearch: { category: null, location: null, search: null, criteria: [] },
       criteriaLoading: false,
 
-      // swiper
       fichesLoading: false,
-      fichesSwiperOptions: null,
-      virtualData: {
-        slides: [],
-      },
-
       loading: false,
     }
   },
@@ -368,125 +358,103 @@ export default {
     },
   },
   async mounted() {
-    this.loading = true
-
-    // create lists
-    if (this.rootCategory) {
-      this.categories = await this.$store.dispatch('categories/findChildren', this.rootCategory)
-    } else {
-      this.categories = Object.entries(this.categoryHierarchy).flatMap(([categoryId, children]) => [
-        this.categoryAll[categoryId],
-        ...children,
-      ])
-    }
-    if (this.rootLocation) {
-      this.locations = await this.$store.dispatch('locations/findChildren', this.rootLocation)
-    } else {
-      this.locations = Object.entries(this.locationHierarchy).flatMap(([locationId, children]) => [
-        this.locationAll[locationId],
-        ...children,
-      ])
-    }
-
-    // criteria
-    await this.searchReset()
-
-    // swiper
-    this.fichesSwiperOptions = {
-      virtual: {
-        slides: this.fiches,
-        renderExternal: (data) => {
-          // assign virtual slides data
-          this.virtualData = data
-        },
-        addSlidesBefore: 2,
-        addSlidesAfter: 2,
-      },
-      ...DEFAULT,
-      ...RESPONSIVE,
-      on: {
-        reachEnd: () => this.fetchMoreFiches(),
-      },
-    }
-
-    // build map
     try {
-      this.google = await this.$googleMaps
-      this.map = new this.google.maps.Map(this.$refs.map, {
-        ...MAP_OPTIONS,
-      })
+      this.loading = true
 
-      // create cluster
-      this.markerClusterer = new MarkerClusterer(this.map, [], {
-        averageCenter: true,
-        styles: CLUSTER_STYLES,
-        calculator: (markers, clusterIconStylesCount) => {
-          const index = markers.find((marker) => marker.chouquettise) ? 2 : 1
-          return {
-            index,
-            text: markers.length,
-          }
-        },
-      })
+      // create lists
+      if (this.rootCategory) {
+        this.categories = await this.$store.dispatch('categories/findChildren', this.rootCategory)
+      } else {
+        this.categories = Object.entries(this.categoryHierarchy).flatMap(([categoryId, children]) => [
+          this.categoryAll[categoryId],
+          ...children,
+        ])
+      }
+      if (this.rootLocation) {
+        this.locations = await this.$store.dispatch('locations/findChildren', this.rootLocation)
+      } else {
+        this.locations = Object.entries(this.locationHierarchy).flatMap(([locationId, children]) => [
+          this.locationAll[locationId],
+          ...children,
+        ])
+      }
 
-      // create map controls
-      const centerControlButton = document.createElement('button')
-      centerControlButton.className = 'google-map-control'
-      centerControlButton.title = 'Voir toutes les fiches sur la carte'
-      const centerControlButtonContent = document.createElement('i')
-      centerControlButtonContent.className = 'far fa-map'
-      centerControlButton.appendChild(centerControlButtonContent)
-      centerControlButton.addEventListener('click', () => this.resetMap())
-      this.map.controls[this.google.maps.ControlPosition.RIGHT_TOP].push(centerControlButton)
+      // criteria
+      await this.searchReset()
 
-      this.loadFichesOnMap(this.fiches)
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error(err)
+      // build map
+      try {
+        this.google = await this.$googleMaps
+        this.map = new this.google.maps.Map(this.$refs.map, {
+          ...MAP_OPTIONS,
+        })
+
+        // create cluster
+        this.markerClusterer = new MarkerClusterer(this.map, [], {
+          averageCenter: true,
+          styles: CLUSTER_STYLES,
+          calculator: (markers, clusterIconStylesCount) => {
+            const index = markers.find((marker) => marker.chouquettise) ? 2 : 1
+            return {
+              index,
+              text: markers.length,
+            }
+          },
+        })
+
+        // create map controls
+        const centerControlButton = document.createElement('button')
+        centerControlButton.className = 'google-map-control'
+        centerControlButton.title = 'Voir toutes les fiches sur la carte'
+        const centerControlButtonContent = document.createElement('i')
+        centerControlButtonContent.className = 'far fa-map'
+        centerControlButton.appendChild(centerControlButtonContent)
+        centerControlButton.addEventListener('click', () => this.resetMap())
+        this.map.controls[this.google.maps.ControlPosition.RIGHT_TOP].push(centerControlButton)
+
+        this.loadFichesOnMap(this.fiches)
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(err)
+      }
+    } finally {
+      this.loading = false
     }
-
-    this.loading = false
   },
   methods: {
     async reload() {
-      // this.categories = this.categoryHierarchy[this.rootCategory.id] // fetched along category
-
       this.loading = true
 
-      // search form
-      await this.searchReset()
-      this.isSearchVisible = false
+      try {
+        // search form
+        await this.searchReset()
+        this.isSearchVisible = false
 
-      const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
-        category: this.defaultCategory,
-        location: this.defaultLocation,
-        search: this.defaultSearch,
-        criteria: this.defaultCriteria,
-        per_page: PER_PAGE_NUMBER,
-      })
+        const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
+          category: this.defaultCategory,
+          location: this.defaultLocation,
+          search: this.defaultSearch,
+          criteria: this.defaultCriteria,
+          per_page: PER_PAGE_NUMBER,
+        })
 
-      // fiches
-      this.fiches = ficheResult.fiches
-      this.fichesTotal = ficheResult.total
-      this.fichesPages = ficheResult.pages
-      this.fichesNextPage = 2
+        // fiches
+        this.fiches = ficheResult.fiches
+        this.fichesTotal = ficheResult.total
+        this.fichesPages = ficheResult.pages
+        this.fichesNextPage = 2
 
-      // map
-      this.markers.clear()
-      this.currentMarker = null
-      this.infoWindows.clear()
-      this.currentInfoWindow = null
-      this.markerClusterer.clearMarkers()
-      this.isMapShown = null
-      this.loadFichesOnMap(this.fiches)
-
-      // swiper
-      this.$swiper.virtual.removeAllSlides()
-      this.$swiper.virtual.slides = this.fiches
-      this.$swiper.virtual.update()
-      this.$swiper.slideTo(0)
-
-      this.loading = false
+        // map
+        this.markers.clear()
+        this.currentMarker = null
+        this.infoWindows.clear()
+        this.currentInfoWindow = null
+        this.markerClusterer.clearMarkers()
+        this.isMapShown = null
+        this.loadFichesOnMap(this.fiches)
+      } finally {
+        this.loading = false
+      }
     },
 
     // criteria
@@ -676,7 +644,6 @@ export default {
         })
 
         this.fiches.push(...ficheResult.fiches)
-        this.$swiper.slideTo(this.$swiper.previousIndex + 1, 0, false)
         this.loadFichesOnMap(ficheResult.fiches)
       } finally {
         this.fichesLoading = false
@@ -702,18 +669,13 @@ export default {
             featuredMedia,
             showBtnAction: () => {
               this.isMapShown = false
-              // find fiche
-              const ficheIndex = this.fiches.findIndex(({ id }) => id === fiche.id)
-              this.$swiper.slideTo(ficheIndex)
-              this.$nextTick(() => {
-                $('.fiche.selected').removeClass('selected')
-                const ficheComponent = this.$refs[`fiche-${fiche.id}`][0]
-                if (ficheComponent) {
-                  $(ficheComponent.$el).addClass('selected')
-                }
-
-                this.$scrollTo(document.getElementById('category-main'))
-              })
+              // goto fiche
+              $('.fiche.selected').removeClass('selected')
+              const ficheComponent = this.$refs[`fiche-${fiche.id}`][0]
+              if (ficheComponent) {
+                $(ficheComponent.$el).addClass('selected')
+              }
+              this.$scrollTo(ficheComponent.$el)
             },
           },
         })
@@ -765,11 +727,6 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: $zindex-dropdown;
-}
-
-.swiper-button-prev,
-.swiper-button-next {
-  top: 250px;
 }
 
 .map {

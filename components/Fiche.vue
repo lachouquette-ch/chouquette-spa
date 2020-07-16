@@ -1,5 +1,5 @@
 <template>
-  <div class="fiche-container d-flex mx-auto">
+  <div class="fiche-container d-flex">
     <b-modal
       ref="ficheModal"
       title-class="w-100 text-center"
