@@ -183,7 +183,7 @@
 
         <main id="category-main">
           <div class="d-flex flex-wrap justify-content-around">
-            <Fiche v-for="fiche in fiches" :key="fiche.id" :ref="`fiche-${fiche.id}`" class="fiche m-3" :fiche="fiche">
+            <Fiche v-for="fiche in fiches" :key="fiche.id" :ref="`fiche-${fiche.id}`" :fiche="fiche" class="fiche m-3">
               <template v-if="map" #front-footer>
                 <a
                   href=""
