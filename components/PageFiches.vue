@@ -200,7 +200,7 @@
             <button
               v-if="fiches.length"
               class="btn btn-outline-secondary my-3 w-50"
-              :disabled="fichesLoading || !hasMoreFiche"
+              :disabled="fichesLoading || !hasMoreFiches"
               @click="fetchMoreFiches"
             >
               <b-spinner v-show="fichesLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
@@ -216,9 +216,9 @@
       <div class="map" :class="{ 'd-none': !isMapShown }">
         <div ref="map" class="h-100 w-100" />
         <button
-          v-if="hasMoreFiche"
+          v-if="hasMoreFiches"
           class="map-load-more google-map-control bg-yellow w-auto"
-          :disabled="fichesLoading || !hasMoreFiche"
+          :disabled="fichesLoading || !hasMoreFiches"
           title="Afficher plus de fiches"
           @click="fetchMoreFiches"
         >
@@ -335,7 +335,7 @@ export default {
     title() {
       return this.rootCategory ? this.rootCategory.name : this.rootLocation.name
     },
-    hasMoreFiche() {
+    hasMoreFiches() {
       return this.fichesNextPage <= this.fichesPages
     },
     countNextFiches() {
@@ -623,7 +623,7 @@ export default {
         return
       }
 
-      if (this.fichesNextPage > this.fichesPages) {
+      if (!this.hasMoreFiches) {
         // eslint-disable-next-line no-console
         console.warn('no more pages')
         return
