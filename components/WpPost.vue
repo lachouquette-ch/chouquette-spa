@@ -62,26 +62,6 @@
         </div>
       </div>
     </nav>
-    <div v-if="fiches && fiches.length" class="post-sidebar-toggle-buttons d-md-none">
-      <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <button
-          class="btn btn-sm btn-primary border-white border-right-0"
-          :class="{ active: hideSidebar }"
-          @click="hideSidebar = true"
-        >
-          <span class="mr-1"><i class="far fa-newspaper"></i></span>
-          Article
-        </button>
-        <button
-          class="btn btn-sm btn-primary border-white border-left-0"
-          :class="{ active: !hideSidebar }"
-          @click="hideSidebar = false"
-        >
-          <span class="mx-1"><i class="far fa-file-alt"></i></span>
-          {{ hasSingleFiche ? 'Fiche' : 'Fiches' }}
-        </button>
-      </div>
-    </div>
     <b-overlay :show="!post" spinner-variant="yellow">
       <main role="main" class="post layout-content" :class="{ 'with-sidebar': fiches && fiches.length }">
         <article v-if="post" :id="post.id">
@@ -152,6 +132,22 @@
             </ol>
             <PostCommentReply :post="post.id" />
           </section>
+
+          <ToggleButtons
+            v-if="fiches && fiches.length"
+            class="d-md-none"
+            @btn1action="hideSidebar = true"
+            @btn2action="hideSidebar = false"
+          >
+            <template #button1>
+              <span class="mr-1"><i class="far fa-newspaper"></i></span>
+              Article
+            </template>
+            <template #button2>
+              <span class="mx-1"><i class="far fa-file-alt"></i></span>
+              {{ hasSingleFiche ? 'Fiche' : 'Fiches' }}
+            </template>
+          </ToggleButtons>
         </article>
       </main>
     </b-overlay>
@@ -175,9 +171,11 @@ import gutenberg from '~/mixins/gutenberg'
 
 import { DEFAULT, RESPONSIVE, HASH } from '~/constants/swiper'
 import Newsletter from '~/components/Newsletter'
+import ToggleButtons from '~/components/ToggleButtons'
 
 export default {
   components: {
+    ToggleButtons,
     Newsletter,
     Fiche,
     FicheThumbnail,
@@ -381,12 +379,6 @@ export default {
   @include media-breakpoint-down(sm) {
     visibility: hidden;
   }
-}
-
-.post-sidebar-toggle-buttons {
-  @include toggle-buttons;
-
-  position: fixed;
 }
 
 .post.with-sidebar {

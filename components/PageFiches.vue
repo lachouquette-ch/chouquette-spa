@@ -228,23 +228,16 @@
         </button>
       </div>
 
-      <div v-if="map" :class="{ 'fiches-map-toggle-buttons-map': isMapShown }" class="fiches-map-toggle-buttons">
-        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-          <button class="btn btn-sm btn-primary" :class="{ active: !isMapShown }" @click="isMapShown = false">
-            <span class="mr-1"><i class="far fa-file-alt"></i></span>
-            Fiches
-          </button>
-          <button
-            class="btn btn-sm btn-primary"
-            :class="{ active: isMapShown }"
-            :disabled="!markers.size"
-            @click="showMap"
-          >
-            <span class="mr-1"><i class="fas fa-map-marked-alt"></i></span>
-            Carte
-          </button>
-        </div>
-      </div>
+      <ToggleButtons v-if="map" :btn2disabled="!markers.size" @btn1action="isMapShown = false" @btn2action="showMap">
+        <template #button1>
+          <span class="mr-1"><i class="far fa-file-alt"></i></span>
+          Fiches
+        </template>
+        <template #button2>
+          <span class="mr-1"><i class="fas fa-map-marked-alt"></i></span>
+          Carte
+        </template>
+      </ToggleButtons>
     </div>
   </b-overlay>
 </template>
@@ -262,12 +255,13 @@ import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, LAUSANNE_LAT_LNG }
 import FicheInfoWindow from '~/components/FicheInfoWindow'
 import { PER_PAGE_NUMBER } from '~/constants/default'
 import CriteriaBadge from '~/components/CriteriaBadge'
+import ToggleButtons from '~/components/ToggleButtons'
 
 // create classes from components to use it in code
 const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
 
 export default {
-  components: { CriteriaBadge, Fiche },
+  components: { ToggleButtons, CriteriaBadge, Fiche },
   directives: { swiper: SwiperDirective },
   props: {
     /* eslint-disable vue/require-default-prop */
@@ -747,27 +741,6 @@ export default {
 .fiche.selected {
   @include media-breakpoint-up(md) {
     box-shadow: $box-shadow !important;
-  }
-}
-
-.fiches-map-toggle-buttons {
-  @include toggle-buttons;
-
-  z-index: $zindex-fixed + 1;
-
-  &-map {
-    position: fixed;
-    bottom: 0;
-  }
-
-  @include media-breakpoint-up(md) {
-    position: fixed;
-    top: $header-height + $covid-banner-height + 15px;
-    bottom: auto;
-    left: 15px;
-    transform: none;
-
-    width: 150px;
   }
 }
 </style>
