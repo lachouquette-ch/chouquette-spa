@@ -23,59 +23,61 @@
 
         <template>
           <div class="search-results container-fluid">
-            <div v-if="fiches || posts" class="text-center my-4">
+            <div v-if="fiches || posts" class="text-center mt-4">
               <h1>{{ totalResultCount }} résultat(s) pour "{{ search }}"</h1>
               <div v-if="tooManyResultats">
                 C'est beaucoup ! <a v-b-modal.searchModal href="" @click.prevent>Affine ta recherche</a>
               </div>
             </div>
-            <div class="mb-4">
-              <div v-if="fiches && fiches.length" class="row">
-                <div class="col">
-                  <h2 class="text-center">{{ fichesTotal }} fiche(s)</h2>
-                  <b-overlay :show="fichesLoading" variant="white" opacity="1" spinner-variant="yellow">
-                    <div v-if="fichesSwiperOptions" v-swiper:fichesSwiper="fichesSwiperOptions" class="swiper px-md-5">
-                      <div class="swiper-wrapper mt-3">
-                        <div
-                          v-for="fiche in fichesVirtualData.slides"
-                          :key="fiche.id"
-                          class="swiper-slide h-auto d-flex align-items-stretch"
-                          :style="{ left: `${fichesVirtualData.offset}px` }"
-                        >
-                          <Fiche :fiche="fiche" />
-                        </div>
-                      </div>
-                      <div slot="pagination" class="swiper-pagination" />
-                      <div slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-                      <div slot="button-next" class="swiper-button-next d-none d-md-block" />
-                    </div>
-                  </b-overlay>
+            <div class="my-md-4">
+              <div v-if="fiches && fiches.length" v-show="!showPosts">
+                <div class="d-flex flex-wrap justify-content-around">
+                  <Fiche v-for="fiche in fiches" :key="fiche.id" :fiche="fiche" class="m-3" />
                 </div>
+                <button
+                  v-if="hasMoreFiches"
+                  class="btn btn-outline-secondary d-block my-3 mx-auto w-50"
+                  :disabled="fichesLoading"
+                  @click.prevent="fetchMoreFiches"
+                >
+                  <b-spinner v-show="fichesLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
+                  Plus de résultats
+                </button>
               </div>
-              <div v-if="posts && posts.length" class="row mt-4">
-                <div class="col">
-                  <h2 class="text-center">{{ postsTotal }} articles(s)</h2>
-                  <b-overlay :show="postsLoading" variant="white" opacity="1" spinner-variant="yellow">
-                    <div v-if="postsSwiperOptions" v-swiper:postsSwiper="postsSwiperOptions" class="swiper px-md-5">
-                      <div class="swiper-wrapper pt-3">
-                        <div
-                          v-for="post in postsVirtualData.slides"
-                          :key="post.id"
-                          class="swiper-slide h-auto d-flex align-items-stretch"
-                          :style="{ left: `${postsVirtualData.offset}px` }"
-                        >
-                          <nuxt-link :to="{ path: `/${post.slug}` }" class="w-100">
-                            <PostCard :post="post" class="mx-auto" />
-                          </nuxt-link>
-                        </div>
-                      </div>
-                      <div slot="pagination" class="swiper-pagination" />
-                      <div slot="button-prev" class="swiper-button-prev d-none d-md-block" />
-                      <div slot="button-next" class="swiper-button-next d-none d-md-block" />
-                    </div>
-                  </b-overlay>
+              <div v-if="posts && posts.length" v-show="showPosts">
+                <div class="d-flex flex-wrap justify-content-around">
+                  <nuxt-link v-for="post in posts" :key="post.id" :to="{ path: `/${post.slug}` }" class="m-3">
+                    <PostCard :post="post" class="mx-auto" />
+                  </nuxt-link>
                 </div>
+                <button
+                  v-if="hasMorePosts"
+                  class="btn btn-outline-secondary d-block my-3 mx-auto w-50"
+                  :disabled="postsLoading"
+                  @click.prevent="fetchMorePosts"
+                >
+                  <b-spinner v-show="postsLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
+                  Plus de résultats
+                </button>
               </div>
+
+              <ToggleButtons
+                :btn1disabled="!fichesTotal"
+                :btn2disabled="!postsTotal"
+                @btn1action="showPosts = false"
+                @btn2action="showPosts = true"
+              >
+                <template #button1>
+                  <span class="mx-1"><i class="far fa-file-alt"></i></span>
+                  Fiches<span v-if="fichesTotal" class="d-none d-md-inline"> ({{ fichesTotal }})</span>
+                </template>
+                <template #button2>
+                  <span class="mr-1"><i class="far fa-newspaper"></i></span>
+                  Articles<span v-if="postsTotal" class="d-none d-md-inline"> ({{ postsTotal }})</span>
+                </template>
+              </ToggleButtons>
+
+              <ScrollTop />
             </div>
           </div>
         </template>
@@ -90,11 +92,12 @@ import { directive as SwiperDirective } from 'vue-awesome-swiper'
 import Fiche from '~/components/Fiche'
 import PostCard from '~/components/PostCard'
 import Search from '~/components/Search'
-import { DEFAULT, RESPONSIVE } from '~/constants/swiper'
 import Newsletter from '~/components/Newsletter'
+import ToggleButtons from '~/components/ToggleButtons'
+import ScrollTop from '~/components/ScrollTop'
 
 export default {
-  components: { Newsletter, PostCard, Fiche, Search },
+  components: { Newsletter, PostCard, Fiche, Search, ToggleButtons, ScrollTop },
   directives: { swiper: SwiperDirective },
   data() {
     return {
@@ -119,6 +122,8 @@ export default {
       postsPages: null,
       postsNextPage: 2,
       postsLoading: false,
+
+      showPosts: false,
     }
   },
   computed: {
@@ -128,80 +133,35 @@ export default {
     tooManyResultats() {
       return this.totalResultCount > 50
     },
+    hasMoreFiches() {
+      return this.fichesNextPage <= this.fichesPages
+    },
+    hasMorePosts() {
+      return this.postsNextPage <= this.postsPages
+    },
   },
-  async mounted() {
-    await new Promise((resolve) => setTimeout(resolve, 10000))
-
+  watch: {
+    showPosts() {
+      this.$scrollTo(window)
+    },
+  },
+  mounted() {
     this.$store.dispatch('posts/fetchByText', { search: this.search }).then((postResult) => {
       this.posts = postResult.posts
       this.postsTotal = postResult.total
       this.postsPages = postResult.pages
-
-      this.postsSwiperOptions = {
-        virtual: {
-          slides: this.posts,
-          renderExternal: (data) => {
-            // assign virtual slides data
-            this.postsVirtualData = data
-          },
-          addSlidesBefore: 2,
-          addSlidesAfter: 2,
-        },
-        ...DEFAULT,
-        ...RESPONSIVE,
-        on: {
-          reachEnd: () => this.loadMorePosts(),
-        },
-      }
     })
 
     this.$store.dispatch('fiches/fetchByText', { search: this.search }).then((ficheResult) => {
       this.fiches = ficheResult.fiches
       this.fichesTotal = ficheResult.total
       this.fichesPages = ficheResult.pages
-
-      this.fichesSwiperOptions = {
-        virtual: {
-          slides: this.fiches,
-          renderExternal: (data) => {
-            // assign virtual slides data
-            this.fichesVirtualData = data
-          },
-          addSlidesBefore: 2,
-          addSlidesAfter: 2,
-        },
-        ...DEFAULT,
-        ...RESPONSIVE,
-        on: {
-          reachEnd: () => this.loadMoreFiches(),
-        },
-      }
     })
   },
   methods: {
-    async loadMorePosts() {
+    async fetchMoreFiches() {
       // stop if last page
-      if (this.postsNextPage > this.postsPages) {
-        // eslint-disable-next-line no-console
-        console.warn('no more pages for posts')
-        return
-      }
-
-      try {
-        this.postsLoading = true
-        const newPosts = await this.$store.dispatch('posts/fetchByText', {
-          search: this.search,
-          page: this.postsNextPage++,
-        })
-        this.posts.push(...newPosts.posts)
-        this.postsSwiper.slideTo(this.postsSwiper.previousIndex + 1, 0, false)
-      } finally {
-        this.postsLoading = false
-      }
-    },
-    async loadMoreFiches() {
-      // stop if last page
-      if (this.fichesNextPage > this.fichesPages) {
+      if (!this.hasMoreFiches) {
         // eslint-disable-next-line no-console
         console.warn('no more pages for fiches')
         return
@@ -214,9 +174,27 @@ export default {
           page: this.fichesNextPage++,
         })
         this.fiches.push(...newFiches.fiches)
-        this.fichesSwiper.slideTo(this.fichesSwiper.previousIndex + 1, 0, false)
       } finally {
         this.fichesLoading = false
+      }
+    },
+    async fetchMorePosts() {
+      // stop if last page
+      if (!this.hasMorePosts) {
+        // eslint-disable-next-line no-console
+        console.warn('no more pages for posts')
+        return
+      }
+
+      try {
+        this.postsLoading = true
+        const newPosts = await this.$store.dispatch('posts/fetchByText', {
+          search: this.search,
+          page: this.postsNextPage++,
+        })
+        this.posts.push(...newPosts.posts)
+      } finally {
+        this.postsLoading = false
       }
     },
     initSearch() {
