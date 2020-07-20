@@ -63,7 +63,7 @@ export default {
     bottom: auto;
     left: 15px;
 
-    width: auto;
+    transform: none;
   }
 }
 </style>
