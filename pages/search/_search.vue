@@ -62,6 +62,7 @@
               </div>
 
               <ToggleButtons
+                v-show="posts || fiches"
                 :btn1disabled="!fichesTotal"
                 :btn2disabled="!postsTotal"
                 @btn1action="showPosts = false"
