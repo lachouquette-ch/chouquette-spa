@@ -31,14 +31,11 @@ export default {
 
 <style lang="scss" scoped>
 .scroll-top {
-  position: sticky;
+  position: fixed;
   bottom: 10px;
-  left: 100%;
+  right: 10px;
   z-index: $zindex-fixed + 1;
 
-  display: inline-block;
-  margin-right: 10px;
-  margin-bottom: 10px;
   height: 50px;
   width: 50px;
   line-height: 50px;

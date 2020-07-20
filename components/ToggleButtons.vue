@@ -45,12 +45,10 @@ export default {
 .toggle-buttons {
   position: sticky;
   bottom: 10px;
-  left: 50%;
+  left: 0;
   text-align: center;
   z-index: $zindex-fixed + 1;
 
-  display: inline-block;
-  transform: translateX(-50%);
   margin-bottom: 10px;
 
   button:focus {
