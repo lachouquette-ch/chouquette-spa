@@ -238,6 +238,8 @@
           Carte
         </template>
       </ToggleButtons>
+
+      <ScrollTop v-show="!isMapShown" />
     </div>
   </b-overlay>
 </template>
@@ -256,12 +258,13 @@ import FicheInfoWindow from '~/components/FicheInfoWindow'
 import { PER_PAGE_NUMBER } from '~/constants/default'
 import CriteriaBadge from '~/components/CriteriaBadge'
 import ToggleButtons from '~/components/ToggleButtons'
+import ScrollTop from '~/components/ScrollTop'
 
 // create classes from components to use it in code
 const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
 
 export default {
-  components: { ToggleButtons, CriteriaBadge, Fiche },
+  components: { ToggleButtons, CriteriaBadge, Fiche, ScrollTop },
   directives: { swiper: SwiperDirective },
   props: {
     /* eslint-disable vue/require-default-prop */
