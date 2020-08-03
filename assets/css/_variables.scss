@@ -44,9 +44,16 @@ $card-spacer-x: 1rem;
 $link-color: $chouquette-grey;
 $link-hover-decoration: none;
 
+$grid-breakpoints: (
+    xs: 0,
+    sm: 480px,
+    md: 769px,
+    lg: 1024px
+) !default;
+
 // Custom breakpoints
 $custom-breakpoints: (
-        xxl: 1600px
+    xxl: 1600px
 ) !default;
 
 // Forms
