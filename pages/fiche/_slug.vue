@@ -26,6 +26,11 @@ import seo from '~/mixins/seo'
 export default {
   components: { Fiche, PostCard },
   mixins: [seo],
+  async fetch() {
+    const postIds = this.fiche.linked_posts.map(({ id }) => id)
+
+    this.posts = await this.$store.dispatch('posts/fetchByIds', postIds)
+  },
   async asyncData({ store, params }) {
     const fiche = await store.dispatch('fiches/fetchBySlug', params.slug)
 
@@ -38,11 +43,6 @@ export default {
       fiche: null,
       posts: [],
     }
-  },
-  async created() {
-    const postIds = this.fiche.linked_posts.map(({ id }) => id)
-
-    this.posts = await this.$store.dispatch('posts/fetchByIds', postIds)
   },
   head() {
     return {
