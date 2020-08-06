@@ -4,8 +4,11 @@
     <main role="main">
       <Fiche :fiche="fiche" no-ref-link flat-enable />
     </main>
-    <div v-if="posts" class="mt-4">
-      <h2 class="text-center mb-4">Les articles</h2>
+    <div v-if="posts.length" class="mt-4">
+      <h2 class="text-center mb-4">
+        <span v-if="posts.length === 1">L'article</span>
+        <span v-else>Les articles</span>
+      </h2>
       <div class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
         <nuxt-link v-for="post in posts" :key="post.id" :to="{ path: `/${post.slug}` }" class="post-card">
           <PostCard :post="post" class="mx-auto" />
