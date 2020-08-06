@@ -1,7 +1,7 @@
 <template>
   <div>
     <WpPage v-if="pageType === 'page'" :page="page" />
-    <WpPost v-else-if="pageType === 'post'" :post="post" :fiches="fiches" />
+    <WpPost v-else-if="pageType === 'post'" :post="post" />
   </div>
 </template>
 
@@ -35,12 +35,9 @@ export default {
       return {}
     }
 
-    const fiches = await store.dispatch('fiches/fetchByIds', post.meta.link_fiche)
-
     return {
       pageType: 'post',
       post,
-      fiches,
     }
   },
   data() {

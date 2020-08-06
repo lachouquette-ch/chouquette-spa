@@ -38,33 +38,33 @@
         </div>
       </template>
     </b-modal>
-    <nav
-      v-if="fiches && fiches.length"
-      class="post-sidebar bg-white pb-5 pb-md-2 border-right border-grey"
-      :class="{ 'hide-sidebar': hideSidebar }"
-    >
-      <div class="my-4">
-        <div class="post-sidebar-header d-none d-md-block text-center mb-4">
-          <h2 class="post-sidebar-title h5 m-0">
-            {{ hasSingleFiche ? "La fiche de l'article" : 'Les fiches citées dans cet article' }} :
-          </h2>
+    <b-overlay :show="$fetchState.pending" variant="white" opacity="1" z-index="1030" spinner-variant="yellow">
+      <nav
+        v-if="fiches && fiches.length"
+        class="post-sidebar bg-white pb-5 pb-md-2 border-right border-grey"
+        :class="{ 'hide-sidebar': hideSidebar }"
+      >
+        <div class="my-4">
+          <div class="post-sidebar-header d-none d-md-block text-center mb-4">
+            <h2 class="post-sidebar-title h5 m-0">
+              {{ hasSingleFiche ? "La fiche de l'article" : 'Les fiches citées dans cet article' }} :
+            </h2>
+          </div>
+          <div v-if="fiches">
+            <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" />
+            <FicheThumbnail
+              v-for="(fiche, index) in fiches"
+              v-else
+              :key="fiche.id"
+              :fiche="fiche"
+              class="my-2 mx-3 mx-md-2 position-relative"
+              @click.native="viewFiche(fiche, index)"
+            />
+          </div>
         </div>
-        <div v-if="fiches">
-          <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" />
-          <FicheThumbnail
-            v-for="(fiche, index) in fiches"
-            v-else
-            :key="fiche.id"
-            :fiche="fiche"
-            class="my-2 mx-3 mx-md-2 position-relative"
-            @click.native="viewFiche(fiche, index)"
-          />
-        </div>
-      </div>
-    </nav>
-    <b-overlay :show="!post" spinner-variant="yellow">
+      </nav>
       <main role="main" class="post layout-content" :class="{ 'with-sidebar': fiches && fiches.length }">
-        <article v-if="post" :id="post.id">
+        <article v-if="!$fetchState.pending" :id="post.id">
           <header class="post-header container-fluid px-0 mb-6">
             <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
             <WpAvatar
@@ -193,14 +193,15 @@ export default {
       type: Object,
       required: true,
     },
-    fiches: {
-      type: Array,
-      required: true,
-    },
     preview: Boolean,
+  },
+  async fetch() {
+    this.fiches = await this.$store.dispatch('fiches/fetchByIds', this.post.meta.link_fiche)
   },
   data() {
     return {
+      fiches: [],
+
       comments: null,
       similarPosts: null,
 
