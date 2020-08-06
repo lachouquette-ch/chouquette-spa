@@ -181,7 +181,7 @@
           </div>
         </div>
 
-        <main id="category-main">
+        <main id="category-main" class="container">
           <div class="d-flex flex-wrap justify-content-around">
             <Fiche v-for="fiche in fiches" :key="fiche.id" :ref="`fiche-${fiche.id}`" :fiche="fiche" class="fiche m-3">
               <template v-if="map" #front-footer>
