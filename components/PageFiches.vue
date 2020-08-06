@@ -214,7 +214,7 @@
               <b-spinner v-show="fichesLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
               Plus de résultats
             </button>
-            <span v-else class="h5">
+            <span v-else-if="this.fichesTotal === 0" class="h5">
               Pas de résultat pour ta recherche <i class="far fa-surprise"></i>. Essaie de changer tes filtres.
             </span>
           </div>
