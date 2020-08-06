@@ -7,16 +7,12 @@
       :query-location="queryLocation"
       :query-search="querySearch"
       :query-criteria="queryCriteria"
-      :init-fiches="initFiches"
-      :init-fiches-total="initFichesTotal"
-      :init-fiches-pages="initFichesPages"
     />
   </div>
 </template>
 
 <script>
 import PageFiches from '~/components/PageFiches'
-import { PER_PAGE_NUMBER } from '~/constants/default'
 
 export default {
   components: { PageFiches },
@@ -38,14 +34,6 @@ export default {
         return { taxonomy: key, values: value.split(',') }
       })
 
-    const ficheResult = await store.dispatch('fiches/fetchByCategoryIds', {
-      category: queryCategory,
-      location: queryLocation,
-      search: querySearch,
-      criteria: queryCriteria,
-      per_page: PER_PAGE_NUMBER,
-    })
-
     return {
       rootCategory,
 
@@ -53,16 +41,6 @@ export default {
       queryLocation,
       querySearch,
       queryCriteria,
-
-      initFiches: ficheResult.fiches,
-      initFichesTotal: ficheResult.total,
-      initFichesPages: ficheResult.pages,
-      initFichesNextPage: 2,
-    }
-  },
-  data() {
-    return {
-      test: 'default',
     }
   },
   beforeRouteUpdate(to, from, next) {
