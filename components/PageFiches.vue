@@ -214,7 +214,7 @@
               <b-spinner v-show="fichesLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
               Plus de résultats
             </button>
-            <span v-else-if="this.fichesTotal === 0" class="h5">
+            <span v-else-if="fichesTotal === 0" class="h5">
               Pas de résultat pour ta recherche <i class="far fa-surprise"></i>. Essaie de changer tes filtres.
             </span>
           </div>
@@ -284,6 +284,22 @@ export default {
     querySearch: String,
     queryCriteria: Array,
     /* eslint-enable vue/require-default-prop */
+  },
+  async fetch() {
+    const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
+      category: this.queryCategory,
+      location: this.queryLocation,
+      search: this.querySearch,
+      criteria: this.queryCriteria,
+      per_page: PER_PAGE_NUMBER,
+    })
+
+    this.fiches = ficheResult.fiches
+    this.fichesTotal = ficheResult.total
+    this.fichesPages = ficheResult.pages
+    this.fichesNextPage++
+
+    this.loadFichesOnMap(this.fiches)
   },
   data() {
     return {
@@ -357,22 +373,6 @@ export default {
       const hasCriteria = this.formSearch.criteria.find(({ selectedValues }) => _.isEmpty(selectedValues) === false)
       return hasSearch || hasCriteria
     },
-  },
-  async fetch() {
-    const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
-      category: this.queryCategory,
-      location: this.queryLocation,
-      search: this.querySearch,
-      criteria: this.queryCriteria,
-      per_page: PER_PAGE_NUMBER,
-    })
-
-    this.fiches = ficheResult.fiches
-    this.fichesTotal = ficheResult.total
-    this.fichesPages = ficheResult.pages
-    this.fichesNextPage++
-
-    this.loadFichesOnMap(this.fiches)
   },
   async mounted() {
     // create lists
