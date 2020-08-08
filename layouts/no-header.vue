@@ -7,7 +7,7 @@
     <nuxt />
     <LayoutFooter />
     <client-only>
-      <cookie-consent>
+      <cookie-consent aria-label="Cookie Preferences" aria-live="polite">
         <template slot="message">
           <span class="text-white mx-3">
             Ici, on aime les Cookies <i class="fas fa-cookie-bite"></i>, mais pas plus qu'il n'en faut !
