@@ -1,7 +1,7 @@
 export default function ({ store, route, redirect }) {
   // sitemap
   if (route.path === '/sitemap.xml') {
-    redirect(307, `${process.env.baseUrl}/sitemap.xml`)
+    redirect(307, `${process.env.wpBaseUrl}/sitemap.xml`)
   }
 
   // yoast redirection

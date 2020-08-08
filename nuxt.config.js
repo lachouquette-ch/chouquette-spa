@@ -5,7 +5,7 @@ require('dotenv').config()
 export default {
   env: {
     baseUrl: process.env.URL || 'https://lachouquette.ch',
-    wpBaseUrl: process.env.WP_URL || 'https.//lachouquette.ch',
+    wpBaseUrl: process.env.WP_URL || 'https://wordpress.lachouquette.ch',
     recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
     mailChimpUserId: process.env.MAILCHIMP_USER_ID,
     mailChimpListId: process.env.MAILCHIMP_LIST_ID,
@@ -128,6 +128,11 @@ export default {
    ** Build configuration
    */
   build: {
+    extend(config, ctx) {
+      if (ctx.isDev) {
+        config.devtool = ctx.isClient ? 'source-map' : 'inline-source-map'
+      }
+    },
     transpile: [
       ({ isClient }) => isClient && 'query-string',
       ({ isClient }) => isClient && 'split-on-first',
