@@ -36,7 +36,7 @@
           <b-collapse id="search" v-model="isSearchVisible">
             <div class="px-3 pt-4 pb-2">
               <form>
-                <div class="form-group mb-0 mb-md-3">
+                <div v-if="categories" class="form-group mb-0 mb-md-3">
                   <label for="category" class="small mb-0 d-md-none">Sous catégorie</label>
                   <select
                     id="category"
