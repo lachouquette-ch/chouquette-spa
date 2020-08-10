@@ -129,9 +129,7 @@ export default {
    */
   build: {
     extend(config, ctx) {
-      if (ctx.isDev) {
-        config.devtool = ctx.isClient ? 'source-map' : 'inline-source-map'
-      }
+      config.devtool = ctx.isClient ? 'eval-source-map' : 'inline-source-map'
     },
     transpile: [
       ({ isClient }) => isClient && 'query-string',
