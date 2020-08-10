@@ -1,5 +1,5 @@
 <template>
-  <div class="toggle-buttons">
+  <div class="toggle-buttons" :class="{ fixed: fixed }">
     <div class="btn-group btn-group-toggle">
       <button class="btn btn-sm btn-primary" :class="{ active: !toggled }" :disabled="btn1disabled" @click="btn1action">
         <slot name="button1">
@@ -22,6 +22,10 @@ export default {
   props: {
     btn1disabled: Boolean,
     btn2disabled: Boolean,
+    fixed: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -62,6 +66,14 @@ export default {
     left: 15px;
 
     transform: none;
+  }
+}
+
+.toggle-buttons.fixed {
+  @include media-breakpoint-down(sm) {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 </style>

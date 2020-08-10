@@ -237,7 +237,13 @@
       </button>
     </div>
 
-    <ToggleButtons v-if="map" :btn2disabled="!markers.size" @btn1action="isMapShown = false" @btn2action="showMap">
+    <ToggleButtons
+      v-if="map"
+      :btn2disabled="!markers.size"
+      :fixed="isMapShown"
+      @btn1action="isMapShown = false"
+      @btn2action="showMap"
+    >
       <template #button1>
         <span class="mr-1"><i class="far fa-file-alt"></i></span>
         Fiches
