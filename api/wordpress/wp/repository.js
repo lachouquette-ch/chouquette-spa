@@ -29,6 +29,11 @@ class Repository {
     const URI = `${this.prefix}/${id}?_embed=true`
     return this.$axios.get(URI, { params: queryParams, ...config })
   }
+
+  getPreview(id, nonce) {
+    const config = { withCredentials: true, headers: { 'X-WP-Nonce': nonce } }
+    return this.getById(id, {}, config)
+  }
 }
 
 export default Repository
