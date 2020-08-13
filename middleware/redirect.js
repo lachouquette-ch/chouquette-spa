@@ -5,10 +5,8 @@ export default function ({ store, route, redirect }) {
   }
 
   // yoast redirection
-  const redirection = store
-    .dispatch('yoast/init')
-    .then((redirects) => redirects.find(({ from }) => route.path.startsWith(from)))
+  const redirection = store.state.yoast.redirects.find(({ from }) => route.path.startsWith(from))
   if (redirection) {
-    redirect(redirection.status, redirection.to)
+    return redirect(redirection.status, redirection.to)
   }
 }
