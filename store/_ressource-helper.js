@@ -36,6 +36,12 @@ const fetchById = async (ressourceRepository, mutationName, { dispatch, commit, 
   } else {
     // fetch ressource and add to store
     const ressource = await ressourceRepository.getById(id).then(({ data }) => data)
+    if (_.isEmpty(ressource)) {
+      // eslint-disable-next-line no-console
+      console.error(`Can't fetch ressource using '${ressourceRepository.constructor.name}' with id '${id}'`)
+      return null
+    }
+
     commit(mutationName, ressource)
 
     // fetch related ressources
@@ -50,6 +56,12 @@ const fetchById = async (ressourceRepository, mutationName, { dispatch, commit, 
  */
 const fetchBySlug = async (ressourceRepository, mutationName, { dispatch, commit, state }, slug) => {
   const ressource = await ressourceRepository.getBySlug(slug).then(({ data }) => data[0])
+  if (_.isEmpty(ressource)) {
+    // eslint-disable-next-line no-console
+    console.error(`Can't fetch ressource using '${ressourceRepository.constructor.name}' with slug '${slug}'`)
+    return null
+  }
+
   commit(mutationName, ressource)
 
   // fetch related ressources

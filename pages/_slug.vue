@@ -16,7 +16,12 @@ export default {
     WpPage,
     WpPost,
   },
-  async asyncData({ app, store, params, error }) {
+  async asyncData(context) {
+    const { app, store, params, route } = context
+
+    // store initialization
+    await store.dispatch('yoast/init')
+
     // first try as a page
     const page = await app.$wpAPI.wp.pages.getBySlug(params.slug).then(({ data }) => data[0])
     if (page) {
@@ -29,10 +34,9 @@ export default {
     // then as a post
     const post = await app.$wpAPI.wp.posts.getBySlug(params.slug, { _embed: true }).then(({ data }) => data[0])
 
-    // quite if not a post neither
+    // redirect if not a post neither
     if (_.isEmpty(post)) {
-      error({ statusCode: '404', message: `'${params.slug}' n'existe pas` })
-      return {}
+      await store.dispatch('yoast/redirect', { path: route.path, context })
     }
 
     return {
