@@ -16,7 +16,7 @@ export const actions = {
         return {
           from: from.replace(/\/$/, ''),
           to: to.replace(/\/$/, ''),
-          status,
+          status: parseInt(status),
         }
       })
 
