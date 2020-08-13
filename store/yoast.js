@@ -48,6 +48,7 @@ export const actions = {
       }
       /* eslint-enable indent */
     }
+    return null
   },
 
   async fetchHome({ state, commit }) {

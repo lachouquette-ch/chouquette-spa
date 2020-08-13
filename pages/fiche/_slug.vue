@@ -32,7 +32,7 @@ export default {
     this.posts = await this.$store.dispatch('posts/fetchByIds', postIds)
   },
   async asyncData(context) {
-    const { store, params, route } = context
+    const { store, params, route, error } = context
 
     // store initialization
     await store.dispatch('yoast/init')
@@ -40,6 +40,7 @@ export default {
     const fiche = await store.dispatch('fiches/fetchBySlug', params.slug)
     if (!fiche) {
       await store.dispatch('yoast/redirect', { path: route.path, context })
+      error({ statusCode: '404', message: `'${params.slug}' n'existe pas` })
     }
 
     return {

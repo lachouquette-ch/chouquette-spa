@@ -17,7 +17,7 @@ export default {
     WpPost,
   },
   async asyncData(context) {
-    const { app, store, params, route } = context
+    const { app, store, params, route, error } = context
 
     // store initialization
     await store.dispatch('yoast/init')
@@ -37,6 +37,7 @@ export default {
     // redirect if not a post neither
     if (_.isEmpty(post)) {
       await store.dispatch('yoast/redirect', { path: route.path, context })
+      error({ statusCode: '404', message: `'${params.slug}' n'existe pas` })
     }
 
     return {
