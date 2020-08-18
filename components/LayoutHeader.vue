@@ -137,7 +137,7 @@ export default {
   data() {
     return {
       hoverCategory: null,
-      baseURL: process.env.wpBaseUrl,
+      baseURL: this.$config.wpBaseURL,
       searchText: '',
     }
   },

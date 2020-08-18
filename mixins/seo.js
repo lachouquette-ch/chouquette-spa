@@ -1,7 +1,7 @@
 export default {
   computed: {
     currentURL() {
-      return `${process.env.baseUrl}${this.$route.fullPath}`
+      return `${this.$config.baseURL}${this.$route.fullPath}`
     },
   },
   methods: {
@@ -37,8 +37,8 @@ export default {
         '@context': 'http://www.schema.org',
         '@type': 'Organization',
         name: 'La Chouquette',
-        url: process.env.baseUrl,
-        logo: `${process.env.baseUrl}/logo.png`,
+        url: this.$config.baseURL,
+        logo: `${this.$config.baseURL}/logo.png`,
         foundingDate: '2014',
         founders: [
           {
@@ -63,11 +63,11 @@ export default {
         '@context': 'http://schema.org',
         '@type': 'WebSite',
         name: 'La Chouquette',
-        url: process.env.baseUrl,
+        url: this.$config.baseURL,
         sameAs: ['https://www.facebook.com/lachouquettelausanne', 'https://www.instagram.com/lachouquette.ch/?hl=fr'],
         potentialAction: {
           '@type': 'SearchAction',
-          target: `${process.env.baseUrl}/search/{search_term}`,
+          target: `${this.$config.baseURL}/search/{search_term}`,
           'query-input': 'required name=search_term',
         },
       }

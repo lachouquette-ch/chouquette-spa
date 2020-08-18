@@ -1,9 +1,9 @@
 const GoogleMapsApiLoader = require('google-maps-api-loader')
 
-export default function (context, inject) {
+export default function ({ $config: { googleMapsKey } }, inject) {
   // Create google maps
   const googleMaps = GoogleMapsApiLoader({
-    apiKey: process.env.googleMapsKey,
+    apiKey: googleMapsKey,
   })
   inject('googleMaps', googleMaps)
 }

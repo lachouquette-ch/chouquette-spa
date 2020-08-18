@@ -140,7 +140,7 @@ export default {
     return {
       topPosts: null,
 
-      baseURL: process.env.wpBaseUrl,
+      baseURL: this.$config.wpBaseURL,
 
       swiperOptions: {
         ...DEFAULT,
@@ -176,7 +176,7 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: `${process.env.baseUrl}/logo.png`,
+          content: `${this.$config.baseURL}/logo.png`,
         },
       ],
       script: [this.jsonLDScript()],

@@ -5,7 +5,7 @@
         <nuxt-link to="/" title="Page d'accueil">
           <img
             class="mx-auto"
-            :src="`${baseURL}/wp-content/uploads/2019/03/logo_white-300x276.png`"
+            :src="`${$config.baseURL}/wp-content/uploads/2019/03/logo_white-300x276.png`"
             alt="Logo Chouquette"
           />
         </nuxt-link>
@@ -38,7 +38,7 @@ import moment from 'moment'
 export default {
   data() {
     return {
-      baseURL: process.env.wpBaseUrl,
+      baseURL: this.$config.wpBaseURL,
     }
   },
   computed: {

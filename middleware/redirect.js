@@ -1,9 +1,14 @@
 export default function (context) {
-  const { store, route, redirect } = context
+  const {
+    store,
+    route,
+    redirect,
+    $config: { wpBaseURL },
+  } = context
 
   // sitemap
   if (route.path === '/sitemap.xml') {
-    redirect(307, `${process.env.wpBaseUrl}/sitemap.xml`)
+    redirect(307, `${wpBaseURL}/sitemap.xml`)
   }
 
   // yoast global redirection

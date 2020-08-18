@@ -1,12 +1,12 @@
 import webpack from 'webpack'
 
-require('dotenv').config()
-
 export default {
   env: {
-    baseUrl: process.env.URL || 'https://lachouquette.ch',
-    wpBaseUrl: process.env.WP_URL || 'https://wordpress.lachouquette.ch',
     recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
+  },
+  publicRuntimeConfig: {
+    baseURL: process.env.URL || 'https://lachouquette.ch',
+    wpBaseURL: process.env.WP_URL || 'https://wordpress.lachouquette.ch',
     mailChimpUserId: process.env.MAILCHIMP_USER_ID,
     mailChimpListId: process.env.MAILCHIMP_LIST_ID,
     googleMapsKey: process.env.GOOGLE_MAPS_KEY,

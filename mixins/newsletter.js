@@ -1,8 +1,8 @@
 export default {
   data() {
     return {
-      mailChimpUserId: process.env.mailChimpUserId,
-      mailChimpListId: process.env.mailChimpListId,
+      mailChimpUserId: this.$config.mailChimpUserId,
+      mailChimpListId: this.$config.mailChimpListId,
     }
   },
   methods: {

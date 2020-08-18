@@ -1,9 +1,9 @@
 import { wordpressEndpointFactory } from '~/api/wordpress/wordpress'
 
-export default function ({ $axios }, inject) {
+export default function ({ $axios, $config: { wpBaseURL } }, inject) {
   // Create a custom axios instance
   const wpAxios = $axios.create()
-  wpAxios.setBaseURL(`${process.env.wpBaseUrl}/wp-json`)
+  wpAxios.setBaseURL(`${wpBaseURL}/wp-json`)
   // Create wordpress endpoints
   const wpEnpoints = wordpressEndpointFactory(wpAxios)
 
