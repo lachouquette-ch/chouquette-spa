@@ -68,13 +68,21 @@
 
     <div id="homeContent" class="home-content py-5">
       <div class="home-latest container">
-        <div class="text-center">
+        <div v-if="!$fetchState.error" class="text-center">
           <h2 class="mb-4">Nos derniers articles</h2>
         </div>
-        <main v-if="latestPosts" class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
-          <nuxt-link v-for="post in latestPosts" :key="post.id" :to="{ path: `/${post.slug}` }" class="post-card">
-            <PostCard :post="post" class="mx-auto" />
-          </nuxt-link>
+        <main class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
+          <template v-if="$fetchState.pending">
+            <PostCardPlaceholder v-for="p in 4" :key="p" class="post-card" />
+          </template>
+          <template v-else-if="$fetchState.error">
+            <p>Impossible d'afficher les derniers articles <i class="far fa-frown"></i></p>
+          </template>
+          <template v-else>
+            <nuxt-link v-for="post in latestPosts" :key="post.id" :to="{ path: `/${post.slug}` }" class="post-card">
+              <PostCard :post="post" class="mx-auto" />
+            </nuxt-link>
+          </template>
         </main>
       </div>
 
@@ -85,15 +93,21 @@
 
       <div class="home-tops container">
         <div class="text-center">
-          <h2 class="mb-4">Nos derniers tops...</h2>
+          <p v-if="$fetchState.error">Impossible d'afficher les derniers tops <i class="far fa-frown"></i></p>
+          <h2 v-else class="mb-4">Nos derniers tops...</h2>
         </div>
-        <div v-show="topPosts" v-swiper="swiperOptions" class="swiper px-md-5">
+        <div v-if="!$fetchState.error" v-swiper="swiperOptions" class="swiper px-md-5">
           <div class="swiper-wrapper pt-3 pt-md-0">
-            <div v-for="post in topPosts" :key="post.id" class="swiper-slide">
-              <nuxt-link :to="{ path: `/${post.slug}` }">
-                <PostCard :post="post" class="mx-auto" />
-              </nuxt-link>
-            </div>
+            <template v-if="$fetchState.pending">
+              <PostCardPlaceholder v-for="p in 4" :key="p" class="swiper-slide" />
+            </template>
+            <template v-else>
+              <div v-for="post in topPosts" :key="post.id" class="swiper-slide">
+                <nuxt-link :to="{ path: `/${post.slug}` }">
+                  <PostCard :post="post" class="mx-auto" />
+                </nuxt-link>
+              </div>
+            </template>
           </div>
           <div slot="pagination" class="swiper-pagination d-block d-md-none" />
           <div slot="button-prev" class="swiper-button-prev d-none d-md-block"></div>
@@ -113,6 +127,7 @@ import WpMediaCategory from '~/components/WpMediaCategory'
 import PostCard from '~/components/PostCard'
 import Search from '~/components/Search'
 import Newsletter from '~/components/Newsletter'
+import PostCardPlaceholder from '~/components/PostCardPlaceholder'
 
 import { AUTO_PLAY, DEFAULT, RESPONSIVE } from '~/constants/swiper'
 import seo from '~/mixins/seo'
@@ -121,24 +136,27 @@ const LATEST_POSTS_NUM = 6
 const TOP_POSTS_NUM = 8
 
 export default {
-  components: { PostCard, WpMediaCategory, Search, Newsletter },
+  components: { PostCard, WpMediaCategory, Search, Newsletter, PostCardPlaceholder },
   directives: { swiper: SwiperDirective },
   layout: 'no-header',
   mixins: [seo],
-  async asyncData({ store }) {
-    const [latestPosts, yoast] = await Promise.all([
-      store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
-      store.dispatch('yoast/fetchHome'),
+  async fetch() {
+    ;[this.latestPosts, this.topPosts] = await Promise.all([
+      this.$store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
+      this.$store.dispatch('posts/fetchByTagSlug', { slug: 'tops', number: TOP_POSTS_NUM }),
     ])
+  },
+  async asyncData({ store }) {
+    const yoast = await store.dispatch('yoast/fetchHome')
 
     return {
-      latestPosts,
       yoast,
     }
   },
   data() {
     return {
-      topPosts: null,
+      latestPosts: [],
+      topPosts: [],
 
       baseURL: this.$config.wpBaseURL,
 
@@ -160,11 +178,6 @@ export default {
     // execute anchor fixing
     const linkAnchorFixedHeader = require('~/assets/scripts/link-anchor-fixed-header')
     linkAnchorFixedHeader(70)
-  },
-  created() {
-    this.$store.dispatch('posts/fetchByTagSlug', { slug: 'tops', number: TOP_POSTS_NUM }).then((posts) => {
-      this.topPosts = posts
-    })
   },
   head() {
     return {
