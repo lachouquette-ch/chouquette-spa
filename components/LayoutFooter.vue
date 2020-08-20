@@ -5,7 +5,7 @@
         <nuxt-link to="/" title="Page d'accueil">
           <img
             class="mx-auto"
-            :src="`${$config.baseURL}/wp-content/uploads/2019/03/logo_white-300x276.png`"
+            :src="`${$config.wpBaseURL}/wp-content/uploads/2019/03/logo_white-300x276.png`"
             alt="Logo Chouquette"
           />
         </nuxt-link>
@@ -36,11 +36,6 @@ import { mapState } from 'vuex'
 import moment from 'moment'
 
 export default {
-  data() {
-    return {
-      baseURL: this.$config.wpBaseURL,
-    }
-  },
   computed: {
     ...mapState('menus', {
       pages: 'footerPages',

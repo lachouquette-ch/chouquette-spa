@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import WpMedia from './WpMedia'
 
 // as defined in ACF for Category
@@ -27,6 +28,11 @@ export default {
       media: null,
     }
   },
+  computed: {
+    ...mapState('media', {
+      mediaList: 'all',
+    }),
+  },
   watch: {
     color(newColor) {
       if (!isColorValid) throw new TypeError(`${newColor} is not a valid color`)
@@ -39,7 +45,7 @@ export default {
   methods: {
     initMedia() {
       const mediaId = this.category.logos[`logo_${this.color}`]
-      this.media = this.$store.state.media.all[mediaId]
+      this.media = this.mediaList[mediaId]
     },
   },
 }
