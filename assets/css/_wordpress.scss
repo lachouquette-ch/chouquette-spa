@@ -9,7 +9,7 @@ span.target {
   position: relative;
   visibility: hidden;
 
-  top: -1 * ($header-height + $covid-banner-height + 5px);
+  top: -1 * ($header-height + $header-banner-height + 5px);
 }
 
 .gutenberg-content {

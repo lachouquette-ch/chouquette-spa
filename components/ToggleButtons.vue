@@ -61,7 +61,7 @@ export default {
 
   @include media-breakpoint-up(md) {
     position: fixed;
-    top: $header-height + $covid-banner-height + 15px;
+    top: $header-height + $header-banner-height + 15px;
     bottom: auto;
     left: 15px;
 

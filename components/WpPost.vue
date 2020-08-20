@@ -346,7 +346,7 @@ export default {
 
 .post-sidebar {
   position: fixed;
-  top: $header-height + $covid-banner-height;
+  top: $header-height + $header-banner-height;
   bottom: 0;
   left: 0;
   width: 100%;

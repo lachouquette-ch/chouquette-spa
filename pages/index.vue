@@ -271,7 +271,7 @@ h3.home-header-menu-description {
 
   font-size: 2rem;
   position: absolute;
-  bottom: calc(20px + #{$covid-banner-height});
+  bottom: calc(20px + #{$header-banner-height});
   right: 0;
   left: 0;
   margin: auto;
@@ -312,7 +312,7 @@ h3.home-header-menu-description {
   position: relative;
   visibility: hidden;
 
-  top: -1 * $covid-banner-height;
+  top: -1 * $header-banner-height;
 }
 
 .home-tops {

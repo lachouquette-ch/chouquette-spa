@@ -1,9 +1,7 @@
 <template>
   <div>
     <LayoutAlert />
-    <LayoutHeaderCovid>
-      Page spéciale COVID-19
-    </LayoutHeaderCovid>
+    <LayoutBanner />
     <LayoutHeader />
     <nuxt />
     <LayoutFooter />
@@ -25,13 +23,13 @@
 
 <script>
 import CookieConsent from 'vue-cookieconsent-component'
-import LayoutHeaderCovid from '../components/LayoutHeaderCovid'
+import LayoutBanner from '../components/LayoutBanner'
 import LayoutHeader from '../components/LayoutHeader'
 import LayoutFooter from '../components/LayoutFooter'
 import LayoutAlert from '../components/LayoutAlert'
 
 export default {
-  components: { LayoutAlert, LayoutHeader, LayoutFooter, LayoutHeaderCovid, CookieConsent },
+  components: { LayoutAlert, LayoutHeader, LayoutFooter, LayoutBanner, CookieConsent },
   middleware({ store }) {
     if (process.client) {
       store.dispatch('nuxtServerInit')

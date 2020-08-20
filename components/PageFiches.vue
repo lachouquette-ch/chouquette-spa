@@ -751,7 +751,7 @@ export default {
   right: 0;
   width: 100%;
   z-index: $zindex-fixed + 1;
-  height: calc(100% - #{$header-height} - #{$covid-banner-height});
+  height: calc(100% - #{$header-height} - #{$header-banner-height});
 }
 
 .map-load-more {
