@@ -59,6 +59,16 @@ export const actions = {
     return { fiches, total: parseInt(headers['x-wp-total']), pages: parseInt(headers['x-wp-totalpages']) }
   },
 
+  async fetchPreview({ dispatch, commit }, { id, nonce }) {
+    const config = { withCredentials: true, headers: { 'X-WP-Nonce': nonce } }
+    const fiche = await this.$wpAPI.wp.fiches.getById(id, {}, config).then(({ data }) => data)
+
+    await dispatch('fetchRelatedRessources', [fiche])
+
+    commit('SET_FICHE', fiche)
+    return fiche
+  },
+
   async fetchByCategoryIds(
     { dispatch, commit },
     // eslint-disable-next-line camelcase

@@ -71,6 +71,16 @@ export const actions = {
     return posts
   },
 
+  async fetchPreview({ dispatch, commit }, { id, nonce }) {
+    const config = { withCredentials: true, headers: { 'X-WP-Nonce': nonce } }
+    const post = await this.$wpAPI.wp.posts.getById(id, { _fields: null }, config).then(({ data }) => data)
+
+    await dispatch('fetchRelatedRessources', [post])
+
+    commit('SET_POST', post)
+    return post
+  },
+
   async fetchByIds(context, ids) {
     return await ressourceActions.fetchByIds(this.$wpAPI.wp.posts, 'SET_POSTS', context, ids)
   },

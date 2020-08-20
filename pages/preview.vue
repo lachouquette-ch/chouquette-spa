@@ -40,14 +40,17 @@ export default {
         .then(({ data }) => data)
       this.pageType = 'page'
     } else if (this.$route.query.type === 'post') {
-      this.post = await this.$wpAPI.wp.posts
-        .getPreview(this.$route.query.id, this.$route.query.nonce)
-        .then(({ data }) => data)
+      const post = await this.$store.dispatch('posts/fetchPreview', {
+        id: this.$route.query.id,
+        nonce: this.$route.query.nonce,
+      })
+      this.post = post
       this.pageType = 'post'
     } else if (this.$route.query.type === 'fiche') {
-      this.fiche = await this.$wpAPI.wp.fiches
-        .getPreview(this.$route.query.id, this.$route.query.nonce)
-        .then(({ data }) => data)
+      this.fiche = await this.$store.dispatch('fiches/fetchPreview', {
+        id: this.$route.query.id,
+        nonce: this.$route.query.nonce,
+      })
       this.pageType = 'fiche'
     } else {
       this.$nuxt.error({ statusCode: 404, message: 'Could not preview this type of content' })

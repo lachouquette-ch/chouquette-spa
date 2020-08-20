@@ -23,17 +23,12 @@ class PostRepository extends Repository {
     return super.getByIds(ids, queryParams)
   }
 
-  getById(id, queryParams = {}) {
+  getById(id, queryParams = {}, config = {}) {
     queryParams = {
       _fields: PostRepository.DEFAULT_FIELDS.join(','),
       ...queryParams,
     }
-    return super.getById(id, queryParams)
-  }
-
-  getPreview(id, nonce) {
-    const config = { withCredentials: true, headers: { 'X-WP-Nonce': nonce } }
-    return super.getById(id, { _embed: true }, config)
+    return super.getById(id, queryParams, config)
   }
 }
 
