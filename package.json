@@ -28,8 +28,10 @@
     "simple-load-script": "^1.0.2",
     "swiper": "^5.4.5",
     "vue-awesome-swiper": "^4.1.1",
+    "vue-content-placeholders": "^0.2.1",
     "vue-cookieconsent-component": "^1.2.0",
     "vue-mailchimp-subscribe": "^1.1.0",
+    "vue-observe-visibility": "^0.4.6",
     "vue-recaptcha-v3": "^1.9.0",
     "vue-scrollto": "^2.18.1",
     "vuelidate": "^0.7.5"

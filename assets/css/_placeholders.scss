@@ -1,0 +1,12 @@
+.placeholder-post-card {
+  @extend .card;
+
+  width: 300px;
+  height: 300px;
+  padding: 10px;
+  margin: 30px;
+
+  .vue-content-placeholders-img {
+    height: 75%;
+  }
+}
