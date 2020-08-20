@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import WpMediaCategory from './WpMediaCategory'
 import WpMedia from '~/components/WpMedia'
 
@@ -32,9 +33,15 @@ export default {
       featuredMedia: null,
     }
   },
+  computed: {
+    ...mapState({
+      categories: (state) => state.categories.all,
+      media: (state) => state.media.all,
+    }),
+  },
   created() {
-    this.topCategory = this.$store.state.categories.all[this.post.top_categories[0]]
-    if (this.post.featured_media) this.featuredMedia = this.$store.state.media.all[this.post.featured_media]
+    this.topCategory = this.categories[this.post.top_categories[0]]
+    if (this.post.featured_media) this.featuredMedia = this.media[this.post.featured_media]
   },
 }
 </script>

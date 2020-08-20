@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import WPMedia from './WpMedia'
 
 export default {
@@ -35,8 +36,13 @@ export default {
       featuredMedia: null,
     }
   },
+  computed: {
+    ...mapState('media', {
+      media: 'all',
+    }),
+  },
   mounted() {
-    this.featuredMedia = this.$store.state.media.all[this.fiche.featured_media]
+    this.featuredMedia = this.media[this.fiche.featured_media]
   },
 }
 </script>

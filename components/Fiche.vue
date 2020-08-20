@@ -266,6 +266,7 @@ import { email, minLength, required } from 'vuelidate/lib/validators'
 import moment from 'moment'
 import _ from 'lodash'
 
+import { mapState } from 'vuex'
 import WpMedia from './WpMedia'
 import { MAP_OPTIONS } from '~/constants/mapSettings'
 import modal from '~/mixins/modal'
@@ -316,12 +317,16 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      media: (state) => state.media.all,
+      fichesCriteria: (state) => state.fiches.criteria,
+    }),
     // property helper
     featuredMedia() {
-      return this.$store.state.media.all[this.fiche.featured_media]
+      return this.media[this.fiche.featured_media]
     },
     criteria() {
-      return this.$store.state.fiches.criteria[this.fiche.id]
+      return this.fichesCriteria[this.fiche.id]
     },
     latestPost() {
       return _.isEmpty(this.fiche.linked_posts) ? null : this.fiche.linked_posts[0]

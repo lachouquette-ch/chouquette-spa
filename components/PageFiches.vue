@@ -347,16 +347,13 @@ export default {
     }
   },
   computed: {
-    ...mapState('locations', {
-      locationAll: 'all',
-      locationHierarchy: 'hierarchy',
-    }),
-    ...mapState('categories', {
-      categoryAll: 'all',
-      categoryHierarchy: 'hierarchy',
-    }),
-    ...mapState('menus', {
-      categoryMenu: 'headerCategories',
+    ...mapState({
+      media: (state) => state.media.all,
+      locationAll: (state) => state.locations.all,
+      locationHierarchy: (state) => state.locations.hierarchy,
+      categoryAll: (state) => state.categories.all,
+      categoryHierarchy: (state) => state.categories.hierarchy,
+      categoryMenu: (state) => state.menus.headerCategories,
     }),
     title() {
       return this.rootCategory ? this.rootCategory.name : this.rootLocation.name
@@ -678,7 +675,7 @@ export default {
         }
 
         // build infoWindow content
-        const featuredMedia = this.$store.state.media.all[fiche.featured_media]
+        const featuredMedia = this.media[fiche.featured_media]
         const ficheInfoWindow = new FicheInfoWindowClass({
           propsData: {
             fiche,

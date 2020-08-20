@@ -151,11 +151,9 @@ export default {
   },
   computed: {
     ...mapState({
-      wpName: 'name',
-      wpDescription: 'description',
-    }),
-    ...mapState('menus', {
-      categories: 'headerCategories',
+      wpName: (state) => state.name,
+      wpDescription: (state) => state.description,
+      categories: (state) => state.menus.headerCategories,
     }),
   },
   mounted() {
