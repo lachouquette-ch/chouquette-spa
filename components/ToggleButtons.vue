@@ -22,14 +22,15 @@ export default {
   props: {
     btn1disabled: Boolean,
     btn2disabled: Boolean,
-    fixed: {
+    fixed: Boolean,
+    reversed: {
       type: Boolean,
       default: false,
     },
   },
   data() {
     return {
-      toggled: false,
+      toggled: this.reversed,
     }
   },
   methods: {
