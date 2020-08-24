@@ -1,11 +1,13 @@
 <template>
   <WpPage :page="page">
     <template #footer>
-      <template v-if="$fetchState.pending">
-        <b-spinner variant="yellow" label="chargement" class="text-center my-3"></b-spinner>
-      </template>
-      <template v-else>
-        <div class="my-3">
+      <div class="my-3">
+        <template v-if="true">
+          <div class="text-center">
+            <b-spinner variant="yellow" label="chargement"></b-spinner>
+          </div>
+        </template>
+        <template v-else>
           <div class="d-flex flex-wrap justify-content-around">
             <div v-for="member in team" :key="member.id" class="card mr-3 mb-4">
               <WpAvatar
@@ -22,8 +24,8 @@
               </div>
             </div>
           </div>
-        </div>
-      </template>
+        </template>
+      </div>
     </template>
   </WpPage>
 </template>
