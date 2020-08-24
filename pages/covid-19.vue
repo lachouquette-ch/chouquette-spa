@@ -2,8 +2,11 @@
   <WpPage :page="page">
     <template #footer>
       <h2 class="text-center my-3">Le kit du bon confineur</h2>
-      <div v-if="posts" class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
-        <nuxt-link v-for="post in posts" :key="post.id" :to="{ path: `/${post.slug}` }" class="post-card">
+      <div class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
+        <template v-if="$fetchState.pending">
+          <PostCardPlaceholder v-for="p in 4" :key="p" class="post-card" />
+        </template>
+        <nuxt-link v-for="post in posts" v-else :key="post.id" :to="{ path: `/${post.slug}` }" class="post-card">
           <PostCard :post="post" class="mx-auto" />
         </nuxt-link>
       </div>
@@ -14,21 +17,27 @@
 <script>
 import WpPage from '~/components/WpPage'
 import PostCard from '~/components/PostCard'
+import PostCardPlaceholder from '~/components/PostCardPlaceholder'
 
 export default {
   components: {
     WpPage,
     PostCard,
+    PostCardPlaceholder,
   },
-  async asyncData({ app, store }) {
-    const [page, posts] = await Promise.all([
-      app.$wpAPI.wp.pages.getBySlug('covid-19').then(({ data }) => data[0]),
-      store.dispatch('posts/fetchByTagSlug', { slug: 'covid-19' }),
-    ])
+  async fetch() {
+    this.posts = await this.$store.dispatch('posts/fetchByTagSlug', { slug: 'covid-19' })
+  },
+  async asyncData({ app }) {
+    const page = await app.$wpAPI.wp.pages.getBySlug('covid-19').then(({ data }) => data[0])
 
     return {
       page,
-      posts,
+    }
+  },
+  data() {
+    return {
+      posts: [],
     }
   },
 }
