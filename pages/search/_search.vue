@@ -13,77 +13,86 @@
       <Search ref="searchBox" button-class="w-100" filter-col="col-12" />
     </b-modal>
     <div class="layout-content d-flex flex-column">
-      <b-overlay :show="$fetchState.pending" opacity="1" blur="none" spinner-variant="yellow" class="flex-grow-1">
-        <template #overlay>
-          <div class="text-center">
-            <h2 class="mb-3">On cherche pour toi... <i class="fas fa-binoculars"></i></h2>
-            <b-spinner variant="yellow" label="chargement" />
+      <div class="text-center mt-5 mb-2">
+        <template v-if="$fetchState.pending">
+          <h2>On cherche pour toi... <i class="fas fa-binoculars"></i></h2>
+        </template>
+        <template v-else-if="fiches || posts">
+          <h1>{{ totalResultCount }} résultat(s) pour "{{ search }}"</h1>
+          <div v-if="tooManyResultats">
+            C'est beaucoup ! <a v-b-modal.searchModal href="" @click.prevent>Affine ta recherche</a>
           </div>
         </template>
-
-        <template>
-          <div class="search-results container-fluid">
-            <div v-if="fiches || posts" class="text-center mt-5">
-              <h1>{{ totalResultCount }} résultat(s) pour "{{ search }}"</h1>
-              <div v-if="tooManyResultats">
-                C'est beaucoup ! <a v-b-modal.searchModal href="" @click.prevent>Affine ta recherche</a>
-              </div>
-            </div>
-            <div class="my-md-4">
-              <div v-if="!!fiches.length" v-show="!showPosts">
-                <div class="d-flex flex-wrap justify-content-around">
-                  <Fiche v-for="fiche in fiches" :key="fiche.id" :fiche="fiche" class="m-3" />
-                </div>
-                <button
-                  v-if="hasMoreFiches"
-                  class="btn btn-outline-secondary d-block my-3 mx-auto w-50"
-                  :disabled="fichesLoading"
-                  @click.prevent="fetchMoreFiches"
-                >
-                  <b-spinner v-show="fichesLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
-                  Plus de résultats
-                </button>
-              </div>
-              <div v-if="!!posts.length" v-show="showPosts">
-                <div class="d-flex flex-wrap justify-content-around">
-                  <nuxt-link v-for="post in posts" :key="post.id" :to="{ path: `/${post.slug}` }" class="m-3">
-                    <PostCard :post="post" class="mx-auto" />
-                  </nuxt-link>
-                </div>
-                <button
-                  v-if="hasMorePosts"
-                  class="btn btn-outline-secondary d-block my-3 mx-auto w-50"
-                  :disabled="postsLoading"
-                  @click.prevent="fetchMorePosts"
-                >
-                  <b-spinner v-show="postsLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
-                  Plus de résultats
-                </button>
-              </div>
-
-              <ToggleButtons
-                v-show="!$fetchState.pending"
-                :btn1disabled="!fiches.length"
-                :btn2disabled="!posts.length"
-                :reversed="false"
-                @btn1action="showPosts = false"
-                @btn2action="showPosts = true"
-              >
-                <template #button1>
-                  <span class="mx-1"><i class="far fa-file-alt"></i></span>
-                  Fiches<span v-if="fichesTotal" class="d-none d-md-inline"> ({{ fichesTotal }})</span>
-                </template>
-                <template #button2>
-                  <span class="mr-1"><i class="far fa-newspaper"></i></span>
-                  Articles<span v-if="postsTotal" class="d-none d-md-inline"> ({{ postsTotal }})</span>
-                </template>
-              </ToggleButtons>
-
-              <ScrollTop />
-            </div>
-          </div>
+        <template v-else>
+          <h2>On a rien trouvé, désolé...</h2>
         </template>
-      </b-overlay>
+      </div>
+
+      <div class="search-results container-fluid">
+        <div class="my-md-4">
+          <div v-show="!showPosts">
+            <div class="d-flex flex-wrap justify-content-around">
+              <template v-if="!!fiches.length">
+                <Fiche v-for="fiche in fiches" :key="fiche.id" :fiche="fiche" class="m-3" />
+              </template>
+              <template v-if="$fetchState.pending || fichesLoading">
+                <FichePlaceholder v-for="f in 4" :key="f" class="m-3" />
+              </template>
+            </div>
+            <button
+              v-if="hasMoreFiches"
+              class="btn btn-outline-secondary d-block my-3 mx-auto w-50"
+              :disabled="fichesLoading"
+              @click.prevent="fetchMoreFiches"
+            >
+              <b-spinner v-show="fichesLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
+              Plus de résultats
+            </button>
+          </div>
+          <div v-show="showPosts">
+            <div class="d-flex flex-wrap justify-content-around">
+              <template v-if="!!posts.length">
+                <nuxt-link v-for="post in posts" :key="post.id" :to="{ path: `/${post.slug}` }" class="m-3">
+                  <PostCard :post="post" class="mx-auto" />
+                </nuxt-link>
+              </template>
+              <template v-if="$fetchState.pending || postsLoading">
+                <PostCardPlaceholder v-for="p in 4" :key="p" class="m-3" />
+              </template>
+            </div>
+            <button
+              v-if="hasMorePosts"
+              class="btn btn-outline-secondary d-block my-3 mx-auto w-50"
+              :disabled="postsLoading"
+              @click.prevent="fetchMorePosts"
+            >
+              <b-spinner v-show="postsLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
+              Plus de résultats
+            </button>
+          </div>
+
+          <ToggleButtons
+            v-show="!$fetchState.pending"
+            :btn1disabled="!fiches.length"
+            :btn2disabled="!posts.length"
+            :reversed="false"
+            @btn1action="showPosts = false"
+            @btn2action="showPosts = true"
+          >
+            <template #button1>
+              <span class="mx-1"><i class="far fa-file-alt"></i></span>
+              Fiches<span v-if="fichesTotal" class="d-none d-md-inline"> ({{ fichesTotal }})</span>
+            </template>
+            <template #button2>
+              <span class="mr-1"><i class="far fa-newspaper"></i></span>
+              Articles<span v-if="postsTotal" class="d-none d-md-inline"> ({{ postsTotal }})</span>
+            </template>
+          </ToggleButtons>
+
+          <ScrollTop />
+        </div>
+      </div>
+
       <Newsletter />
     </div>
   </div>
@@ -97,9 +106,11 @@ import Search from '~/components/Search'
 import Newsletter from '~/components/Newsletter'
 import ToggleButtons from '~/components/ToggleButtons'
 import ScrollTop from '~/components/ScrollTop'
+import FichePlaceholder from '~/components/FichePlaceholder'
+import PostCardPlaceholder from '~/components/PostCardPlaceholder'
 
 export default {
-  components: { Newsletter, PostCard, Fiche, Search, ToggleButtons, ScrollTop },
+  components: { Newsletter, PostCard, Fiche, Search, ToggleButtons, ScrollTop, FichePlaceholder, PostCardPlaceholder },
   directives: { swiper: SwiperDirective },
   async fetch() {
     await Promise.all([this.fetchMorePosts(), this.fetchMoreFiches()])
