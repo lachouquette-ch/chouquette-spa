@@ -33,26 +33,29 @@
           <div v-show="!showPosts">
             <div class="d-flex flex-wrap justify-content-around">
               <template v-if="!!fiches.length">
-                <Fiche v-for="fiche in fiches" :key="fiche.id" :fiche="fiche" class="m-3" />
+                <Fiche
+                  v-for="(fiche, i) in fiches"
+                  :key="fiche.id"
+                  v-observe-visibility="i === fiches.length - 1 ? lazyLoadFiches : false"
+                  :fiche="fiche"
+                  class="m-3"
+                />
               </template>
               <template v-if="$fetchState.pending || fichesLoading">
                 <FichePlaceholder v-for="f in 4" :key="f" class="m-3" />
               </template>
             </div>
-            <button
-              v-if="hasMoreFiches"
-              class="btn btn-outline-secondary d-block my-3 mx-auto w-50"
-              :disabled="fichesLoading"
-              @click.prevent="fetchMoreFiches"
-            >
-              <b-spinner v-show="fichesLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
-              Plus de résultats
-            </button>
           </div>
           <div v-show="showPosts">
             <div class="d-flex flex-wrap justify-content-around">
               <template v-if="!!posts.length">
-                <nuxt-link v-for="post in posts" :key="post.id" :to="{ path: `/${post.slug}` }" class="m-3">
+                <nuxt-link
+                  v-for="(post, i) in posts"
+                  :key="post.id"
+                  v-observe-visibility="i === posts.length - 1 ? lazyLoadPosts : false"
+                  :to="{ path: `/${post.slug}` }"
+                  class="m-3"
+                >
                   <PostCard :post="post" class="mx-auto" />
                 </nuxt-link>
               </template>
@@ -60,15 +63,6 @@
                 <PostCardPlaceholder v-for="p in 4" :key="p" class="m-3" />
               </template>
             </div>
-            <button
-              v-if="hasMorePosts"
-              class="btn btn-outline-secondary d-block my-3 mx-auto w-50"
-              :disabled="postsLoading"
-              @click.prevent="fetchMorePosts"
-            >
-              <b-spinner v-show="postsLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
-              Plus de résultats
-            </button>
           </div>
 
           <ToggleButtons
@@ -178,6 +172,13 @@ export default {
         this.fichesLoading = false
       }
     },
+    lazyLoadFiches(isVisible) {
+      if (isVisible) {
+        if (this.hasMoreFiches) {
+          this.fetchMoreFiches()
+        }
+      }
+    },
     async fetchMorePosts() {
       // stop if last page
       if (!this.hasMorePosts) {
@@ -197,6 +198,13 @@ export default {
         this.postsPages = postResult.pages
       } finally {
         this.postsLoading = false
+      }
+    },
+    lazyLoadPosts(isVisible) {
+      if (isVisible) {
+        if (this.hasMorePosts) {
+          this.fetchMorePosts()
+        }
       }
     },
     initSearch() {
