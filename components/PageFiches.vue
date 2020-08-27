@@ -182,44 +182,30 @@
         </div>
       </div>
 
-      <b-overlay
-        :show="$fetchState.pending || loading"
-        variant="white"
-        opacity="1"
-        z-index="1030"
-        spinner-variant="yellow"
-      >
-        <main id="category-main" class="container" style="min-height: 50vh;">
-          <div class="d-flex flex-wrap justify-content-around">
-            <Fiche v-for="fiche in fiches" :key="fiche.id" :ref="`fiche-${fiche.id}`" :fiche="fiche" class="fiche m-3">
-              <template v-if="map" #front-footer>
-                <a
-                  href=""
-                  title="Voir sur la carte"
-                  class="btn btn-sm btn-outline-secondary"
-                  @click.prevent="gotoMarker(fiche)"
-                >
-                  <span class="mx-1"><i class="fas fa-map-marker-alt"></i></span>
-                </a>
-              </template>
-            </Fiche>
-          </div>
-          <div class="d-block text-center">
-            <button
-              v-if="fiches.length"
-              class="btn btn-outline-secondary my-3 w-50"
-              :disabled="fichesLoading || !hasMoreFiches"
-              @click="fetchMoreFiches"
-            >
-              <b-spinner v-show="fichesLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
-              Plus de résultats
-            </button>
-            <span v-else-if="fichesTotal === 0" class="h5">
+      <main id="category-main" class="container">
+        <div class="d-flex flex-wrap justify-content-around">
+          <Fiche v-for="fiche in fiches" :key="fiche.id" :ref="`fiche-${fiche.id}`" :fiche="fiche" class="fiche m-3">
+            <template v-if="map" #front-footer>
+              <a
+                href=""
+                title="Voir sur la carte"
+                class="btn btn-sm btn-outline-secondary"
+                @click.prevent="gotoMarker(fiche)"
+              >
+                <span class="mx-1"><i class="fas fa-map-marker-alt"></i></span>
+              </a>
+            </template>
+          </Fiche>
+          <template v-if="$fetchState.pending">
+            <FichePlaceholder v-for="f in 4" :key="f" class="fiche m-3" />
+          </template>
+          <template v-else-if="!fichesTotal">
+            <span class="h5">
               Pas de résultat pour ta recherche <i class="far fa-surprise"></i>. Essaie de changer tes filtres.
             </span>
-          </div>
-        </main>
-      </b-overlay>
+          </template>
+        </div>
+      </main>
     </div>
 
     <div class="map" :class="{ 'd-none': !isMapShown }">
@@ -273,12 +259,13 @@ import { PER_PAGE_NUMBER } from '~/constants/default'
 import CriteriaBadge from '~/components/CriteriaBadge'
 import ToggleButtons from '~/components/ToggleButtons'
 import ScrollTop from '~/components/ScrollTop'
+import FichePlaceholder from '~/components/FichePlaceholder'
 
 // create classes from components to use it in code
 const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
 
 export default {
-  components: { ToggleButtons, CriteriaBadge, Fiche, ScrollTop },
+  components: { ToggleButtons, CriteriaBadge, Fiche, ScrollTop, FichePlaceholder },
   directives: { swiper: SwiperDirective },
   props: {
     /* eslint-disable vue/require-default-prop */
@@ -378,27 +365,6 @@ export default {
     },
   },
   async mounted() {
-    // create lists
-    if (this.rootCategory) {
-      this.categories = await this.$store.dispatch('categories/findChildren', this.rootCategory)
-    } else {
-      this.categories = Object.entries(this.categoryHierarchy).flatMap(([categoryId, children]) => [
-        this.categoryAll[categoryId],
-        ...children,
-      ])
-    }
-    if (this.rootLocation) {
-      this.locations = await this.$store.dispatch('locations/findChildren', this.rootLocation)
-    } else {
-      this.locations = Object.entries(this.locationHierarchy).flatMap(([locationId, children]) => [
-        this.locationAll[locationId],
-        ...children,
-      ])
-    }
-
-    // criteria
-    await this.searchReset()
-
     // build map
     try {
       this.google = await this.$googleMaps
