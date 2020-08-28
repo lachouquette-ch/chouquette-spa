@@ -231,6 +231,8 @@
     <ToggleButtons
       ref="toggleButtons"
       :fixed="mapState === $mapState.SHOWN"
+      :btn1disabled="fichesLoading"
+      :btn2disabled="fichesLoading || !fiches.length"
       @btn1action="mapState = $mapState.HIDDEN"
       @btn2action="showMap"
     >
@@ -399,6 +401,7 @@ export default {
     },
     async reload() {
       this.fiches = []
+      this.fichesNextPage = 1
 
       // search form
       await this.searchReset()
