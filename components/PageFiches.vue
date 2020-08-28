@@ -287,28 +287,6 @@ export default {
   async fetch() {
     await this.fetchMoreFiches()
   },
-  async mounted() {
-    // create lists
-    if (this.rootCategory) {
-      this.categories = await this.$store.dispatch('categories/findChildren', this.rootCategory)
-    } else {
-      this.categories = Object.entries(this.categoryHierarchy).flatMap(([categoryId, children]) => [
-        this.categoryAll[categoryId],
-        ...children,
-      ])
-    }
-    if (this.rootLocation) {
-      this.locations = await this.$store.dispatch('locations/findChildren', this.rootLocation)
-    } else {
-      this.locations = Object.entries(this.locationHierarchy).flatMap(([locationId, children]) => [
-        this.locationAll[locationId],
-        ...children,
-      ])
-    }
-
-    // criteria
-    await this.searchReset()
-  },
   data() {
     return {
       // initialize component
@@ -367,6 +345,28 @@ export default {
       const hasCriteria = this.formSearch.criteria.find(({ selectedValues }) => _.isEmpty(selectedValues) === false)
       return hasSearch || hasCriteria
     },
+  },
+  async mounted() {
+    // create lists
+    if (this.rootCategory) {
+      this.categories = await this.$store.dispatch('categories/findChildren', this.rootCategory)
+    } else {
+      this.categories = Object.entries(this.categoryHierarchy).flatMap(([categoryId, children]) => [
+        this.categoryAll[categoryId],
+        ...children,
+      ])
+    }
+    if (this.rootLocation) {
+      this.locations = await this.$store.dispatch('locations/findChildren', this.rootLocation)
+    } else {
+      this.locations = Object.entries(this.locationHierarchy).flatMap(([locationId, children]) => [
+        this.locationAll[locationId],
+        ...children,
+      ])
+    }
+
+    // criteria
+    await this.searchReset()
   },
   methods: {
     async fetchMoreFiches() {
