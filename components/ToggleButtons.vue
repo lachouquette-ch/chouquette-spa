@@ -42,6 +42,9 @@ export default {
       this.toggled = true
       this.$emit('btn2action')
     },
+    toggle() {
+      this.toggled = !this.toggled
+    },
   },
 }
 </script>

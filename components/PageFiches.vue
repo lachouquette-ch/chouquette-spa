@@ -184,19 +184,28 @@
 
       <main id="category-main" class="container">
         <div class="d-flex flex-wrap justify-content-around">
-          <Fiche v-for="fiche in fiches" :key="fiche.id" :ref="`fiche-${fiche.id}`" :fiche="fiche" class="fiche m-3">
-            <template v-if="map" #front-footer>
-              <a
-                href=""
-                title="Voir sur la carte"
-                class="btn btn-sm btn-outline-secondary"
-                @click.prevent="gotoMarker(fiche)"
-              >
-                <span class="mx-1"><i class="fas fa-map-marker-alt"></i></span>
-              </a>
-            </template>
-          </Fiche>
-          <template v-if="$fetchState.pending">
+          <template v-if="!!fiches.length">
+            <Fiche
+              v-for="(fiche, i) in fiches"
+              :key="fiche.id"
+              :ref="`fiche-${fiche.id}`"
+              v-observe-visibility="i === fiches.length - 1 ? lazyLoadFiches : false"
+              :fiche="fiche"
+              class="fiche m-3"
+            >
+              <template #front-footer>
+                <a
+                  href=""
+                  title="Voir sur la carte"
+                  class="btn btn-sm btn-outline-secondary"
+                  @click.prevent="selectFicheOnMap(fiche)"
+                >
+                  <span class="mx-1"><i class="fas fa-map-marker-alt"></i></span>
+                </a>
+              </template>
+            </Fiche>
+          </template>
+          <template v-if="$fetchState.pending || fichesLoading">
             <FichePlaceholder v-for="f in 4" :key="f" class="fiche m-3" />
           </template>
           <template v-else-if="!fichesTotal">
@@ -208,26 +217,21 @@
       </main>
     </div>
 
-    <div class="map" :class="{ 'd-none': !isMapShown }">
-      <div ref="map" class="h-100 w-100" />
-      <button
-        v-if="hasMoreFiches"
-        class="map-load-more google-map-control bg-yellow w-auto"
-        :disabled="fichesLoading || !hasMoreFiches"
-        title="Afficher plus de fiches"
-        @click="fetchMoreFiches"
-      >
-        <b-spinner v-show="fichesLoading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
-        <strong>+{{ countNextFiches }}</strong>
-        <sub>Fiches</sub>
-      </button>
-    </div>
+    <client-only>
+      <FichesMap
+        ref="map"
+        :fiches="fiches"
+        :count-next-fiches="countNextFiches"
+        :loading="fichesLoading"
+        :class="{ 'd-none': mapState != $mapState.SHOWN }"
+        @fichesMapSelection="selectFiche"
+      />
+    </client-only>
 
     <ToggleButtons
-      v-if="map"
-      :btn2disabled="!markers.size"
-      :fixed="isMapShown"
-      @btn1action="isMapShown = false"
+      ref="toggleButtons"
+      :fixed="mapState === $mapState.SHOWN"
+      @btn1action="mapState = $mapState.HIDDEN"
       @btn2action="showMap"
     >
       <template #button1>
@@ -240,32 +244,34 @@
       </template>
     </ToggleButtons>
 
-    <ScrollTop v-show="!isMapShown" />
+    <ScrollTop v-show="mapState != $mapState.SHOWN" />
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
-import MarkerClusterer from '@google/markerclustererplus'
-import $ from 'jquery'
 import { directive as SwiperDirective } from 'vue-awesome-swiper'
 import { mapState } from 'vuex'
 import _ from 'lodash'
+import Vue from 'vue'
+import $ from 'jquery'
 
 import Fiche from '~/components/Fiche'
-import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, LAUSANNE_LAT_LNG } from '~/constants/mapSettings'
-import FicheInfoWindow from '~/components/FicheInfoWindow'
 import { PER_PAGE_NUMBER } from '~/constants/default'
 import CriteriaBadge from '~/components/CriteriaBadge'
 import ToggleButtons from '~/components/ToggleButtons'
 import ScrollTop from '~/components/ScrollTop'
 import FichePlaceholder from '~/components/FichePlaceholder'
+import FichesMap from '~/components/FichesMap'
 
-// create classes from components to use it in code
-const FicheInfoWindowClass = Vue.extend(FicheInfoWindow)
+const MapStates = Object.freeze({
+  HIDDEN: Symbol('hidden'),
+  SHOWN: Symbol('shown'),
+  UPDATED: Symbol('updated'),
+})
+Vue.prototype.$mapState = MapStates
 
 export default {
-  components: { ToggleButtons, CriteriaBadge, Fiche, ScrollTop, FichePlaceholder },
+  components: { FichesMap, ToggleButtons, CriteriaBadge, Fiche, ScrollTop, FichePlaceholder },
   directives: { swiper: SwiperDirective },
   props: {
     /* eslint-disable vue/require-default-prop */
@@ -279,20 +285,29 @@ export default {
     /* eslint-enable vue/require-default-prop */
   },
   async fetch() {
-    const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
-      category: this.queryCategory,
-      location: this.queryLocation,
-      search: this.querySearch,
-      criteria: this.queryCriteria,
-      per_page: PER_PAGE_NUMBER,
-    })
+    await this.fetchMoreFiches()
+  },
+  async mounted() {
+    // create lists
+    if (this.rootCategory) {
+      this.categories = await this.$store.dispatch('categories/findChildren', this.rootCategory)
+    } else {
+      this.categories = Object.entries(this.categoryHierarchy).flatMap(([categoryId, children]) => [
+        this.categoryAll[categoryId],
+        ...children,
+      ])
+    }
+    if (this.rootLocation) {
+      this.locations = await this.$store.dispatch('locations/findChildren', this.rootLocation)
+    } else {
+      this.locations = Object.entries(this.locationHierarchy).flatMap(([locationId, children]) => [
+        this.locationAll[locationId],
+        ...children,
+      ])
+    }
 
-    this.fiches = ficheResult.fiches
-    this.fichesTotal = ficheResult.total
-    this.fichesPages = ficheResult.pages
-    this.fichesNextPage++
-
-    this.loadFichesOnMap(this.fiches)
+    // criteria
+    await this.searchReset()
   },
   data() {
     return {
@@ -309,23 +324,13 @@ export default {
       fichesPages: null,
       fichesNextPage: 1,
 
-      // map
-      google: null,
-      map: null,
-      markers: new Map(),
-      currentMarker: null,
-      infoWindows: new Map(),
-      currentInfoWindow: null,
-      markerClusterer: null,
-      isMapShown: null,
-
       // search form
       isSearchVisible: false,
       formSearch: { category: null, location: null, search: null, criteria: [] },
       criteriaLoading: false,
 
+      mapState: MapStates.HIDDEN,
       fichesLoading: false,
-      loading: false,
     }
   },
   validations() {
@@ -335,7 +340,6 @@ export default {
   },
   computed: {
     ...mapState({
-      media: (state) => state.media.all,
       locationAll: (state) => state.locations.all,
       locationHierarchy: (state) => state.locations.hierarchy,
       categoryAll: (state) => state.categories.all,
@@ -364,76 +368,42 @@ export default {
       return hasSearch || hasCriteria
     },
   },
-  async mounted() {
-    // build map
-    try {
-      this.google = await this.$googleMaps
-      this.map = new this.google.maps.Map(this.$refs.map, {
-        ...MAP_OPTIONS,
-      })
-
-      // create cluster
-      this.markerClusterer = new MarkerClusterer(this.map, [], {
-        averageCenter: true,
-        styles: CLUSTER_STYLES,
-        calculator: (markers, clusterIconStylesCount) => {
-          const index = markers.find((marker) => marker.chouquettise) ? 2 : 1
-          return {
-            index,
-            text: markers.length,
-          }
-        },
-      })
-
-      // create map controls
-      const centerControlButton = document.createElement('button')
-      centerControlButton.className = 'google-map-control'
-      centerControlButton.title = 'Voir toutes les fiches sur la carte'
-      const centerControlButtonContent = document.createElement('i')
-      centerControlButtonContent.className = 'far fa-map'
-      centerControlButton.appendChild(centerControlButtonContent)
-      centerControlButton.addEventListener('click', () => this.resetMap())
-      this.map.controls[this.google.maps.ControlPosition.RIGHT_TOP].push(centerControlButton)
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error(err)
-    }
-  },
   methods: {
-    async reload() {
-      this.fiches = []
-      this.loading = true
-
+    async fetchMoreFiches() {
       try {
-        // search form
-        await this.searchReset()
-        this.isSearchVisible = false
+        this.fichesLoading = true
 
         const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
           category: this.defaultCategory,
           location: this.defaultLocation,
           search: this.defaultSearch,
           criteria: this.defaultCriteria,
+          page: this.fichesNextPage++,
           per_page: PER_PAGE_NUMBER,
         })
 
-        // fiches
-        this.fiches = ficheResult.fiches
+        this.fiches.push(...ficheResult.fiches)
         this.fichesTotal = ficheResult.total
         this.fichesPages = ficheResult.pages
-        this.fichesNextPage = 2
-
-        // map
-        this.markers.clear()
-        this.currentMarker = null
-        this.infoWindows.clear()
-        this.currentInfoWindow = null
-        this.markerClusterer.clearMarkers()
-        this.isMapShown = null
-        this.loadFichesOnMap(this.fiches)
       } finally {
-        this.loading = false
+        this.fichesLoading = false
+        this.mapState = MapStates.UPDATED
       }
+    },
+    lazyLoadFiches(isVisible) {
+      if (isVisible) {
+        if (this.hasMoreFiches && !this.fichesLoading) {
+          this.fetchMoreFiches()
+        }
+      }
+    },
+    async reload() {
+      this.fiches = []
+
+      // search form
+      await this.searchReset()
+      this.isSearchVisible = false
+      await this.fetchMoreFiches()
     },
 
     // criteria
@@ -475,51 +445,30 @@ export default {
 
     // map
     showMap() {
-      if (this.isMapShown === null) {
-        this.isMapShown = true
+      if (this.mapState === MapStates.UPDATED) {
         this.$nextTick(() => {
-          this.resetMap()
+          this.$refs.map.resetMap()
         })
-      } else {
-        this.isMapShown = true
       }
+      this.mapState = MapStates.SHOWN
     },
-    gotoMarker(fiche) {
-      this.resetMapObjects()
-      this.isMapShown = true
-
-      this.currentMarker = this.markers.get(fiche.id)
-      this.map.setZoom(ZOOM_LEVELS.activated)
-      this.map.setCenter(this.currentMarker.getPosition())
-      this.currentInfoWindow = this.infoWindows.get(fiche.id)
-      this.currentInfoWindow.open(this.map, this.currentMarker)
+    selectFiche(id) {
+      this.mapState = MapStates.HIDDEN
+      this.$refs.toggleButtons.toggle()
+      // goto fiche
+      $('.fiche.selected').removeClass('selected')
+      const ficheComponent = this.$refs[`fiche-${id}`][0]
+      if (ficheComponent) {
+        $(ficheComponent.$el).addClass('selected')
+      }
+      this.$scrollTo(ficheComponent.$el)
     },
-    resetMapObjects() {
-      if (this.currentMarker) {
-        this.currentMarker.setZIndex(this.currentMarker.defaultZIndex)
-      }
-      if (this.currentInfoWindow) {
-        this.currentInfoWindow.close()
-      }
-
-      // clear selection
-      $('.fiche').removeClass('selected')
-    },
-    resetMap() {
-      this.resetMapObjects()
-
-      // need to fit map twice... (magic)
-      if (this.markers.size) {
-        this.markerClusterer.fitMapToMarkers()
-        this.markerClusterer.fitMapToMarkers()
-      } else {
-        this.map.setCenter(LAUSANNE_LAT_LNG)
-      }
-
-      this.currentMarker = this.markers.values().next().value
-      this.currentInfoWindow = this.infoWindows.values().next().value
-
-      if (this.markers.size === 1) this.currentInfoWindow.open(this.map, this.currentMarker)
+    selectFicheOnMap(fiche) {
+      this.mapState = MapStates.SHOWN
+      this.$refs.toggleButtons.toggle()
+      this.$nextTick(() => {
+        this.$refs.map.gotoMarker(fiche)
+      })
     },
 
     // fiches
@@ -592,106 +541,6 @@ export default {
 
       this.$router.push({ query })
     },
-    async fetchMoreFiches() {
-      if (this.loading) {
-        // eslint-disable-next-line no-console
-        console.warn('loading first fiches')
-        return
-      }
-
-      if (this.fichesLoading) {
-        // eslint-disable-next-line no-console
-        console.warn('already loading more fiches')
-        return
-      }
-
-      if (!this.hasMoreFiches) {
-        // eslint-disable-next-line no-console
-        console.warn('no more pages')
-        return
-      }
-
-      this.fichesLoading = true
-      try {
-        const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
-          category: this.defaultCategory,
-          location: this.defaultLocation,
-          search: this.defaultSearch,
-          criteria: this.defaultCriteria,
-          page: this.fichesNextPage++,
-          per_page: PER_PAGE_NUMBER,
-        })
-
-        this.fiches.push(...ficheResult.fiches)
-        this.loadFichesOnMap(ficheResult.fiches)
-      } finally {
-        this.fichesLoading = false
-        if (!this.isMapShown) {
-          // need to reinit markerclusterer on next map view
-          this.isMapShown = null
-        }
-      }
-    },
-    loadFichesOnMap(fiches) {
-      for (const fiche of fiches) {
-        if (!fiche.info || !fiche.info.location) {
-          // eslint-disable-next-line no-console
-          console.warn(`${fiche.slug} has no location (not info)`)
-          continue
-        }
-
-        // build infoWindow content
-        const featuredMedia = this.media[fiche.featured_media]
-        const ficheInfoWindow = new FicheInfoWindowClass({
-          propsData: {
-            fiche,
-            featuredMedia,
-            showBtnAction: () => {
-              this.isMapShown = false
-              // goto fiche
-              $('.fiche.selected').removeClass('selected')
-              const ficheComponent = this.$refs[`fiche-${fiche.id}`][0]
-              if (ficheComponent) {
-                $(ficheComponent.$el).addClass('selected')
-              }
-              this.$scrollTo(ficheComponent.$el)
-            },
-          },
-        })
-        ficheInfoWindow.$mount()
-
-        // create infoWindow
-        const infoWindow = new this.google.maps.InfoWindow({
-          content: ficheInfoWindow.$el,
-        })
-        this.infoWindows.set(fiche.id, infoWindow)
-
-        // create marker
-        const marker = new this.google.maps.Marker({
-          icon: fiche.main_category.marker_icon,
-          position: fiche.info.location,
-          title: this.$options.filters.heDecode(fiche.title.rendered),
-        })
-        marker.defaultZIndex = fiche.info.chouquettise ? Z_INDEXES.chouquettise : Z_INDEXES.default
-        marker.chouquettise = fiche.info.chouquettise
-        marker.setZIndex(marker.defaultZIndex)
-        marker.addListener('click', () => {
-          this.resetMapObjects()
-
-          marker.setZIndex(Z_INDEXES.selected)
-          infoWindow.open(this.map, marker)
-
-          this.currentMarker = marker
-          this.currentInfoWindow = infoWindow
-        })
-        this.markers.set(fiche.id, marker)
-      }
-
-      this.markerClusterer.addMarkers(Array.from(this.markers.values()))
-
-      // reset map
-      this.resetMap()
-    },
   },
 }
 </script>
@@ -706,21 +555,6 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: $zindex-dropdown;
-}
-
-.map {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  width: 100%;
-  z-index: $zindex-fixed + 1;
-  height: calc(100% - #{$header-height} - #{$header-banner-height});
-}
-
-.map-load-more {
-  position: absolute;
-  bottom: 0;
-  left: 0;
 }
 
 .fiche.selected {
