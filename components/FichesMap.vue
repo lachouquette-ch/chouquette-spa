@@ -4,7 +4,7 @@
     <button
       v-if="!!countNextFiches"
       class="map-load-more google-map-control bg-yellow w-auto"
-      :disabled="loading || !!countNextFiches"
+      :disabled="loading || !countNextFiches"
       title="Afficher plus de fiches"
       @click="$emit('fetchMoreFiches')"
     >

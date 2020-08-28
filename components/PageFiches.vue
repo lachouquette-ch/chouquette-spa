@@ -225,6 +225,7 @@
         :loading="fichesLoading"
         :class="{ 'd-none': mapState != $mapState.SHOWN }"
         @fichesMapSelection="selectFiche"
+        @fetchMoreFiches="fetchMoreFiches"
       />
     </client-only>
 
@@ -389,7 +390,11 @@ export default {
         this.fichesPages = ficheResult.pages
       } finally {
         this.fichesLoading = false
-        this.mapState = MapStates.UPDATED
+        if (this.mapState === MapStates.SHOWN) {
+          this.resetMap()
+        } else {
+          this.mapState = MapStates.UPDATED
+        }
       }
     },
     lazyLoadFiches(isVisible) {
@@ -449,11 +454,14 @@ export default {
     // map
     showMap() {
       if (this.mapState === MapStates.UPDATED) {
-        this.$nextTick(() => {
-          this.$refs.map.resetMap()
-        })
+        this.resetMap()
       }
       this.mapState = MapStates.SHOWN
+    },
+    resetMap() {
+      this.$nextTick(() => {
+        this.$refs.map.resetMap()
+      })
     },
     selectFiche(id) {
       this.mapState = MapStates.HIDDEN
