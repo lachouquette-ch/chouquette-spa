@@ -38,119 +38,118 @@
         </div>
       </template>
     </b-modal>
-    <b-overlay :show="$fetchState.pending" variant="white" opacity="1" z-index="1030" spinner-variant="yellow">
-      <nav
-        v-if="fiches && fiches.length"
-        class="post-sidebar bg-white pb-5 pb-md-2 border-right border-grey"
-        :class="{ 'hide-sidebar': hideSidebar }"
-      >
-        <div class="my-4">
-          <div class="post-sidebar-header d-none d-md-block text-center mb-4">
-            <h2 class="post-sidebar-title h5 m-0">
-              {{ hasSingleFiche ? "La fiche de l'article" : 'Les fiches citées dans cet article' }} :
-            </h2>
-          </div>
-          <div v-if="fiches">
-            <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" />
-            <FicheThumbnail
-              v-for="(fiche, index) in fiches"
-              v-else
-              :key="fiche.id"
-              :fiche="fiche"
-              class="my-2 mx-3 mx-md-2 position-relative"
-              @click.native="viewFiche(fiche, index)"
-            />
-          </div>
+
+    <nav
+      v-if="fiches.length"
+      class="post-sidebar bg-white pb-5 pb-md-2 border-right border-grey"
+      :class="{ 'hide-sidebar': hideSidebar }"
+    >
+      <div class="my-4">
+        <div class="post-sidebar-header d-none d-md-block text-center mb-4">
+          <h2 class="post-sidebar-title h5 m-0">
+            {{ hasSingleFiche ? "La fiche de l'article" : 'Les fiches citées dans cet article' }} :
+          </h2>
         </div>
-      </nav>
-      <main role="main" class="post layout-content" :class="{ 'with-sidebar': fiches && fiches.length }">
-        <article v-if="!$fetchState.pending" :id="post.id">
-          <header class="post-header container-fluid px-0 mb-6">
-            <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
+        <div>
+          <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" />
+          <FicheThumbnail
+            v-for="(fiche, index) in fiches"
+            v-else
+            :key="fiche.id"
+            :fiche="fiche"
+            class="my-2 mx-3 mx-md-2 position-relative"
+            @click.native="viewFiche(fiche, index)"
+          />
+        </div>
+      </div>
+    </nav>
+    <main role="main" class="post layout-content" :class="{ 'with-sidebar': fiches.length }">
+      <article :id="post.id">
+        <header class="post-header container-fluid px-0 mb-6">
+          <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
+          <WpAvatar
+            :size="150"
+            :avatar-urls="author.avatar_urls"
+            :alt="author.name"
+            class="post-header-author-img rounded-circle"
+          />
+          <div class="post-header-meta">
+            <span>par {{ author.name }}</span>
+            <span v-if="postModifiedDate">
+              mise à jour le <time :datetime="post.modified">{{ postModifiedDate }}</time>
+            </span>
+            <span v-else>
+              publié le <time :datetime="post.date">{{ postCreatedDate }}</time>
+            </span>
+          </div>
+          <PostShare :post="post" class="post-header-sn-share" />
+        </header>
+
+        <section class="gutenberg-content container pt-4 mb-5">
+          <h1 class="pt-2 mb-4 text-center">{{ post.title.rendered | heDecode }}</h1>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <div v-html="post.content.rendered" />
+        </section>
+
+        <section class="post-author container mb-5">
+          <div class="border shadow-sm text-center position-relative">
             <WpAvatar
               :size="150"
               :avatar-urls="author.avatar_urls"
               :alt="author.name"
               class="post-header-author-img rounded-circle"
             />
-            <div class="post-header-meta">
-              <span>par {{ author.name }}</span>
-              <span v-if="postModifiedDate">
-                mise à jour le <time :datetime="post.modified">{{ postModifiedDate }}</time>
-              </span>
-              <span v-else>
-                publié le <time :datetime="post.date">{{ postCreatedDate }}</time>
-              </span>
-            </div>
-            <PostShare :post="post" class="post-header-sn-share" />
-          </header>
+            <h5 class="mt-3 mb-4">{{ author.name }}</h5>
+            <p class="px-2 pb-1">{{ author.description }}</p>
+          </div>
+        </section>
 
-          <section class="gutenberg-content container pt-4 mb-5">
-            <h1 class="pt-2 mb-4 text-center">{{ post.title.rendered | heDecode }}</h1>
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <div v-html="post.content.rendered" />
-          </section>
+        <Newsletter />
 
-          <section class="post-author container mb-5">
-            <div class="border shadow-sm text-center position-relative">
-              <WpAvatar
-                :size="150"
-                :avatar-urls="author.avatar_urls"
-                :alt="author.name"
-                class="post-header-author-img rounded-circle"
-              />
-              <h5 class="mt-3 mb-4">{{ author.name }}</h5>
-              <p class="px-2 pb-1">{{ author.description }}</p>
-            </div>
-          </section>
-
-          <Newsletter />
-
-          <section v-if="similarPosts" class="post-similar container my-5">
-            <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
-            <div v-swiper:similarSwiper="swiperPostsOptions" class="swiper px-md-5">
-              <div class="swiper-wrapper pt-3 pt-md-0">
-                <div v-for="similarPost in similarPosts" :key="similarPost.id" class="swiper-slide">
-                  <nuxt-link :to="{ path: `/${similarPost.slug}` }">
-                    <PostCard :post="similarPost" class="mx-auto" />
-                  </nuxt-link>
-                </div>
+        <section v-if="similarPosts" class="post-similar container my-5">
+          <h3 class="mb-3 text-center">Tu vas aussi aimer...</h3>
+          <div v-swiper:similarSwiper="swiperPostsOptions" class="swiper px-md-5">
+            <div class="swiper-wrapper pt-3 pt-md-0">
+              <div v-for="similarPost in similarPosts" :key="similarPost.id" class="swiper-slide">
+                <nuxt-link :to="{ path: `/${similarPost.slug}` }">
+                  <PostCard :post="similarPost" class="mx-auto" />
+                </nuxt-link>
               </div>
-              <div slot="pagination" class="swiper-pagination d-block d-md-none" />
-              <div slot="button-prev" class="swiper-button-prev d-none d-md-block"></div>
-              <div slot="button-next" class="swiper-button-next d-none d-md-block"></div>
             </div>
-          </section>
+            <div slot="pagination" class="swiper-pagination d-block d-md-none" />
+            <div slot="button-prev" class="swiper-button-prev d-none d-md-block"></div>
+            <div slot="button-next" class="swiper-button-next d-none d-md-block"></div>
+          </div>
+        </section>
 
-          <section v-if="comments" class="post-comments container my-5">
-            <h3 v-if="comments.length" class="mb-3 text-center">{{ comments.length }} commentaire(s)</h3>
-            <h3 v-else class="mb-3 text-center">Sois le premier à nous laisser un commentaire</h3>
-            <ol class="comment-list p-0">
-              <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
-                <PostComment :post="post.id" :comment="comment" :comments="comments" />
-              </li>
-            </ol>
-            <PostCommentReply :post="post.id" />
-          </section>
+        <section v-if="comments" class="post-comments container my-5">
+          <h3 v-if="comments.length" class="mb-3 text-center">{{ comments.length }} commentaire(s)</h3>
+          <h3 v-else class="mb-3 text-center">Sois le premier à nous laisser un commentaire</h3>
+          <ol class="comment-list p-0">
+            <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
+              <PostComment :post="post.id" :comment="comment" :comments="comments" />
+            </li>
+          </ol>
+          <PostCommentReply :post="post.id" />
+        </section>
 
-          <ToggleButtons
-            v-if="fiches && fiches.length"
-            class="d-md-none"
-            @btn1action="hideSidebar = true"
-            @btn2action="hideSidebar = false"
-          >
-            <template #button1>
-              <span class="mr-1"><i class="far fa-newspaper"></i></span>
-              Article
-            </template>
-            <template #button2>
-              <span class="mx-1"><i class="far fa-file-alt"></i></span>
-              {{ hasSingleFiche ? 'Fiche' : 'Fiches' }}
-            </template>
-          </ToggleButtons>
-        </article>
-      </main>
-    </b-overlay>
+        <ToggleButtons
+          v-if="fiches.length"
+          class="d-md-none"
+          @btn1action="hideSidebar = true"
+          @btn2action="hideSidebar = false"
+        >
+          <template #button1>
+            <span class="mr-1"><i class="far fa-newspaper"></i></span>
+            Article
+          </template>
+          <template #button2>
+            <span class="mx-1"><i class="far fa-file-alt"></i></span>
+            {{ hasSingleFiche ? 'Fiche' : 'Fiches' }}
+          </template>
+        </ToggleButtons>
+      </article>
+    </main>
   </div>
 </template>
 
