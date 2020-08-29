@@ -126,6 +126,8 @@ export default {
       'DropdownPlugin',
       'CollapsePlugin',
       'SpinnerPlugin',
+      'ButtonPlugin',
+      'ButtonGroupPlugin',
     ],
     directivePlugins: ['VBVisiblePlugin'],
   },

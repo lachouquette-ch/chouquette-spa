@@ -229,23 +229,24 @@
       />
     </client-only>
 
-    <ToggleButtons
-      ref="toggleButtons"
-      :fixed="mapState === $mapState.SHOWN"
-      :btn1disabled="fichesLoading"
-      :btn2disabled="fichesLoading || !fiches.length"
-      @btn1action="mapState = $mapState.HIDDEN"
-      @btn2action="showMap"
-    >
-      <template #button1>
-        <span class="mr-1"><i class="far fa-file-alt"></i></span>
-        Fiches
-      </template>
-      <template #button2>
-        <span class="mr-1"><i class="fas fa-map-marked-alt"></i></span>
-        Carte
-      </template>
-    </ToggleButtons>
+    <b-button-group ref="toggleButtons" size="sm" class="toggle-content-btn">
+      <b-button
+        variant="primary"
+        :pressed="mapState != $mapState.SHOWN"
+        :disabled="fichesLoading"
+        @click="mapState = $mapState.HIDDEN"
+      >
+        <span class="mr-1"><i class="far fa-file-alt"></i></span> Fiches
+      </b-button>
+      <b-button
+        variant="primary"
+        :pressed="mapState === $mapState.SHOWN"
+        :disabled="fichesLoading || !fiches.length"
+        @click="showMap"
+      >
+        <span class="mr-1"><i class="fas fa-map-marked-alt"></i></span> Carte
+      </b-button>
+    </b-button-group>
 
     <ScrollTop v-show="mapState != $mapState.SHOWN" />
   </div>
@@ -261,7 +262,6 @@ import $ from 'jquery'
 import Fiche from '~/components/Fiche'
 import { PER_PAGE_NUMBER } from '~/constants/default'
 import CriteriaBadge from '~/components/CriteriaBadge'
-import ToggleButtons from '~/components/ToggleButtons'
 import ScrollTop from '~/components/ScrollTop'
 import FichePlaceholder from '~/components/FichePlaceholder'
 import FichesMap from '~/components/FichesMap'
@@ -274,7 +274,7 @@ const MapStates = Object.freeze({
 Vue.prototype.$mapState = MapStates
 
 export default {
-  components: { FichesMap, ToggleButtons, CriteriaBadge, Fiche, ScrollTop, FichePlaceholder },
+  components: { FichesMap, CriteriaBadge, Fiche, ScrollTop, FichePlaceholder },
   directives: { swiper: SwiperDirective },
   props: {
     /* eslint-disable vue/require-default-prop */
@@ -459,13 +459,13 @@ export default {
       this.mapState = MapStates.SHOWN
     },
     resetMap() {
+      console.log('resetMap')
       this.$nextTick(() => {
         this.$refs.map.resetMap()
       })
     },
     selectFiche(id) {
       this.mapState = MapStates.HIDDEN
-      this.$refs.toggleButtons.toggle()
       // goto fiche
       $('.fiche.selected').removeClass('selected')
       const ficheComponent = this.$refs[`fiche-${id}`][0]
@@ -476,7 +476,6 @@ export default {
     },
     selectFicheOnMap(fiche) {
       this.mapState = MapStates.SHOWN
-      this.$refs.toggleButtons.toggle()
       this.$nextTick(() => {
         this.$refs.map.gotoMarker(fiche)
       })
