@@ -229,7 +229,7 @@
       />
     </client-only>
 
-    <b-button-group ref="toggleButtons" size="sm" class="toggle-content-btn">
+    <b-button-group size="sm" class="toggle-content-btn">
       <b-button
         variant="primary"
         :pressed="mapState != $mapState.SHOWN"

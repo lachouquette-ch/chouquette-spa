@@ -65,23 +65,16 @@
             </div>
           </div>
 
-          <ToggleButtons
-            v-show="!$fetchState.pending"
-            :btn1disabled="!fiches.length"
-            :btn2disabled="!posts.length"
-            :reversed="false"
-            @btn1action="showPosts = false"
-            @btn2action="showPosts = true"
-          >
-            <template #button1>
+          <b-button-group v-show="!$fetchState.pending" size="sm" class="toggle-content-btn">
+            <b-button variant="primary" :pressed="!showPosts" :disabled="!fiches.length" @click="showPosts = false">
               <span class="mx-1"><i class="far fa-file-alt"></i></span>
               Fiches<span v-if="fichesTotal" class="d-none d-md-inline"> ({{ fichesTotal }})</span>
-            </template>
-            <template #button2>
+            </b-button>
+            <b-button variant="primary" :pressed="showPosts" :disabled="!posts.length" @click="showPosts = true">
               <span class="mr-1"><i class="far fa-newspaper"></i></span>
               Articles<span v-if="postsTotal" class="d-none d-md-inline"> ({{ postsTotal }})</span>
-            </template>
-          </ToggleButtons>
+            </b-button>
+          </b-button-group>
 
           <ScrollTop />
         </div>
@@ -98,13 +91,12 @@ import Fiche from '~/components/Fiche'
 import PostCard from '~/components/PostCard'
 import Search from '~/components/Search'
 import Newsletter from '~/components/Newsletter'
-import ToggleButtons from '~/components/ToggleButtons'
 import ScrollTop from '~/components/ScrollTop'
 import FichePlaceholder from '~/components/FichePlaceholder'
 import PostCardPlaceholder from '~/components/PostCardPlaceholder'
 
 export default {
-  components: { Newsletter, PostCard, Fiche, Search, ToggleButtons, ScrollTop, FichePlaceholder, PostCardPlaceholder },
+  components: { Newsletter, PostCard, Fiche, Search, ScrollTop, FichePlaceholder, PostCardPlaceholder },
   directives: { swiper: SwiperDirective },
   async fetch() {
     await Promise.all([this.fetchMorePosts(), this.fetchMoreFiches()])
