@@ -42,13 +42,18 @@
     <nav
       v-if="fiches.length"
       class="post-sidebar bg-white pb-5 pb-md-2 border-right border-grey"
-      :class="{ 'hide-sidebar': hideSidebar, 'pt-5': isTops }"
+      :class="{ 'hide-sidebar': hideSidebar, 'pt-md-5': isTops }"
     >
-      <div class="my-4">
+      <div>
         <div class="post-sidebar-header d-none d-md-block text-center mb-4">
-          <h2 class="post-sidebar-title h5 m-0">
+          <h2 class="post-sidebar-title h5 m-0 mt-3">
             {{ hasSingleFiche ? "La fiche de l'article" : 'Les fiches citées dans cet article' }} :
           </h2>
+        </div>
+        <div class="d-md-none text-center my-2">
+          <b-button variant="primary" size="sm" :pressed="mapShown" @click="showMap">
+            <span class="mr-1"><i class="fas fa-map-marked-alt"></i></span> Voir sur la carte
+          </b-button>
         </div>
         <div>
           <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" />
@@ -134,37 +139,39 @@
           <PostCommentReply :post="post.id" />
         </section>
       </article>
+      <ScrollTop v-if="hideSidebar" />
     </main>
 
     <client-only>
       <FichesMap v-show="mapShown" ref="map" :fiches="fiches" @fichesMapSelection="viewFiche" />
     </client-only>
 
-    <ToggleButtons v-if="fiches.length" class="d-none d-md-block" @btn1action="mapShown = false" @btn2action="showMap">
-      <template #button1>
-        <span class="mr-1"><i class="far fa-newspaper"></i></span>
-        Article
-      </template>
-      <template #button2>
-        <span class="mr-1"><i class="fas fa-map-marked-alt"></i></span>
-        Carte
-      </template>
-    </ToggleButtons>
-    <ToggleButtons
-      v-if="fiches.length"
-      class="d-md-none"
-      @btn1action="hideSidebar = true"
-      @btn2action="hideSidebar = false"
-    >
-      <template #button1>
-        <span class="mr-1"><i class="far fa-newspaper"></i></span>
-        Article
-      </template>
-      <template #button2>
-        <span class="mr-1"><i class="far fa-file-alt"></i></span>
-        {{ hasSingleFiche ? 'Fiche' : 'Fiches' }}
-      </template>
-    </ToggleButtons>
+    <template v-if="fiches.length">
+      <b-button-group v-if="isTops" size="sm" class="toggle-content-btn d-none d-md-inline-flex">
+        <b-button variant="primary" :pressed="!mapShown" @click="mapShown = false">
+          <span class="mr-1"><i class="far fa-newspaper"></i></span> Article
+        </b-button>
+        <b-button variant="primary" :pressed="mapShown" @click="showMap">
+          <span class="mr-1"><i class="fas fa-map-marked-alt"></i></span> Carte
+        </b-button>
+      </b-button-group>
+      <b-button-group size="sm" class="toggle-content-btn d-md-none">
+        <b-button
+          variant="primary"
+          :pressed="hideSidebar"
+          @click="
+            hideSidebar = true
+            mapShown = false
+          "
+        >
+          <span class="mr-1"><i class="far fa-newspaper"></i></span> Article
+        </b-button>
+        <b-button variant="primary" :pressed="!hideSidebar" @click="hideSidebar = false">
+          <span class="mr-1"><i class="far fa-file-alt"></i></span>
+          {{ hasSingleFiche ? 'Fiche' : 'Fiches' }}
+        </b-button>
+      </b-button-group>
+    </template>
   </div>
 </template>
 
@@ -179,19 +186,18 @@ import PostCard from '../components/PostCard'
 import WpAvatar from '../components/WpAvatar'
 import PostCommentReply from '../components/PostCommentReply'
 import FicheThumbnail from '../components/FicheThumbnail'
+import ScrollTop from '../components/ScrollTop'
 import Fiche from '../components/Fiche'
 import seo from '~/mixins/seo'
 import gutenberg from '~/mixins/gutenberg'
 
 import { DEFAULT, RESPONSIVE, HASH } from '~/constants/swiper'
 import Newsletter from '~/components/Newsletter'
-import ToggleButtons from '~/components/ToggleButtons'
 import FichesMap from '~/components/FichesMap'
 
 export default {
   components: {
     FichesMap,
-    ToggleButtons,
     Newsletter,
     Fiche,
     FicheThumbnail,
@@ -201,6 +207,7 @@ export default {
     WPMedia,
     PostCard,
     PostShare,
+    ScrollTop,
   },
   directives: { swiper: SwiperDirective },
   mixins: [gutenberg, seo],
@@ -308,10 +315,10 @@ export default {
     },
 
     showMap() {
+      this.mapShown = true
       this.$nextTick(() => {
         this.$refs.map.resetMap()
       })
-      this.mapShown = true
     },
     resetMap() {},
   },
