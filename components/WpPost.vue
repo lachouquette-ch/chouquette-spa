@@ -42,7 +42,7 @@
     <nav
       v-if="fiches.length"
       class="post-sidebar bg-white pb-5 pb-md-2 border-right border-grey"
-      :class="{ 'hide-sidebar': hideSidebar }"
+      :class="{ 'hide-sidebar': hideSidebar, 'pt-5': isTops }"
     >
       <div class="my-4">
         <div class="post-sidebar-header d-none d-md-block text-center mb-4">
@@ -53,16 +53,17 @@
         <div>
           <Fiche v-if="hasSingleFiche" :fiche="fiches[0]" class="mx-2" />
           <FicheThumbnail
-            v-for="(fiche, index) in fiches"
+            v-for="fiche in fiches"
             v-else
             :key="fiche.id"
             :fiche="fiche"
             class="my-2 mx-3 mx-md-2 position-relative"
-            @click.native="viewFiche(fiche, index)"
+            @click.native="viewFiche(fiche.id)"
           />
         </div>
       </div>
     </nav>
+
     <main role="main" class="post layout-content" :class="{ 'with-sidebar': fiches.length }">
       <article :id="post.id">
         <header class="post-header container-fluid px-0 mb-6">
@@ -132,24 +133,38 @@
           </ol>
           <PostCommentReply :post="post.id" />
         </section>
-
-        <ToggleButtons
-          v-if="fiches.length"
-          class="d-md-none"
-          @btn1action="hideSidebar = true"
-          @btn2action="hideSidebar = false"
-        >
-          <template #button1>
-            <span class="mr-1"><i class="far fa-newspaper"></i></span>
-            Article
-          </template>
-          <template #button2>
-            <span class="mx-1"><i class="far fa-file-alt"></i></span>
-            {{ hasSingleFiche ? 'Fiche' : 'Fiches' }}
-          </template>
-        </ToggleButtons>
       </article>
     </main>
+
+    <client-only>
+      <FichesMap v-show="mapShown" ref="map" :fiches="fiches" @fichesMapSelection="viewFiche" />
+    </client-only>
+
+    <ToggleButtons v-if="fiches.length" class="d-none d-md-block" @btn1action="mapShown = false" @btn2action="showMap">
+      <template #button1>
+        <span class="mr-1"><i class="far fa-newspaper"></i></span>
+        Article
+      </template>
+      <template #button2>
+        <span class="mr-1"><i class="fas fa-map-marked-alt"></i></span>
+        Carte
+      </template>
+    </ToggleButtons>
+    <ToggleButtons
+      v-if="fiches.length"
+      class="d-md-none"
+      @btn1action="hideSidebar = true"
+      @btn2action="hideSidebar = false"
+    >
+      <template #button1>
+        <span class="mr-1"><i class="far fa-newspaper"></i></span>
+        Article
+      </template>
+      <template #button2>
+        <span class="mr-1"><i class="far fa-file-alt"></i></span>
+        {{ hasSingleFiche ? 'Fiche' : 'Fiches' }}
+      </template>
+    </ToggleButtons>
   </div>
 </template>
 
@@ -171,9 +186,11 @@ import gutenberg from '~/mixins/gutenberg'
 import { DEFAULT, RESPONSIVE, HASH } from '~/constants/swiper'
 import Newsletter from '~/components/Newsletter'
 import ToggleButtons from '~/components/ToggleButtons'
+import FichesMap from '~/components/FichesMap'
 
 export default {
   components: {
+    FichesMap,
     ToggleButtons,
     Newsletter,
     Fiche,
@@ -196,6 +213,16 @@ export default {
   },
   async fetch() {
     this.fiches = await this.$store.dispatch('fiches/fetchByIds', this.post.meta.link_fiche)
+
+    // show fiche if previously selected
+    const ficheId = parseInt(location.hash.substring(1))
+    if (ficheId) {
+      const selectedFiche = this.fiches.find(({ id }) => id === ficheId)
+      if (selectedFiche) {
+        this.hideSidebar = false
+        this.viewFiche(selectedFiche.id)
+      }
+    }
   },
   data() {
     return {
@@ -205,7 +232,6 @@ export default {
       similarPosts: null,
 
       hideSidebar: true,
-      selectedFiche: null,
 
       swiperFichesOptions: {
         ...DEFAULT,
@@ -215,6 +241,8 @@ export default {
         ...DEFAULT,
         ...RESPONSIVE,
       },
+
+      mapShown: false,
     }
   },
   computed: {
@@ -239,6 +267,11 @@ export default {
     rootLevelComments() {
       return this.comments.filter(({ parent }) => parent === 0)
     },
+    isTops() {
+      return !!this.tags.find(({ slug }) => {
+        return slug === 'tops'
+      })
+    },
   },
   async created() {
     if (!this.preview) {
@@ -249,16 +282,6 @@ export default {
     }
   },
   mounted() {
-    // show fiche if previously selected
-    const ficheId = parseInt(location.hash.substring(1))
-    if (ficheId) {
-      const ficheIndex = this.fiches.findIndex(({ id }) => id === ficheId)
-      if (ficheIndex !== -1) {
-        this.hideSidebar = false
-        this.viewFiche(this.fiches[ficheIndex], ficheIndex)
-      }
-    }
-
     // avoid googlemaps fullscreen to change slides underneath
     document.addEventListener(
       'fullscreenchange',
@@ -273,16 +296,24 @@ export default {
     )
   },
   methods: {
-    viewFiche(fiche, index) {
-      this.selectedFiche = fiche
+    viewFiche(ficheId) {
+      const ficheIndex = this.fiches.findIndex(({ id }) => id === ficheId)
       // start with correct fiche
-      this.swiperFichesOptions.initialSlide = index
+      this.swiperFichesOptions.initialSlide = ficheIndex
       this.$bvModal.show('fiche-modal')
     },
     closeModal() {
       // remove hash reference (if any)
       history.replaceState(null, null, '#')
     },
+
+    showMap() {
+      this.$nextTick(() => {
+        this.$refs.map.resetMap()
+      })
+      this.mapShown = true
+    },
+    resetMap() {},
   },
   head() {
     return {
