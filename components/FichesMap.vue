@@ -130,7 +130,7 @@ export default {
 
       // need to fit map twice... (magic)
       if (this.markers.size) {
-        this.markerClusterer.fitMapToMarkers()
+        this.$nextTick(() => this.markerClusterer.fitMapToMarkers())
       } else {
         this.map.setCenter(LAUSANNE_LAT_LNG)
       }

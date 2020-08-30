@@ -459,7 +459,7 @@ export default {
       this.mapState = MapStates.SHOWN
     },
     resetMap() {
-      console.log('resetMap')
+      // wait untail map is shown
       this.$nextTick(() => {
         this.$refs.map.resetMap()
       })
