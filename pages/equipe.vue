@@ -2,7 +2,7 @@
   <WpPage :page="page">
     <template #footer>
       <div class="my-3">
-        <template v-if="true">
+        <template v-if="$fetchState.pending">
           <div class="text-center">
             <b-spinner variant="yellow" label="chargement"></b-spinner>
           </div>
