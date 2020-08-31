@@ -220,16 +220,6 @@ export default {
   },
   async fetch() {
     this.fiches = await this.$store.dispatch('fiches/fetchByIds', this.post.meta.link_fiche)
-
-    // show fiche if previously selected
-    const ficheId = parseInt(location.hash.substring(1))
-    if (ficheId) {
-      const selectedFiche = this.fiches.find(({ id }) => id === ficheId)
-      if (selectedFiche) {
-        this.hideSidebar = false
-        this.viewFiche(selectedFiche.id)
-      }
-    }
   },
   data() {
     return {
@@ -280,6 +270,11 @@ export default {
       })
     },
   },
+  watch: {
+    '$fetchState.pending'() {
+      this.initModal()
+    },
+  },
   async created() {
     if (!this.preview) {
       ;[this.comments, this.similarPosts] = await Promise.all([
@@ -289,6 +284,8 @@ export default {
     }
   },
   mounted() {
+    this.initModal()
+
     // avoid googlemaps fullscreen to change slides underneath
     document.addEventListener(
       'fullscreenchange',
@@ -313,6 +310,17 @@ export default {
       // remove hash reference (if any)
       history.replaceState(null, null, '#')
     },
+    initModal() {
+      // show fiche if previously selected
+      const ficheId = parseInt(location.hash.substring(1))
+      if (ficheId) {
+        const selectedFiche = this.fiches.find(({ id }) => id === ficheId)
+        if (selectedFiche) {
+          this.hideSidebar = false
+          this.viewFiche(selectedFiche.id)
+        }
+      }
+    },
 
     showMap() {
       this.mapShown = true
@@ -320,7 +328,6 @@ export default {
         this.$refs.map.resetMap()
       })
     },
-    resetMap() {},
   },
   head() {
     return {
