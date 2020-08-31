@@ -30,7 +30,7 @@
 
       <div class="search-results container-fluid">
         <div class="my-md-4">
-          <div v-show="!showPosts">
+          <div v-show="!postsShown">
             <div class="d-flex flex-wrap justify-content-around">
               <template v-if="!!fiches.length">
                 <Fiche
@@ -46,7 +46,7 @@
               </template>
             </div>
           </div>
-          <div v-show="showPosts">
+          <div v-show="postsShown">
             <div class="d-flex flex-wrap justify-content-around">
               <template v-if="!!posts.length">
                 <nuxt-link
@@ -66,11 +66,11 @@
           </div>
 
           <b-button-group v-show="!$fetchState.pending" size="sm" class="toggle-content-btn">
-            <b-button variant="primary" :pressed="!showPosts" :disabled="!fiches.length" @click="showPosts = false">
+            <b-button variant="primary" :pressed="!postsShown" :disabled="!fiches.length" @click="postsShown = false">
               <span class="mx-1"><i class="far fa-file-alt"></i></span>
               Fiches<span v-if="fichesTotal" class="d-none d-md-inline"> ({{ fichesTotal }})</span>
             </b-button>
-            <b-button variant="primary" :pressed="showPosts" :disabled="!posts.length" @click="showPosts = true">
+            <b-button variant="primary" :pressed="postsShown" :disabled="!posts.length" @click="postsShown = true">
               <span class="mr-1"><i class="far fa-newspaper"></i></span>
               Articles<span v-if="postsTotal" class="d-none d-md-inline"> ({{ postsTotal }})</span>
             </b-button>
@@ -101,7 +101,7 @@ export default {
   async fetch() {
     await Promise.all([this.fetchMorePosts(), this.fetchMoreFiches()])
     // change showPosts value if none
-    this.showPosts = !this.fiches.length
+    this.postsShown = !this.fiches.length
   },
   fetchOnServer: false,
   data() {
@@ -120,7 +120,7 @@ export default {
       postsNextPage: 1,
       postsLoading: false,
 
-      showPosts: false,
+      postsShown: false,
     }
   },
   computed: {
@@ -138,7 +138,7 @@ export default {
     },
   },
   watch: {
-    showPosts() {
+    postsShown() {
       this.$scrollTo(window)
     },
   },
