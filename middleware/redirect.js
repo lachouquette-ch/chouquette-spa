@@ -1,15 +1,5 @@
 export default function (context) {
-  const {
-    store,
-    route,
-    redirect,
-    $config: { wpBaseURL },
-  } = context
-
-  // sitemap
-  if (route.path === '/sitemap.xml') {
-    redirect(307, `${wpBaseURL}/sitemap.xml`)
-  }
+  const { store, route } = context
 
   // yoast global redirection
   // only works from server-side since nuxtServerInit has been called already

@@ -1,5 +1,7 @@
 import webpack from 'webpack'
 
+const axios = require('axios')
+
 export default {
   env: {
     recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
@@ -102,10 +104,78 @@ export default {
     'bootstrap-vue/nuxt',
     ['vue-scrollto/nuxt', { offset: -1 * (80 + 70) - 15 }], // fix default offset (do not work for home page)
     '@nuxtjs/sentry',
+    '@nuxtjs/sitemap',
   ],
   sentry: {
     dsn: 'https://aaf0c41235c44040ae01dcd356fb3e6f@o397059.ingest.sentry.io/5251223',
     disabled: process.env.NODE_ENV === 'development',
+  },
+  sitemap: {
+    hostname: 'https://lachouquette.ch',
+    path: '/sitemap.xml',
+    gzip: true,
+    sitemaps: [
+      {
+        path: '/sitemap-static.xml',
+        routes: [],
+      },
+      {
+        path: '/sitemap-posts.xml',
+        exclude: ['/**'],
+        routes: async () => {
+          let page = 1
+          let hasMorePage = false
+          const posts = []
+          do {
+            const { data, headers } = await axios.get(
+              `https://wordpress.lachouquette.ch/wp-json/wp/v2/posts/?_fields=slug&per_page=100&page=${page}`
+            )
+            posts.push(...data.map(({ slug }) => `/${slug}`))
+            hasMorePage = headers['x-wp-totalpages'] > page++
+          } while (hasMorePage)
+
+          return posts
+        },
+      },
+      {
+        path: '/sitemap-fiches.xml',
+        exclude: ['/**'],
+        routes: async () => {
+          let page = 1
+          let hasMorePage = false
+          const posts = []
+          do {
+            const { data, headers } = await axios.get(
+              `https://wordpress.lachouquette.ch/wp-json/wp/v2/fiches/?_fields=slug&per_page=100&page=${page}`
+            )
+            posts.push(...data.map(({ slug }) => `/fiche/${slug}`))
+            hasMorePage = headers['x-wp-totalpages'] > page++
+          } while (hasMorePage)
+
+          return posts
+        },
+      },
+      {
+        path: '/sitemap-categories.xml',
+        exclude: ['/**'],
+        routes: async () => {
+          const { data } = await axios.get(
+            `https://wordpress.lachouquette.ch/wp-json/wp/v2/categories/?_fields=slug&per_page=100&parent=0`
+          )
+          return data.map(({ slug }) => `/category/${slug}`)
+        },
+      },
+      {
+        path: '/sitemap-locations.xml',
+        exclude: ['/**'],
+        routes: async () => {
+          const { data } = await axios.get(
+            `https://wordpress.lachouquette.ch/wp-json/wp/v2/locations/?_fields=slug&per_page=100`
+          )
+          return data.map(({ slug }) => `/location/${slug}`)
+        },
+      },
+    ],
   },
   styleResources: {
     scss: [
