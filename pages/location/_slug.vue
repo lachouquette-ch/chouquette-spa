@@ -72,19 +72,28 @@ export default {
     return {
       title: this.rootLocation.name,
       meta: this.yoastMetaProperties([
-        { name: 'description', content: this.$options.filters.heDecode(this.rootLocation.description) },
+        {
+          name: 'description',
+          content: this.$options.filters.heDecode(this.rootLocation.description || this.rootLocation.name),
+        },
 
         { property: 'og:type', content: 'article' },
         { property: 'og:locale', content: 'fr_FR' },
         { property: 'og:url', content: this.currentURL },
         { property: 'og:title', content: this.$options.filters.heDecode(this.rootLocation.name) },
-        { property: 'og:description', content: this.$options.filters.heDecode(this.rootLocation.description) },
+        {
+          property: 'og:description',
+          content: this.$options.filters.heDecode(this.rootLocation.description || this.rootLocation.description),
+        },
         { property: 'og:image', content: '' },
 
-        { property: 'twitter:card', content: 'summary' },
-        { property: 'twitter:title', content: this.$options.filters.heDecode(this.rootLocation.name) },
-        { property: 'twitter:description', content: this.$options.filters.heDecode(this.rootLocation.description) },
-        { property: 'twitter:image', content: '' },
+        { name: 'twitter:card', content: 'summary' },
+        { name: 'twitter:title', content: this.$options.filters.heDecode(this.rootLocation.name) },
+        {
+          name: 'twitter:description',
+          content: this.$options.filters.heDecode(this.rootLocation.description || this.rootLocation.description),
+        },
+        { name: 'twitter:image', content: '' },
       ]),
       script: [
         this.jsonLDScript({
