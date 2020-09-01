@@ -19,21 +19,21 @@ export default {
       })
 
       // helper to udpate/create new property
-      const metadataUpdateHelper = (name, content) => {
+      const metadataUpdateHelper = (name, content, nameAttr = 'name') => {
         const property = metaProperties.find(({ property }) => property === name)
         if (property) {
           property.content = content
         } else {
           metaProperties.push({
             hid: name,
-            property: name,
+            [nameAttr]: name,
             content,
           })
         }
       }
 
       // hack URL
-      metadataUpdateHelper('og:url', this.currentURL)
+      metadataUpdateHelper('og:url', this.currentURL, 'property')
 
       // add twitter missing meta data
       metadataUpdateHelper('twitter:site', this.currentURL)
