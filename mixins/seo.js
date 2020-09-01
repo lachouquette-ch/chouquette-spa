@@ -18,17 +18,27 @@ export default {
         }
       })
 
-      // hack URL
-      const ogURL = metaProperties.find(({ property }) => property === 'og:url')
-      if (ogURL) {
-        ogURL.content = this.currentURL
-      } else {
-        metaProperties.push({
-          hid: 'og:url',
-          property: 'og:url',
-          content: this.currentURL,
-        })
+      // helper to udpate/create new property
+      const metadataUpdateHelper = (name, content) => {
+        const property = metaProperties.find(({ property }) => property === name)
+        if (property) {
+          property.content = content
+        } else {
+          metaProperties.push({
+            hid: name,
+            property: name,
+            content,
+          })
+        }
       }
+
+      // hack URL
+      metadataUpdateHelper('og:url', this.currentURL)
+
+      // add twitter missing meta data
+      metadataUpdateHelper('twitter:site', this.currentURL)
+      const image = metaProperties.find(({ property }) => property === 'og:image')
+      metadataUpdateHelper('twitter:image', image ? image.content : `${this.$config.baseURL}/logo.png`)
 
       return metaProperties
     },
