@@ -36,7 +36,14 @@ export default {
     return {
       title: this.$options.filters.heDecode(this.page.yoast_title),
       link: this.gutenbergLinks(),
-      meta: this.yoastMetaProperties(this.page.yoast_meta),
+      meta: [
+        ...this.yoastMetaProperties(this.page.yoast_meta),
+        {
+          hid: 'og:image',
+          property: 'og:image',
+          content: `${this.$config.baseURL}/logo.png`,
+        },
+      ],
       script: [
         this.jsonLDScript({
           '@context': 'http://schema.org',

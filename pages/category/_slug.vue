@@ -72,19 +72,36 @@ export default {
   head() {
     return {
       title: this.rootCategory.name + ' - ' + this.rootCategory.description,
-      meta: [
+      meta: this.yoastMetaProperties([
         {
-          hid: 'og:image',
-          property: 'og:image',
-          content: this.rootLogo.source_url,
+          name: 'description',
+          content: this.$options.filters.heDecode(this.rootCategory.description || this.rootCategory.name),
         },
-      ],
+
+        { property: 'og:type', content: 'article' },
+        { property: 'og:locale', content: 'fr_FR' },
+        { property: 'og:url', content: this.currentURL },
+        { property: 'og:title', content: this.$options.filters.heDecode(this.rootCategory.name) },
+        {
+          property: 'og:description',
+          content: this.$options.filters.heDecode(this.rootCategory.description || this.rootCategory.name),
+        },
+        { property: 'og:image', content: this.rootLogo.source_url },
+
+        { name: 'twitter:card', content: 'summary' },
+        { name: 'twitter:title', content: this.$options.filters.heDecode(this.rootCategory.name) },
+        {
+          name: 'twitter:description',
+          content: this.$options.filters.heDecode(this.rootCategory.description || this.rootCategory.name),
+        },
+        { name: 'twitter:image', content: this.rootLogo.source_url },
+      ]),
       script: [
         this.jsonLDScript({
           '@context': 'http://schema.org',
           '@type': 'WebPage',
           name: this.$options.filters.heDecode(this.rootCategory.name),
-          description: this.$options.filters.heDecode(this.rootCategory.description),
+          description: this.$options.filters.heDecode(this.rootCategory.description || this.rootCategory.name),
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',

@@ -83,7 +83,7 @@ export default {
         { property: 'og:title', content: this.$options.filters.heDecode(this.rootLocation.name) },
         {
           property: 'og:description',
-          content: this.$options.filters.heDecode(this.rootLocation.description || this.rootLocation.description),
+          content: this.$options.filters.heDecode(this.rootLocation.description || this.rootLocation.name),
         },
         { property: 'og:image', content: '' },
 
@@ -91,7 +91,7 @@ export default {
         { name: 'twitter:title', content: this.$options.filters.heDecode(this.rootLocation.name) },
         {
           name: 'twitter:description',
-          content: this.$options.filters.heDecode(this.rootLocation.description || this.rootLocation.description),
+          content: this.$options.filters.heDecode(this.rootLocation.description || this.rootLocation.name),
         },
         { name: 'twitter:image', content: '' },
       ]),
@@ -100,7 +100,7 @@ export default {
           '@context': 'http://schema.org',
           '@type': 'WebPage',
           name: this.$options.filters.heDecode(this.rootLocation.name),
-          description: this.$options.filters.heDecode(this.rootLocation.description),
+          description: this.$options.filters.heDecode(this.rootLocation.description || this.rootLocation.name),
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
