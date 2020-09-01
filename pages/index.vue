@@ -190,7 +190,20 @@ export default {
           content: `${this.$config.baseURL}/logo.png`,
         },
       ],
-      script: [this.jsonLDScript()],
+      script: [
+        this.jsonLDScript({
+          '@context': 'http://schema.org',
+          '@type': 'WebPage',
+          name: this.yoast.yoast_title,
+          description: this.yoastGetDescription(this.yoast.yoast_meta),
+          publisher: {
+            '@type': 'Organization',
+            name: 'La Chouquette',
+            logo: `${this.$config.baseURL}/logo.png`,
+          },
+          url: this.currentURL,
+        }),
+      ],
     }
   },
 }

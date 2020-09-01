@@ -13,11 +13,14 @@
 
 <script>
 import PageFiches from '~/components/PageFiches'
+import seo from '~/mixins/seo'
 
 export default {
   components: { PageFiches },
+  mixins: [seo],
   async asyncData({ store, params, query }) {
     const rootCategory = await store.dispatch('categories/fetchBySlug', params.slug)
+    const rootLogo = await store.dispatch('media/fetchById', rootCategory.logos.logo_black)
 
     // store initialization
     await store.dispatch('locations/init')
@@ -36,6 +39,7 @@ export default {
 
     return {
       rootCategory,
+      rootLogo,
 
       queryCategory,
       queryLocation,
@@ -68,6 +72,27 @@ export default {
   head() {
     return {
       title: this.rootCategory.name + ' - ' + this.rootCategory.description,
+      meta: [
+        {
+          hid: 'og:image',
+          property: 'og:image',
+          content: this.rootLogo.source_url,
+        },
+      ],
+      script: [
+        this.jsonLDScript({
+          '@context': 'http://schema.org',
+          '@type': 'WebPage',
+          name: this.$options.filters.heDecode(this.rootCategory.name),
+          description: this.$options.filters.heDecode(this.rootCategory.description),
+          publisher: {
+            '@type': 'Organization',
+            name: 'La Chouquette',
+            logo: `${this.$config.baseURL}/logo.png`,
+          },
+          url: this.currentURL,
+        }),
+      ],
     }
   },
 }

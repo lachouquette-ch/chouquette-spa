@@ -13,9 +13,11 @@
 
 <script>
 import PageFiches from '~/components/PageFiches'
+import seo from '~/mixins/seo'
 
 export default {
   components: { PageFiches },
+  mixins: [seo],
   async asyncData({ store, params, query }) {
     // store initialization
     await store.dispatch('locations/init')
@@ -69,6 +71,20 @@ export default {
   head() {
     return {
       title: this.rootLocation.name,
+      script: [
+        this.jsonLDScript({
+          '@context': 'http://schema.org',
+          '@type': 'WebPage',
+          name: this.$options.filters.heDecode(this.rootLocation.name),
+          description: this.$options.filters.heDecode(this.rootLocation.description),
+          publisher: {
+            '@type': 'Organization',
+            name: 'La Chouquette',
+            logo: `${this.$config.baseURL}/logo.png`,
+          },
+          url: this.currentURL,
+        }),
+      ],
     }
   },
 }

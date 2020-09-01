@@ -115,6 +115,7 @@
 import { email, minLength, required } from 'vuelidate/lib/validators'
 import _ from 'lodash'
 import Newsletter from '~/components/Newsletter'
+import seo from '~/mixins/seo'
 
 const recipients = ['hello', 'communication', 'webmaster']
 const mustMatchRecipients = (value) => {
@@ -123,6 +124,7 @@ const mustMatchRecipients = (value) => {
 
 export default {
   components: { Newsletter },
+  mixins: [seo],
   data() {
     return {
       formContact: {
@@ -195,6 +197,20 @@ export default {
   head() {
     return {
       title: "Contacte un membre de l'équipe La Chouquette",
+      script: [
+        this.jsonLDScript({
+          '@context': 'http://schema.org',
+          '@type': 'WebPage',
+          name: 'Contacte-nous',
+          description: "Contacte un membre de l'équipe La Chouquette",
+          publisher: {
+            '@type': 'Organization',
+            name: 'La Chouquette',
+            logo: `${this.$config.baseURL}/logo.png`,
+          },
+          url: this.currentURL,
+        }),
+      ],
     }
   },
 }

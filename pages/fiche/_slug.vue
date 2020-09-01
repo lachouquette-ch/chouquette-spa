@@ -50,8 +50,11 @@ export default {
       error({ statusCode: '404', message: `'${params.slug}' n'existe pas` })
     }
 
+    const image = await store.dispatch('media/fetchById', fiche.featured_media)
+
     return {
       fiche,
+      image,
     }
   },
   data() {
@@ -63,7 +66,32 @@ export default {
   head() {
     return {
       title: this.$options.filters.heDecode(this.fiche.title.rendered),
-      meta: this.yoastMetaProperties(this.fiche.yoast_meta),
+      meta: [
+        ...this.yoastMetaProperties(this.fiche.yoast_meta),
+        {
+          hid: 'og:image',
+          property: 'og:image',
+          content: this.fiche.featured_img,
+        },
+      ],
+      script: [
+        this.jsonLDScript({
+          '@context': 'https://schema.org',
+          '@type': 'LocalBusiness',
+          name: this.$options.filters.heDecode(this.fiche.title.rendered),
+          description: this.yoastGetDescription(this.fiche.yoast_meta),
+          image: this.fiche.featured_img,
+
+          address: this.fiche.info.address,
+          email: this.fiche.info.mail,
+          telephone: this.fiche.telephone,
+          photo: this.image.source_url,
+
+          url: this.currentURL,
+          datePublished: this.fiche.date,
+          dateModified: this.fiche.modified,
+        }),
+      ],
     }
   },
 }

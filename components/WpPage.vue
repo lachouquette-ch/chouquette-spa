@@ -43,6 +43,14 @@ export default {
           '@type': 'WebPage',
           name: this.$options.filters.heDecode(this.page.yoast_title),
           description: this.yoastGetDescription(this.page.yoast_meta),
+          publisher: {
+            '@type': 'Organization',
+            name: 'La Chouquette',
+            logo: `${this.$config.baseURL}/logo.png`,
+          },
+          url: this.currentURL,
+          datePublished: this.page.date,
+          dateModified: this.page.modified,
         }),
       ],
     }

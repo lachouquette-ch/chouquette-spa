@@ -333,22 +333,30 @@ export default {
     return {
       title: this.$options.filters.heDecode(this.post.yoast_title),
       link: this.gutenbergLinks(),
-      meta: this.yoastMetaProperties(this.post.yoast_meta),
+      meta: [
+        ...this.yoastMetaProperties(this.post.yoast_meta),
+        {
+          hid: 'og:image',
+          property: 'og:image',
+          content: this.post.featured_img,
+        },
+      ],
       script: [
         this.jsonLDScript({
           '@context': 'https://schema.org',
           '@type': 'Article',
           headline: this.$options.filters.heDecode(this.post.title.rendered),
           image: this.post.featured_img,
+          description: this.yoastGetDescription(this.post.yoast_meta),
           author: this.post.author_meta.display_name,
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
+            logo: `${this.$config.baseURL}/logo.png`,
           },
           url: this.currentURL,
           datePublished: this.post.date,
           dateModified: this.post.modified,
-          description: this.yoastGetDescription(this.post.yoast_meta),
         }),
       ],
     }
