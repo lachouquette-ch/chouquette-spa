@@ -38,6 +38,32 @@ class Repository {
     return fiches
   }
 
+  async searchFichesByCriteria(termList) {
+    console.log(termList)
+    const termMap = termList.map(({ taxonomy, value }) => {
+      return {
+        term: {
+          'criteria.criteria_term': `${taxonomy}_${value}`,
+        },
+      }
+    })
+    const {
+      hits: { hits: result },
+    } = await this.$axios.$post(`${Repository.fichesIndex}/_search`, {
+      // _source: ['_id', 'title', 'categories.name', 'criteria.term_name', 'location.address'],
+      _source: ['title', 'chouquettise_end'],
+      sort: [{ chouquettise_end: { order: 'desc', missing: '_last' } }, '_score'],
+      query: {
+        bool: {
+          filter: termMap,
+        },
+      },
+    })
+
+    const fiches = result.map(({ _source }) => _source)
+    return fiches
+  }
+
   async searchPostsByText(text) {
     const {
       hits: { hits: result },
