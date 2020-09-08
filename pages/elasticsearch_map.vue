@@ -1,20 +1,19 @@
 <template>
   <div class="container layout-content my-3">
     <div ref="map" style="height: 50vh;" />
-    {{ markers }}
   </div>
 </template>
 
 <script>
 import _ from 'lodash'
+import MarkerClusterer from '@google/markerclustererplus'
 import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, LAUSANNE_LAT_LNG } from '~/constants/mapSettings'
 
 export default {
   data() {
     return {
-      markers: [],
-      gMarkers: [],
       map: null,
+      markerClusterer: null,
       google: null,
       currentBounds: null,
     }
@@ -23,17 +22,29 @@ export default {
     this.google = await this.$googleMaps
     this.map = new this.google.maps.Map(this.$refs.map, {
       ...MAP_OPTIONS,
-      zoom: 21,
+      zoom: 9,
     })
 
-    const boundsThrottle = _.throttle(() => this.fetchMarkers(), 1000)
-    const boundsDebounce = _.debounce(boundsThrottle, 1000)
-    this.map.addListener('tilesloaded', () => {
-      setTimeout(boundsDebounce, 500)
+    this.markerClusterer = new MarkerClusterer(this.map, [], {
+      averageCenter: true,
+      styles: CLUSTER_STYLES,
+      calculator: (markers, clusterIconStylesCount) => {
+        const index = markers.find((marker) => marker.chouquettise) ? 2 : 1
+        const count = markers.reduce((accumulator, marker) => accumulator + marker.count, 0)
+        return {
+          index,
+          text: count,
+        }
+      },
     })
+
+    const fetchMarkersDebounce = _.debounce(() => this.fetchMarkers(), 1000, { trailing: true })
+    const fetchMarkersThrottle = _.throttle(fetchMarkersDebounce, 2000)
+    this.google.maps.event.addListener(this.map, 'idle', fetchMarkersThrottle)
   },
   methods: {
     async fetchMarkers() {
+      console.log('fetchMarkers')
       // check if bounds is still the same
       const mapBounds = this.map.getBounds().toJSON()
       const mapZoom = this.map.getZoom()
@@ -43,30 +54,26 @@ export default {
       }
       this.currentBounds = mapBounds
 
-      this.markers = await this.$esAPI.searchMarkers(mapBounds, mapZoom)
-      console.log('markers count', this.markers.length)
+      const markers = await this.$esAPI.searchMarkers(mapBounds, mapZoom)
+      console.log('markers count', markers.length)
 
       // add markers
-      const gBounds = new this.google.maps.LatLngBounds()
-      this.gMarkers.forEach((gMarker) => gMarker.setMap(null))
-      this.gMarkers = []
-      for (const marker of this.markers) {
+      this.markerClusterer.clearMarkers()
+      for (const marker of markers) {
         const gLatLng = new this.google.maps.LatLng(marker.coord.latitude, marker.coord.longitude)
 
         // eslint-disable-next-line no-new
-        this.gMarkers.push(
+        this.markerClusterer.addMarker(
           new this.google.maps.Marker({
             // icon: fiche.main_category.marker_icon,
             position: gLatLng,
             label: (marker.id || marker.count).toString(),
-            map: this.map,
+            count: marker.count,
+            chouquettise: marker.chouquettise,
           })
         )
-
-        gBounds.extend(gLatLng)
       }
-
-      // this.map.fitBounds(gBounds, 10)
+      this.markerClusterer.fitMapToMarkers()
     },
   },
 }
