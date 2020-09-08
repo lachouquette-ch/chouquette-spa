@@ -15,7 +15,6 @@ export default {
       map: null,
       markerClusterer: null,
       google: null,
-      currentBounds: null,
     }
   },
   async mounted() {
@@ -48,27 +47,22 @@ export default {
   },
   methods: {
     async fetchMarkers() {
-      // check if bounds is still the same
+      // remove current markers
+      this.markerClusterer.clearMarkers()
+
       const mapBounds = this.map.getBounds().toJSON()
       const mapZoom = this.map.getZoom()
-      if (this.currentBounds && _.isEqual(mapBounds, this.currentBounds)) {
-        // eslint-disable-next-line no-console
-        console.info('same bounds')
-        return
-      }
-      this.currentBounds = mapBounds
-
       const markers = await this.$esAPI.searchMarkers(mapBounds, mapZoom)
       // eslint-disable-next-line no-console
       console.debug('markers count', markers.length)
 
-      // add markers
-      this.markerClusterer.clearMarkers()
+      // build markers
+      const gMarkers = []
       for (const marker of markers) {
         const gLatLng = new this.google.maps.LatLng(marker.coord.latitude, marker.coord.longitude)
 
         // eslint-disable-next-line no-new
-        this.markerClusterer.addMarker(
+        gMarkers.push(
           new this.google.maps.Marker({
             // icon: fiche.main_category.marker_icon,
             position: gLatLng,
@@ -78,6 +72,8 @@ export default {
           })
         )
       }
+
+      this.markerClusterer.addMarkers(gMarkers)
     },
   },
 }
