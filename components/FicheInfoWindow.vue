@@ -36,7 +36,7 @@ export default {
       type: Function,
       default: () => {
         // eslint-disable-next-line no-console
-        console.log('Show btn action')
+        console.debug('Show btn action')
       },
     },
   },

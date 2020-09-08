@@ -78,7 +78,7 @@ class Repository {
     } else {
       precision = 11
     }
-    console.log('zoom', zoom, 'precision', precision)
+    console.debug('zoom', zoom, 'precision', precision)
 
     const {
       aggregations: {

@@ -7,7 +7,7 @@
 <script>
 import _ from 'lodash'
 import MarkerClusterer from '@google/markerclustererplus'
-import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, LAUSANNE_LAT_LNG } from '~/constants/mapSettings'
+import { CLUSTER_STYLES, MAP_OPTIONS } from '~/constants/mapSettings'
 
 export default {
   data() {
@@ -38,24 +38,29 @@ export default {
       },
     })
 
-    const fetchMarkersDebounce = _.debounce(() => this.fetchMarkers(), 1000, { trailing: true })
-    const fetchMarkersThrottle = _.throttle(fetchMarkersDebounce, 2000)
-    this.google.maps.event.addListener(this.map, 'idle', fetchMarkersThrottle)
+    const fetchMarkersDebounce = _.debounce(async () => await this.fetchMarkers(), 500)
+    this.google.maps.event.addDomListenerOnce(this.map, 'idle', async () => {
+      await this.fetchMarkers()
+      this.markerClusterer.fitMapToMarkers() // initialize fit
+      // wait a little to avoid double fetching markers
+      setTimeout(() => this.google.maps.event.addListener(this.map, 'idle', fetchMarkersDebounce), 1000)
+    })
   },
   methods: {
     async fetchMarkers() {
-      console.log('fetchMarkers')
       // check if bounds is still the same
       const mapBounds = this.map.getBounds().toJSON()
       const mapZoom = this.map.getZoom()
       if (this.currentBounds && _.isEqual(mapBounds, this.currentBounds)) {
-        console.log('same bounds')
+        // eslint-disable-next-line no-console
+        console.info('same bounds')
         return
       }
       this.currentBounds = mapBounds
 
       const markers = await this.$esAPI.searchMarkers(mapBounds, mapZoom)
-      console.log('markers count', markers.length)
+      // eslint-disable-next-line no-console
+      console.debug('markers count', markers.length)
 
       // add markers
       this.markerClusterer.clearMarkers()
@@ -73,7 +78,6 @@ export default {
           })
         )
       }
-      this.markerClusterer.fitMapToMarkers()
     },
   },
 }
