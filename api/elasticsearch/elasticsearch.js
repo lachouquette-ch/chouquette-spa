@@ -78,11 +78,12 @@ class Repository {
     } else {
       precision = 11
     }
+    // eslint-disable-next-line no-console
     console.debug('zoom', zoom, 'precision', precision)
 
     const {
       aggregations: {
-        fiches: { buckets },
+        map: { buckets },
       },
     } = await this.$axios.$post(`${Repository.fichesIndex}/_search`, {
       _source: false,
@@ -109,7 +110,7 @@ class Repository {
         },
       },
       aggregations: {
-        fiches: {
+        map: {
           geohash_grid: {
             field: 'location.position',
             precision,
@@ -117,12 +118,13 @@ class Repository {
           aggregations: {
             data: {
               scripted_metric: {
-                init_script: 'state.now = ZonedDateTime.parse(params.now); state.chouquettise = false; state.id = 0;',
+                init_script:
+                  'state.now = ZonedDateTime.parse(params.now); state.count = 0; state.chouquettise = false; state.id = 0; state.name = null; state.marker_icon = null;',
                 map_script:
-                  'if (state.chouquettise != true && doc.chouquettise_end.size() > 0 && doc.chouquettise_end.value.isAfter(state.now)) { state.chouquettise = true; } if (state.id === 0) { state.id = doc.id.value; } else if (state.id !== null) { state.id = null; }',
-                combine_script: 'return [state.chouquettise, state.id]',
+                  'if (state.chouquettise === false && doc.chouquettise_end.size() > 0 && doc.chouquettise_end.value.isAfter(state.now)) { state.chouquettise = true; } if (state.count++ === 0) { state.id = params._source.id; state.name = params._source.title; state.marker_icon = state.chouquettise ? params._source.marker_icon_chouquettise : params._source.marker_icon; } else { state.id = null; state.name = null; state.marker_icon = null; }',
+                combine_script: 'return state',
                 reduce_script:
-                  "Map result = new HashMap(); result['chouquettise'] = states.stream().anyMatch(e -> e.get(0) === true); if (states.stream().anyMatch(e -> e.get(1) === null)) { result['id'] = null; } else { ArrayList ids = states.stream().map(e -> e.get(1)).filter(Objects::nonNull).collect(Collectors.toList()); result['id'] = ids.size() === 1 ? ids.get(0) : null; } return result;",
+                  "Map result = new HashMap(); result['chouquettise'] = states.stream().anyMatch(state -> state.chouquettise === true); if (states.size() === 1) { def state = states.get(0); if (state.count === 1) { result['id'] = state.id; result['name'] = state.name; result['marker_icon'] = state.marker_icon; } } return result;",
                 params: {
                   now: '2020-08-04T08:36:28.446Z',
                 },

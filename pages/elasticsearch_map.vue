@@ -61,16 +61,48 @@ export default {
       for (const marker of markers) {
         const gLatLng = new this.google.maps.LatLng(marker.coord.latitude, marker.coord.longitude)
 
-        // eslint-disable-next-line no-new
-        gMarkers.push(
-          new this.google.maps.Marker({
-            // icon: fiche.main_category.marker_icon,
+        if (marker.count === 1) {
+          // single marker
+
+          gMarkers.push(
+            new this.google.maps.Marker({
+              icon: marker.marker_icon,
+              position: gLatLng,
+              title: marker.name,
+              count: marker.count,
+              chouquettise: marker.chouquettise,
+            })
+          )
+        } else {
+          // cluster marker
+
+          // build marker
+          const scaledSize = marker.chouquettise ? new this.google.maps.Size(40, 40) : new this.google.maps.Size(30, 30)
+          const url = marker.chouquettise
+            ? `${this.$config.baseURL}/marker_cluster_yellow.png`
+            : `${this.$config.baseURL}/marker_cluster_white.png`
+          const gMarker = new this.google.maps.Marker({
+            icon: {
+              url,
+              scaledSize,
+            },
+            draggable: false,
+            label: marker.count.toString(),
             position: gLatLng,
-            label: (marker.id || marker.count).toString(),
             count: marker.count,
             chouquettise: marker.chouquettise,
           })
-        )
+
+          // build event
+          const gLatLngBounds = new this.google.maps.LatLngBounds()
+          gLatLngBounds.extend({ lat: marker.bbox[0], lng: marker.bbox[1] }) // sw
+          gLatLngBounds.extend({ lat: marker.bbox[2], lng: marker.bbox[3] }) // ne
+          this.google.maps.event.addListener(gMarker, 'click', () => {
+            this.map.fitBounds(gLatLngBounds)
+          })
+
+          gMarkers.push(gMarker)
+        }
       }
 
       this.markerClusterer.addMarkers(gMarkers)
