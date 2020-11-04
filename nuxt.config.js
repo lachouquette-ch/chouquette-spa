@@ -16,7 +16,7 @@ export default {
     bannerLinkTo: process.env.BANNER_LINK_TO,
     bannerLinkText: process.env.BANNER_LINK_TEXT,
   },
-  mode: 'universal',
+  ssr: false,
   /*
    ** Headers of the page
    */

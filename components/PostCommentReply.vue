@@ -11,9 +11,7 @@
         aria-required="true"
         @blur="$v.formComment.comment.$touch"
       ></textarea>
-      <div v-if="!$v.formComment.comment.required" class="invalid-feedback">
-        Il faut un contenu à ton commentaire
-      </div>
+      <div v-if="!$v.formComment.comment.required" class="invalid-feedback">Il faut un contenu à ton commentaire</div>
       <div v-if="!$v.formComment.comment.minText" class="invalid-feedback">
         Ton commentaire doit avoir un minimum de contenu
       </div>
@@ -31,17 +29,13 @@
           aria-required="true"
           @blur="$v.formComment.name.$touch"
         />
-        <div v-if="!$v.formComment.name.required" class="invalid-feedback">
-          Merci de nous indiquer ton ptit nom
-        </div>
+        <div v-if="!$v.formComment.name.required" class="invalid-feedback">Merci de nous indiquer ton ptit nom</div>
       </div>
     </div>
     <div class="form-group row">
       <div class="col-sm-4">
         <label class="col-form-label" :for="`email${_uid}`">Adresse de messagerie *</label>
-        <small class="form-text text-muted">
-          Ton email ne sera pas publié. Parole de Chouquette !
-        </small>
+        <small class="form-text text-muted"> Ton email ne sera pas publié. Parole de Chouquette ! </small>
       </div>
       <div class="col-sm-8">
         <input
@@ -54,12 +48,8 @@
           aria-required="true"
           @blur="$v.formComment.email.$touch"
         />
-        <div v-if="!$v.formComment.email.required" class="invalid-feedback">
-          Merci de nous indiquer ton ptit nom
-        </div>
-        <div v-if="!$v.formComment.email.email" class="invalid-feedback">
-          Ton email doit être valide
-        </div>
+        <div v-if="!$v.formComment.email.required" class="invalid-feedback">Merci de nous indiquer ton ptit nom</div>
+        <div v-if="!$v.formComment.email.email" class="invalid-feedback">Ton email doit être valide</div>
       </div>
     </div>
     <div class="form-group row">
@@ -76,9 +66,7 @@
           size="30"
           @blur="$v.formComment.webSite.$touch"
         />
-        <div v-if="!$v.formComment.webSite.url" class="invalid-feedback">
-          Ton Site web doit être une adresse valide
-        </div>
+        <div v-if="!$v.formComment.webSite.url" class="invalid-feedback">Ton Site web doit être une adresse valide</div>
       </div>
     </div>
     <div class="form-submit">
