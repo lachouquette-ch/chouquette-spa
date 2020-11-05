@@ -100,12 +100,20 @@ export default {
    */
   modules: [
     '@nuxtjs/axios',
+    '@nuxtjs/apollo',
     '@nuxtjs/style-resources',
     'bootstrap-vue/nuxt',
     ['vue-scrollto/nuxt', { offset: -1 * (80 + 70) - 15 }], // fix default offset (do not work for home page)
     '@nuxtjs/sentry',
     '@nuxtjs/sitemap',
   ],
+  apollo: {
+    clientConfigs: {
+      default: {
+        httpEndpoint: 'http://localhost:4000/graphql'
+      }
+    }
+  },
   sentry: {
     dsn: 'https://aaf0c41235c44040ae01dcd356fb3e6f@o397059.ingest.sentry.io/5251223',
     disabled: process.env.NODE_ENV === 'development',
