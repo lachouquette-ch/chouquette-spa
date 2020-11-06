@@ -14,7 +14,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <nuxt-link to="/" title="Page d'accueil" class="navbar-brand d-none d-md-inline ml-md-5">
-          <h2 class="home-header-name">{{ wpName }}</h2>
+          <h2 class="home-header-name">{{ settings.name }}</h2>
         </nuxt-link>
         <div class="home-header-sn mr-md-5">
           <a href="https://www.facebook.com/lachouquettelausanne" title="Facebook" target="_blank"
@@ -44,8 +44,8 @@
 
       <div class="home-header-menu d-flex flex-column justify-content-md-center align-items-center">
         <div class="text-center w-100">
-          <h1 class="home-header-name d-block d-md-none my-2">{{ wpName }}</h1>
-          <h3 class="home-header-menu-description mb-3">{{ wpDescription }}</h3>
+          <h1 class="home-header-name d-block d-md-none my-2">{{ settings.name }}</h1>
+          <h3 class="home-header-menu-description mb-3">{{ settings.description }}</h3>
         </div>
         <div class="d-none d-md-flex flex-row flex-wrap justify-content-center text-center">
           <div v-for="category in categories" :key="category.id" class="home-header-category m-4">
@@ -121,8 +121,9 @@
 
 <script>
 import { mapState } from 'vuex'
-
 import { directive as SwiperDirective } from 'vue-awesome-swiper'
+
+import { SETTINGS } from '@/api/graphql/wordpress'
 import WpMediaCategory from '~/components/WpMediaCategory'
 import PostCard from '~/components/PostCard'
 import Search from '~/components/Search'
@@ -165,12 +166,17 @@ export default {
         ...AUTO_PLAY,
         ...RESPONSIVE,
       },
+
+      settings: {},
     }
+  },
+  apollo: {
+    settings: {
+      query: SETTINGS,
+    },
   },
   computed: {
     ...mapState({
-      wpName: (state) => state.name,
-      wpDescription: (state) => state.description,
       categories: (state) => state.menus.headerCategories,
     }),
   },
