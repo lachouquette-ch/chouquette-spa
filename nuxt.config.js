@@ -1,6 +1,6 @@
 import webpack from 'webpack'
 
-const axios = require('axios')
+import axios from 'axios'
 
 export default {
   env: {
@@ -92,7 +92,7 @@ export default {
    */
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
-    '@nuxtjs/eslint-module',
+    // '@nuxtjs/eslint-module',
     ['@nuxtjs/google-analytics', { id: 'UA-47894326-1' }],
   ],
   /*
@@ -110,9 +110,9 @@ export default {
   apollo: {
     clientConfigs: {
       default: {
-        httpEndpoint: 'http://localhost:4000/graphql'
-      }
-    }
+        httpEndpoint: 'http://localhost:4000/graphql',
+      },
+    },
   },
   sentry: {
     dsn: 'https://aaf0c41235c44040ae01dcd356fb3e6f@o397059.ingest.sentry.io/5251223',
