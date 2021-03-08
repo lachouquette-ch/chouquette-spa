@@ -71,7 +71,7 @@ export default {
   head() {
     return {
       title: this.rootLocation.name,
-      meta: this.yoastMetaProperties([
+      meta: this.seoMetaProperties([
         {
           name: 'description',
           content: this.$options.filters.heDecode(this.rootLocation.description || this.rootLocation.name),

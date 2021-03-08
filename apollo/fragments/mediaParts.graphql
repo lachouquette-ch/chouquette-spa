@@ -1,0 +1,12 @@
+fragment MediaParts on Media {
+  id
+  alt
+  sizes {
+    name
+    image {
+      width
+      height
+      url
+    }
+  }
+}

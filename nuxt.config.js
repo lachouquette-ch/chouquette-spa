@@ -108,6 +108,18 @@ export default {
     '@nuxtjs/sitemap',
   ],
   apollo: {
+    tokenName: 'chouquette', // specify token name
+    cookieAttributes: {
+      expires: 7, // optional, default: 7 (days)
+    },
+    defaultOptions: {
+      $query: {
+        fetchPolicy: 'cache-and-network',
+        errorPolicy: 'all',
+      },
+    },
+    watchLoading: '~/apollo/loadingHandler.js',
+    errorHandler: '~/apollo/errorHandler.js',
     clientConfigs: {
       default: {
         httpEndpoint: 'http://localhost:4000/graphql',

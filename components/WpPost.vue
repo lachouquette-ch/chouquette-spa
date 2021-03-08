@@ -334,7 +334,7 @@ export default {
       title: this.$options.filters.heDecode(this.post.yoast_title),
       link: this.gutenbergLinks(),
       meta: [
-        ...this.yoastMetaProperties(this.post.yoast_meta),
+        ...this.seoMetaProperties(this.post.yoast_meta),
         {
           hid: 'og:image',
           property: 'og:image',
@@ -347,7 +347,7 @@ export default {
           '@type': 'Article',
           headline: this.$options.filters.heDecode(this.post.title.rendered),
           image: this.post.featured_img,
-          description: this.yoastGetDescription(this.post.yoast_meta),
+          description: this.seoGetDescription(this.post.yoast_meta),
           author: this.post.author_meta.display_name,
           publisher: {
             '@type': 'Organization',

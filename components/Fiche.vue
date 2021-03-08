@@ -8,7 +8,7 @@
       @shown="focusOn('message')"
       @close="resetModal"
     >
-      <template v-slot:modal-title>{{ fiche.title.rendered | heDecode }}</template>
+      <template v-slot:modal-title>{{ fiche.title }}</template>
       <template v-slot:default>
         <form @submit.prevent="postMessage(isContactModal)">
           <label v-if="isContactModal">
@@ -31,9 +31,7 @@
               rows="8"
               @blur="$v.formFiche.message.$touch"
             ></textarea>
-            <div v-if="!$v.formFiche.message.required" class="invalid-feedback">
-              Il faut un contenu à ton message
-            </div>
+            <div v-if="!$v.formFiche.message.required" class="invalid-feedback">Il faut un contenu à ton message</div>
             <div v-if="!$v.formFiche.message.minText" class="invalid-feedback">
               Ton message doit avoir un minimum de contenu
             </div>
@@ -48,9 +46,7 @@
               :class="{ 'is-invalid': $v.formFiche.name.$error }"
               @blur="$v.formFiche.name.$touch"
             />
-            <div v-if="!$v.formFiche.name.required" class="invalid-feedback">
-              Merci de nous indiquer ton ptit nom
-            </div>
+            <div v-if="!$v.formFiche.name.required" class="invalid-feedback">Merci de nous indiquer ton ptit nom</div>
           </div>
           <div class="form-group">
             <label for="ficheModalMail">Ton mail *</label>
@@ -66,9 +62,7 @@
             <div v-if="!$v.formFiche.email.required" class="invalid-feedback">
               Merci de nous indiquer ton email (ne sera pas afficher)
             </div>
-            <div v-if="!$v.formFiche.email.email" class="invalid-feedback">
-              Ton email doit être valide
-            </div>
+            <div v-if="!$v.formFiche.email.email" class="invalid-feedback">Ton email doit être valide</div>
           </div>
           <button class="btn btn-primary w-100" type="submit" :disabled="loading">
             <b-spinner v-show="loading" small variant="black" label="chargement" class="mr-2"></b-spinner>
@@ -82,24 +76,21 @@
         <div ref="front" class="h-100 w-100 card bg-white">
           <div class="card-header p-0">
             <WpMedia
-              v-if="featuredMedia"
-              :media="featuredMedia"
+              v-if="fiche.image"
+              :media="fiche.image"
               size="medium_large"
               :no-src-set="true"
               class="fiche-image"
             />
-            <span
-              class="fiche-category-icon rounded-circle"
-              :class="fiche.info.chouquettise ? 'bg-yellow' : 'bg-white'"
-            >
-              <img :src="fiche.main_category.logo" alt="" :title="fiche.main_category.name" width="35" height="35" />
+            <span class="fiche-category-icon rounded-circle" :class="fiche.isChouquettise ? 'bg-yellow' : 'bg-white'">
+              <!--              <img :src="fiche.main_category.logo" alt="" :title="fiche.main_category.name" width="35" height="35" />-->
             </span>
           </div>
           <div class="card-body d-flex flex-column position-relative">
-            <h2 class="card-title text-center h4">{{ fiche.title.rendered | heDecode }}</h2>
+            <h2 class="card-title text-center h4">{{ fiche.title }}</h2>
             <!-- eslint-disable-next-line vue/no-v-html -->
-            <div class="card-text" v-html="fiche.content.rendered"></div>
-            <div v-if="fiche.info.chouquettise" class="card-text d-flex justify-content-around mt-auto">
+            <div class="card-text" v-html="fiche.content"></div>
+            <div v-if="fiche.isChouquettise" class="card-text d-flex justify-content-around mt-auto">
               <a
                 v-if="fiche.info.mail"
                 href=""
@@ -117,16 +108,16 @@
                 ><i class="fas fa-phone-alt"></i
               ></a>
               <a
-                v-if="fiche.info.sn_facebook"
-                :href="fiche.info.sn_facebook"
+                v-if="fiche.info.facebook"
+                :href="fiche.info.facebook"
                 title="Facebook"
                 target="_blank"
                 class="fiche-social border border-secondary rounded-circle"
                 ><i class="fab fa-facebook-f"></i
               ></a>
               <a
-                v-if="fiche.info.sn_instagram"
-                :href="fiche.info.sn_instagram"
+                v-if="fiche.info.instagram"
+                :href="fiche.info.instagram"
                 title="Instagram"
                 target="_blank"
                 class="fiche-social border border-secondary rounded-circle"
@@ -170,7 +161,7 @@
             <div ref="ficheMap" class="h-100"></div>
           </div>
           <div class="card-body position-relative p-0 pt-2">
-            <ul v-if="fiche.info.chouquettise" class="list-group list-group-flush">
+            <ul v-if="fiche.isChouquettise" class="list-group list-group-flush">
               <li v-if="fiche.info.website" class="list-group-item text-nowrap text-truncate">
                 <a :href="fiche.info.website" title="Site Internet" target="_blank"
                   ><i class="fas fa-globe"></i> {{ fiche.info.website | prettyURL }}
@@ -218,12 +209,12 @@
               </li>
             </ul>
             <div class="card-text p-3">
-              <div v-if="criteria">
+              <div v-if="fiche.criteria">
                 <span
-                  v-for="value in criteriaList"
-                  :key="value.id"
+                  v-for="criteria in fiche.criteria"
+                  :key="criteria.name"
                   class="badge badge-pill badge-light-grey font-weight-normal mr-1"
-                  >{{ value.name }}</span
+                  >{{ criteria.name }}</span
                 >
               </div>
             </div>
@@ -317,17 +308,6 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      media: (state) => state.media.all,
-      fichesCriteria: (state) => state.fiches.criteria,
-    }),
-    // property helper
-    featuredMedia() {
-      return this.media[this.fiche.featured_media]
-    },
-    criteria() {
-      return this.fichesCriteria[this.fiche.id]
-    },
     latestPost() {
       return _.isEmpty(this.fiche.linked_posts) ? null : this.fiche.linked_posts[0]
     },
@@ -357,11 +337,6 @@ export default {
     },
     currentDayOfWeek() {
       return moment().locale('fr-CH').format('dddd')
-    },
-    criteriaList() {
-      const criteriaList = _.flatten(Object.values(this.criteria))
-      const termsList = criteriaList.flatMap(({ values }) => values)
-      return _.uniqBy(termsList, 'slug')
     },
   },
   mounted() {
@@ -416,14 +391,14 @@ export default {
       // add marker
       if (this.map) {
         this.infoWindow = new this.google.maps.InfoWindow({
-          content: `<div class="text-center">${this.fiche.info.location.address}</div>`,
+          content: `<div class="text-center">${this.fiche.poi.address}</div>`,
         })
         this.marker = new this.google.maps.Marker({
           animation: this.google.maps.Animation.DROP,
           icon: this.fiche.main_category.marker_icon,
           map: this.map,
-          position: this.fiche.info.location,
-          title: this.$options.filters.heDecode(this.fiche.title.rendered),
+          position: this.fiche.poi,
+          title: this.fiche.title,
         })
 
         this.map.setCenter(this.marker.getPosition())

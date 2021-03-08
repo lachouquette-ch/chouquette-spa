@@ -5,12 +5,12 @@ export default {
     },
   },
   methods: {
-    yoastGetDescription(yoastMeta) {
+    seoGetDescription(yoastMeta) {
       const ogDescription = yoastMeta.find(({ property }) => property === 'og:description')
       return ogDescription ? this.$options.filters.heDecode(ogDescription.content) : ''
     },
-    yoastMetaProperties(yoastMeta) {
-      const metaProperties = yoastMeta.map((metaProperty) => {
+    seoMetaProperties(metadata) {
+      const metaProperties = metadata.map((metaProperty) => {
         return {
           ...metaProperty,
           content: this.$options.filters.heDecode(metaProperty.content),

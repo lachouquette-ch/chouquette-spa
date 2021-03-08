@@ -1,0 +1,40 @@
+#import '../fragments/mediaParts.graphql'
+#import '../fragments/seo.graphql'
+
+query {
+    ficheBySlug(slug: "mangiobevo-epicerie-italienne-lausanne") {
+        id
+        slug
+        title
+        date
+        content
+        categoryId
+        isChouquettise
+        poi {
+            street
+            number
+            postCode
+            state
+            city
+            lat
+            lng
+        }
+        info {
+            mail
+            telephone
+            facebook
+            openings
+        }
+        address
+        locationId
+        image {
+            ...MediaParts
+        }
+        criteria {
+            name
+        }
+        seo {
+            ...SeoParts
+        }
+    }
+}

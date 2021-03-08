@@ -189,7 +189,7 @@ export default {
     return {
       title: this.yoast.yoast_title,
       meta: [
-        ...this.yoastMetaProperties(this.yoast.yoast_meta),
+        ...this.seoMetaProperties(this.yoast.yoast_meta),
         {
           hid: 'og:image',
           property: 'og:image',
@@ -201,7 +201,7 @@ export default {
           '@context': 'http://schema.org',
           '@type': 'WebPage',
           name: this.yoast.yoast_title,
-          description: this.yoastGetDescription(this.yoast.yoast_meta),
+          description: this.seoGetDescription(this.yoast.yoast_meta),
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',

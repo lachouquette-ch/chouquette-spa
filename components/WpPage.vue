@@ -37,7 +37,7 @@ export default {
       title: this.$options.filters.heDecode(this.page.yoast_title),
       link: this.gutenbergLinks(),
       meta: [
-        ...this.yoastMetaProperties(this.page.yoast_meta),
+        ...this.seoMetaProperties(this.page.yoast_meta),
         {
           hid: 'og:image',
           property: 'og:image',
@@ -49,7 +49,7 @@ export default {
           '@context': 'http://schema.org',
           '@type': 'WebPage',
           name: this.$options.filters.heDecode(this.page.yoast_title),
-          description: this.yoastGetDescription(this.page.yoast_meta),
+          description: this.seoGetDescription(this.page.yoast_meta),
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',

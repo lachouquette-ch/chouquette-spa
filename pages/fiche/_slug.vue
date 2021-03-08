@@ -1,16 +1,17 @@
 <template>
   <div class="fiche-page layout-content container my-4">
-    <h1 class="text-center mb-4">{{ fiche.title.rendered | heDecode }}</h1>
+    <h1 class="text-center mb-4">{{ fiche.title }}</h1>
     <main role="main">
       <Fiche :fiche="fiche" no-ref-link flat-enable />
     </main>
     <div class="mt-4">
-      <template v-if="$fetchState.pending">
-        <div class="text-center">
-          <b-spinner variant="yellow" label="chargement"></b-spinner>
-        </div>
-      </template>
-      <template v-else-if="posts.length">
+      <!--      <template v-if="$fetchState.pending">-->
+      <!--        <div class="text-center">-->
+      <!--          <b-spinner variant="yellow" label="chargement"></b-spinner>-->
+      <!--        </div>-->
+      <!--      </template>-->
+      <!--      <template v-else-if="posts.length">-->
+      <template>
         <h2 class="text-center mb-4">
           <span v-if="posts.length === 1">L'article</span>
           <span v-else>Les articles</span>
@@ -30,31 +31,31 @@ import Fiche from '~/components/Fiche'
 import PostCard from '~/components/PostCard'
 import seo from '~/mixins/seo'
 
+import fetchBySlug from '~/apollo/queries/ficheBySlug.graphql'
+
 export default {
   components: { Fiche, PostCard },
   mixins: [seo],
-  async fetch() {
-    const postIds = this.fiche.linked_posts.map(({ id }) => id)
-
-    this.posts = await this.$store.dispatch('posts/fetchByIds', postIds)
-  },
+  // async fetch() {
+  //   const postIds = this.fiche.linked_posts.map(({ id }) => id)
+  //
+  //   this.posts = await this.$store.dispatch('posts/fetchByIds', postIds)
+  // },
   async asyncData(context) {
-    const { store, params, route, error } = context
+    const { app, store, params, route, error } = context
 
-    // store initialization
-    await store.dispatch('yoast/init')
+    const client = app.apolloProvider.defaultClient
 
-    const fiche = await store.dispatch('fiches/fetchBySlug', params.slug)
+    const fiche = await client
+      .query({ query: fetchBySlug, variables: { slug: params.slug } })
+      .then(({ data }) => data.ficheBySlug)
     if (!fiche) {
       await store.dispatch('yoast/redirect', { path: route.path, context })
       error({ statusCode: '404', message: `'${params.slug}' n'existe pas` })
     }
 
-    const image = await store.dispatch('media/fetchById', fiche.featured_media)
-
     return {
       fiche,
-      image,
     }
   },
   data() {
@@ -65,9 +66,9 @@ export default {
   },
   head() {
     return {
-      title: this.$options.filters.heDecode(this.fiche.title.rendered),
+      title: this.fiche.seo.title,
       meta: [
-        ...this.yoastMetaProperties(this.fiche.yoast_meta),
+        ...this.seoMetaProperties(JSON.parse(this.fiche.seo.metadata)),
         {
           hid: 'og:image',
           property: 'og:image',
@@ -78,14 +79,14 @@ export default {
         this.jsonLDScript({
           '@context': 'https://schema.org',
           '@type': 'LocalBusiness',
-          name: this.$options.filters.heDecode(this.fiche.title.rendered),
-          description: this.yoastGetDescription(this.fiche.yoast_meta),
-          image: this.fiche.featured_img,
+          name: this.fiche.seo.title,
+          description: this.seoGetDescription(JSON.parse(this.fiche.seo.metadata)),
+          image: this.fiche.image.source,
 
           address: this.fiche.info.address,
           email: this.fiche.info.mail,
           telephone: this.fiche.telephone,
-          photo: this.image.source_url,
+          photo: this.fiche.image.source,
 
           url: this.currentURL,
           datePublished: this.fiche.date,

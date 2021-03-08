@@ -56,7 +56,7 @@ export default {
   },
   computed: {
     escapedTitle() {
-      return this.$options.filters.heDecode(this.fiche.title.rendered)
+      return this.fiche.title
     },
   },
   mounted() {

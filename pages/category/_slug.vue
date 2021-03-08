@@ -72,7 +72,7 @@ export default {
   head() {
     return {
       title: this.rootCategory.name + ' - ' + this.rootCategory.description,
-      meta: this.yoastMetaProperties([
+      meta: this.seoMetaProperties([
         {
           name: 'description',
           content: this.$options.filters.heDecode(this.rootCategory.description || this.rootCategory.name),
