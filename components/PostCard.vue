@@ -1,14 +1,14 @@
 <template>
   <article class="card shadow-sm position-relative text-black">
     <div class="card-img-top">
-      <WpMedia v-if="featuredMedia" :media="featuredMedia" size="medium_large" />
+      <WpMedia v-if="post.image" :media="post.image" size="medium_large" />
       <div class="card-category rounded-circle bg-white shadow">
-        <WpMediaCategory v-if="topCategory" :category="topCategory" width="35" height="35" color="black" />
+        <!--        <WpMediaCategory v-if="topCategory" :category="topCategory" width="35" height="35" color="black" />-->
       </div>
     </div>
     <div class="card-body">
       <p class="card-text text-center">
-        {{ post.title.rendered | heDecode }}
+        {{ post.title }}
       </p>
     </div>
   </article>
@@ -40,8 +40,7 @@ export default {
     }),
   },
   created() {
-    this.topCategory = this.categories[this.post.top_categories[0]]
-    if (this.post.featured_media) this.featuredMedia = this.media[this.post.featured_media]
+    // this.topCategory = this.categories[this.post.top_categories[0]]
   },
 }
 </script>

@@ -5,19 +5,13 @@
       <Fiche :fiche="fiche" no-ref-link flat-enable />
     </main>
     <div class="mt-4">
-      <!--      <template v-if="$fetchState.pending">-->
-      <!--        <div class="text-center">-->
-      <!--          <b-spinner variant="yellow" label="chargement"></b-spinner>-->
-      <!--        </div>-->
-      <!--      </template>-->
-      <!--      <template v-else-if="posts.length">-->
-      <template>
+      <template v-if="fiche.postCards">
         <h2 class="text-center mb-4">
           <span v-if="posts.length === 1">L'article</span>
           <span v-else>Les articles</span>
         </h2>
         <div class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
-          <nuxt-link v-for="post in posts" :key="post.id" :to="{ path: `/${post.slug}` }" class="post-card">
+          <nuxt-link v-for="post in fiche.postCards" :key="post.id" :to="{ path: `/${post.slug}` }" class="post-card">
             <PostCard :post="post" class="mx-auto" />
           </nuxt-link>
         </div>
@@ -36,11 +30,6 @@ import fetchBySlug from '~/apollo/queries/ficheBySlug.graphql'
 export default {
   components: { Fiche, PostCard },
   mixins: [seo],
-  // async fetch() {
-  //   const postIds = this.fiche.linked_posts.map(({ id }) => id)
-  //
-  //   this.posts = await this.$store.dispatch('posts/fetchByIds', postIds)
-  // },
   async asyncData(context) {
     const { app, store, params, route, error } = context
 

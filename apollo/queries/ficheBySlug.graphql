@@ -1,8 +1,9 @@
-#import '../fragments/mediaParts.graphql'
+#import '../fragments/media.graphql'
+#import '../fragments/postCard.graphql'
 #import '../fragments/seo.graphql'
 
-query {
-    ficheBySlug(slug: "mangiobevo-epicerie-italienne-lausanne") {
+query($slug: String!) {
+    ficheBySlug(slug: $slug) {
         id
         slug
         title
@@ -35,6 +36,9 @@ query {
         }
         seo {
             ...SeoParts
+        }
+        postCards {
+            ...PostCardParts
         }
     }
 }

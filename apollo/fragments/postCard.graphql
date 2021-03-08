@@ -1,0 +1,9 @@
+fragment PostCardParts on PostCard {
+    id
+    slug
+    title
+    image {
+        ...MediaParts
+    }
+    categories
+}
