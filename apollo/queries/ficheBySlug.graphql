@@ -35,6 +35,10 @@ query($slug: String!) {
         }
         criteria {
             name
+            values {
+                id
+                name
+            }
         }
         poi {
             address

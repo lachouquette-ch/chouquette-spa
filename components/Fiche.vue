@@ -211,10 +211,10 @@
             <div class="card-text p-3">
               <div v-if="fiche.criteria">
                 <span
-                  v-for="criteria in fiche.criteria"
-                  :key="criteria.name"
+                  v-for="criteriaValue in criteriaValues"
+                  :key="criteriaValue.id"
                   class="badge badge-pill badge-light-grey font-weight-normal mr-1"
-                  >{{ criteria.name }}</span
+                  >{{ criteriaValue.name }}</span
                 >
               </div>
             </div>
@@ -312,6 +312,9 @@ export default {
     },
     currentURL() {
       return process.client ? window.location.host : ''
+    },
+    criteriaValues() {
+      return this.fiche.criteria.flatMap((criteria) => criteria.values)
     },
 
     // css
