@@ -308,7 +308,7 @@ export default {
   },
   computed: {
     latestPost() {
-      return _.isEmpty(this.fiche.linked_posts) ? null : this.fiche.linked_posts[0]
+      return _.isEmpty(this.fiche.postCards) ? null : this.fiche.postCards[0]
     },
     currentURL() {
       return process.client ? window.location.host : ''
