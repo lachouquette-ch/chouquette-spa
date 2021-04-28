@@ -2,8 +2,8 @@
   <img
     :width="mediaDetails.width"
     :height="mediaDetails.height"
-    :src="mediaDetails.source_url"
-    :alt="media.alt_text"
+    :src="mediaDetails.url"
+    :alt="media.alt"
     :srcset="srcSet"
     sizes="(max-width: 1024px) 100vw, 1024px"
   />
@@ -41,12 +41,13 @@ export default {
   computed: {
     srcSet() {
       if (this.noSrcSet) return ''
-      else
-        return Object.entries(this.media.media_details.sizes)
-          .map(([_, sizeData]) => {
-            return `${sizeData.source_url} ${sizeData.width}w`
+      else {
+        return this.media.sizes
+          .map(({ image }) => {
+            return `${image.url} ${image.width}w`
           })
           .join(', ')
+      }
     },
   },
   watch: {
@@ -59,11 +60,15 @@ export default {
   },
   methods: {
     init() {
+      const sizes = {}
+      for (const { name, image } of this.media.sizes) {
+        sizes[name] = image
+      }
       // find media_detail_size that match wanted size of any upper size. Else fallback to full size
       const wantedSizeOrHigher = THUMBNAIL_SIZES.slice(THUMBNAIL_SIZES.indexOf(this.size))
-      const selectedSizes = _.intersection(wantedSizeOrHigher, Object.keys(this.media.media_details.sizes))
-      if (!_.isEmpty(selectedSizes)) this.mediaDetails = this.media.media_details.sizes[selectedSizes.shift()]
-      else this.mediaDetails = this.media.media_details.sizes.full
+      const selectedSizes = _.intersection(wantedSizeOrHigher, Object.keys(sizes))
+      if (!_.isEmpty(selectedSizes)) this.mediaDetails = sizes[selectedSizes.shift()]
+      else this.mediaDetails = sizes.full
     },
   },
 }

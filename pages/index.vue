@@ -123,7 +123,7 @@
 import { mapState } from 'vuex'
 import { directive as SwiperDirective } from 'vue-awesome-swiper'
 
-import { SETTINGS } from '@/api/graphql/wordpress'
+import { SETTINGS } from '@/apollo/queries/nuxtServerInit.graphql'
 import WpMediaCategory from '~/components/WpMediaCategory'
 import PostCard from '~/components/PostCard'
 import Search from '~/components/Search'

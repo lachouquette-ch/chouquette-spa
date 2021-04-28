@@ -9,34 +9,43 @@ query($slug: String!) {
         title
         date
         content
-        categoryId
         isChouquettise
-        poi {
-            street
-            number
-            postCode
-            state
-            city
-            lat
-            lng
-        }
+        address
+
+        principalCategoryId
+        categoryIds
+        locationId
+
         info {
             mail
             telephone
+            website
             facebook
+            instagram
+            cost
             openings
         }
-        address
-        locationId
+        logo {
+            slug
+            name
+            url
+        }
         image {
             ...MediaParts
         }
         criteria {
             name
         }
+        poi {
+            address
+            lat
+            lng
+            marker
+        }
         seo {
             ...SeoParts
         }
+
         postCards {
             ...PostCardParts
         }

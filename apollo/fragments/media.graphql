@@ -1,6 +1,7 @@
 fragment MediaParts on Media {
   id
   alt
+  source
   sizes {
     name
     image {

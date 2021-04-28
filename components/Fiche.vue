@@ -83,7 +83,7 @@
               class="fiche-image"
             />
             <span class="fiche-category-icon rounded-circle" :class="fiche.isChouquettise ? 'bg-yellow' : 'bg-white'">
-              <!--              <img :src="fiche.main_category.logo" alt="" :title="fiche.main_category.name" width="35" height="35" />-->
+              <img :src="fiche.logo.url" alt="" :title="fiche.logo.name" width="35" height="35" />
             </span>
           </div>
           <div class="card-body d-flex flex-column position-relative">
@@ -157,7 +157,7 @@
       </div>
       <div v-if="loadBack" ref="ficheBack" class="fiche-back h-100 d-flex" :class="backClass">
         <div ref="back" class="h-100 w-100 card bg-white">
-          <div v-if="fiche.info.location" class="card-header p-0">
+          <div v-if="fiche.poi" class="card-header p-0">
             <div ref="ficheMap" class="h-100"></div>
           </div>
           <div class="card-body position-relative p-0 pt-2">
@@ -257,8 +257,7 @@ import { email, minLength, required } from 'vuelidate/lib/validators'
 import moment from 'moment'
 import _ from 'lodash'
 
-import { mapState } from 'vuex'
-import WpMedia from './WpMedia'
+import WpMedia from './WpMediaGQL'
 import { MAP_OPTIONS } from '~/constants/mapSettings'
 import modal from '~/mixins/modal'
 import FicheShare from '~/components/FicheShare'
@@ -348,7 +347,7 @@ export default {
   methods: {
     // map
     async buildMap() {
-      if (this.fiche.info.location) {
+      if (this.fiche.poi) {
         try {
           this.google = await this.$googleMaps
           this.map = new this.google.maps.Map(this.$refs.ficheMap, {
@@ -395,7 +394,7 @@ export default {
         })
         this.marker = new this.google.maps.Marker({
           animation: this.google.maps.Animation.DROP,
-          icon: this.fiche.main_category.marker_icon,
+          icon: this.fiche.poi.marker,
           map: this.map,
           position: this.fiche.poi,
           title: this.fiche.title,
