@@ -5,5 +5,5 @@ fragment PostCardParts on PostCard {
     image {
         ...MediaParts
     }
-    categories
+    categoryId
 }

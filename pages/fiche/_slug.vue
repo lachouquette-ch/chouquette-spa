@@ -22,7 +22,7 @@
 
 <script>
 import Fiche from '~/components/Fiche'
-import PostCard from '~/components/PostCard'
+import PostCard from '~/components/PostCardGQL'
 import seo from '~/mixins/seo'
 
 import fetchBySlug from '~/apollo/queries/ficheBySlug.graphql'
