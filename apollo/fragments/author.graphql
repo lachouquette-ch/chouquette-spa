@@ -1,0 +1,11 @@
+fragment AuthorParts on Author {
+    id
+    slug
+    name
+    description
+    avatar {
+        size24
+        size48
+        size96
+    }
+}

@@ -47,7 +47,7 @@ export default {
   },
   computed: {
     escapedTitle() {
-      return this.$options.filters.heDecode(this.post.title.rendered)
+      return this.post.title
     },
   },
   mounted() {

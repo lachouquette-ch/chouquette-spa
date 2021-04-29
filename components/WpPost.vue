@@ -12,7 +12,7 @@
       centered
       @hide="closeModal"
     >
-      <template #default="{close}">
+      <template #default="{ close }">
         <!-- For medium device -->
         <a href="" class="fiche-modal-close d-none d-md-block m-2 text-center text-black" @click.prevent="close"
           ><i class="fas fa-times"></i
@@ -72,15 +72,15 @@
     <main role="main" class="post layout-content" :class="{ 'with-sidebar': fiches.length }">
       <article :id="post.id">
         <header class="post-header container-fluid px-0 mb-6">
-          <WPMedia v-if="featuredMedia" :media="featuredMedia" class="post-header-img" />
+          <WPMedia v-if="post.image" :media="post.image" class="post-header-img" />
           <WpAvatar
             :size="150"
-            :avatar-urls="author.avatar_urls"
-            :alt="author.name"
+            :avatar-urls="post.author.avatar"
+            :alt="post.author.name"
             class="post-header-author-img rounded-circle"
           />
           <div class="post-header-meta">
-            <span>par {{ author.name }}</span>
+            <span>par {{ post.author.name }}</span>
             <span v-if="postModifiedDate">
               mise à jour le <time :datetime="post.modified">{{ postModifiedDate }}</time>
             </span>
@@ -92,21 +92,21 @@
         </header>
 
         <section class="gutenberg-content container pt-4 mb-5">
-          <h1 class="pt-2 mb-4 text-center">{{ post.title.rendered | heDecode }}</h1>
+          <h1 class="pt-2 mb-4 text-center">{{ post.title }}</h1>
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="post.content.rendered" />
+          <div v-html="post.content" />
         </section>
 
         <section class="post-author container mb-5">
           <div class="border shadow-sm text-center position-relative">
             <WpAvatar
               :size="150"
-              :avatar-urls="author.avatar_urls"
-              :alt="author.name"
+              :avatar-urls="post.author.avatar"
+              :alt="post.author.name"
               class="post-header-author-img rounded-circle"
             />
-            <h5 class="mt-3 mb-4">{{ author.name }}</h5>
-            <p class="px-2 pb-1">{{ author.description }}</p>
+            <h5 class="mt-3 mb-4">{{ post.author.name }}</h5>
+            <p class="px-2 pb-1">{{ post.author.description }}</p>
           </div>
         </section>
 
@@ -179,7 +179,7 @@
 import moment from 'moment'
 
 import { directive as SwiperDirective } from 'vue-awesome-swiper'
-import WPMedia from '../components/WpMedia'
+import WPMedia from '../components/WpMediaGQL'
 import PostShare from '../components/PostShare'
 import PostComment from '../components/PostComment'
 import PostCard from '../components/PostCard'
@@ -219,7 +219,7 @@ export default {
     preview: Boolean,
   },
   async fetch() {
-    this.fiches = await this.$store.dispatch('fiches/fetchByIds', this.post.meta.link_fiche)
+    this.fiches = await this.$store.dispatch('fiches/fetchByIds', this.post.ficheIds)
   },
   data() {
     return {
@@ -251,12 +251,6 @@ export default {
     },
     hasSingleFiche() {
       return this.fiches && this.fiches.length === 1
-    },
-    featuredMedia() {
-      return this.post._embedded['wp:featuredmedia'] ? this.post._embedded['wp:featuredmedia'][0] : null
-    },
-    author() {
-      return this.post._embedded.author[0]
     },
     tags() {
       return this.post._embedded['wp:term'][1]
@@ -331,24 +325,24 @@ export default {
   },
   head() {
     return {
-      title: this.$options.filters.heDecode(this.post.yoast_title),
+      title: this.post.seo.title,
       link: this.gutenbergLinks(),
       meta: [
-        ...this.seoMetaProperties(this.post.yoast_meta),
+        ...this.seoMetaProperties(JSON.parse(this.post.seo.metadata)),
         {
           hid: 'og:image',
           property: 'og:image',
-          content: this.post.featured_img,
+          content: this.post.image,
         },
       ],
       script: [
         this.jsonLDScript({
           '@context': 'https://schema.org',
           '@type': 'Article',
-          headline: this.$options.filters.heDecode(this.post.title.rendered),
-          image: this.post.featured_img,
-          description: this.seoGetDescription(this.post.yoast_meta),
-          author: this.post.author_meta.display_name,
+          headline: this.post.title,
+          image: this.post.image,
+          description: this.seoGetDescription(JSON.parse(this.post.seo.metadata)),
+          author: this.post.author.name,
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',

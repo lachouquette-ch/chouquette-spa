@@ -9,6 +9,7 @@
 import _ from 'lodash'
 
 import fetchPageBySlug from '@/apollo/queries/pageBySlug.graphql'
+import fetchPostBySlug from '@/apollo/queries/postBySlug.graphql'
 import WpPost from '~/components/WpPost'
 import WpPage from '~/components/WpPage'
 
@@ -36,7 +37,9 @@ export default {
     }
 
     // then as a post
-    const post = await app.$wpAPI.wp.posts.getBySlug(params.slug, { _embed: true }).then(({ data }) => data[0])
+    const post = await client
+      .query({ query: fetchPostBySlug, variables: { slug: params.slug } })
+      .then(({ data }) => data.postBySlug)
 
     // redirect if not a post neither
     if (_.isEmpty(post)) {
