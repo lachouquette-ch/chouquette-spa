@@ -8,6 +8,7 @@
 <script>
 import _ from 'lodash'
 
+import fetchPageBySlug from '@/apollo/queries/pageBySlug.graphql'
 import WpPost from '~/components/WpPost'
 import WpPage from '~/components/WpPage'
 
@@ -18,12 +19,15 @@ export default {
   },
   async asyncData(context) {
     const { app, store, params, route, error } = context
+    const client = app.apolloProvider.defaultClient
 
     // store initialization
     await store.dispatch('yoast/init')
 
     // first try as a page
-    const page = await app.$wpAPI.wp.pages.getBySlug(params.slug).then(({ data }) => data[0])
+    const page = await client
+      .query({ query: fetchPageBySlug, variables: { slug: params.slug } })
+      .then(({ data }) => data.pageBySlug)
     if (page) {
       return {
         pageType: 'page',
