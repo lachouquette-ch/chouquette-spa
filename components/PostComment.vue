@@ -2,20 +2,15 @@
   <article class="my-3">
     <header>
       <div>
-        <WpAvatar
-          :size="32"
-          :avatar-urls="comment.author_avatar_urls"
-          :alt="comment.author_name"
-          class="rounded-circle"
-        />
-        <b class="ml-2">{{ comment.author_name }}</b> <span class="says">dit&nbsp;:</span>
+        <WpAvatar :size="32" :avatar-urls="comment.authorAvatar" :alt="comment.authorName" class="rounded-circle" />
+        <b class="ml-2">{{ comment.authorName }}</b> <span class="says">dit&nbsp;:</span>
       </div>
       <div class="comment-metadata">
         <time :datetime="comment.date">Le {{ commentDate }}</time>
       </div>
     </header>
     <!-- eslint-disable-next-line vue/no-v-html -->
-    <section class="comment-content" v-html="comment.content.rendered" />
+    <section class="comment-content" v-html="comment.content" />
     <section>
       <a href="" class="text-chouquette-grey" @click.prevent="toggleReplyToComment">{{ replyLinkText }}</a>
       <PostCommentReply
@@ -44,7 +39,7 @@ export default {
   components: { PostCommentReply, WpAvatar },
   props: {
     post: {
-      type: Number,
+      type: String,
       required: true,
     },
     comment: {
@@ -63,7 +58,7 @@ export default {
   },
   computed: {
     children() {
-      return this.comments.filter(({ parent }) => parent === this.comment.id)
+      return this.comments.filter(({ parentId }) => parentId === parseInt(this.comment.id))
     },
     commentDate() {
       return moment(this.comment.date).locale('fr-CH').format('dddd DD MMMM YYYY à k:mm')

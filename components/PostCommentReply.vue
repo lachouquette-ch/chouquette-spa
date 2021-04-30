@@ -84,11 +84,11 @@ import { required, email, url, minLength } from 'vuelidate/lib/validators'
 export default {
   props: {
     post: {
-      type: Number,
+      type: String,
       required: true,
     },
     parent: {
-      type: Number,
+      type: String,
       default: null,
     },
   },
