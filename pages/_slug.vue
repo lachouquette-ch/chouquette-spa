@@ -26,28 +26,7 @@ export default {
     // store initialization
     await store.dispatch('yoast/init')
 
-    // first try as a page
-    const page = await client
-      .query({
-        query: gql`
-          query($slug: String!) {
-            pageBySlug(slug: $slug) {
-              ...PageFragments
-            }
-          }
-          ${PageFragments}
-        `,
-        variables: { slug: params.slug },
-      })
-      .then(({ data }) => data.pageBySlug)
-    if (page) {
-      return {
-        pageType: 'page',
-        page,
-      }
-    }
-
-    // then as a post
+    // first try as a post
     const post = await client
       .query({
         query: gql`
@@ -61,16 +40,37 @@ export default {
         variables: { slug: params.slug },
       })
       .then(({ data }) => data.postBySlug)
+    if (post) {
+      return {
+        pageType: 'post',
+        post,
+      }
+    }
+
+    // then as a post
+    const page = await client
+      .query({
+        query: gql`
+          query($slug: String!) {
+            pageBySlug(slug: $slug) {
+              ...PageFragments
+            }
+          }
+          ${PageFragments}
+        `,
+        variables: { slug: params.slug },
+      })
+      .then(({ data }) => data.pageBySlug)
 
     // redirect if not a post neither
-    if (_.isEmpty(post)) {
+    if (_.isEmpty(page)) {
       await store.dispatch('yoast/redirect', { path: route.path, context })
       error({ statusCode: '404', message: `'${params.slug}' n'existe pas` })
     }
 
     return {
-      pageType: 'post',
-      post,
+      pageType: 'page',
+      page,
     }
   },
   data() {
