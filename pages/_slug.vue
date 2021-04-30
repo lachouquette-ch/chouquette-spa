@@ -9,7 +9,7 @@
 import _ from 'lodash'
 import gql from 'graphql-tag'
 
-import { post as PostParts } from '@/apollo/fragments/post'
+import { post as PostFragments } from '@/apollo/fragments/post'
 import { page as PageFragments } from '@/apollo/fragments/page'
 import WpPost from '~/components/WpPost'
 import WpPage from '~/components/WpPage'
@@ -53,10 +53,10 @@ export default {
         query: gql`
           query($slug: String!) {
             postBySlug(slug: $slug) {
-              ...PostParts
+              ...PostFragments
             }
           }
-          ${PostParts}
+          ${PostFragments}
         `,
         variables: { slug: params.slug },
       })

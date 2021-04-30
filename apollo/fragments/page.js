@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 import { seo as SeoParts } from '@/apollo/fragments/seo'
 
 export const page = gql`
-  fragment PostFragments on Post {
+  fragment PageFragments on Page {
     id
     slug
     title

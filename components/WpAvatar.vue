@@ -4,6 +4,7 @@
 
 <script>
 const AVATAR_SIZES = [24, 32, 48, 150]
+const avatarUrlRegExp = new RegExp(`\\?s=\\d+`)
 
 export default {
   props: {
@@ -22,15 +23,13 @@ export default {
   data() {
     return {
       urlSrc: '',
-      urlSrcSet: '',
     }
   },
   created() {
-    const [size, url] = Object.entries(this.avatarUrls).shift()
-    const avatarUrlRegExp = new RegExp(`\\?s=${size}`)
+    const sampleURL = Object.values(this.avatarUrls).shift()
 
-    this.urlSrc = url.replace(avatarUrlRegExp, `?s=${this.size}`)
-    this.urlSrcSet = url.replace(avatarUrlRegExp, `?s=${this.size * 2}`) + ' 2x'
+    this.urlSrc = sampleURL.replace(avatarUrlRegExp, `?s=${this.size}`)
+    this.urlSrcSet = sampleURL.replace(avatarUrlRegExp, `?s=${this.size * 2}`) + ' 2x'
   },
 }
 </script>
