@@ -177,8 +177,11 @@
 
 <script>
 import moment from 'moment'
+import _ from 'lodash'
 
+import gql from 'graphql-tag'
 import { directive as SwiperDirective } from 'vue-awesome-swiper'
+import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
 import WPMedia from '../components/WpMediaGQL'
 import PostShare from '../components/PostShare'
 import PostComment from '../components/PostComment'
@@ -218,9 +221,6 @@ export default {
     },
     preview: Boolean,
   },
-  async fetch() {
-    this.fiches = await this.$store.dispatch('fiches/fetchByIds', this.post.ficheIds)
-  },
   data() {
     return {
       fiches: [],
@@ -252,14 +252,11 @@ export default {
     hasSingleFiche() {
       return this.fiches && this.fiches.length === 1
     },
-    tags() {
-      return this.post._embedded['wp:term'][1]
-    },
     rootLevelComments() {
       return this.comments.filter(({ parent }) => parent === 0)
     },
     isTops() {
-      return !!this.tags.find(({ slug }) => {
+      return !!this.post.tags.find(({ slug }) => {
         return slug === 'tops'
       })
     },
@@ -270,11 +267,27 @@ export default {
     },
   },
   async created() {
+    if (!_.isEmpty(this.post.ficheIds)) {
+      this.fiches = await this.$apollo
+        .query({
+          query: gql`
+            query($ids: [Int!]!) {
+              ficheByIds(ids: $ids) {
+                ...FicheFragments
+              }
+            }
+            ${FicheFragments}
+          `,
+          variables: { ids: this.post.ficheIds },
+        })
+        .then(({ data }) => data.ficheByIds)
+    }
+
     if (!this.preview) {
-      ;[this.comments, this.similarPosts] = await Promise.all([
-        this.$wpAPI.wp.comments.getByPost(this.post.id).then(({ data }) => data),
-        this.$store.dispatch('posts/fetchSimilar', this.post),
-      ])
+      // ;[this.comments, this.similarPosts] = await Promise.any([
+      //   this.$wpAPI.wp.comments.getByPost(this.post.id).then(({ data }) => data),
+      //   this.$store.dispatch('posts/fetchSimilar', this.post),
+      // ])
     }
   },
   mounted() {
