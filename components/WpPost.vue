@@ -200,6 +200,49 @@ import Newsletter from '~/components/Newsletter'
 import FichesMap from '~/components/FichesMap'
 
 export default {
+  apollo: {
+    postBySlug: {
+      query: gql`
+        query($slug: String!) {
+          postBySlug(slug: $slug) {
+            id
+            fiches {
+              ...FicheFragments
+            }
+            comments {
+              ...CommentFragments
+            }
+            similarPosts {
+              ...PostCardFragments
+            }
+          }
+        }
+        ${FicheFragments}
+        ${CommentFragments}
+        ${PostCardFragments}
+      `,
+      variables() {
+        return {
+          slug: this.post.slug,
+        }
+      },
+      update({ postBySlug }) {
+        this.fiches = postBySlug.fiches
+        this.comments = postBySlug.comments
+        this.similarPosts = postBySlug.similarPosts
+      },
+      error(error) {
+        this.$store.dispatch('alerts/addAction', {
+          type: 'warning',
+          message: `Problème lors du chargement d'une partie de la page : ${error}`,
+        })
+      },
+      skip() {
+        return this.preview
+      },
+      prefetch: false,
+    },
+  },
   components: {
     FichesMap,
     Newsletter,
@@ -266,37 +309,6 @@ export default {
     '$fetchState.pending'() {
       this.initModal()
     },
-  },
-  async created() {
-    if (!this.preview) {
-      const {
-        data: { postBySlug: result },
-      } = await this.$apollo.query({
-        query: gql`
-          query($slug: String!) {
-            postBySlug(slug: $slug) {
-              id
-              fiches {
-                ...FicheFragments
-              }
-              comments {
-                ...CommentFragments
-              }
-              similarPosts {
-                ...PostCardFragments
-              }
-            }
-          }
-          ${FicheFragments}
-          ${CommentFragments}
-          ${PostCardFragments}
-        `,
-        variables: { slug: this.post.slug },
-      })
-      this.fiches = result.fiches
-      this.comments = result.comments
-      this.similarPosts = result.similarPosts
-    }
   },
   mounted() {
     this.initModal()

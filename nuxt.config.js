@@ -114,7 +114,7 @@ export default {
     },
     defaultOptions: {
       $query: {
-        fetchPolicy: 'cache-and-network',
+        fetchPolicy: 'cache-first',
         errorPolicy: 'all',
       },
     },
