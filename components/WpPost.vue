@@ -293,11 +293,10 @@ export default {
           query: gql`
             query($slug: String!) {
               postBySlug(slug: $slug) {
-                id
                 comments {
                   ...CommentFragments
                 }
-                similarPostCards {
+                similarPosts {
                   ...PostCardFragments
                 }
               }
@@ -309,7 +308,7 @@ export default {
         })
         .then(({ data }) => {
           this.comments = data.postBySlug.comments
-          this.similarPosts = data.postBySlug.similarPostCards
+          this.similarPosts = data.postBySlug.similarPosts
         })
     }
   },
