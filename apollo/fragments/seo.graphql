@@ -1,5 +1,0 @@
-fragment SeoParts on Seo {
-    title
-    metadata
-    jsonLD
-}

@@ -1,0 +1,45 @@
+query {
+  nuxtServerInit {
+    settings {
+      description
+      name
+      url
+    }
+    redirects {
+      from
+      to
+      status
+    }
+    menus {
+      id
+      name
+      slug
+      items {
+        id
+        type
+        slug
+      }
+    }
+#    categories {
+#      id
+#      name
+#      parentId
+#      logoYellow {
+#        ...MediaFragments
+#      }
+#      logoWhite {
+#        ...MediaFragments
+#      }
+#      logoBlack {
+#        ...MediaFragments
+#      }
+#    }
+#    locations {
+#      id
+#      parentId
+#      name
+#      slug
+#      description
+#    }
+  }
+}

@@ -21,11 +21,12 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
+import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
+import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
 import Fiche from '~/components/Fiche'
 import PostCard from '~/components/PostCardGQL'
 import seo from '~/mixins/seo'
-
-import fetchBySlug from '~/apollo/queries/ficheBySlug.graphql'
 
 export default {
   components: { Fiche, PostCard },
@@ -36,7 +37,22 @@ export default {
     const client = app.apolloProvider.defaultClient
 
     const fiche = await client
-      .query({ query: fetchBySlug, variables: { slug: params.slug } })
+      .query({
+        query: gql`
+          query($slug: String!) {
+            ficheBySlug(slug: $slug) {
+              ...FicheFragments
+
+              postCards {
+                ...PostCardFragments
+              }
+            }
+          }
+          ${FicheFragments}
+          ${PostCardFragments}
+        `,
+        variables: { slug: params.slug },
+      })
       .then(({ data }) => data.ficheBySlug)
     if (!fiche) {
       await store.dispatch('yoast/redirect', { path: route.path, context })

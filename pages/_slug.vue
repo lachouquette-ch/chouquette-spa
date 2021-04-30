@@ -7,9 +7,10 @@
 
 <script>
 import _ from 'lodash'
+import gql from 'graphql-tag'
 
-import fetchPageBySlug from '@/apollo/queries/pageBySlug.graphql'
-import fetchPostBySlug from '@/apollo/queries/postBySlug.graphql'
+import { post as PostParts } from '@/apollo/fragments/post'
+import { page as PageFragments } from '@/apollo/fragments/page'
 import WpPost from '~/components/WpPost'
 import WpPage from '~/components/WpPage'
 
@@ -27,7 +28,17 @@ export default {
 
     // first try as a page
     const page = await client
-      .query({ query: fetchPageBySlug, variables: { slug: params.slug } })
+      .query({
+        query: gql`
+          query($slug: String!) {
+            pageBySlug(slug: $slug) {
+              ...PageFragments
+            }
+          }
+          ${PageFragments}
+        `,
+        variables: { slug: params.slug },
+      })
       .then(({ data }) => data.pageBySlug)
     if (page) {
       return {
@@ -38,7 +49,17 @@ export default {
 
     // then as a post
     const post = await client
-      .query({ query: fetchPostBySlug, variables: { slug: params.slug } })
+      .query({
+        query: gql`
+          query($slug: String!) {
+            postBySlug(slug: $slug) {
+              ...PostParts
+            }
+          }
+          ${PostParts}
+        `,
+        variables: { slug: params.slug },
+      })
       .then(({ data }) => data.postBySlug)
 
     // redirect if not a post neither
