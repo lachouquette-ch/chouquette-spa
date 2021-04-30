@@ -177,7 +177,6 @@
 
 <script>
 import moment from 'moment'
-import _ from 'lodash'
 
 import gql from 'graphql-tag'
 import { directive as SwiperDirective } from 'vue-awesome-swiper'
@@ -268,48 +267,35 @@ export default {
       this.initModal()
     },
   },
-  created() {
-    if (!_.isEmpty(this.post.ficheIds)) {
-      this.$apollo
-        .query({
-          query: gql`
-            query($ids: [Int!]!) {
-              ficheByIds(ids: $ids) {
+  async created() {
+    if (!this.preview) {
+      const {
+        data: { postBySlug: result },
+      } = await this.$apollo.query({
+        query: gql`
+          query($slug: String!) {
+            postBySlug(slug: $slug) {
+              id
+              fiches {
                 ...FicheFragments
               }
-            }
-            ${FicheFragments}
-          `,
-          variables: { ids: this.post.ficheIds },
-        })
-        .then(({ data }) => {
-          this.fiches = data.ficheByIds
-        })
-    }
-
-    if (!this.preview) {
-      this.$apollo
-        .query({
-          query: gql`
-            query($slug: String!) {
-              postBySlug(slug: $slug) {
-                comments {
-                  ...CommentFragments
-                }
-                similarPosts {
-                  ...PostCardFragments
-                }
+              comments {
+                ...CommentFragments
+              }
+              similarPosts {
+                ...PostCardFragments
               }
             }
-            ${CommentFragments}
-            ${PostCardFragments}
-          `,
-          variables: { slug: this.post.slug },
-        })
-        .then(({ data }) => {
-          this.comments = data.postBySlug.comments
-          this.similarPosts = data.postBySlug.similarPosts
-        })
+          }
+          ${FicheFragments}
+          ${CommentFragments}
+          ${PostCardFragments}
+        `,
+        variables: { slug: this.post.slug },
+      })
+      this.fiches = result.fiches
+      this.comments = result.comments
+      this.similarPosts = result.similarPosts
     }
   },
   mounted() {
