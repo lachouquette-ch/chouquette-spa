@@ -183,10 +183,11 @@ import gql from 'graphql-tag'
 import { directive as SwiperDirective } from 'vue-awesome-swiper'
 import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
 import { comment as CommentFragments } from '@/apollo/fragments/comment'
+import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
 import WPMedia from '../components/WpMediaGQL'
 import PostShare from '../components/PostShare'
 import PostComment from '../components/PostComment'
-import PostCard from '../components/PostCard'
+import PostCard from '../components/PostCardGQL'
 import WpAvatar from '../components/WpAvatar'
 import PostCommentReply from '../components/PostCommentReply'
 import FicheThumbnail from '../components/FicheThumbnail'
@@ -296,19 +297,20 @@ export default {
                 comments {
                   ...CommentFragments
                 }
+                similarPostCards {
+                  ...PostCardFragments
+                }
               }
             }
             ${CommentFragments}
+            ${PostCardFragments}
           `,
           variables: { slug: this.post.slug },
         })
         .then(({ data }) => {
           this.comments = data.postBySlug.comments
+          this.similarPosts = data.postBySlug.similarPostCards
         })
-      // ;[this.comments, this.similarPosts] = await Promise.any([
-      //   this.$wpAPI.wp.comments.getByPost(this.post.id).then(({ data }) => data),
-      //   this.$store.dispatch('posts/fetchSimilar', this.post),
-      // ])
     }
   },
   mounted() {
