@@ -1,11 +1,16 @@
-import { SETTINGS } from '@/api/graphql/wordpress'
+export const state = () => ({
+  name: null,
+  description: null,
+  wordpressUrl: null,
+})
 
 export const actions = {
   async nuxtServerInit({ state, commit, dispatch }) {
-    const client = this.app.apolloProvider.defaultClient
-    client.query({
-      query: SETTINGS,
-    })
+    /* Fetch wordpress settings data */
+    if (!state.name) {
+      const settings = await this.$wpAPI._.get().then(({ data }) => data)
+      commit('SET_SETTINGS', settings)
+    }
 
     /* Fetch yoast redirect */
     await dispatch('yoast/init')
@@ -16,5 +21,13 @@ export const actions = {
     await dispatch('menus/init')
     // fetch locations
     await dispatch('locations/init')
+  },
+}
+
+export const mutations = {
+  SET_SETTINGS(state, { name, description, url, home }) {
+    state.name = name
+    state.description = description
+    state.wordpressUrl = url
   },
 }
