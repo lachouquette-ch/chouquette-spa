@@ -11,35 +11,27 @@ export const state = () => ({
 })
 
 export const actions = {
-  async init({ state, commit, dispatch }) {
-    if (state.header && state.footer) {
-      return [state.header, state.footer]
-    } else {
-      // fetch all menus
-      const rawMenus = await this.$wpAPI.menus.get().then(({ data }) => data)
-      // build menus with all dependencies
-      const menus = await Promise.all(
-        rawMenus.map((rawMenu) => this.$wpAPI.menus.getById(rawMenu.term_id).then(({ data }) => data))
-      )
+  async init({ state, commit, dispatch }, menus) {
+    /* Process header menu */
+    // get menu and add to store
+    const headerMenu = menus.find((menu) => menu.slug === HEADER_SLUG)
+    commit('SET_HEADER', headerMenu)
+    // filter categories, get and store
+    const categories = await Promise.all(
+      headerMenu.items
+        .filter(({ type }) => {
+          return type === 'category'
+        })
+        .map(({ id }) => {
+          return dispatch('categories/get', parseInt(id), { root: true })
+        })
+    )
+    commit('SET_HEADER_CATEGORIES', categories)
 
-      /* Process header menu */
-      // get menu and add to store
-      const headerMenu = menus.find((menu) => menu.slug === HEADER_SLUG)
-      commit('SET_HEADER', headerMenu)
-      // filter categories, fetch and store
-      const categoryItems = headerMenu.items.filter(({ object }) => {
-        return object === 'category'
-      })
-      // eslint-disable-next-line camelcase
-      const categoryIds = categoryItems.map(({ object_id }) => object_id)
-      const categories = await dispatch('categories/fetchByIds', categoryIds, { root: true })
-      commit('SET_HEADER_CATEGORIES', categories)
+    const footerMenu = menus.find((menu) => menu.slug === FOOTER_SLUG)
+    commit('SET_FOOTER', footerMenu)
 
-      const footerMenu = menus.find((menu) => menu.slug === FOOTER_SLUG)
-      commit('SET_FOOTER', footerMenu)
-
-      return [headerMenu, footerMenu]
-    }
+    return [headerMenu, footerMenu]
   },
 
   setSelectedCategory({ commit }, category) {
@@ -51,10 +43,12 @@ export const actions = {
   },
 
   /**
-   * Return an array with all header categories and subcategories
+   * Return an array with all hleader categories and subcategories
    */
-  flatHeaderCategories({ state, dispatch }) {
-    return dispatch('categories/flatCategories', state.headerCategories, { root: true })
+  getHeaderCategories({ state, dispatch }) {
+    return state.headerCategories.map((headerCategoryId) =>
+      dispatch('categories/get', headerCategoryId, { root: true })
+    )
   },
 }
 
@@ -67,8 +61,8 @@ export const mutations = {
   },
   SET_FOOTER(state, menu) {
     state.footer = menu
-    state.footerPages = menu.items.filter(({ object }) => {
-      return object === 'page'
+    state.footerPages = menu.items.filter(({ type }) => {
+      return type === 'page'
     })
   },
   SET_SELECTED_CATEGORY(state, category) {

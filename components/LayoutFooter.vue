@@ -13,7 +13,7 @@
           <div>
             <ul class="footer-top-menu px-2">
               <li v-for="page in pages" :key="page.object_id">
-                <nuxt-link :to="{ path: `/${page.slug}` }">{{ page.title | heDecode }}</nuxt-link>
+                <nuxt-link :to="{ path: `/${page.slug}` }">{{ page.title }}</nuxt-link>
               </li>
             </ul>
           </div>

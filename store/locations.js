@@ -2,27 +2,15 @@ import _ from 'lodash'
 import { ressourceStates, ressourceMutations } from './_ressource-helper'
 
 export const state = () => ({
-  ...ressourceStates(),
+  all: {},
   hierarchy: {},
 })
 
 export const actions = {
-  async init({ state, commit }) {
-    if (!_.isEmpty(state.all)) {
-      return [state.all, state.hierarchy]
-    } else {
-      // fetch all menus
-      const locations = await this.$wpAPI.wp.locations
-        .get({
-          hide_empty: true,
-          orderby: 'count',
-          order: 'desc',
-        })
-        .then(({ data }) => data)
-      commit('SET_LOCATIONS', locations)
+  init({ state, commit }, locations) {
+    commit('SET_LOCATIONS', locations)
 
-      return [locations, state.hierarchy]
-    }
+    return [locations, state.hierarchy]
   },
 
   fetchBySlug({ state }, slug) {
@@ -54,11 +42,11 @@ export const mutations = {
   SET_LOCATIONS(state, locations) {
     ressourceMutations.setRessources(state, locations)
 
-    const topLocations = locations.filter(({ parent }) => parent === 0)
+    const topLocations = locations.filter(({ parentId }) => parentId === 0)
     // single level only. Add level property
     topLocations.forEach((location) => {
       location.level = 0
-      const subLocations = locations.filter(({ parent }) => parent === location.id)
+      const subLocations = locations.filter(({ parentId }) => parentId === location.id)
       subLocations.forEach((subLocation) => (subLocation.level = 1))
       state.hierarchy[location.id] = subLocations
     })

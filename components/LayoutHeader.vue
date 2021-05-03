@@ -95,7 +95,7 @@
             >
               <WpMediaCategory
                 :category="category"
-                :color="isSelected(category) ? 'yellow' : 'white'"
+                :color="isSelected(category) ? 'Yellow' : 'White'"
                 class="d-inline nav-logo ml-lg-3 mr-2"
               />
               <span class="text-nowrap" :class="{ 'text-yellow': isSelected(category) }">{{ category.name }}</span>

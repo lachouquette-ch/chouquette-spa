@@ -1,63 +1,46 @@
 import _ from 'lodash'
-import { ressourceStates, ressourceActions, ressourceMutations } from './_ressource-helper'
 
 export const state = () => ({
-  ...ressourceStates(),
-  hierarchy: {},
+  all: {},
+  topLevels: {},
 })
 
 export const actions = {
-  async fetchRelatedRessources({ state, dispatch, commit }, categories) {
-    // fetch children
-    const categoryChildren = categories.map(async (category) => {
-      if (!state.hierarchy[category.id]) {
-        const children = await this.$wpAPI.wp.categories.get({ parent: category.id }).then(({ data }) => data)
-        commit('ADD_TO_HIERARCHY', { category, children })
-      }
-    })
-
-    // fetch category logos
-    const mediaIds = categories.flatMap(({ logos }) => Object.values(logos))
-
-    await Promise.all([...categoryChildren, dispatch('media/fetchByIds', mediaIds, { root: true })])
+  init({ state, commit, dispatch }, categories) {
+    commit('SET_CATEGORIES', categories)
+    return categories
   },
 
-  async fetchByIds(context, ids) {
-    return await ressourceActions.fetchByIds(this.$wpAPI.wp.categories, 'SET_CATEGORIES', context, ids)
+  // TODO keep those methods or use state mapping in vue components ?
+  get({ state }, id) {
+    return state.all[id]
   },
-
-  async fetchById(context, id) {
-    return await ressourceActions.fetchById(this.$wpAPI.wp.categories, 'SET_CATEGORY', context, id)
+  fetchBySlug({ state }, slug) {
+    return state.all.find((category) => category.slug === slug)
   },
-
-  async fetchBySlug(context, slug) {
-    return await ressourceActions.fetchBySlug(this.$wpAPI.wp.categories, 'SET_CATEGORY', context, slug)
-  },
-
   findChildren({ state }, category) {
-    return state.hierarchy[category.id]
-  },
-
-  flatCategories({ state }, categories) {
-    return categories.flatMap((category) => [...state.hierarchy[category.id]])
+    return state.topLevels[category.id]
   },
 }
 
 export const mutations = {
   SET_CATEGORIES(state, categories) {
-    ressourceMutations.setRessources(state, categories)
-  },
-  SET_CATEGORY(state, category) {
-    ressourceMutations.setRessource(state, category)
-  },
-  ADD_TO_HIERARCHY(state, { category, children }) {
-    if (_.isEmpty(children)) {
-      return
-    }
-    if (!state.hierarchy[category.id]) {
-      category.level = 0
-      children.forEach((subCategory) => (subCategory.level = 1))
-      state.hierarchy[category.id] = children
+    _.merge(
+      state.topLevels,
+      categories
+        .filter(({ parentId }) => parentId === 0)
+        .reduce((acc, category) => {
+          acc[category.id] = []
+          return acc
+        }, {})
+    )
+    for (const category of categories) {
+      state.all[category.id] = category
+      // setup category if not root category
+      if (category.parentId === 0) continue
+      state.topLevels[category.parentId]
+        ? state.topLevels[category.parentId].push(category)
+        : console.warn(`No parent category for ${category.slug} (${category.id}). 3rd level category ?`)
     }
   },
 }
