@@ -29,6 +29,7 @@ export const actions = {
               }
               categories {
                 id
+                slug
                 name
                 parentId
                 logoYellow {
