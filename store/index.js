@@ -10,7 +10,7 @@ export const state = () => ({
 export const actions = {
   async nuxtServerInit({ state, commit, dispatch }) {
     // eslint-disable-next-line no-undef
-    const client = $nuxt.$apolloProvider.defaultClient
+    const client = this.app.apolloProvider.defaultClient
 
     const nuxtServerInit = await client
       .query({
