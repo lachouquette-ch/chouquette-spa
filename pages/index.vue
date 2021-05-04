@@ -34,7 +34,7 @@
                 :title="category.description"
                 class="nav-link text-md-center"
               >
-                <WpMediaCategory :category="category" color="white" class="d-inline nav-logo ml-lg-3 mr-2" />
+                <WpMediaCategory :category="category" color="White" class="d-inline nav-logo ml-lg-3 mr-2" />
                 <span class="text-nowrap text-white">{{ category.name }}</span>
               </nuxt-link>
             </li>
@@ -51,7 +51,7 @@
           <div v-for="category in categories" :key="category.id" class="home-header-category m-4">
             <nuxt-link :to="{ path: `/category/${category.slug}` }" :title="category.description">
               <div class="home-header-category-logo p-3 rounded-circle">
-                <WpMediaCategory :category="category" height="60" width="60" color="yellow" />
+                <WpMediaCategory :category="category" height="60" width="60" color="Yellow" />
               </div>
               <h2 class="my-2">{{ category.name }}</h2>
             </nuxt-link>
@@ -68,15 +68,10 @@
 
     <div id="homeContent" class="home-content py-5">
       <div class="home-latest container">
-        <div v-if="!$fetchState.error" class="text-center">
-          <h2 class="mb-4">Nos derniers articles</h2>
-        </div>
+        <h2 class="text-center mb-4">Nos derniers articles</h2>
         <main class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
-          <template v-if="$fetchState.pending">
+          <template v-if="$apollo.queries.home.loading">
             <PostCardPlaceholder v-for="p in 4" :key="p" class="post-card" />
-          </template>
-          <template v-else-if="$fetchState.error">
-            <p>Impossible d'afficher les derniers articles <i class="far fa-frown"></i></p>
           </template>
           <template v-else>
             <nuxt-link v-for="post in latestPosts" :key="post.id" :to="{ path: `/${post.slug}` }" class="post-card">
@@ -93,12 +88,11 @@
 
       <div class="home-tops container">
         <div class="text-center">
-          <p v-if="$fetchState.error">Impossible d'afficher les derniers tops <i class="far fa-frown"></i></p>
-          <h2 v-else class="mb-4">Nos derniers tops...</h2>
+          <h2 class="mb-4">Nos derniers tops...</h2>
         </div>
-        <div v-if="!$fetchState.error" v-swiper="swiperOptions" class="swiper px-md-5">
+        <div v-swiper="swiperOptions" class="swiper px-md-5">
           <div class="swiper-wrapper pt-3 pt-md-0">
-            <template v-if="$fetchState.pending">
+            <template v-if="$apollo.queries.home.loading">
               <PostCardPlaceholder v-for="p in 4" :key="p" class="swiper-slide" />
             </template>
             <template v-else>
@@ -120,12 +114,14 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
 import { mapState } from 'vuex'
 import { directive as SwiperDirective } from 'vue-awesome-swiper'
 
-import { SETTINGS } from '@/apollo/queries/nuxtServerInit.graphql'
+import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
+import { seo as SeoFragments } from '@/apollo/fragments/seo'
 import WpMediaCategory from '~/components/WpMediaCategory'
-import PostCard from '~/components/PostCard'
+import PostCard from '~/components/PostCardGQL'
 import Search from '~/components/Search'
 import Newsletter from '~/components/Newsletter'
 import PostCardPlaceholder from '~/components/PostCardPlaceholder'
@@ -133,22 +129,48 @@ import PostCardPlaceholder from '~/components/PostCardPlaceholder'
 import { AUTO_PLAY, DEFAULT, RESPONSIVE } from '~/constants/swiper'
 import seo from '~/mixins/seo'
 
-const LATEST_POSTS_NUM = 6
-const TOP_POSTS_NUM = 8
-
 export default {
+  apollo: {
+    home: {
+      query: gql`
+        query {
+          home {
+            latestPosts {
+              ...PostCardFragments
+            }
+            topPosts {
+              ...PostCardFragments
+            }
+          }
+        }
+        ${PostCardFragments}
+      `,
+      update({ home }) {
+        this.latestPosts = home.latestPosts
+        this.topPosts = home.topPosts
+      },
+      prefetch: false,
+    },
+  },
   components: { PostCard, WpMediaCategory, Search, Newsletter, PostCardPlaceholder },
   directives: { swiper: SwiperDirective },
   layout: 'no-header',
   mixins: [seo],
-  async fetch() {
-    ;[this.latestPosts, this.topPosts] = await Promise.all([
-      this.$store.dispatch('posts/fetchLatests', LATEST_POSTS_NUM),
-      this.$store.dispatch('posts/fetchByTagSlug', { slug: 'tops', number: TOP_POSTS_NUM }),
-    ])
-  },
-  async asyncData({ store }) {
-    const yoast = await store.dispatch('yoast/fetchHome')
+  async asyncData({ app }) {
+    const yoast = await app.apolloProvider.defaultClient
+      .query({
+        query: gql`
+          query {
+            home {
+              seo {
+                ...SeoFragments
+              }
+            }
+          }
+          ${SeoFragments}
+        `,
+      })
+      .then(({ data }) => data.home.seo)
 
     return {
       yoast,
@@ -170,11 +192,6 @@ export default {
       settings: {},
     }
   },
-  apollo: {
-    settings: {
-      query: SETTINGS,
-    },
-  },
   computed: {
     ...mapState({
       categories: (state) => state.menus.headerCategories,
@@ -187,9 +204,9 @@ export default {
   },
   head() {
     return {
-      title: this.yoast.yoast_title,
+      title: this.yoast.title,
       meta: [
-        ...this.seoMetaProperties(this.yoast.yoast_meta),
+        ...this.seoMetaProperties(JSON.parse(this.yoast.metadata)),
         {
           hid: 'og:image',
           property: 'og:image',
@@ -200,8 +217,8 @@ export default {
         this.jsonLDScript({
           '@context': 'http://schema.org',
           '@type': 'WebPage',
-          name: this.yoast.yoast_title,
-          description: this.seoGetDescription(this.yoast.yoast_meta),
+          name: this.yoast.title,
+          description: this.seoGetDescription(JSON.parse(this.yoast.metadata)),
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',

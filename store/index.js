@@ -66,12 +66,14 @@ export const actions = {
       })
       .then(({ data }) => data.nuxtServerInit)
 
-    commit('SET_SETTINGS', nuxtServerInit.settings)
-    /* Init all stores */
-    await dispatch('yoast/init', nuxtServerInit.redirects)
-    await dispatch('categories/init', nuxtServerInit.categories)
-    await dispatch('menus/init', nuxtServerInit.menus)
-    await dispatch('locations/init', nuxtServerInit.locations)
+    return Promise.all([
+      commit('SET_SETTINGS', nuxtServerInit.settings),
+      /* Init all stores */
+      await dispatch('yoast/init', nuxtServerInit.redirects),
+      await dispatch('categories/init', nuxtServerInit.categories),
+      await dispatch('menus/init', nuxtServerInit.menus),
+      await dispatch('locations/init', nuxtServerInit.locations),
+    ])
   },
 }
 

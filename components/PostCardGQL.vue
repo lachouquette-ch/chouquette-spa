@@ -3,7 +3,7 @@
     <div class="card-img-top">
       <WpMedia v-if="post.image" :media="post.image" size="medium_large" />
       <div class="card-category rounded-circle bg-white shadow">
-        <WpMediaCategory v-if="topCategory" :category="topCategory" width="35" height="35" color="black" />
+        <WpMediaCategory v-if="topCategory" :category="topCategory" width="35" height="35" color="Black" />
       </div>
     </div>
     <div class="card-body">
@@ -40,7 +40,7 @@ export default {
     }),
   },
   created() {
-    this.topCategory = this.categories[this.post.category]
+    this.topCategory = this.categories[this.post.categoryId]
   },
 }
 </script>

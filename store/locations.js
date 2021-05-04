@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import { ressourceStates, ressourceMutations } from './_ressource-helper'
 
 export const state = () => ({
   all: {},
@@ -32,7 +31,8 @@ export const actions = {
   flatLocations({ state }) {
     const result = []
     for (const [parentId, children] of Object.entries(state.hierarchy)) {
-      result.push(state.all[parentId], ...children)
+      const parent = state.all.find(({ id }) => id === parentId)
+      result.push(parent, ...children)
     }
     return result
   },
@@ -40,13 +40,13 @@ export const actions = {
 
 export const mutations = {
   SET_LOCATIONS(state, locations) {
-    ressourceMutations.setRessources(state, locations)
+    state.all = locations
 
     const topLocations = locations.filter(({ parentId }) => parentId === 0)
     // single level only. Add level property
     topLocations.forEach((location) => {
       location.level = 0
-      const subLocations = locations.filter(({ parentId }) => parentId === location.id)
+      const subLocations = locations.filter(({ parentId }) => parentId === parseInt(location.id))
       subLocations.forEach((subLocation) => (subLocation.level = 1))
       state.hierarchy[location.id] = subLocations
     })

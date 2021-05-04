@@ -28,9 +28,9 @@ import LayoutAlert from '../components/LayoutAlert'
 
 export default {
   components: { LayoutAlert, LayoutFooter, LayoutBanner, CookieConsent },
-  middleware({ store }) {
+  async middleware({ store }) {
     if (process.client) {
-      store.dispatch('nuxtServerInit')
+      await store.dispatch('nuxtServerInit')
     }
   },
 }
