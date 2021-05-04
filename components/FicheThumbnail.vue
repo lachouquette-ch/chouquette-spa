@@ -1,27 +1,19 @@
 <template>
   <div
     class="fiche media btn btn-outline-dark-grey border-0 p-0 shadow-sm text-left"
-    :class="{ 'btn-yellow': fiche.info.chouquettise }"
+    :class="{ 'btn-yellow': fiche.isChouquettise }"
   >
-    <WPMedia
-      v-if="featuredMedia"
-      :media="featuredMedia"
-      size="thumbnail"
-      class="fiche-img rounded-left"
-      height="64"
-      width="64"
-    />
+    <WPMedia :media="fiche.image" size="thumbnail" class="fiche-img rounded-left" height="64" width="64" />
     <div class="media-body ml-1 p-1">
       <!-- eslint-disable-next-line vue/no-v-html -->
-      <h3 class="my-1 h6" v-html="fiche.title.rendered"></h3>
+      <h3 class="my-1 h6" v-html="fiche.title"></h3>
     </div>
     <span class="fiche-link"><i class="fas fa-external-link-alt"></i></span>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import WPMedia from './WpMedia'
+import WPMedia from './WpMediaGQL'
 
 export default {
   components: { WPMedia },
@@ -30,19 +22,6 @@ export default {
       type: Object,
       required: true,
     },
-  },
-  data() {
-    return {
-      featuredMedia: null,
-    }
-  },
-  computed: {
-    ...mapState('media', {
-      media: 'all',
-    }),
-  },
-  mounted() {
-    this.featuredMedia = this.media[this.fiche.featured_media]
   },
 }
 </script>

@@ -230,6 +230,8 @@ export default {
         this.fiches = postBySlug.fiches
         this.comments = postBySlug.comments
         this.similarPosts = postBySlug.similarPosts
+
+        this.initModal()
       },
       error(error) {
         this.$store.dispatch('alerts/addAction', {
@@ -305,11 +307,6 @@ export default {
       })
     },
   },
-  watch: {
-    '$fetchState.pending'() {
-      this.initModal()
-    },
-  },
   mounted() {
     this.initModal()
 
@@ -341,7 +338,7 @@ export default {
       // show fiche if previously selected
       const ficheId = parseInt(location.hash.substring(1))
       if (ficheId) {
-        const selectedFiche = this.fiches.find(({ id }) => id === ficheId)
+        const selectedFiche = this.fiches.find(({ id }) => parseInt(id) === ficheId)
         if (selectedFiche) {
           this.hideSidebar = false
           this.viewFiche(selectedFiche.id)

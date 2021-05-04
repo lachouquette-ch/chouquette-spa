@@ -19,7 +19,6 @@
 import Vue from 'vue'
 import MarkerClusterer from '@google/markerclustererplus'
 
-import { mapState } from 'vuex'
 import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, LAUSANNE_LAT_LNG } from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
 
@@ -57,11 +56,6 @@ export default {
       isMapShown: null,
     }
   },
-  computed: {
-    ...mapState({
-      media: (state) => state.media.all,
-    }),
-  },
   watch: {
     // the callback will be called immediately after the start of the observation
     fiches: 'loadFichesOnMap',
@@ -78,7 +72,7 @@ export default {
       averageCenter: true,
       styles: CLUSTER_STYLES,
       calculator: (markers, clusterIconStylesCount) => {
-        const index = markers.find((marker) => marker.chouquettise) ? 2 : 1
+        const index = markers.find((marker) => marker.isChouquettise) ? 2 : 1
         return {
           index,
           text: markers.length,
@@ -144,18 +138,16 @@ export default {
       this.clear()
 
       for (const fiche of this.fiches) {
-        if (!fiche.info || !fiche.info.location) {
+        if (!fiche.poi) {
           // eslint-disable-next-line no-console
-          console.warn(`${fiche.slug} has no location (not info)`)
+          console.warn(`${fiche.slug} has no location`)
           continue
         }
 
         // build infoWindow content
-        const featuredMedia = this.media[fiche.featured_media]
         const ficheInfoWindow = new FicheInfoWindowClass({
           propsData: {
             fiche,
-            featuredMedia,
             showBtnAction: () => {
               this.$emit('fichesMapSelection', fiche.id)
             },
@@ -171,12 +163,12 @@ export default {
 
         // create marker
         const marker = new this.google.maps.Marker({
-          icon: fiche.main_category.marker_icon,
-          position: fiche.info.location,
-          title: this.$options.filters.heDecode(fiche.title.rendered),
+          icon: fiche.poi.marker,
+          position: fiche.poi,
+          title: fiche.title,
         })
-        marker.defaultZIndex = fiche.info.chouquettise ? Z_INDEXES.chouquettise : Z_INDEXES.default
-        marker.chouquettise = fiche.info.chouquettise
+        marker.defaultZIndex = fiche.isChouquettise ? Z_INDEXES.chouquettise : Z_INDEXES.default
+        marker.chouquettise = fiche.isChouquettise
         marker.setZIndex(marker.defaultZIndex)
         marker.addListener('click', () => {
           this.resetMapObjects()

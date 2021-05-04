@@ -314,7 +314,10 @@ export default {
       return process.client ? window.location.host : ''
     },
     criteriaValues() {
-      return this.fiche.criteria.flatMap((criteria) => criteria.values)
+      return _.uniq(
+        this.fiche.criteria.flatMap((criteria) => criteria.values),
+        'id'
+      )
     },
 
     // css
