@@ -77,7 +77,12 @@
                   </select>
                 </div>
                 <div class="d-bock d-md-none">
-                  <b-overlay :show="criteriaLoading" opacity="0.6" blur="none" spinner-variant="yellow">
+                  <b-overlay
+                    :show="$apollo.queries.criteriaByCategory.loading"
+                    opacity="0.6"
+                    blur="none"
+                    spinner-variant="yellow"
+                  >
                     <div v-for="criteria in formSearch.criteria" :key="criteria.id" class="form-group mb-0 mb-md-3">
                       <label :for="criteria.taxonomy" class="small mb-0">{{ criteria.name }}</label>
                       <select
@@ -95,7 +100,12 @@
                   </b-overlay>
                 </div>
                 <div class="d-none d-md-block">
-                  <b-overlay :show="criteriaLoading" opacity="0.6" blur="none" spinner-variant="yellow">
+                  <b-overlay
+                    :show="$apollo.queries.criteriaByCategory.loading"
+                    opacity="0.6"
+                    blur="none"
+                    spinner-variant="yellow"
+                  >
                     <fieldset v-for="criteria in formSearch.criteria" :key="criteria.id" class="border my-3 px-3">
                       <legend class="h6 w-auto px-3 m-0">{{ criteria.name }}</legend>
                       <div class="form-row py-2">
@@ -205,7 +215,7 @@
               </template>
             </Fiche>
           </template>
-          <template v-if="$fetchState.pending || fichesLoading">
+          <template v-if="$apollo.queries.fichesByCategory.loading">
             <FichePlaceholder v-for="f in 4" :key="f" class="fiche m-3" />
           </template>
           <template v-else-if="!fichesTotal">
@@ -222,7 +232,7 @@
         ref="map"
         :fiches="fiches"
         :count-next-fiches="countNextFiches"
-        :loading="fichesLoading"
+        :loading="$apollo.queries.fichesByCategory.loading"
         :class="{ 'd-none': mapState != $mapState.SHOWN }"
         @fichesMapSelection="selectFiche"
         @fetchMoreFiches="fetchMoreFiches"
@@ -233,7 +243,7 @@
       <b-button
         variant="primary"
         :pressed="mapState != $mapState.SHOWN"
-        :disabled="fichesLoading"
+        :disabled="$apollo.queries.fichesByCategory.loading"
         @click="mapState = $mapState.HIDDEN"
       >
         <span class="mr-1"><i class="far fa-file-alt"></i></span> Fiches
@@ -241,7 +251,7 @@
       <b-button
         variant="primary"
         :pressed="mapState === $mapState.SHOWN"
-        :disabled="fichesLoading || !fiches.length"
+        :disabled="$apollo.queries.fichesByCategory.loading || !fiches.length"
         @click="showMap"
       >
         <span class="mr-1"><i class="fas fa-map-marked-alt"></i></span> Carte
@@ -258,6 +268,7 @@ import { mapState } from 'vuex'
 import _ from 'lodash'
 import Vue from 'vue'
 import $ from 'jquery'
+import gql from 'graphql-tag'
 
 import Fiche from '~/components/Fiche'
 import { PER_PAGE_NUMBER } from '~/constants/default'
@@ -265,6 +276,7 @@ import CriteriaBadge from '~/components/CriteriaBadge'
 import ScrollTop from '~/components/ScrollTop'
 import FichePlaceholder from '~/components/FichePlaceholder'
 import FichesMap from '~/components/FichesMap'
+import { fiche as FicheFragments } from '~/apollo/fragments/fiche'
 
 const MapStates = Object.freeze({
   HIDDEN: Symbol('hidden'),
@@ -276,6 +288,74 @@ Vue.prototype.$mapState = MapStates
 export default {
   components: { FichesMap, CriteriaBadge, Fiche, ScrollTop, FichePlaceholder },
   directives: { swiper: SwiperDirective },
+  apollo: {
+    fichesByCategory: {
+      query: gql`
+        query($slug: String!, $page: Int!, $pageSize: Int!) {
+          fichesByCategory(slug: $slug, page: $page, pageSize: $pageSize) {
+            hasMore
+            total
+            totalPages
+            fiches {
+              ...FicheFragments
+            }
+          }
+        }
+        ${FicheFragments}
+      `,
+      variables() {
+        return {
+          slug: this.rootCategory.slug,
+          page: this.fichesNextPage,
+          pageSize: PER_PAGE_NUMBER,
+        }
+      },
+      update({ fichesByCategory: data }) {
+        const { fiches, total, totalPages } = data
+
+        this.fiches.push(...fiches)
+        this.fichesTotal = total
+        this.fichesPages = totalPages
+        return {}
+      },
+    },
+    criteriaByCategory: {
+      query: gql`
+        query($id: Int!) {
+          criteriaByCategory(id: $id) {
+            id
+            name
+            taxonomy
+            values {
+              id
+              slug
+              name
+              description
+            }
+          }
+        }
+      `,
+      variables() {
+        let categoryId = null
+        if (this.formSearch.category) {
+          categoryId = this.formSearch.category.id
+        } else if (this.rootCategory) {
+          categoryId = this.rootCategory.id
+        }
+
+        return {
+          id: parseInt(categoryId),
+        }
+      },
+      update({ criteriaByCategory: data }) {
+        // build selectedValues "add-on"
+        data.forEach((criteria) => (criteria.selectedValues = []))
+
+        this.formSearch.criteria = data
+      },
+      skip: true,
+    },
+  },
   props: {
     /* eslint-disable vue/require-default-prop */
     rootCategory: Object,
@@ -286,9 +366,6 @@ export default {
     querySearch: String,
     queryCriteria: Array,
     /* eslint-enable vue/require-default-prop */
-  },
-  async fetch() {
-    await this.fetchMoreFiches()
   },
   data() {
     return {
@@ -308,10 +385,8 @@ export default {
       // search form
       isSearchVisible: false,
       formSearch: { category: null, location: null, search: null, criteria: [] },
-      criteriaLoading: false,
 
       mapState: MapStates.HIDDEN,
-      fichesLoading: false,
     }
   },
   validations() {
@@ -355,7 +430,7 @@ export default {
       this.categories = await this.$store.dispatch('categories/findChildren', this.rootCategory)
     } else {
       this.categories = Object.entries(this.categoryHierarchy).flatMap(([categoryId, children]) => [
-        this.categoryAll[categoryId],
+        this.categoryAll.find(({ id }) => id === categoryId),
         ...children,
       ])
     }
@@ -363,7 +438,7 @@ export default {
       this.locations = await this.$store.dispatch('locations/findChildren', this.rootLocation)
     } else {
       this.locations = Object.entries(this.locationHierarchy).flatMap(([locationId, children]) => [
-        this.locationAll[locationId],
+        this.locationAll.find(({ id }) => id === locationId),
         ...children,
       ])
     }
@@ -374,22 +449,21 @@ export default {
   methods: {
     async fetchMoreFiches() {
       try {
-        this.fichesLoading = true
+        await this.$apollo.queries.fichesByCategory.fetchMore({
+          variables: {
+            slug: this.rootCategory.slug,
+            page: ++this.fichesNextPage,
+            pageSize: PER_PAGE_NUMBER,
+          },
+          updateQuery(previousResult, { fetchMoreResult }) {
+            const { fiches, total, totalPages } = fetchMoreResult.fichesByCategory
 
-        const ficheResult = await this.$store.dispatch('fiches/fetchByCategoryIds', {
-          category: this.defaultCategory,
-          location: this.defaultLocation,
-          search: this.defaultSearch,
-          criteria: this.defaultCriteria,
-          page: this.fichesNextPage++,
-          per_page: PER_PAGE_NUMBER,
+            this.fiches.push(...fiches)
+            this.fichesTotal = total
+            this.fichesPages = totalPages
+          },
         })
-
-        this.fiches.push(...ficheResult.fiches)
-        this.fichesTotal = ficheResult.total
-        this.fichesPages = ficheResult.pages
       } finally {
-        this.fichesLoading = false
         if (this.mapState === MapStates.SHOWN) {
           this.resetMap()
         } else {
@@ -399,7 +473,7 @@ export default {
     },
     lazyLoadFiches(isVisible) {
       if (isVisible) {
-        if (this.hasMoreFiches && !this.fichesLoading) {
+        if (this.hasMoreFiches && !this.$apollo.queries.fichesByCategory.loading) {
           this.fetchMoreFiches()
         }
       }
@@ -428,27 +502,8 @@ export default {
       return criteria.selectedValues.includes(value)
     },
     async loadCriteria() {
-      try {
-        this.criteriaLoading = true
-
-        let categoryId = null
-        if (this.formSearch.category) {
-          categoryId = this.formSearch.category.id
-        } else if (this.rootCategory) {
-          categoryId = this.rootCategory.id
-        }
-
-        const criteriaList = categoryId
-          ? await this.$wpAPI.criteria.getForCategory(categoryId).then(({ data }) => data)
-          : []
-
-        // build selectedValues "add-on"
-        criteriaList.forEach((criteria) => (criteria.selectedValues = []))
-
-        this.formSearch.criteria = criteriaList
-      } finally {
-        this.criteriaLoading = false
-      }
+      this.$apollo.queries.criteriaByCategory.skip = false
+      await this.$apollo.queries.criteriaByCategory.refresh()
     },
 
     // map

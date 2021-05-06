@@ -18,14 +18,11 @@ import seo from '~/mixins/seo'
 export default {
   components: { PageFiches },
   mixins: [seo],
-  async asyncData({ store, params, query }) {
-    const rootCategory = await store.dispatch('categories/fetchBySlug', params.slug)
-    const rootLogo = await store.dispatch('media/fetchById', rootCategory.logos.logo_black)
-
+  async asyncData({ store, params, query, app }) {
     // store initialization
-    await store.dispatch('locations/init')
-    await store.dispatch('menus/init')
-    await store.dispatch('menus/setSelectedCategory', rootCategory)
+    await store.dispatch('yoast/init')
+
+    const rootCategory = await store.dispatch('categories/fetchBySlug', params.slug)
 
     // build criteria
     const queryCategory = query.category || rootCategory.slug
@@ -39,7 +36,6 @@ export default {
 
     return {
       rootCategory,
-      rootLogo,
 
       queryCategory,
       queryLocation,
@@ -75,33 +71,33 @@ export default {
       meta: this.seoMetaProperties([
         {
           name: 'description',
-          content: this.$options.filters.heDecode(this.rootCategory.description || this.rootCategory.name),
+          content: this.rootCategory.description || this.rootCategory.name,
         },
 
         { property: 'og:type', content: 'article' },
         { property: 'og:locale', content: 'fr_FR' },
         { property: 'og:url', content: this.currentURL },
-        { property: 'og:title', content: this.$options.filters.heDecode(this.rootCategory.name) },
+        { property: 'og:title', content: this.rootCategory.name },
         {
           property: 'og:description',
-          content: this.$options.filters.heDecode(this.rootCategory.description || this.rootCategory.name),
+          content: this.rootCategory.description || this.rootCategory.name,
         },
-        { property: 'og:image', content: this.rootLogo.source_url },
+        { property: 'og:image', content: this.rootCategory.logoBlack.source },
 
         { name: 'twitter:card', content: 'summary' },
-        { name: 'twitter:title', content: this.$options.filters.heDecode(this.rootCategory.name) },
+        { name: 'twitter:title', content: this.rootCategory.name },
         {
           name: 'twitter:description',
-          content: this.$options.filters.heDecode(this.rootCategory.description || this.rootCategory.name),
+          content: this.rootCategory.description || this.rootCategory.name,
         },
-        { name: 'twitter:image', content: this.rootLogo.source_url },
+        { name: 'twitter:image', content: this.rootCategory.logoBlack.source },
       ]),
       script: [
         this.jsonLDScript({
           '@context': 'http://schema.org',
           '@type': 'WebPage',
-          name: this.$options.filters.heDecode(this.rootCategory.name),
-          description: this.$options.filters.heDecode(this.rootCategory.description || this.rootCategory.name),
+          name: this.rootCategory.name,
+          description: this.rootCategory.description || this.rootCategory.name,
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',

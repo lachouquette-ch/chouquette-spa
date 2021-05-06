@@ -16,7 +16,7 @@ export const actions = {
     return state.all[id]
   },
   fetchBySlug({ state }, slug) {
-    return state.all.find((category) => category.slug === slug)
+    return Object.values(state.all).find((category) => category.slug === slug)
   },
   findChildren({ state }, category) {
     return state.topLevels[category.id]
