@@ -75,6 +75,7 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
+    { src: '~/plugins/global-error-handler.js', mode: 'client' },
     { src: '~/plugins/vue-recaptcha-v3.js', mode: 'client' },
     { src: '~/plugins/bootstrap.js', mode: 'client' },
     { src: '~/plugins/jquery.js', mode: 'client' },
@@ -128,6 +129,8 @@ export default {
   sentry: {
     dsn: 'https://aaf0c41235c44040ae01dcd356fb3e6f@o397059.ingest.sentry.io/5251223',
     disabled: process.env.NODE_ENV === 'development',
+    publishRelease: true,
+    attachCommits: true,
   },
   sitemap: {
     hostname: 'https://lachouquette.ch',
