@@ -1,5 +1,5 @@
 <template>
-  <div class="position-relative" style="min-height: 75vh;">
+  <div class="position-relative" style="min-height: 75vh">
     <div class="fiches py-3">
       <div class="container">
         <div class="text-center">
@@ -306,7 +306,7 @@ export default {
       variables() {
         return {
           slug: this.rootCategory.slug,
-          page: this.fichesNextPage,
+          page: 1,
           pageSize: PER_PAGE_NUMBER,
         }
       },
@@ -449,13 +449,14 @@ export default {
   methods: {
     async fetchMoreFiches() {
       try {
+        this.fichesNextPage++
         await this.$apollo.queries.fichesByCategory.fetchMore({
           variables: {
             slug: this.rootCategory.slug,
-            page: ++this.fichesNextPage,
+            page: this.fichesNextPage,
             pageSize: PER_PAGE_NUMBER,
           },
-          updateQuery(previousResult, { fetchMoreResult }) {
+          updateQuery: (previousResult, { fetchMoreResult }) => {
             const { fiches, total, totalPages } = fetchMoreResult.fichesByCategory
 
             this.fiches.push(...fiches)
@@ -480,7 +481,7 @@ export default {
     },
     async reload() {
       this.fiches = []
-      this.fichesNextPage = 1
+      this.fichesNextPage = 0
 
       // search form
       await this.searchReset()

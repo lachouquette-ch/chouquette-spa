@@ -31,6 +31,7 @@ export const actions = {
                 id
                 slug
                 name
+                description
                 parentId
                 logoYellow {
                   ...MediaFragments

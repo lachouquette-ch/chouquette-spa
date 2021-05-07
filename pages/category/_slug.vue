@@ -62,8 +62,9 @@ export default {
 
     next()
   },
-  beforeRouteLeave(to, from, next) {
-    this.$store.dispatch('menus/clearSelectedCategory').then(() => next())
+  async beforeRouteLeave(to, from, next) {
+    await this.$store.dispatch('menus/clearSelectedCategory')
+    next()
   },
   head() {
     return {
