@@ -73,6 +73,10 @@ export default {
           name: 'description',
           content: this.rootCategory.description || this.rootCategory.name,
         },
+        {
+          name: 'robots',
+          content: 'noindex',
+        },
 
         { property: 'og:type', content: 'article' },
         { property: 'og:locale', content: 'fr_FR' },
