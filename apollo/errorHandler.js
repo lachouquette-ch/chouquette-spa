@@ -1,6 +1,15 @@
-export default ({ graphQLErrors, networkError, operation, forward }, nuxtContext) => {
+export default ({ graphQLErrors, networkError }, { store }) => {
   // TODO : call sentry ?
-  console.log('Global error handler')
-  console.log(graphQLErrors, networkError, operation, forward)
-  console.log(nuxtContext)
+  if (networkError) {
+    store.dispatch('alerts/addAction', {
+      type: 'danger',
+      message: `Erreur lors du chargement des données : ${networkError.statusCode} ${networkError.name}`,
+    })
+  } else if (graphQLErrors) {
+    const errors = graphQLErrors.map(({ path, message }) => `${path.join(',')} (${message})`)
+    store.dispatch('alerts/addAction', {
+      type: 'danger',
+      message: `Erreur(s) lors du chargement des données : ${errors.join(' - ')}`,
+    })
+  }
 }
