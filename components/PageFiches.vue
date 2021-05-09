@@ -291,8 +291,22 @@ export default {
   apollo: {
     fichesByCategory: {
       query: gql`
-        query($slug: String!, $page: Int!, $pageSize: Int!) {
-          fichesByCategory(slug: $slug, page: $page, pageSize: $pageSize) {
+        query(
+          $slug: String!
+          $location: String
+          $search: String
+          $criteria: [CriteriaSearch!]
+          $page: Int!
+          $pageSize: Int!
+        ) {
+          fichesByCategory(
+            slug: $slug
+            location: $location
+            search: $search
+            criteria: $criteria
+            page: $page
+            pageSize: $pageSize
+          ) {
             hasMore
             total
             totalPages
@@ -305,7 +319,10 @@ export default {
       `,
       variables() {
         return {
-          slug: this.rootCategory.slug,
+          slug: this.defaultCategory,
+          location: this.defaultLocation,
+          search: this.search,
+          criteria: this.defaultCriteria,
           page: 1,
           pageSize: PER_PAGE_NUMBER,
         }
@@ -493,7 +510,7 @@ export default {
       // search form
       await this.searchReset()
       this.isSearchVisible = false
-      await this.fetchMoreFiches()
+      await this.$apollo.queries.fichesByCategory.refetch()
     },
 
     // criteria
