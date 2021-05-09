@@ -321,7 +321,7 @@ export default {
         return {
           slug: this.defaultCategory,
           location: this.defaultLocation,
-          search: this.search,
+          search: this.defaultSearch,
           criteria: this.defaultCriteria,
           page: 1,
           pageSize: PER_PAGE_NUMBER,
