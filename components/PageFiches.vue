@@ -311,11 +311,12 @@ export default {
         }
       },
       update({ fichesByCategory: data }) {
-        const { fiches, total, totalPages } = data
+        const { fiches, total, totalPages, hasMore } = data
 
         this.fiches.push(...fiches)
         this.fichesTotal = total
         this.fichesPages = totalPages
+        this.hasMoreFiches = hasMore
         return {}
       },
     },
@@ -381,6 +382,7 @@ export default {
       fichesTotal: null,
       fichesPages: null,
       fichesNextPage: 1,
+      hasMoreFiches: false,
 
       // search form
       isSearchVisible: false,
@@ -404,9 +406,6 @@ export default {
     }),
     title() {
       return this.rootCategory ? this.rootCategory.name : this.rootLocation.name
-    },
-    hasMoreFiches() {
-      return this.fichesNextPage <= this.fichesPages
     },
     countNextFiches() {
       if (this.fichesNextPage < this.fichesPages) {
