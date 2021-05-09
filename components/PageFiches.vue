@@ -350,7 +350,15 @@ export default {
       },
       update({ criteriaByCategory: data }) {
         // build selectedValues "add-on"
-        data.forEach((criteria) => (criteria.selectedValues = []))
+        data.forEach((criteria) => {
+          criteria.selectedValues = []
+          // try to map with default criteria
+          const matchingDefaultCriteria = this.defaultCriteria.find(({ taxonomy }) => taxonomy === criteria.taxonomy)
+          if (matchingDefaultCriteria) {
+            const matchingCriteria = criteria.values.filter(({ slug }) => matchingDefaultCriteria.values.includes(slug))
+            criteria.selectedValues.push(...matchingCriteria)
+          }
+        })
 
         this.formSearch.criteria = data
       },

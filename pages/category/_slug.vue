@@ -18,39 +18,42 @@ import seo from '~/mixins/seo'
 export default {
   components: { PageFiches },
   mixins: [seo],
-  async asyncData({ store, params, query, app }) {
-    // store initialization
-    await store.dispatch('yoast/init')
-
+  async asyncData({ store, params }) {
     const rootCategory = await store.dispatch('categories/fetchBySlug', params.slug)
-
-    // build criteria
-    const queryCategory = query.category || rootCategory.slug
-    const queryLocation = query.location
-    const querySearch = query.search
-    const queryCriteria = Object.entries(query)
-      .filter(([key]) => key.startsWith('cq_'))
-      .map(([key, value]) => {
-        return { taxonomy: key, values: value.split(',') }
-      })
 
     return {
       rootCategory,
-
-      queryCategory,
-      queryLocation,
-      querySearch,
-      queryCriteria,
     }
   },
-  beforeRouteUpdate(to, from, next) {
-    if (to.path === from.path) {
-      // build criteria
-      const criteria = Object.entries(to.query)
+  data() {
+    return {
+      rootCategory: null,
+      queryCategory: null,
+      queryLocation: null,
+      querySearch: null,
+      queryCriteria: null,
+    }
+  },
+  created() {
+    // build criteria
+    this.queryCategory = this.$route.query.category || this.rootCategory.slug
+    this.queryLocation = this.$route.query.location
+    this.querySearch = this.$route.query.search
+    this.queryCriteria = this.buildSelectedCriteriaFromQuery(this.$route.query)
+  },
+  methods: {
+    buildSelectedCriteriaFromQuery(query) {
+      return Object.entries(query)
         .filter(([key]) => key.startsWith('cq_'))
         .map(([key, value]) => {
           return { taxonomy: key, values: value.split(',') }
         })
+    },
+  },
+  beforeRouteUpdate(to, from, next) {
+    if (to.path === from.path) {
+      // build criteria
+      const criteria = this.buildSelectedCriteriaFromQuery(to.query)
 
       this.$refs.category.defaultCategory = to.query.category || this.rootCategory.slug
       this.$refs.category.defaultLocation = to.query.location
