@@ -77,12 +77,7 @@
                   </select>
                 </div>
                 <div class="d-bock d-md-none">
-                  <b-overlay
-                    :show="$apollo.queries.criteriaByCategory.loading"
-                    opacity="0.6"
-                    blur="none"
-                    spinner-variant="yellow"
-                  >
+                  <b-overlay :show="criteriaLoading" opacity="0.6" blur="none" spinner-variant="yellow">
                     <div v-for="criteria in formSearch.criteria" :key="criteria.id" class="form-group mb-0 mb-md-3">
                       <label :for="criteria.taxonomy" class="small mb-0">{{ criteria.name }}</label>
                       <select
@@ -100,12 +95,7 @@
                   </b-overlay>
                 </div>
                 <div class="d-none d-md-block">
-                  <b-overlay
-                    :show="$apollo.queries.criteriaByCategory.loading"
-                    opacity="0.6"
-                    blur="none"
-                    spinner-variant="yellow"
-                  >
+                  <b-overlay :show="criteriaLoading" opacity="0.6" blur="none" spinner-variant="yellow">
                     <fieldset v-for="criteria in formSearch.criteria" :key="criteria.id" class="border my-3 px-3">
                       <legend class="h6 w-auto px-3 m-0">{{ criteria.name }}</legend>
                       <div class="form-row py-2">
@@ -215,8 +205,11 @@
               </template>
             </Fiche>
           </template>
-          <template v-if="$apollo.queries.fichesByCategory.loading">
+          <template v-if="$fetchState.pending">
             <FichePlaceholder v-for="f in 4" :key="f" class="fiche m-3" />
+          </template>
+          <template v-else-if="$fetchState.error">
+            <span class="h5">{{ parseGQLError($fetchState.error) }} </span>
           </template>
           <template v-else-if="!fichesTotal">
             <span class="h5">
@@ -232,10 +225,10 @@
         ref="map"
         :fiches="fiches"
         :count-next-fiches="countNextFiches"
-        :loading="$apollo.queries.fichesByCategory.loading"
+        :loading="$fetchState.pending"
         :class="{ 'd-none': mapState != $mapState.SHOWN }"
         @fichesMapSelection="selectFiche"
-        @fetchMoreFiches="fetchMoreFiches"
+        @fetchMofetchMoreFiches="$fetch"
       />
     </client-only>
 
@@ -243,7 +236,7 @@
       <b-button
         variant="primary"
         :pressed="mapState != $mapState.SHOWN"
-        :disabled="$apollo.queries.fichesByCategory.loading"
+        :disabled="$fetchState.pending"
         @click="mapState = $mapState.HIDDEN"
       >
         <span class="mr-1"><i class="far fa-file-alt"></i></span> Fiches
@@ -251,7 +244,7 @@
       <b-button
         variant="primary"
         :pressed="mapState === $mapState.SHOWN"
-        :disabled="$apollo.queries.fichesByCategory.loading || !fiches.length"
+        :disabled="$fetchState.pending || !fiches.length"
         @click="showMap"
       >
         <span class="mr-1"><i class="fas fa-map-marked-alt"></i></span> Carte
@@ -277,6 +270,7 @@ import ScrollTop from '~/components/ScrollTop'
 import FichePlaceholder from '~/components/FichePlaceholder'
 import FichesMap from '~/components/FichesMap'
 import { fiche as FicheFragments } from '~/apollo/fragments/fiche'
+import graphql from '~/mixins/graphql'
 
 const MapStates = Object.freeze({
   HIDDEN: Symbol('hidden'),
@@ -288,100 +282,7 @@ Vue.prototype.$mapState = MapStates
 export default {
   components: { FichesMap, CriteriaBadge, Fiche, ScrollTop, FichePlaceholder },
   directives: { swiper: SwiperDirective },
-  apollo: {
-    fichesByCategory: {
-      query: gql`
-        query(
-          $slug: String!
-          $location: String
-          $search: String
-          $criteria: [CriteriaSearch!]
-          $page: Int!
-          $pageSize: Int!
-        ) {
-          fichesByCategory(
-            slug: $slug
-            location: $location
-            search: $search
-            criteria: $criteria
-            page: $page
-            pageSize: $pageSize
-          ) {
-            hasMore
-            total
-            totalPages
-            fiches {
-              ...FicheFragments
-            }
-          }
-        }
-        ${FicheFragments}
-      `,
-      variables() {
-        return {
-          slug: this.defaultCategory,
-          location: this.defaultLocation,
-          search: this.defaultSearch,
-          criteria: this.defaultCriteria,
-          page: 1,
-          pageSize: PER_PAGE_NUMBER,
-        }
-      },
-      update({ fichesByCategory: data }) {
-        const { fiches, total, totalPages, hasMore } = data
-
-        this.fiches.push(...fiches)
-        this.fichesTotal = total
-        this.fichesPages = totalPages
-        this.hasMoreFiches = hasMore
-        return {}
-      },
-    },
-    criteriaByCategory: {
-      query: gql`
-        query($id: Int!) {
-          criteriaByCategory(id: $id) {
-            id
-            name
-            taxonomy
-            values {
-              id
-              slug
-              name
-              description
-            }
-          }
-        }
-      `,
-      variables() {
-        let categoryId = null
-        if (this.formSearch.category) {
-          categoryId = this.formSearch.category.id
-        } else if (this.rootCategory) {
-          categoryId = this.rootCategory.id
-        }
-
-        return {
-          id: parseInt(categoryId),
-        }
-      },
-      update({ criteriaByCategory: data }) {
-        // build selectedValues "add-on"
-        data.forEach((criteria) => {
-          criteria.selectedValues = []
-          // try to map with default criteria
-          const matchingDefaultCriteria = this.defaultCriteria.find(({ taxonomy }) => taxonomy === criteria.taxonomy)
-          if (matchingDefaultCriteria) {
-            const matchingCriteria = criteria.values.filter(({ slug }) => matchingDefaultCriteria.values.includes(slug))
-            criteria.selectedValues.push(...matchingCriteria)
-          }
-        })
-
-        this.formSearch.criteria = data
-      },
-      skip: true,
-    },
-  },
+  mixins: [graphql],
   props: {
     /* eslint-disable vue/require-default-prop */
     rootCategory: Object,
@@ -393,6 +294,63 @@ export default {
     queryCriteria: Array,
     /* eslint-enable vue/require-default-prop */
   },
+  async fetch() {
+    try {
+      const { data } = await this.$apollo.query({
+        query: gql`
+          query(
+            $slug: String!
+            $location: String
+            $search: String
+            $criteria: [CriteriaSearch!]
+            $page: Int!
+            $pageSize: Int!
+          ) {
+            fichesByCategory(
+              slug: $slug
+              location: $location
+              search: $search
+              criteria: $criteria
+              page: $page
+              pageSize: $pageSize
+            ) {
+              hasMore
+              total
+              totalPages
+              fiches {
+                ...FicheFragments
+              }
+            }
+          }
+          ${FicheFragments}
+        `,
+        variables: {
+          slug: this.defaultCategory,
+          location: this.defaultLocation,
+          search: this.defaultSearch,
+          criteria: this.defaultCriteria,
+          page: this.fichesNextPage++,
+          pageSize: PER_PAGE_NUMBER,
+        },
+      })
+
+      const { fiches, total, totalPages, hasMore } = data.fichesByCategory
+      this.fiches.push(...fiches)
+      this.fichesTotal = total
+      this.fichesPages = totalPages
+      this.hasMoreFiches = hasMore
+    } catch (err) {
+      this.$sentry.captureException(err)
+      this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(err) })
+    } finally {
+      if (this.mapState === MapStates.SHOWN) {
+        this.resetMap()
+      } else {
+        this.mapState = MapStates.UPDATED
+      }
+    }
+  },
+  fetchOnServer: false,
   data() {
     return {
       // initialize component
@@ -414,6 +372,8 @@ export default {
       formSearch: { category: null, location: null, search: null, criteria: [] },
 
       mapState: MapStates.HIDDEN,
+
+      criteriaLoading: false,
     }
   },
   validations() {
@@ -448,7 +408,7 @@ export default {
       return hasSearch || hasCriteria
     },
   },
-  async mounted() {
+  async created() {
     // create lists
     if (this.rootCategory) {
       this.categories = await this.$store.dispatch('categories/findChildren', this.rootCategory)
@@ -471,49 +431,59 @@ export default {
     await this.searchReset()
   },
   methods: {
-    async fetchMoreFiches() {
-      try {
-        this.fichesNextPage++
-        await this.$apollo.queries.fichesByCategory.fetchMore({
-          variables: {
-            slug: this.rootCategory.slug,
-            page: this.fichesNextPage,
-            pageSize: PER_PAGE_NUMBER,
-          },
-          updateQuery: (previousResult, { fetchMoreResult }) => {
-            const { fiches, total, totalPages } = fetchMoreResult.fichesByCategory
-
-            this.fiches.push(...fiches)
-            this.fichesTotal = total
-            this.fichesPages = totalPages
-          },
-        })
-      } finally {
-        if (this.mapState === MapStates.SHOWN) {
-          this.resetMap()
-        } else {
-          this.mapState = MapStates.UPDATED
-        }
-      }
-    },
-    lazyLoadFiches(isVisible) {
-      if (isVisible) {
-        if (this.hasMoreFiches && !this.$apollo.queries.fichesByCategory.loading) {
-          this.fetchMoreFiches()
-        }
-      }
-    },
     async reload() {
       this.fiches = []
-      this.fichesNextPage = 0
+      this.fichesNextPage = 1
 
       // search form
       await this.searchReset()
       this.isSearchVisible = false
-      await this.$apollo.queries.fichesByCategory.refetch()
+      await this.$fetch()
     },
 
     // criteria
+    async loadCriteria() {
+      try {
+        this.criteriaLoading = true
+        const { data } = await this.$apollo.query({
+          query: gql`
+            query($id: Int!) {
+              criteriaByCategory(id: $id) {
+                id
+                name
+                taxonomy
+                values {
+                  id
+                  slug
+                  name
+                  description
+                }
+              }
+            }
+          `,
+          variables: {
+            id: this.formSearch.category ? parseInt(this.formSearch.category.id) : parseInt(this.rootCategory.id),
+          },
+        })
+
+        // build selectedValues "add-on"
+        data.criteriaByCategory.forEach((criteria) => {
+          criteria.selectedValues = []
+          // try to map with default criteria
+          const matchingDefaultCriteria = this.defaultCriteria.find(({ taxonomy }) => taxonomy === criteria.taxonomy)
+          if (matchingDefaultCriteria) {
+            const matchingCriteria = criteria.values.filter(({ slug }) => matchingDefaultCriteria.values.includes(slug))
+            criteria.selectedValues.push(...matchingCriteria)
+          }
+        })
+        this.formSearch.criteria = data.criteriaByCategory
+      } catch (e) {
+        this.handleGQLError(e, 'Impossible de charger les critères :')
+        this.$nuxt.$sentry.captureException(e)
+      } finally {
+        this.criteriaLoading = false
+      }
+    },
     toggleValue(criteria, value) {
       this.$v.formSearch.$touch()
       const valueIndex = criteria.selectedValues.findIndex((el) => el.id === value.id)
@@ -525,10 +495,6 @@ export default {
     },
     isValueChecked(criteria, value) {
       return criteria.selectedValues.includes(value)
-    },
-    async loadCriteria() {
-      this.$apollo.queries.criteriaByCategory.skip = false
-      await this.$apollo.queries.criteriaByCategory.refresh()
     },
 
     // map
@@ -562,6 +528,13 @@ export default {
     },
 
     // fiches
+    async lazyLoadFiches(isVisible) {
+      if (isVisible) {
+        if (this.hasMoreFiches && !this.$fetchState.pending) {
+          await this.$fetch()
+        }
+      }
+    },
     async searchClear() {
       this.formSearch.category = null
       await this.loadCriteria()
