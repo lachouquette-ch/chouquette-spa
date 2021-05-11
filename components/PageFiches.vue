@@ -339,9 +339,9 @@ export default {
       this.fichesTotal = total
       this.fichesPages = totalPages
       this.hasMoreFiches = hasMore
-    } catch (err) {
-      this.$sentry.captureException(err)
-      this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(err) })
+    } catch (e) {
+      this.$sentry.captureException(e)
+      this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(e) })
     } finally {
       if (this.mapState === MapStates.SHOWN) {
         this.resetMap()
@@ -478,8 +478,8 @@ export default {
         })
         this.formSearch.criteria = data.criteriaByCategory
       } catch (e) {
+        this.$sentry.captureException(e)
         this.handleGQLError(e, 'Impossible de charger les critères :')
-        this.$nuxt.$sentry.captureException(e)
       } finally {
         this.criteriaLoading = false
       }

@@ -3,9 +3,6 @@ import webpack from 'webpack'
 import axios from 'axios'
 
 export default {
-  env: {
-    recaptchaSiteKey: process.env.RECAPTCHA_SITE_KEY,
-  },
   publicRuntimeConfig: {
     baseURL: process.env.URL || 'https://lachouquette.ch',
     wpBaseURL: process.env.WP_URL || 'https://wordpress.lachouquette.ch',
@@ -15,6 +12,12 @@ export default {
     bannerText: process.env.BANNER_TEXT,
     bannerLinkTo: process.env.BANNER_LINK_TO,
     bannerLinkText: process.env.BANNER_LINK_TEXT,
+    recaptcha: {
+      /* reCAPTCHA options */
+      siteKey: process.env.RECAPTCHA_SITE_KEY,
+      hideBadge: true,
+      version: 3,
+    },
   },
   ssr: false,
   /*
@@ -76,7 +79,6 @@ export default {
    */
   plugins: [
     { src: '~/plugins/global-error-handler.js', mode: 'client' },
-    { src: '~/plugins/vue-recaptcha-v3.js', mode: 'client' },
     { src: '~/plugins/bootstrap.js', mode: 'client' },
     { src: '~/plugins/jquery.js', mode: 'client' },
     { src: '~/plugins/google-maps.js', mode: 'client' },
@@ -106,6 +108,7 @@ export default {
     ['vue-scrollto/nuxt', { offset: -1 * (80 + 70) - 15 }], // fix default offset (do not work for home page)
     '@nuxtjs/sentry',
     '@nuxtjs/sitemap',
+    '@nuxtjs/recaptcha',
   ],
   apollo: {
     tokenName: 'chouquette', // specify token name

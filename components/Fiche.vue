@@ -256,15 +256,17 @@
 import { email, minLength, required } from 'vuelidate/lib/validators'
 import moment from 'moment'
 import _ from 'lodash'
+import gql from 'graphql-tag'
 
 import WpMedia from './WpMediaGQL'
 import { MAP_OPTIONS } from '~/constants/mapSettings'
 import modal from '~/mixins/modal'
+import graphql from '~/mixins/graphql'
 import FicheShare from '~/components/FicheShare'
 
 export default {
   components: { FicheShare, WpMedia },
-  mixins: [modal],
+  mixins: [modal, graphql],
   props: {
     fiche: {
       type: Object,
@@ -445,9 +447,9 @@ export default {
       if (!this.$v.formFiche.$invalid) {
         this.loading = true
         // Get recaptcha token
-        await this.$recaptchaLoaded()
+        await this.$recaptcha.init()
         // Execute reCAPTCHA with action "login".
-        const token = await this.$recaptcha('report')
+        const token = await this.$recaptcha.execute('report')
 
         const data = {
           name: this.formFiche.name,
@@ -459,6 +461,7 @@ export default {
         // post report
         try {
           if (isContactForm) {
+            // contact
             await this.$wpAPI.wp.fiches.postContact(this.fiche.id, data)
             this.$store.dispatch('alerts/addAction', {
               type: 'success',
@@ -467,7 +470,24 @@ export default {
               )}.`,
             })
           } else {
-            await this.$wpAPI.wp.fiches.postReport(this.fiche.id, data)
+            // report
+            await this.$apollo.mutate({
+              mutation: gql`
+                mutation ficheReport(
+                  $ficheId: Int!
+                  $name: String!
+                  $email: String!
+                  $message: String!
+                  $recaptcha: String!
+                ) {
+                  ficheReport(ficheId: $ficheId, name: $name, email: $email, message: $message, recaptcha: $recaptcha)
+                }
+              `,
+              variables: {
+                ficheId: parseInt(this.fiche.id),
+                ...data,
+              },
+            })
             this.$store.dispatch('alerts/addAction', {
               type: 'success',
               message:
@@ -477,8 +497,9 @@ export default {
 
           this.resetModal()
           this.$refs.ficheModal.hide()
-        } catch (err) {
-          this.$store.dispatch('alerts/addAction', { type: 'danger', message: err })
+        } catch (e) {
+          this.$sentry.captureException(e)
+          this.handleGQLError(e, "L'envoi de ton message à échouer :")
         } finally {
           this.loading = false
         }
