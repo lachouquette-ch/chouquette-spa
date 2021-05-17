@@ -449,7 +449,7 @@ export default {
         // Get recaptcha token
         await this.$recaptcha.init()
         // Execute reCAPTCHA with action "login".
-        const token = await this.$recaptcha.execute('report')
+        const token = await this.$recaptcha.execute(isContactForm ? 'report' : 'contact')
 
         const data = {
           name: this.formFiche.name,
@@ -462,12 +462,26 @@ export default {
         try {
           if (isContactForm) {
             // contact
-            await this.$wpAPI.wp.fiches.postContact(this.fiche.id, data)
+            await this.$apollo.mutate({
+              mutation: gql`
+                mutation ficheContact(
+                  $ficheId: Int!
+                  $name: String!
+                  $email: String!
+                  $message: String!
+                  $recaptcha: String!
+                ) {
+                  ficheContact(ficheId: $ficheId, name: $name, email: $email, message: $message, recaptcha: $recaptcha)
+                }
+              `,
+              variables: {
+                ficheId: parseInt(this.fiche.id),
+                ...data,
+              },
+            })
             this.$store.dispatch('alerts/addAction', {
               type: 'success',
-              message: `Nous avons bien envoyé ton message à ${this.$options.filters.heDecode(
-                this.fiche.title.rendered
-              )}.`,
+              message: `Nous avons bien envoyé ton message à ${this.fiche.title}.`,
             })
           } else {
             // report
