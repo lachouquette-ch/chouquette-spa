@@ -126,11 +126,11 @@ export default {
   data() {
     return {
       formContact: {
-        name: 'Fabrice',
-        email: 'fabrice.douchant@gmail.com',
-        subject: 'Mon sujet',
-        to: 'webmaster',
-        message: 'Mon message',
+        name: null,
+        email: null,
+        subject: null,
+        to: null,
+        message: null,
       },
       loading: false,
     }
@@ -183,8 +183,9 @@ export default {
           this.$v.formContact.$reset()
 
           this.$emit('done')
-        } catch (err) {
-          this.$store.dispatch('alerts/addAction', { type: 'danger', message: err })
+        } catch (e) {
+          this.$sentry.captureException(e)
+          this.handleGQLError(e, "L'envoi de ton message à échouer :")
         } finally {
           this.loading = false
         }
