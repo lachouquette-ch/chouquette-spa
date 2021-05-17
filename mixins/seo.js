@@ -1,3 +1,5 @@
+import { seo } from '~/apollo/fragments/seo'
+
 export default {
   computed: {
     currentURL() {
@@ -9,8 +11,9 @@ export default {
       const ogDescription = yoastMeta.find(({ property }) => property === 'og:description')
       return ogDescription ? this.$options.filters.heDecode(ogDescription.content) : ''
     },
-    seoMetaProperties(metadata) {
-      const metaProperties = metadata.map((metaProperty) => {
+    seoMetaProperties(metadata, noIndex = false) {
+      const seoMetaProperties = noIndex ? [{ name: 'robots', content: 'noindex' }, ...metadata] : metadata
+      const metaProperties = seoMetaProperties.map((metaProperty) => {
         return {
           ...metaProperty,
           content: this.$options.filters.heDecode(metaProperty.content),

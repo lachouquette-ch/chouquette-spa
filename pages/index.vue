@@ -70,7 +70,7 @@
       <div class="home-latest container">
         <h2 class="text-center mb-4">Nos derniers articles</h2>
         <main class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
-          <template v-if="$apollo.queries.home.loading">
+          <template v-if="$fetchState.pending">
             <PostCardPlaceholder v-for="p in 4" :key="p" class="post-card" />
           </template>
           <template v-else>
@@ -92,7 +92,7 @@
         </div>
         <div v-swiper="swiperOptions" class="swiper px-md-5">
           <div class="swiper-wrapper pt-3 pt-md-0">
-            <template v-if="$apollo.queries.home.loading">
+            <template v-if="$fetchState.pending">
               <PostCardPlaceholder v-for="p in 4" :key="p" class="swiper-slide" />
             </template>
             <template v-else>
@@ -128,34 +128,40 @@ import PostCardPlaceholder from '~/components/PostCardPlaceholder'
 
 import { AUTO_PLAY, DEFAULT, RESPONSIVE } from '~/constants/swiper'
 import seo from '~/mixins/seo'
+import graphql from '~/mixins/graphql'
 
 export default {
-  apollo: {
-    home: {
-      query: gql`
-        query {
-          home {
-            latestPosts {
-              ...PostCardFragments
-            }
-            topPosts {
-              ...PostCardFragments
-            }
-          }
-        }
-        ${PostCardFragments}
-      `,
-      update({ home }) {
-        this.latestPosts = home.latestPosts
-        this.topPosts = home.topPosts
-      },
-      prefetch: false,
-    },
-  },
   components: { PostCard, WpMediaCategory, Search, Newsletter, PostCardPlaceholder },
   directives: { swiper: SwiperDirective },
+  mixins: [seo, graphql],
+  async fetch() {
+    try {
+      const { data } = await this.$apollo.query({
+        query: gql`
+          query {
+            home {
+              latestPosts {
+                ...PostCardFragments
+              }
+              topPosts {
+                ...PostCardFragments
+              }
+            }
+          }
+          ${PostCardFragments}
+        `,
+      })
+
+      const { latestPosts, topPosts } = data.home
+      this.latestPosts = latestPosts
+      this.topPosts = topPosts
+    } catch (e) {
+      this.$sentry.captureException(e)
+      this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(e) })
+    }
+  },
+  fetchOnServer: false,
   layout: 'no-header',
-  mixins: [seo],
   async asyncData({ app }) {
     const yoast = await app.apolloProvider.defaultClient
       .query({
@@ -206,7 +212,7 @@ export default {
     return {
       title: this.yoast.title,
       meta: [
-        ...this.seoMetaProperties(JSON.parse(this.yoast.metadata)),
+        ...this.seoMetaProperties(JSON.parse(this.yoast.metadata), true),
         {
           hid: 'og:image',
           property: 'og:image',
