@@ -464,14 +464,20 @@ export default {
             // contact
             await this.$apollo.mutate({
               mutation: gql`
-                mutation ficheContact(
+                mutation contactFicheOwner(
                   $ficheId: Int!
                   $name: String!
                   $email: String!
                   $message: String!
                   $recaptcha: String!
                 ) {
-                  ficheContact(ficheId: $ficheId, name: $name, email: $email, message: $message, recaptcha: $recaptcha)
+                  contactFicheOwner(
+                    ficheId: $ficheId
+                    name: $name
+                    email: $email
+                    message: $message
+                    recaptcha: $recaptcha
+                  )
                 }
               `,
               variables: {
@@ -487,14 +493,20 @@ export default {
             // report
             await this.$apollo.mutate({
               mutation: gql`
-                mutation ficheReport(
+                mutation reportFicheInfo(
                   $ficheId: Int!
                   $name: String!
                   $email: String!
                   $message: String!
                   $recaptcha: String!
                 ) {
-                  ficheReport(ficheId: $ficheId, name: $name, email: $email, message: $message, recaptcha: $recaptcha)
+                  reportFicheInfo(
+                    ficheId: $ficheId
+                    name: $name
+                    email: $email
+                    message: $message
+                    recaptcha: $recaptcha
+                  )
                 }
               `,
               variables: {

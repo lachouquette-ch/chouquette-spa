@@ -24,9 +24,7 @@
               autofocus
               @blur="$v.formContact.name.$touch"
             />
-            <div v-if="$v.formContact.name.$error" class="invalid-feedback">
-              Merci de nous indiquer ton ptit nom
-            </div>
+            <div v-if="$v.formContact.name.$error" class="invalid-feedback">Merci de nous indiquer ton ptit nom</div>
           </div>
           <div class="form-group col-md-6">
             <label for="mail">Email *</label>
@@ -40,9 +38,7 @@
               placeholder="Email"
               @blur="$v.formContact.email.$touch"
             />
-            <div v-if="$v.formContact.email.$error" class="invalid-feedback">
-              Merci de remplir un email correct
-            </div>
+            <div v-if="$v.formContact.email.$error" class="invalid-feedback">Merci de remplir un email correct</div>
           </div>
         </div>
         <div class="form-row">
@@ -114,8 +110,10 @@
 <script>
 import { email, minLength, required } from 'vuelidate/lib/validators'
 import _ from 'lodash'
+import gql from 'graphql-tag'
 import Newsletter from '~/components/Newsletter'
 import seo from '~/mixins/seo'
+import graphql from '~/mixins/graphql'
 
 const recipients = ['hello', 'communication', 'webmaster']
 const mustMatchRecipients = (value) => {
@@ -124,15 +122,15 @@ const mustMatchRecipients = (value) => {
 
 export default {
   components: { Newsletter },
-  mixins: [seo],
+  mixins: [seo, graphql],
   data() {
     return {
       formContact: {
-        name: null,
-        email: null,
-        subject: null,
-        to: null,
-        message: null,
+        name: 'Fabrice',
+        email: 'fabrice.douchant@gmail.com',
+        subject: 'Mon sujet',
+        to: 'webmaster',
+        message: 'Mon message',
       },
       loading: false,
     }
@@ -145,13 +143,34 @@ export default {
           this.loading = true
 
           // Get recaptcha token
-          await this.$recaptchaLoaded()
+          await this.$recaptcha.init()
           // Execute reCAPTCHA with action "login".
-          const token = await this.$recaptcha('contact')
+          const token = await this.$recaptcha.execute('contact')
 
-          await this.$wpAPI.contact.postMessage({
-            ...this.formContact,
-            recaptcha: token,
+          await this.$apollo.mutate({
+            mutation: gql`
+              mutation contactStaff(
+                $name: String!
+                $email: String!
+                $subject: String!
+                $to: String!
+                $message: String!
+                $recaptcha: String!
+              ) {
+                contactStaff(
+                  name: $name
+                  email: $email
+                  subject: $subject
+                  to: $to
+                  message: $message
+                  recaptcha: $recaptcha
+                )
+              }
+            `,
+            variables: {
+              ...this.formContact,
+              recaptcha: token,
+            },
           })
 
           this.$store.dispatch('alerts/addAction', {
