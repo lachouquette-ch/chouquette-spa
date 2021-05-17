@@ -40,7 +40,7 @@
     </b-modal>
 
     <nav
-      v-if="fiches.length"
+      v-if="fiches && fiches.length"
       class="post-sidebar bg-white pb-5 pb-md-2 border-right border-grey"
       :class="{ 'hide-sidebar': hideSidebar, 'pt-md-5': isTops }"
     >
