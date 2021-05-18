@@ -198,6 +198,7 @@ import gutenberg from '~/mixins/gutenberg'
 import { DEFAULT, RESPONSIVE, HASH } from '~/constants/swiper'
 import Newsletter from '~/components/Newsletter'
 import FichesMap from '~/components/FichesMap'
+import graphql from '~/mixins/graphql'
 
 export default {
   components: {
@@ -214,7 +215,7 @@ export default {
     ScrollTop,
   },
   directives: { swiper: SwiperDirective },
-  mixins: [gutenberg, seo],
+  mixins: [gutenberg, seo, graphql],
   props: {
     post: {
       type: Object,
@@ -255,7 +256,10 @@ export default {
       this.initModal()
     } catch (e) {
       this.$sentry.captureException(e)
-      this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(e) })
+      this.$store.dispatch('alerts/addAction', {
+        type: 'warning',
+        message: `Problème lors du chargement d'une partie de la page : ${this.parseGQLError(e)}`,
+      })
     }
   },
   fetchOnServer: false,
