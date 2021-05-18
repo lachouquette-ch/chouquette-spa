@@ -1,7 +1,6 @@
 <template>
   <div>
     <LayoutAlert />
-    <LayoutBanner />
     <LayoutHeader />
     <nuxt />
     <LayoutFooter />
@@ -23,13 +22,12 @@
 
 <script>
 import CookieConsent from 'vue-cookieconsent-component'
-import LayoutBanner from '../components/LayoutBanner'
 import LayoutHeader from '../components/LayoutHeader'
 import LayoutFooter from '../components/LayoutFooter'
 import LayoutAlert from '../components/LayoutAlert'
 
 export default {
-  components: { LayoutAlert, LayoutHeader, LayoutFooter, LayoutBanner, CookieConsent },
+  components: { LayoutAlert, LayoutHeader, LayoutFooter, CookieConsent },
   async middleware({ store }) {
     if (process.client) {
       await store.dispatch('nuxtServerInit')

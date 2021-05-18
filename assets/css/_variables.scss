@@ -27,7 +27,7 @@ $navbar-light-disabled-color: $chouquette-yellow;
 
 // Constants
 $header-height: 80px;
-$header-banner-height: 70px;
+$header-banner-height: 0; // TODO remove : currently banner component is not used anymore. To remove when the component will be deleted
 
 // Dropdowns
 $dropdown-link-hover-color: $chouquette-yellow;
