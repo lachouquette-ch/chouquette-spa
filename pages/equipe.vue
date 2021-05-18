@@ -1,55 +1,83 @@
 <template>
-  <WpPage :page="page">
+  <WpPage v-if="page" :page="page">
     <template #footer>
       <div class="my-3">
-        <template v-if="$fetchState.pending">
-          <div class="text-center">
-            <b-spinner variant="yellow" label="chargement"></b-spinner>
-          </div>
-        </template>
-        <template v-else>
-          <div class="d-flex flex-wrap justify-content-around">
-            <div v-for="member in team" :key="member.id" class="card mr-3 mb-4">
-              <WpAvatar
-                :size="150"
-                :avatar-urls="member.avatar_urls"
-                :alt="member.name"
-                class="card-img-top mx-auto mt-3 rounded-circle"
-              />
-              <div class="card-body text-center">
-                <h3 class="card-title">{{ member.name }}</h3>
-                <p class="card-text small text-muted">{{ member.title }}</p>
-                <!-- eslint-disable-next-line vue/no-v-html -->
-                <p class="card-text" v-html="member.description" />
-              </div>
+        <div class="d-flex flex-wrap justify-content-around">
+          <div v-for="member in team" :key="member.id" class="card mr-3 mb-4">
+            <WpAvatar
+              :size="150"
+              :avatar-urls="member.avatar"
+              :alt="member.name"
+              class="card-img-top mx-auto mt-3 rounded-circle"
+            />
+            <div class="card-body text-center">
+              <h3 class="card-title">{{ member.name }}</h3>
+              <p class="card-text small text-muted">{{ member.title }}</p>
+              <!-- eslint-disable-next-line vue/no-v-html -->
+              <p class="card-text" v-html="member.description" />
             </div>
           </div>
-        </template>
+        </div>
       </div>
     </template>
   </WpPage>
 </template>
 
 <script>
+import gql from 'graphql-tag'
+import { page as PageFragments } from '@/apollo/fragments/page'
+import { author as AuthorParts } from '@/apollo/fragments/author'
+
 import WpAvatar from '../components/WpAvatar'
 import WpPage from '~/components/WpPage'
+import seo from '~/mixins/seo'
 
 export default {
   components: {
     WpPage,
     WpAvatar,
   },
-  async fetch() {
-    this.team = await this.$wpAPI.wp.users.getTeam().then(({ data }) => data)
-  },
+  mixins: [seo],
   async asyncData({ app }) {
+    const { data } = await app.apolloProvider.defaultClient.query({
+      query: gql`
+        query {
+          team {
+            page {
+              ...PageFragments
+            }
+            authors {
+              ...AuthorFragments
+            }
+          }
+        }
+        ${PageFragments}
+        ${AuthorParts}
+      `,
+    })
+
     return {
-      page: await app.$wpAPI.wp.pages.getBySlug('equipe').then(({ data }) => data[0]),
+      page: data.team.page,
+      team: data.team.authors,
     }
   },
-  data() {
+  head() {
     return {
-      team: [],
+      title: this.page.title,
+      script: [
+        this.jsonLDScript({
+          '@context': 'http://schema.org',
+          '@type': 'WebPage',
+          name: this.page.title,
+          description: this.page.description,
+          publisher: {
+            '@type': 'Organization',
+            name: 'La Chouquette',
+            logo: `${this.$config.baseURL}/logo.png`,
+          },
+          url: this.currentURL,
+        }),
+      ],
     }
   },
 }

@@ -240,8 +240,8 @@ export default {
 
 <style lang="scss" scoped>
 .home-header {
-  margin-top: 70px;
-  height: calc(100vh - 70px);
+  margin-top: $header-banner-height;
+  height: calc(100vh - #{$header-banner-height});
   min-height: 500px;
   background-image: url('/home.jpg');
   background-size: cover;
