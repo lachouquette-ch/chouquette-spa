@@ -3,7 +3,7 @@
     <div class="card-img-top">
       <WpMedia v-if="post.image" :media="post.image" size="medium_large" />
       <div class="card-category rounded-circle bg-white shadow">
-        <!--        <WpMediaCategory v-if="topCategory" :category="topCategory" width="35" height="35" color="black" />-->
+        <WpMediaCategory v-if="topCategory" :category="topCategory" width="35" height="35" color="Black" />
       </div>
     </div>
     <div class="card-body">
@@ -16,10 +16,11 @@
 
 <script>
 import { mapState } from 'vuex'
-import WpMedia from '~/components/WpMediaRaw'
+import WpMediaCategory from './WpMediaCategory'
+import WpMedia from '~/components/WpMedia'
 
 export default {
-  components: { WpMedia },
+  components: { WpMedia, WpMediaCategory },
   props: {
     post: {
       required: true,
@@ -39,7 +40,7 @@ export default {
     }),
   },
   created() {
-    // this.topCategory = this.categories[this.post.top_categories[0]]
+    this.topCategory = this.categories[this.post.categoryId]
   },
 }
 </script>

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import WpMedia from './WpMediaGQL'
+import WpMedia from './WpMedia'
 
 // as defined in ACF for Category
 const CATEGORY_LOGO_COLORS = ['White', 'Yellow', 'Black']

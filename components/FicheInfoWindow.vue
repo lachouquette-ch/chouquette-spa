@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import WpMedia from '~/components/WpMediaGQL'
+import WpMedia from '~/components/WpMedia'
 
 export default {
   components: { WpMedia },

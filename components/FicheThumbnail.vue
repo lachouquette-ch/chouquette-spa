@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import WPMedia from './WpMediaGQL'
+import WPMedia from './WpMedia'
 
 export default {
   components: { WPMedia },

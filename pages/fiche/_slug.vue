@@ -25,7 +25,7 @@ import gql from 'graphql-tag'
 import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
 import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
 import Fiche from '~/components/Fiche'
-import PostCard from '~/components/PostCardGQL'
+import PostCard from '~/components/PostCard'
 import seo from '~/mixins/seo'
 
 export default {

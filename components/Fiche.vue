@@ -272,7 +272,7 @@ import moment from 'moment'
 import _ from 'lodash'
 import gql from 'graphql-tag'
 
-import WpMedia from './WpMediaGQL'
+import WpMedia from './WpMedia'
 import WpMediaRaw from './WpMediaRaw'
 import { MAP_OPTIONS } from '~/constants/mapSettings'
 import modal from '~/mixins/modal'
