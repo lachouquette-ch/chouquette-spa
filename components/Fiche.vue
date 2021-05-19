@@ -1,5 +1,5 @@
 <template>
-  <div class="fiche-container d-flex">
+  <div>
     <b-modal
       ref="ficheModal"
       title-class="w-100 text-center"
@@ -71,184 +71,198 @@
         </form>
       </template>
     </b-modal>
-    <article ref="fiche" class="fiche fiche-chouquettise w-100 d-flex justify-content-center align-items-stretch">
-      <div ref="ficheFront" class="fiche-front h-100 d-flex" :class="frontClass">
-        <div ref="front" class="h-100 w-100 card bg-white">
-          <div class="card-header p-0">
-            <WpMedia
-              v-if="fiche.image"
-              :media="fiche.image"
-              size="medium_large"
-              :no-src-set="true"
-              class="fiche-image"
-            />
-            <span class="fiche-category-icon rounded-circle" :class="fiche.isChouquettise ? 'bg-yellow' : 'bg-white'">
-              <img :src="fiche.logo.url" alt="" :title="fiche.logo.name" width="35" height="35" />
-            </span>
-          </div>
-          <div class="card-body d-flex flex-column position-relative">
-            <h2 class="card-title text-center h4">{{ fiche.title }}</h2>
-            <!-- eslint-disable-next-line vue/no-v-html -->
-            <div class="card-text" v-html="fiche.content"></div>
-            <div v-if="fiche.isChouquettise" class="card-text d-flex justify-content-around mt-auto">
-              <a
-                v-if="fiche.info.mail"
-                href=""
-                title="Envoyer un message"
-                class="fiche-social border border-secondary rounded-circle"
-                @click.prevent="openContactModal"
-                ><i class="far fa-envelope"></i
-              ></a>
-              <a
-                v-if="fiche.info.telephone"
-                :href="`tel: ${fiche.info.telephone}`"
-                title="Appeler"
-                target="_blank"
-                class="fiche-social border border-secondary rounded-circle"
-                ><i class="fas fa-phone-alt"></i
-              ></a>
-              <a
-                v-if="fiche.info.facebook"
-                :href="fiche.info.facebook"
-                title="Facebook"
-                target="_blank"
-                class="fiche-social border border-secondary rounded-circle"
-                ><i class="fab fa-facebook-f"></i
-              ></a>
-              <a
-                v-if="fiche.info.instagram"
-                :href="fiche.info.instagram"
-                title="Instagram"
-                target="_blank"
-                class="fiche-social border border-secondary rounded-circle"
-                ><i class="fab fa-instagram"></i
-              ></a>
+    <div v-if="preview" class="alert alert-warning text-center" role="alert">Mode prévisualisation : toutes les données ne seront pas affichées</div>
+    <div class="fiche-container d-flex">
+      <article ref="fiche" class="fiche fiche-chouquettise w-100 d-flex justify-content-center align-items-stretch">
+        <div ref="ficheFront" class="fiche-front h-100 d-flex" :class="frontClass">
+          <div ref="front" class="h-100 w-100 card bg-white">
+            <div class="card-header p-0">
+              <WpMediaRaw
+                v-if="preview"
+                :media="fiche._embedded['wp:featuredmedia'][0]"
+                size="medium_large"
+                :no-src-set="true"
+                class="fiche-image"
+              />
+              <WpMedia
+                v-else-if="fiche.image"
+                :media="fiche.image"
+                size="medium_large"
+                :no-src-set="true"
+                class="fiche-image"
+              />
+              <span
+                v-if="!preview"
+                class="fiche-category-icon rounded-circle"
+                :class="fiche.isChouquettise ? 'bg-yellow' : 'bg-white'"
+              >
+                <img :src="fiche.logo.url" alt="" :title="fiche.logo.name" width="35" height="35" />
+              </span>
             </div>
-            <a
-              title="Reporter une précision ou erreur sur la fiche"
-              href=""
-              class="fiche-report"
-              @click.prevent="openReportModal"
-              ><i class="fas fa-exclamation-circle"></i
-            ></a>
-          </div>
-          <div class="card-footer">
-            <slot name="front-footer"></slot>
-            <FicheShare :fiche="fiche" />
-            <nuxt-link
-              v-if="latestPost"
-              :to="{ path: `/${latestPost.slug}` }"
-              :title="`Lire le dernier article : ${latestPost.title}`"
-              class="btn btn-sm btn-outline-secondary"
-            >
-              <i class="far fa-newspaper"></i>
-            </nuxt-link>
-            <a
-              href=""
-              title="Plus de détails"
-              class="btn btn-sm btn-outline-secondary float-right"
-              :class="{ 'd-md-none': flatEnable }"
-              @click.prevent="flipFiche"
-            >
-              Voir <span class="ml-1"><i class="fas fa-plus"></i></span>
-            </a>
-          </div>
-        </div>
-      </div>
-      <div v-if="loadBack" ref="ficheBack" class="fiche-back h-100 d-flex" :class="backClass">
-        <div ref="back" class="h-100 w-100 card bg-white">
-          <div v-if="fiche.poi" class="card-header p-0">
-            <div ref="ficheMap" class="h-100"></div>
-          </div>
-          <div class="card-body position-relative p-0 pt-2">
-            <ul v-if="fiche.isChouquettise" class="list-group list-group-flush">
-              <li v-if="fiche.info.website" class="list-group-item text-nowrap text-truncate">
-                <a :href="fiche.info.website" title="Site Internet" target="_blank"
-                  ><i class="fas fa-globe"></i> {{ fiche.info.website | prettyURL }}
-                </a>
-              </li>
-              <li v-if="fiche.info.telephone" class="list-group-item">
-                <a :href="`tel: ${fiche.info.telephone}`" title="Téléphone" target="_blank"
-                  ><i class="fas fa-phone"></i> {{ fiche.info.telephone }}
-                </a>
-              </li>
-              <li v-if="fiche.info.mail" class="list-group-item text-nowrap text-truncate">
+            <div class="card-body d-flex flex-column position-relative">
+              <h2 class="card-title text-center h4">{{ fiche.title }}</h2>
+              <!-- eslint-disable-next-line vue/no-v-html -->
+              <div class="card-text" v-html="fiche.content"></div>
+              <div v-if="fiche.isChouquettise" class="card-text d-flex justify-content-around mt-auto">
                 <a
-                  :href="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
-                  title="Email"
+                  v-if="fiche.info.mail"
+                  href=""
+                  title="Envoyer un message"
+                  class="fiche-social border border-secondary rounded-circle"
+                  @click.prevent="openContactModal"
+                  ><i class="far fa-envelope"></i
+                ></a>
+                <a
+                  v-if="fiche.info.telephone"
+                  :href="`tel: ${fiche.info.telephone}`"
+                  title="Appeler"
                   target="_blank"
-                  ><i class="fas fa-at"></i> {{ fiche.info.mail }}
-                </a>
-              </li>
-              <li v-if="fiche.info.cost" class="list-group-item">
-                <label class="mb-0">Prix :</label>
-                <span class="fiche-price fiche-price-selected">{{ fichePrice[0] }}</span
-                ><span class="fiche-price">{{ fichePrice[1] }}</span>
-              </li>
-              <li v-if="fiche.info.openings" class="list-group-item">
-                <label class="mb-0">Horaires :</label>
-                <b-dropdown
-                  class="fiche-planning"
-                  variant="link"
-                  toggle-tag="span"
-                  toggle-class="text-black d-inline-block p-0 border-0"
-                  :dropup="!!fiche.info.location"
-                  right
-                >
-                  <template v-slot:button-content> {{ getOpening() }} ({{ currentDayOfWeek }}) </template>
-                  <template v-slot:default>
-                    <b-dropdown-text><label class="mb-0">Lundi</label>{{ getOpening(1) }}</b-dropdown-text>
-                    <b-dropdown-text><label class="mb-0">Mardi</label>{{ getOpening(2) }}</b-dropdown-text>
-                    <b-dropdown-text><label class="mb-0">Mercredi</label>{{ getOpening(3) }}</b-dropdown-text>
-                    <b-dropdown-text><label class="mb-0">Jeudi</label>{{ getOpening(4) }}</b-dropdown-text>
-                    <b-dropdown-text><label class="mb-0">Vendredi</label>{{ getOpening(5) }}</b-dropdown-text>
-                    <b-dropdown-text><label class="mb-0">Samedi</label>{{ getOpening(6) }}</b-dropdown-text>
-                    <b-dropdown-text><label class="mb-0">Dimanche</label>{{ getOpening(0) }}</b-dropdown-text>
-                  </template>
-                </b-dropdown>
-              </li>
-            </ul>
-            <div class="card-text p-3">
-              <div v-if="fiche.criteria">
-                <span
-                  v-for="criteriaValue in criteriaValues"
-                  :key="criteriaValue.id"
-                  class="badge badge-pill badge-light-grey font-weight-normal mr-1"
-                  >{{ criteriaValue.name }}</span
-                >
+                  class="fiche-social border border-secondary rounded-circle"
+                  ><i class="fas fa-phone-alt"></i
+                ></a>
+                <a
+                  v-if="fiche.info.facebook"
+                  :href="fiche.info.facebook"
+                  title="Facebook"
+                  target="_blank"
+                  class="fiche-social border border-secondary rounded-circle"
+                  ><i class="fab fa-facebook-f"></i
+                ></a>
+                <a
+                  v-if="fiche.info.instagram"
+                  :href="fiche.info.instagram"
+                  title="Instagram"
+                  target="_blank"
+                  class="fiche-social border border-secondary rounded-circle"
+                  ><i class="fab fa-instagram"></i
+                ></a>
               </div>
+              <a
+                title="Reporter une précision ou erreur sur la fiche"
+                href=""
+                class="fiche-report"
+                @click.prevent="openReportModal"
+                ><i class="fas fa-exclamation-circle"></i
+              ></a>
             </div>
-            <a
-              title="Reporter une précision ou erreur sur la fiche"
-              href=""
-              class="fiche-report"
-              @click.prevent="openReportModal"
-              ><i class="fas fa-exclamation-circle"></i
-            ></a>
-          </div>
-          <div class="card-footer">
-            <nuxt-link
-              v-if="!noRefLink"
-              :to="{ path: `/fiche/${fiche.slug}` }"
-              title="Page de la fiche"
-              class="btn btn-sm btn-outline-secondary"
-            >
-              <i class="fas fa-external-link-alt"></i>
-              <span class="ml-1">Ouvrir la fiche</span>
-            </nuxt-link>
-            <a
-              href=""
-              title="Retour sur les informations principales"
-              class="btn btn-sm btn-outline-secondary float-right"
-              :class="{ 'd-md-none': flatEnable }"
-              @click.prevent="flipFiche"
-            >
-              Retour
-            </a>
+            <div class="card-footer">
+              <slot name="front-footer"></slot>
+              <FicheShare :fiche="fiche" />
+              <nuxt-link
+                v-if="latestPost"
+                :to="{ path: `/${latestPost.slug}` }"
+                :title="`Lire le dernier article : ${latestPost.title}`"
+                class="btn btn-sm btn-outline-secondary"
+              >
+                <i class="far fa-newspaper"></i>
+              </nuxt-link>
+              <a
+                href=""
+                title="Plus de détails"
+                class="btn btn-sm btn-outline-secondary float-right"
+                :class="{ 'd-md-none': flatEnable }"
+                @click.prevent="flipFiche"
+              >
+                Voir <span class="ml-1"><i class="fas fa-plus"></i></span>
+              </a>
+            </div>
           </div>
         </div>
-      </div>
-    </article>
+        <div v-if="loadBack" ref="ficheBack" class="fiche-back h-100 d-flex" :class="backClass">
+          <div ref="back" class="h-100 w-100 card bg-white">
+            <div v-if="fiche.poi" class="card-header p-0">
+              <div ref="ficheMap" class="h-100"></div>
+            </div>
+            <div class="card-body position-relative p-0 pt-2">
+              <ul v-if="fiche.isChouquettise" class="list-group list-group-flush">
+                <li v-if="fiche.info.website" class="list-group-item text-nowrap text-truncate">
+                  <a :href="fiche.info.website" title="Site Internet" target="_blank"
+                    ><i class="fas fa-globe"></i> {{ fiche.info.website | prettyURL }}
+                  </a>
+                </li>
+                <li v-if="fiche.info.telephone" class="list-group-item">
+                  <a :href="`tel: ${fiche.info.telephone}`" title="Téléphone" target="_blank"
+                    ><i class="fas fa-phone"></i> {{ fiche.info.telephone }}
+                  </a>
+                </li>
+                <li v-if="fiche.info.mail" class="list-group-item text-nowrap text-truncate">
+                  <a
+                    :href="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
+                    title="Email"
+                    target="_blank"
+                    ><i class="fas fa-at"></i> {{ fiche.info.mail }}
+                  </a>
+                </li>
+                <li v-if="fiche.info.cost" class="list-group-item">
+                  <label class="mb-0">Prix :</label>
+                  <span class="fiche-price fiche-price-selected">{{ fichePrice[0] }}</span
+                  ><span class="fiche-price">{{ fichePrice[1] }}</span>
+                </li>
+                <li v-if="fiche.info.openings" class="list-group-item">
+                  <label class="mb-0">Horaires :</label>
+                  <b-dropdown
+                    class="fiche-planning"
+                    variant="link"
+                    toggle-tag="span"
+                    toggle-class="text-black d-inline-block p-0 border-0"
+                    :dropup="!!fiche.info.location"
+                    right
+                  >
+                    <template v-slot:button-content> {{ getOpening() }} ({{ currentDayOfWeek }}) </template>
+                    <template v-slot:default>
+                      <b-dropdown-text><label class="mb-0">Lundi</label>{{ getOpening(1) }}</b-dropdown-text>
+                      <b-dropdown-text><label class="mb-0">Mardi</label>{{ getOpening(2) }}</b-dropdown-text>
+                      <b-dropdown-text><label class="mb-0">Mercredi</label>{{ getOpening(3) }}</b-dropdown-text>
+                      <b-dropdown-text><label class="mb-0">Jeudi</label>{{ getOpening(4) }}</b-dropdown-text>
+                      <b-dropdown-text><label class="mb-0">Vendredi</label>{{ getOpening(5) }}</b-dropdown-text>
+                      <b-dropdown-text><label class="mb-0">Samedi</label>{{ getOpening(6) }}</b-dropdown-text>
+                      <b-dropdown-text><label class="mb-0">Dimanche</label>{{ getOpening(0) }}</b-dropdown-text>
+                    </template>
+                  </b-dropdown>
+                </li>
+              </ul>
+              <div class="card-text p-3">
+                <div v-if="fiche.criteria">
+                  <span
+                    v-for="criteriaValue in criteriaValues"
+                    :key="criteriaValue.id"
+                    class="badge badge-pill badge-light-grey font-weight-normal mr-1"
+                    >{{ criteriaValue.name }}</span
+                  >
+                </div>
+              </div>
+              <a
+                title="Reporter une précision ou erreur sur la fiche"
+                href=""
+                class="fiche-report"
+                @click.prevent="openReportModal"
+                ><i class="fas fa-exclamation-circle"></i
+              ></a>
+            </div>
+            <div class="card-footer">
+              <nuxt-link
+                v-if="!noRefLink"
+                :to="{ path: `/fiche/${fiche.slug}` }"
+                title="Page de la fiche"
+                class="btn btn-sm btn-outline-secondary"
+              >
+                <i class="fas fa-external-link-alt"></i>
+                <span class="ml-1">Ouvrir la fiche</span>
+              </nuxt-link>
+              <a
+                href=""
+                title="Retour sur les informations principales"
+                class="btn btn-sm btn-outline-secondary float-right"
+                :class="{ 'd-md-none': flatEnable }"
+                @click.prevent="flipFiche"
+              >
+                Retour
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
   </div>
 </template>
 
@@ -259,19 +273,21 @@ import _ from 'lodash'
 import gql from 'graphql-tag'
 
 import WpMedia from './WpMediaGQL'
+import WpMediaRaw from './WpMediaRaw'
 import { MAP_OPTIONS } from '~/constants/mapSettings'
 import modal from '~/mixins/modal'
 import graphql from '~/mixins/graphql'
 import FicheShare from '~/components/FicheShare'
 
 export default {
-  components: { FicheShare, WpMedia },
+  components: { FicheShare, WpMedia, WpMediaRaw },
   mixins: [modal, graphql],
   props: {
     fiche: {
       type: Object,
       required: true,
     },
+    preview: Boolean,
     flatEnable: Boolean,
     noRefLink: Boolean,
   },

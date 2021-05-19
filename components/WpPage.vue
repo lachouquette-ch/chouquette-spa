@@ -1,6 +1,9 @@
 <template>
   <b-overlay :show="!page" spinner-variant="yellow">
     <div class="wp-page container layout-content my-4">
+      <div v-if="preview" class="alert alert-warning text-center" role="alert">
+        Mode prévisualisation : toutes les données ne seront pas affichées
+      </div>
       <div v-if="page" class="row">
         <div class="col gutenberg-content">
           <h1 class="text-center mb-4">{{ page.title }}</h1>
@@ -31,8 +34,11 @@ export default {
       type: Object,
       required: true,
     },
+    preview: Boolean,
   },
   head() {
+    if (this.preview) return { meta: [{ name: 'robots', content: 'none' }] }
+
     return {
       title: this.page.seo.title,
       link: this.gutenbergLinks(),

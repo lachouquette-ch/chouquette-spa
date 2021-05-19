@@ -16,11 +16,10 @@
 
 <script>
 import { mapState } from 'vuex'
-import WpMediaCategory from './WpMediaCategory'
-import WpMedia from '~/components/WpMedia'
+import WpMedia from '~/components/WpMediaRaw'
 
 export default {
-  components: { WpMedia, WpMediaCategory },
+  components: { WpMedia },
   props: {
     post: {
       required: true,

@@ -1,9 +1,9 @@
 <template>
   <div>
-    <WpPage v-if="pageType === 'page'" :page="page" />
+    <WpPage v-if="pageType === 'page'" :page="page" preview />
     <WpPost v-else-if="pageType === 'post'" :post="post" preview />
     <div v-else-if="pageType === 'fiche'" class="container layout-content mx-auto mt-5">
-      <Fiche :fiche="fiche" />
+      <Fiche :fiche="fiche" preview />
     </div>
   </div>
 </template>
@@ -35,22 +35,39 @@ export default {
     }
 
     if (this.$route.query.type === 'page') {
-      this.page = await this.$wpAPI.wp.pages
-        .getPreview(this.$route.query.id, this.$route.query.nonce)
-        .then(({ data }) => data)
+      const page = await this.$axios.$get(`${this.$config.wpBaseURL}/wp-json/wp/v2/pages/${this.$route.query.id}`, {
+        withCredentials: true,
+        headers: { 'X-WP-Nonce': this.$route.query.nonce },
+      })
+      // convert to expected page object
+      page.title = this.$options.filters.heDecode(page.title.rendered)
+      page.content = this.$options.filters.heDecode(page.content.rendered)
+
+      this.page = page
       this.pageType = 'page'
     } else if (this.$route.query.type === 'post') {
-      const post = await this.$store.dispatch('posts/fetchPreview', {
-        id: this.$route.query.id,
-        nonce: this.$route.query.nonce,
+      const post = await this.$axios.$get(`${this.$config.wpBaseURL}/wp-json/wp/v2/posts/${this.$route.query.id}`, {
+        params: { _embed: true },
+        withCredentials: true,
+        headers: { 'X-WP-Nonce': this.$route.query.nonce },
       })
+      // convert to expected page object
+      post.title = this.$options.filters.heDecode(post.title.rendered)
+      post.content = this.$options.filters.heDecode(post.content.rendered)
+
       this.post = post
       this.pageType = 'post'
     } else if (this.$route.query.type === 'fiche') {
-      this.fiche = await this.$store.dispatch('fiches/fetchPreview', {
-        id: this.$route.query.id,
-        nonce: this.$route.query.nonce,
+      const fiche = await this.$axios.$get(`${this.$config.wpBaseURL}/wp-json/wp/v2/fiches/${this.$route.query.id}`, {
+        params: { _embed: true },
+        withCredentials: true,
+        headers: { 'X-WP-Nonce': this.$route.query.nonce },
       })
+      // convert to expected page object
+      fiche.title = this.$options.filters.heDecode(fiche.title.rendered)
+      fiche.content = this.$options.filters.heDecode(fiche.content.rendered)
+
+      this.fiche = fiche
       this.pageType = 'fiche'
     } else {
       this.$nuxt.error({ statusCode: 404, message: 'Could not preview this type of content' })

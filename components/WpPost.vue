@@ -70,25 +70,29 @@
     </nav>
 
     <main role="main" class="post layout-content" :class="{ 'with-sidebar': fiches.length }">
+      <div v-if="preview" class="alert alert-warning text-center" role="alert">Mode prévisualisation : toutes les données ne seront pas affichées</div>
       <article :id="post.id">
         <header class="post-header container-fluid px-0 mb-6">
-          <WPMedia v-if="post.image" :media="post.image" class="post-header-img" />
-          <WpAvatar
-            :size="150"
-            :avatar-urls="post.author.avatar"
-            :alt="post.author.name"
-            class="post-header-author-img rounded-circle"
-          />
-          <div class="post-header-meta">
-            <span>par {{ post.author.name }}</span>
-            <span v-if="postModifiedDate">
-              mise à jour le <time :datetime="post.modified">{{ postModifiedDate }}</time>
-            </span>
-            <span v-else>
-              publié le <time :datetime="post.date">{{ postCreatedDate }}</time>
-            </span>
-          </div>
-          <PostShare :post="post" class="post-header-sn-share" />
+          <WPMediaRaw v-if="preview" :media="post._embedded['wp:featuredmedia'][0]" class="post-header-img" />
+          <WPMedia v-else-if="post.image" :media="post.image" class="post-header-img" />
+          <template v-if="!preview">
+            <WpAvatar
+              :size="150"
+              :avatar-urls="post.author.avatar"
+              :alt="post.author.name"
+              class="post-header-author-img rounded-circle"
+            />
+            <div class="post-header-meta">
+              <span>par {{ post.author.name }}</span>
+              <span v-if="postModifiedDate">
+                mise à jour le <time :datetime="post.modified">{{ postModifiedDate }}</time>
+              </span>
+              <span v-else>
+                publié le <time :datetime="post.date">{{ postCreatedDate }}</time>
+              </span>
+            </div>
+            <PostShare :post="post" class="post-header-sn-share" />
+          </template>
         </header>
 
         <section class="gutenberg-content container pt-4 mb-5">
@@ -97,7 +101,7 @@
           <div v-html="post.content" />
         </section>
 
-        <section class="post-author container mb-5">
+        <section v-if="!preview" class="post-author container mb-5">
           <div class="border shadow-sm text-center position-relative">
             <WpAvatar
               :size="150"
@@ -184,6 +188,7 @@ import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
 import { comment as CommentFragments } from '@/apollo/fragments/comment'
 import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
 import WPMedia from '../components/WpMediaGQL'
+import WPMediaRaw from '../components/WpMediaRaw'
 import PostShare from '../components/PostShare'
 import PostComment from '../components/PostComment'
 import PostCard from '../components/PostCardGQL'
@@ -210,6 +215,7 @@ export default {
     WpAvatar,
     PostComment,
     WPMedia,
+    WPMediaRaw,
     PostCard,
     PostShare,
     ScrollTop,
@@ -225,6 +231,8 @@ export default {
   },
   async fetch() {
     try {
+      if (this.preview) return
+
       const { data } = await this.$apollo.query({
         query: gql`
           query($slug: String!) {
@@ -350,6 +358,8 @@ export default {
     },
   },
   head() {
+    if (this.preview) return { meta: [{ name: 'robots', content: 'none' }] }
+
     return {
       title: this.post.seo.title,
       link: this.gutenbergLinks(),
