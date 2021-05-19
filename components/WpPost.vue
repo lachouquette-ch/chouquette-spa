@@ -428,7 +428,7 @@ export default {
 
 .post-sidebar {
   position: fixed;
-  top: $header-height + $header-banner-height;
+  top: $header-height;
   bottom: 0;
   left: 0;
   width: 100%;

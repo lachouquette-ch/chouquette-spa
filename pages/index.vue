@@ -240,8 +240,7 @@ export default {
 
 <style lang="scss" scoped>
 .home-header {
-  margin-top: $header-banner-height;
-  height: calc(100vh - #{$header-banner-height});
+  height: 100vh;
   min-height: 500px;
   background-image: url('/home.jpg');
   background-size: cover;
@@ -324,7 +323,7 @@ h3.home-header-menu-description {
 
   font-size: 2rem;
   position: absolute;
-  bottom: calc(20px + #{$header-banner-height});
+  bottom: 20px;
   right: 0;
   left: 0;
   margin: auto;
@@ -364,8 +363,6 @@ h3.home-header-menu-description {
   display: block;
   position: relative;
   visibility: hidden;
-
-  top: -1 * $header-banner-height;
 }
 
 .home-tops {

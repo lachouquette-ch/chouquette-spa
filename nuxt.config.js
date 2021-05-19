@@ -9,9 +9,6 @@ export default {
     mailChimpUserId: process.env.MAILCHIMP_USER_ID,
     mailChimpListId: process.env.MAILCHIMP_LIST_ID,
     googleMapsKey: process.env.GOOGLE_MAPS_KEY,
-    bannerText: process.env.BANNER_TEXT,
-    bannerLinkTo: process.env.BANNER_LINK_TO,
-    bannerLinkText: process.env.BANNER_LINK_TEXT,
     recaptcha: {
       /* reCAPTCHA options */
       siteKey: process.env.RECAPTCHA_SITE_KEY,

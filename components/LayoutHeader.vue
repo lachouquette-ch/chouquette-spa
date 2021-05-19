@@ -166,7 +166,7 @@ export default {
 
 <style lang="scss" scoped>
 .navbar-chouquette-light {
-  top: $header-banner-height;
+  top: 0;
   background-color: $chouquette-darker-grey;
   z-index: $zindex-fixed + 2;
 
