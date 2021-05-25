@@ -161,7 +161,6 @@ export default {
     }
   },
   fetchOnServer: false,
-  layout: 'no-header',
   async asyncData({ app }) {
     const yoast = await app.apolloProvider.defaultClient
       .query({

@@ -1,7 +1,7 @@
 <template>
   <div>
     <LayoutAlert />
-    <LayoutHeader />
+    <LayoutHeader v-if="!isIndex" />
     <nuxt />
     <LayoutFooter />
     <client-only>
@@ -38,6 +38,11 @@ export default {
     return {
       showCookieConsent: false,
     }
+  },
+  computed: {
+    isIndex() {
+      return this.$route.name === 'index'
+    },
   },
   mounted() {
     this.showCookieConsent = !isbot(navigator.userAgent)
