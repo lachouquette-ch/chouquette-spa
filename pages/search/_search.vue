@@ -86,6 +86,8 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
+
 import { directive as SwiperDirective } from 'vue-awesome-swiper'
 import Fiche from '~/components/Fiche'
 import PostCard from '~/components/PostCard'
@@ -94,14 +96,20 @@ import Newsletter from '~/components/Newsletter'
 import ScrollTop from '~/components/ScrollTop'
 import FichePlaceholder from '~/components/FichePlaceholder'
 import PostCardPlaceholder from '~/components/PostCardPlaceholder'
+import { fiche as FicheFragments } from '~/apollo/fragments/fiche'
+import { postCard as PostCardFragments } from '~/apollo/fragments/postCard'
+import graphql from '~/mixins/graphql'
 
 export default {
   components: { Newsletter, PostCard, Fiche, Search, ScrollTop, FichePlaceholder, PostCardPlaceholder },
   directives: { swiper: SwiperDirective },
-  async fetch() {
-    await Promise.all([this.fetchMorePosts(), this.fetchMoreFiches()])
-    // change showPosts value if none
-    this.postsShown = !this.fiches.length
+  mixins: [graphql],
+  fetch() {
+    this.fetchMorePosts()
+    this.fetchMoreFiches().then(() => {
+      // change showPosts value if none
+      this.postsShown = !this.fiches.length
+    })
   },
   fetchOnServer: false,
   data() {
@@ -153,13 +161,33 @@ export default {
 
       try {
         this.fichesLoading = true
-        const ficheResult = await this.$store.dispatch('fiches/fetchByText', {
-          search: this.search,
-          page: this.fichesNextPage++,
+        const { data } = await this.$apollo.query({
+          query: gql`
+            query($text: String!, $page: Int!) {
+              fichesByText(text: $text, page: $page) {
+                fiches {
+                  ...FicheFragments
+                }
+                hasMore
+                total
+                totalPages
+              }
+            }
+            ${FicheFragments}
+          `,
+          variables: {
+            text: this.search,
+            page: this.fichesNextPage++,
+          },
         })
-        this.fiches.push(...ficheResult.fiches)
-        this.fichesTotal = ficheResult.total
-        this.fichesPages = ficheResult.pages
+
+        const { fiches, total, totalPages } = data.fichesByText
+        this.fiches.push(...fiches)
+        this.fichesTotal = total
+        this.fichesPages = totalPages
+      } catch (e) {
+        this.$sentry.captureException(e)
+        this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(e) })
       } finally {
         this.fichesLoading = false
       }
@@ -181,13 +209,33 @@ export default {
 
       try {
         this.postsLoading = true
-        const postResult = await this.$store.dispatch('posts/fetchByText', {
-          search: this.search,
-          page: this.postsNextPage++,
+        const { data } = await this.$apollo.query({
+          query: gql`
+            query($text: String!, $page: Int!) {
+              postsByText(text: $text, page: $page) {
+                postCards {
+                  ...PostCardFragments
+                }
+                hasMore
+                total
+                totalPages
+              }
+            }
+            ${PostCardFragments}
+          `,
+          variables: {
+            text: this.search,
+            page: this.postsNextPage++,
+          },
         })
-        this.posts.push(...postResult.posts)
-        this.postsTotal = postResult.total
-        this.postsPages = postResult.pages
+
+        const { postCards, total, totalPages } = data.postsByText
+        this.posts.push(...postCards)
+        this.postsTotal = total
+        this.postsPages = totalPages
+      } catch (e) {
+        this.$sentry.captureException(e)
+        this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(e) })
       } finally {
         this.postsLoading = false
       }
