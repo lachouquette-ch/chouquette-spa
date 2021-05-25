@@ -4,7 +4,7 @@
     <nuxt />
     <LayoutFooter />
     <client-only>
-      <cookie-consent aria-label="Cookie Preferences" aria-live="polite">
+      <cookie-consent v-if="showCookieConsent" aria-label="Cookie Preferences" aria-live="polite">
         <template slot="message">
           <span class="text-white mx-3">
             Ici, on aime les Cookies <i class="fas fa-cookie-bite"></i>, mais pas plus qu'il n'en faut !
@@ -21,6 +21,7 @@
 
 <script>
 import CookieConsent from 'vue-cookieconsent-component'
+import isbot from 'isbot'
 import LayoutFooter from '../components/LayoutFooter'
 import LayoutAlert from '../components/LayoutAlert'
 
@@ -30,6 +31,14 @@ export default {
     if (process.client) {
       await store.dispatch('nuxtServerInit')
     }
+  },
+  data() {
+    return {
+      showCookieConsent: false,
+    }
+  },
+  mounted() {
+    this.showCookieConsent = !isbot(navigator.userAgent)
   },
 }
 </script>

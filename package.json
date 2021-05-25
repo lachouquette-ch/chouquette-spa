@@ -22,6 +22,7 @@
     "bootstrap-vue": "^2.11.0",
     "google-maps-api-loader": "^1.1.1",
     "he": "^1.2.0",
+    "isbot": "^3.0.26",
     "jquery": "^3.4.1",
     "jquery-ui": "^1.12.1",
     "lodash": "^4.17.15",
