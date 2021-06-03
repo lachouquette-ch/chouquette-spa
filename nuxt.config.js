@@ -122,7 +122,7 @@ export default {
     errorHandler: '~/apollo/errorHandler.js',
     clientConfigs: {
       default: {
-        httpEndpoint: 'http://localhost:4000/graphql',
+        httpEndpoint: process.env.GRAPHQL_URI || 'http://localhost:4000/graphql',
       },
     },
   },
