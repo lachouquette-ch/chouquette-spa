@@ -105,11 +105,12 @@ export default {
   directives: { swiper: SwiperDirective },
   mixins: [graphql],
   fetch() {
-    this.fetchMorePosts()
-    this.fetchMoreFiches().then(() => {
+    const posts = this.fetchMorePosts()
+    const fiches = this.fetchMoreFiches().then(() => {
       // change showPosts value if none
       this.postsShown = !this.fiches.length
     })
+    return Promise.all([posts, fiches])
   },
   fetchOnServer: false,
   data() {
