@@ -4,7 +4,6 @@ import axios from 'axios'
 
 export default {
   publicRuntimeConfig: {
-    baseURL: process.env.URL || 'https://lachouquette.ch',
     wpBaseURL: process.env.WP_URL || 'https://wordpress.lachouquette.ch',
     mailChimpUserId: process.env.MAILCHIMP_USER_ID,
     mailChimpListId: process.env.MAILCHIMP_LIST_ID,

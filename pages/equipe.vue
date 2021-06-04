@@ -73,7 +73,7 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.$config.baseURL}/logo.png`,
+            logo: `${this.$config.wpBaseURL}/logo.png`,
           },
           url: this.currentURL,
         }),

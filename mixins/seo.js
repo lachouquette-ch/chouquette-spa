@@ -3,7 +3,7 @@ import { seo } from '~/apollo/fragments/seo'
 export default {
   computed: {
     currentURL() {
-      return `${this.$config.baseURL}${this.$route.fullPath}`
+      return `${this.$config.wpBaseURL}${this.$route.fullPath}`
     },
   },
   methods: {
@@ -41,7 +41,7 @@ export default {
       // add twitter missing meta data
       metadataUpdateHelper('twitter:site', this.currentURL)
       const image = metaProperties.find(({ property }) => property === 'og:image')
-      metadataUpdateHelper('twitter:image', image ? image.content : `${this.$config.baseURL}/logo.png`)
+      metadataUpdateHelper('twitter:image', image ? image.content : `${this.$config.wpBaseURL}/logo.png`)
 
       return metaProperties
     },
@@ -50,8 +50,8 @@ export default {
         '@context': 'http://www.schema.org',
         '@type': 'Organization',
         name: 'La Chouquette',
-        url: this.$config.baseURL,
-        logo: `${this.$config.baseURL}/logo.png`,
+        url: this.$config.wpBaseURL,
+        logo: `${this.$config.wpBaseURL}/logo.png`,
         foundingDate: '2014',
         founders: [
           {
@@ -76,11 +76,11 @@ export default {
         '@context': 'http://schema.org',
         '@type': 'WebSite',
         name: 'La Chouquette',
-        url: this.$config.baseURL,
+        url: this.$config.wpBaseURL,
         sameAs: ['https://www.facebook.com/lachouquettelausanne', 'https://www.instagram.com/lachouquette.ch/?hl=fr'],
         potentialAction: {
           '@type': 'SearchAction',
-          target: `${this.$config.baseURL}/search/{search_term}`,
+          target: `${this.$config.wpBaseURL}/search/{search_term}`,
           'query-input': 'required name=search_term',
         },
       }

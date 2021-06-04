@@ -47,7 +47,7 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: `${this.$config.baseURL}/logo.png`,
+          content: `${this.$config.wpBaseURL}/logo.png`,
         },
       ],
       script: [
@@ -59,7 +59,7 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.$config.baseURL}/logo.png`,
+            logo: `${this.$config.wpBaseURL}/logo.png`,
           },
           url: this.currentURL,
           datePublished: this.page.date,
