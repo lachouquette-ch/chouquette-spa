@@ -87,11 +87,6 @@ export default {
         },
         {
           rel: 'stylesheet',
-          hid: 'advgb_bulma_styles-css',
-          href: `${this.wordpressUrl}/wp-content/plugins/advanced-gutenberg/assets/css/bulma.min.css?ver=5.3.2`,
-        },
-        {
-          rel: 'stylesheet',
           hid: 'dashicons-css',
           href: `${this.wordpressUrl}/wp-includes/css/dashicons.css?ver=5.3.2`,
         },
