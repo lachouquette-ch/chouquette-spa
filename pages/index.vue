@@ -186,8 +186,6 @@ export default {
       latestPosts: [],
       topPosts: [],
 
-      wpBaseURL: this.$config.wpBaseURL,
-
       swiperOptions: {
         ...DEFAULT,
         ...AUTO_PLAY,
@@ -199,7 +197,7 @@ export default {
     ...mapState({
       categories: (state) => state.menus.headerCategories,
     }),
-    ...mapState(['name', 'description']),
+    ...mapState(['name', 'description', 'wordpressUrl']),
   },
   mounted() {
     // execute anchor fixing
@@ -214,7 +212,7 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: `${this.$config.wpBaseURL}/logo.png`,
+          content: `${this.wordpressUrl}/logo.png`,
         },
       ],
       script: [
@@ -226,7 +224,7 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.$config.wpBaseURL}/logo.png`,
+            logo: `${this.wordpressUrl}/logo.png`,
           },
           url: this.currentURL,
         }),

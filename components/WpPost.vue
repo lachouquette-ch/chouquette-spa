@@ -70,7 +70,9 @@
     </nav>
 
     <main role="main" class="post layout-content" :class="{ 'with-sidebar': fiches.length }">
-      <div v-if="preview" class="alert alert-warning text-center" role="alert">Mode prévisualisation : toutes les données ne seront pas affichées</div>
+      <div v-if="preview" class="alert alert-warning text-center" role="alert">
+        Mode prévisualisation : toutes les données ne seront pas affichées
+      </div>
       <article :id="post.id">
         <header class="post-header container-fluid px-0 mb-6">
           <WPMediaRaw v-if="preview" :media="post._embedded['wp:featuredmedia'][0]" class="post-header-img" />
@@ -187,16 +189,17 @@ import { directive as SwiperDirective } from 'vue-awesome-swiper'
 import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
 import { comment as CommentFragments } from '@/apollo/fragments/comment'
 import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
-import WPMedia from './WpMedia'
+import { mapState } from 'vuex'
 import WPMediaRaw from '../components/WpMediaRaw'
 import PostShare from '../components/PostShare'
 import PostComment from '../components/PostComment'
-import PostCard from './PostCard'
 import WpAvatar from '../components/WpAvatar'
 import PostCommentReply from '../components/PostCommentReply'
 import FicheThumbnail from '../components/FicheThumbnail'
 import ScrollTop from '../components/ScrollTop'
 import Fiche from '../components/Fiche'
+import PostCard from './PostCard'
+import WPMedia from './WpMedia'
 import seo from '~/mixins/seo'
 import gutenberg from '~/mixins/gutenberg'
 
@@ -293,6 +296,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['wordpressUrl']),
     postCreatedDate() {
       return moment(this.post.date).format('DD/MM/YY')
     },
@@ -382,7 +386,7 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.$config.wpBaseURL}/logo.png`,
+            logo: `${this.wordpressUrl}/logo.png`,
           },
           url: this.currentURL,
           datePublished: this.post.date,

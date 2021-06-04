@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import seo from '~/mixins/seo'
 import gutenberg from '~/mixins/gutenberg'
 import Newsletter from '~/components/Newsletter'
@@ -36,6 +37,9 @@ export default {
     },
     preview: Boolean,
   },
+  computed: {
+    ...mapState(['wordpressUrl']),
+  },
   head() {
     if (this.preview) return { meta: [{ name: 'robots', content: 'none' }] }
 
@@ -47,7 +51,7 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: `${this.$config.wpBaseURL}/logo.png`,
+          content: `${this.wordpressUrl}/logo.png`,
         },
       ],
       script: [
@@ -59,7 +63,7 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.$config.wpBaseURL}/logo.png`,
+            logo: `${this.wordpressUrl}/logo.png`,
           },
           url: this.currentURL,
           datePublished: this.page.date,

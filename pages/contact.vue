@@ -111,6 +111,7 @@
 import { email, minLength, required } from 'vuelidate/lib/validators'
 import _ from 'lodash'
 import gql from 'graphql-tag'
+import { mapState } from 'vuex'
 import Newsletter from '~/components/Newsletter'
 import seo from '~/mixins/seo'
 import graphql from '~/mixins/graphql'
@@ -214,6 +215,9 @@ export default {
       },
     },
   },
+  computed: {
+    ...mapState(['wordpressUrl']),
+  },
   head() {
     return {
       title: "Contacte un membre de l'équipe La Chouquette",
@@ -226,7 +230,7 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.$config.wpBaseURL}/logo.png`,
+            logo: `${this.wordpressUrl}/logo.png`,
           },
           url: this.currentURL,
         }),

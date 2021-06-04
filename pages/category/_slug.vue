@@ -14,6 +14,7 @@
 <script>
 import PageFiches from '~/components/PageFiches'
 import seo from '~/mixins/seo'
+import {mapState} from "vuex";
 
 export default {
   components: { PageFiches },
@@ -40,6 +41,9 @@ export default {
     this.queryLocation = this.$route.query.location
     this.querySearch = this.$route.query.search
     this.queryCriteria = this.buildSelectedCriteriaFromQuery(this.$route.query)
+  },
+  computed: {
+    ...mapState(['wordpressUrl']),
   },
   methods: {
     buildSelectedCriteriaFromQuery(query) {
@@ -108,7 +112,7 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.$config.wpBaseURL}/logo.png`,
+            logo: `${this.wordpressUrl}/logo.png`,
           },
           url: this.currentURL,
         }),

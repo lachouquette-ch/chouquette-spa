@@ -12,6 +12,7 @@
 import WpPage from '~/components/WpPage'
 import WpPost from '~/components/WpPost'
 import Fiche from '~/components/Fiche'
+import {mapState} from "vuex";
 
 export default {
   components: {
@@ -27,6 +28,9 @@ export default {
       fiche: null,
     }
   },
+  computed: {
+    ...mapState(['wordpressUrl']),
+  },
   async created() {
     // first try as a page
     if (!this.$route.query.type || !this.$route.query.id || !this.$route.query.nonce) {
@@ -35,7 +39,7 @@ export default {
     }
 
     if (this.$route.query.type === 'page') {
-      const page = await this.$axios.$get(`${this.$config.wpBaseURL}/wp-json/wp/v2/pages/${this.$route.query.id}`, {
+      const page = await this.$axios.$get(`${this.wordpressUrl}/wp-json/wp/v2/pages/${this.$route.query.id}`, {
         withCredentials: true,
         headers: { 'X-WP-Nonce': this.$route.query.nonce },
       })
@@ -46,7 +50,7 @@ export default {
       this.page = page
       this.pageType = 'page'
     } else if (this.$route.query.type === 'post') {
-      const post = await this.$axios.$get(`${this.$config.wpBaseURL}/wp-json/wp/v2/posts/${this.$route.query.id}`, {
+      const post = await this.$axios.$get(`${this.wordpressUrl}/wp-json/wp/v2/posts/${this.$route.query.id}`, {
         params: { _embed: true },
         withCredentials: true,
         headers: { 'X-WP-Nonce': this.$route.query.nonce },
@@ -58,7 +62,7 @@ export default {
       this.post = post
       this.pageType = 'post'
     } else if (this.$route.query.type === 'fiche') {
-      const fiche = await this.$axios.$get(`${this.$config.wpBaseURL}/wp-json/wp/v2/fiches/${this.$route.query.id}`, {
+      const fiche = await this.$axios.$get(`${this.wordpressUrl}/wp-json/wp/v2/fiches/${this.$route.query.id}`, {
         params: { _embed: true },
         withCredentials: true,
         headers: { 'X-WP-Nonce': this.$route.query.nonce },

@@ -5,7 +5,7 @@
         <nuxt-link to="/" title="Page d'accueil">
           <img
             class="mx-auto"
-            :src="`${$config.wpBaseURL}/wp-content/uploads/2019/03/logo_white-300x276.png`"
+            :src="`${wordpressUrl}/wp-content/uploads/2019/03/logo_white-300x276.png`"
             alt="Logo Chouquette"
           />
         </nuxt-link>
@@ -40,6 +40,7 @@ export default {
     ...mapState('menus', {
       pages: 'footerPages',
     }),
+    ...mapState(['wordpressUrl']),
     currentYear() {
       return moment().format('YYYY')
     },

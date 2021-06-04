@@ -28,6 +28,7 @@ import gql from 'graphql-tag'
 import { page as PageFragments } from '@/apollo/fragments/page'
 import { author as AuthorParts } from '@/apollo/fragments/author'
 
+import { mapState } from 'vuex'
 import WpAvatar from '../components/WpAvatar'
 import WpPage from '~/components/WpPage'
 import seo from '~/mixins/seo'
@@ -61,6 +62,9 @@ export default {
       team: data.team.authors,
     }
   },
+  computed: {
+    ...mapState(['wordpressUrl']),
+  },
   head() {
     return {
       title: this.page.title,
@@ -73,7 +77,7 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.$config.wpBaseURL}/logo.png`,
+            logo: `${this.wordpressUrl}/logo.png`,
           },
           url: this.currentURL,
         }),

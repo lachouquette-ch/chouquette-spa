@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import PageFiches from '~/components/PageFiches'
 import seo from '~/mixins/seo'
 
@@ -48,6 +49,9 @@ export default {
     return {
       test: 'default',
     }
+  },
+  computed: {
+    ...mapState(['wordpressUrl']),
   },
   beforeRouteUpdate(to, from, next) {
     if (to.path === from.path) {
@@ -104,7 +108,7 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.$config.wpBaseURL}/logo.png`,
+            logo: `${this.wordpressUrl}/logo.png`,
           },
           url: this.currentURL,
         }),

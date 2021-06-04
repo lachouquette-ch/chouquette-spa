@@ -4,7 +4,6 @@ import axios from 'axios'
 
 export default {
   publicRuntimeConfig: {
-    wpBaseURL: process.env.WP_URL || 'https://wordpress.lachouquette.ch',
     mailChimpUserId: process.env.MAILCHIMP_USER_ID,
     mailChimpListId: process.env.MAILCHIMP_LIST_ID,
     googleMapsKey: process.env.GOOGLE_MAPS_KEY,
@@ -15,7 +14,7 @@ export default {
       version: 3,
     },
   },
-  ssr: true,
+  ssr: false,
   /*
    ** Headers of the page
    */
