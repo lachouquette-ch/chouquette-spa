@@ -1,3 +1,6 @@
 node_modules
 .git
 .nuxt
+k8s
+Dockerfile
+docker*
