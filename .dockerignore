@@ -1,6 +1,8 @@
-node_modules
-.git
 .nuxt
+dist
 k8s
+node_modules
+.*
+docker-compose*
 Dockerfile
-docker*
+*.log

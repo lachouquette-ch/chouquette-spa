@@ -1,9 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: chouquette-spa-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+  name: chouquette-spa
 spec:
   rules:
     - http:
@@ -12,6 +10,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: chouquette-spa-deployment-service
+                name: chouquette-spa-uat
                 port:
                   number: 80

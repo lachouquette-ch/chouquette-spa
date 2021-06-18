@@ -13,17 +13,15 @@ COPY package.json .
 COPY yarn.lock .
 RUN yarn install
 
-# Set build variables
-ARG env=.env
 # Set env variables
 ENV NODE_ENV production
+ENV GRAPHQL_URI http://api-gateway-uat.default.svc.cluster.local:4000/graphql
 ENV NUXT_HOST 0.0.0.0
 ENV NUXT_PORT 3000
 
 # Bundle app source
 COPY . .
-# override .env with the appropriate file
-COPY $env .env
+# Build and clean
 RUN npm run build
 RUN yarn cache clean
 

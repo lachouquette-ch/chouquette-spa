@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chouquette-spa-uat
+  labels:
+      app: chouquette-spa
+      environment: uat
+      tier: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chouquette-spa
+      environment: uat
+  template:
+    metadata:
+      labels:
+        app: chouquette-spa
+        environment: uat
+    spec:
+      containers:
+        - name: chouquette-spa-uat
+          image: docker.lachouquette.ch/chouquette-spa:latest
+          ports:
+            - containerPort: 3000
+          envFrom:
+            - configMapRef:
+                name: chouquette-spa-uat
+          env:
+            - name: RECAPTCHA_SITE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: chouquette-spa-uat
+                  key: RECAPTCHA_SITE_KEY
+            - name: MAILCHIMP_USER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: chouquette-spa-uat
+                  key: MAILCHIMP_USER_ID
+            - name: MAILCHIMP_LIST_ID
+              valueFrom:
+                secretKeyRef:
+                  name: chouquette-spa-uat
+                  key: MAILCHIMP_LIST_ID
+            - name: GOOGLE_MAPS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: chouquette-spa-uat
+                  key: GOOGLE_MAPS_KEY
+          volumeMounts:
+            - name: apollo-config
+              mountPath: "/usr/src/app/apollo/config"
+              readOnly: true
+      volumes:
+        - name: apollo-config
+          configMap:
+            name: chouquette-spa-uat
+            items:
+              - key: "apollo-config"
+                path: "apollo-config.js"
