@@ -175,26 +175,6 @@ export default {
           return posts
         },
       },
-      {
-        path: '/sitemap-categories.xml',
-        exclude: ['/**'],
-        routes: async () => {
-          const { data } = await axios.get(
-            `https://wordpress.lachouquette.ch/wp-json/wp/v2/categories/?_fields=slug&per_page=100&parent=0`
-          )
-          return data.map(({ slug }) => `/category/${slug}`)
-        },
-      },
-      {
-        path: '/sitemap-locations.xml',
-        exclude: ['/**'],
-        routes: async () => {
-          const { data } = await axios.get(
-            `https://wordpress.lachouquette.ch/wp-json/wp/v2/locations/?_fields=slug&per_page=100`
-          )
-          return data.map(({ slug }) => `/location/${slug}`)
-        },
-      },
     ],
   },
   styleResources: {
