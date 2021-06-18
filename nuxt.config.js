@@ -121,6 +121,7 @@ export default {
     clientConfigs: {
       default: {
         httpEndpoint: process.env.GRAPHQL_URI || 'http://localhost:4000/graphql',
+        browserHttpEndpoint: '/graphql',
       },
     },
   },

@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:16.3.0-slim
+FROM node:16.3.0-alpine
 LABEL maintainer="La Chouquette"
 LABEL description="Single Page Application"
 LABEL version="1.0"
