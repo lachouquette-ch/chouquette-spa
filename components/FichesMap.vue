@@ -17,7 +17,7 @@
 
 <script>
 import Vue from 'vue'
-import MarkerClusterer from '@google/markerclustererplus'
+import MarkerClusterer from '@googlemaps/markerclustererplus'
 
 import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, LAUSANNE_LAT_LNG } from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
