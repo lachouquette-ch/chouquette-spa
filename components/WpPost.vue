@@ -366,7 +366,7 @@ export default {
 
     return {
       title: this.post.seo.title,
-      link: this.gutenbergLinks(),
+      link: this.gutenbergStylesheets(),
       meta: [
         ...this.seoMetaProperties(JSON.parse(this.post.seo.metadata)),
         {

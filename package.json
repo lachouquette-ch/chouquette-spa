@@ -30,6 +30,7 @@
     "isbot": "^3.0.27",
     "jquery": "^3.6.0",
     "nuxt": "^2.15.3",
+    "simple-load-script": "^1.0.3",
     "swiper": "5.2.0",
     "vue-awesome-swiper": "^4.1.1",
     "vue-content-placeholders": "^0.2.1",

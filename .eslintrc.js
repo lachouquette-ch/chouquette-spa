@@ -14,7 +14,6 @@ module.exports = {
     'plugin:prettier-vue/recommended',
     'plugin:nuxt/recommended',
   ],
-  plugins: ['prettier'],
   // add your custom rules here
   rules: {
     indent: ['error', 2],
