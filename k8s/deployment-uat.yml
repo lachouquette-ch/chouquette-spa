@@ -47,14 +47,3 @@ spec:
                 secretKeyRef:
                   name: chouquette-spa-uat
                   key: GOOGLE_MAPS_KEY
-          volumeMounts:
-            - name: apollo-config
-              mountPath: "/usr/src/app/apollo/config"
-              readOnly: true
-      volumes:
-        - name: apollo-config
-          configMap:
-            name: chouquette-spa-uat
-            items:
-              - key: "apollo-config"
-                path: "apollo-config.js"
