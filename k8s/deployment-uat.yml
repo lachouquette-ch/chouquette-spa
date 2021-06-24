@@ -28,8 +28,8 @@ spec:
             httpGet:
               path: /health
               port: container-port
-            failureThreshold: 1
-            periodSeconds: 5
+            failureThreshold: 3
+            periodSeconds: 15
           startupProbe:
             httpGet:
               path: /
