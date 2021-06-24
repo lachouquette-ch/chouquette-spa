@@ -11407,6 +11407,11 @@ schema-utils@^3.0.0:
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
 
+scriptjs@^2.5.9:
+  version "2.5.9"
+  resolved "https://registry.yarnpkg.com/scriptjs/-/scriptjs-2.5.9.tgz#343915cd2ec2ed9bfdde2b9875cd28f59394b35f"
+  integrity sha512-qGVDoreyYiP1pkQnbnFAUIS5AjenNwwQBdl7zeos9etl+hYKWahjRTfzAZZYBv5xNHx7vNKCmaLDQZ6Fr2AEXg==
+
 scss-tokenizer@^0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/scss-tokenizer/-/scss-tokenizer-0.2.3.tgz#8eb06db9a9723333824d3f5530641149847ce5d1"
@@ -11626,11 +11631,6 @@ signedsource@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/signedsource/-/signedsource-1.0.0.tgz#1ddace4981798f93bd833973803d80d52e93ad6a"
   integrity sha1-HdrOSYF5j5O9gzlzgD2A1S6TrWo=
-
-simple-load-script@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/simple-load-script/-/simple-load-script-1.0.3.tgz#386bd3ece78dcdb2cee75956cbd22247930d9046"
-  integrity sha512-uzkQFI6ox63k0CMK7AtEZ6NXe4HLMDxBsN5UCjbwY5DgAdREmBzmsxWQmiuvRPHHTsQ3ad00/aNYiNLYdphZLw==
 
 simple-swizzle@^0.2.2:
   version "0.2.2"
