@@ -22,7 +22,20 @@ spec:
         - name: chouquette-spa-uat
           image: docker.lachouquette.ch/chouquette-spa:latest
           ports:
-            - containerPort: 3000
+            - name: liveness-port
+              containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: liveness-port
+            failureThreshold: 1
+            periodSeconds: 5
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: liveness-port
+            failureThreshold: 12
+            periodSeconds: 5
           envFrom:
             - configMapRef:
                 name: chouquette-spa-uat
