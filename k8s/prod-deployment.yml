@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chouquette-spa-prod
+  labels:
+      app: chouquette-spa
+      environment: prod
+      tier: frontend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: chouquette-spa
+      environment: prod
+  template:
+    metadata:
+      labels:
+        app: chouquette-spa
+        environment: prod
+    spec:
+      containers:
+        - name: chouquette-spa-prod
+          image: docker.lachouquette.ch/chouquette-spa:latest
+          ports:
+            - name: container-port
+              containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: container-port
+            failureThreshold: 3
+            periodSeconds: 15
+          startupProbe:
+            httpGet:
+              path: /
+              port: container-port
+            failureThreshold: 12
+            periodSeconds: 5
+          envFrom:
+            - configMapRef:
+                name: chouquette-spa-prod
+          env:
+            - name: RECAPTCHA_SITE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: chouquette-spa-prod
+                  key: RECAPTCHA_SITE_KEY
+            - name: MAILCHIMP_USER_ID
+              valueFrom:
+                secretKeyRef:
+                  name: chouquette-spa-prod
+                  key: MAILCHIMP_USER_ID
+            - name: MAILCHIMP_LIST_ID
+              valueFrom:
+                secretKeyRef:
+                  name: chouquette-spa-prod
+                  key: MAILCHIMP_LIST_ID
+            - name: GOOGLE_MAPS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: chouquette-spa-prod
+                  key: GOOGLE_MAPS_KEY
