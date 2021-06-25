@@ -18,7 +18,7 @@ jobs:
           push: true
           tags: docker.lachouquette.ch/chouquette-spa:${{ github.sha }}
       - name: Image digest
-          run: echo ${{ steps.docker_build.outputs.digest }}
+        run: echo ${{ steps.docker_build.outputs.digest }}
       - name: Deploy image to cluster
         uses: ghostzero/kubectl@v1
         env:
