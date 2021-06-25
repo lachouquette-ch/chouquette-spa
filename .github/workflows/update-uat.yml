@@ -18,11 +18,11 @@ jobs:
           push: true
           tags: docker.lachouquette.ch/chouquette-spa:latest
       - name: Deploy image to cluster
-          uses: ghostzero/kubectl@v1
-          env:
-            KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-          with:
-            args: set image --record deployment/chouquette-spa-uat=docker.lachouquette.ch/chouquette-spa:latest
+        uses: ghostzero/kubectl@v1
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        with:
+          args: set image --record deployment/chouquette-spa-uat=docker.lachouquette.ch/chouquette-spa:latest
       - name: Verify deployment
         uses: ghostzero/kubectl@v1
         env:
