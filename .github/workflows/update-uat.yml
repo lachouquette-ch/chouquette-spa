@@ -16,13 +16,15 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: docker.lachouquette.ch/chouquette-spa:latest
+          tags: docker.lachouquette.ch/chouquette-spa:${{ github.sha }}
+      - name: Image digest
+          run: echo ${{ steps.docker_build.outputs.digest }}
       - name: Deploy image to cluster
         uses: ghostzero/kubectl@v1
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
         with:
-          args: set image --record deployment/chouquette-spa-uat=docker.lachouquette.ch/chouquette-spa:latest
+          args: set image deployment/chouquette-spa-uat chouquette-spa-uat=docker.lachouquette.ch/chouquette-spa:${{ github.sha }} --record
       - name: Verify deployment
         uses: ghostzero/kubectl@v1
         env:
