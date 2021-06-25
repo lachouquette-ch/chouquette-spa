@@ -7,10 +7,6 @@ jobs:
   update-uat:
     runs-on: ubuntu-latest
     steps:
-      - name: Image digest
-        run: echo ${{ secrets.KUBE_CONFIG_DATA }}
-      - name: Try to fail
-        run: exit 1
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build image and push to private repository
@@ -24,15 +20,12 @@ jobs:
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
       - name: Deploy image to cluster
-        uses: ghostzero/kubectl@v1
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        uses: nickgronow/kubectl@master
         with:
+          config_data: ${{ secrets.KUBE_CONFIG_DATA }}
           args: set image deployment/chouquette-spa-uat chouquette-spa-uat=docker.lachouquette.ch/chouquette-spa:${{ github.sha }} --record
       - name: Verify deployment
-        uses: ghostzero/kubectl@v1
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-          KUBECTL_VERSION: "1.15"
+        uses: nickgronow/kubectl@master
         with:
+          config_data: ${{ secrets.KUBE_CONFIG_DATA }}
           args: '"rollout status deployment/chouquette-spa-uat"'
