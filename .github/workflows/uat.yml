@@ -17,6 +17,10 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: docker.lachouquette.ch/chouquette-spa:${{ github.sha }}
+        env:
+          NODE_ENV: development
+          GRAPHQL_URI: http://api-gateway-uat.default.svc.cluster.local:4000/graphql
+          BROWSER_GRAPHQL_URI: https://api-gateway-uat.lachouquette.ch/graphql
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
       - name: Deploy image to cluster
