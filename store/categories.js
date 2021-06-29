@@ -25,6 +25,7 @@ export const actions = {
 
 export const mutations = {
   SET_CATEGORIES(state, categories) {
+    // add top levels
     _.merge(
       state.topLevels,
       categories
@@ -34,7 +35,11 @@ export const mutations = {
           return acc
         }, {})
     )
+    // build all and append children to top levels
     for (const category of categories) {
+      // setup level
+      category.level = category.parentId ? 1 : 0
+      // add to all categories
       state.all[category.id] = category
       // setup category if not root category
       if (category.parentId === 0) continue

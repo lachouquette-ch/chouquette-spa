@@ -10,7 +10,7 @@ export const state = () => ({
 export const actions = {
   async nuxtServerInit({ state, commit, dispatch }) {
     // avoid double initialization
-    if (state.name) return
+    if (state.name) return Promise.resolve()
 
     // eslint-disable-next-line no-undef
     const client = this.app.apolloProvider.defaultClient

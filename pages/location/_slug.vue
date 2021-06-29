@@ -21,8 +21,7 @@ export default {
   mixins: [seo],
   async asyncData({ store, params, query }) {
     // store initialization
-    await store.dispatch('locations/init')
-    await store.dispatch('menus/init')
+    await store.dispatch('nuxtServerInit')
 
     const rootLocation = await store.dispatch('locations/fetchBySlug', params.slug)
 
@@ -43,11 +42,6 @@ export default {
       queryLocation,
       querySearch,
       queryCriteria,
-    }
-  },
-  data() {
-    return {
-      test: 'default',
     }
   },
   computed: {

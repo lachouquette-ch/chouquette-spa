@@ -299,14 +299,14 @@ export default {
       const { data } = await this.$apollo.query({
         query: gql`
           query(
-            $slug: String!
+            $slug: String
             $location: String
             $search: String
             $criteria: [CriteriaSearch!]
             $page: Int!
             $pageSize: Int!
           ) {
-            fichesByCategory(
+            fichesByFilters(
               slug: $slug
               location: $location
               search: $search
@@ -334,7 +334,7 @@ export default {
         },
       })
 
-      const { fiches, total, totalPages, hasMore } = data.fichesByCategory
+      const { fiches, total, totalPages, hasMore } = data.fichesByFilters
       this.fiches.push(...fiches)
       this.fichesTotal = total
       this.fichesPages = totalPages
@@ -414,7 +414,7 @@ export default {
       this.categories = await this.$store.dispatch('categories/findChildren', this.rootCategory)
     } else {
       this.categories = Object.entries(this.categoryHierarchy).flatMap(([categoryId, children]) => [
-        this.categoryAll.find(({ id }) => id === categoryId),
+        this.categoryAll[categoryId],
         ...children,
       ])
     }
@@ -443,6 +443,12 @@ export default {
 
     // criteria
     async loadCriteria() {
+      // clear and exit if no category (e.g location page)
+      if (!this.formSearch.category && !this.rootCategory) {
+        this.formSearch.criteria = []
+        return
+      }
+
       try {
         this.criteriaLoading = true
         const { data } = await this.$apollo.query({

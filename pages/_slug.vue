@@ -24,7 +24,7 @@ export default {
     const client = app.apolloProvider.defaultClient
 
     // store initialization
-    await store.dispatch('yoast/init')
+    await store.dispatch('nuxtServerInit')
 
     // first try as a post
     const post = await client
