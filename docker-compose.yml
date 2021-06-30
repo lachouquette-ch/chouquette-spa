@@ -7,6 +7,7 @@ services:
       - "3000:3000"
     environment:
       NODE_ENV: development
+      DISABLE_SENTY: 'true'
       GRAPHQL_URI: http://localhost:4000/graphql
       BROWSER_GRAPHQL_URI: http://localhost:4000/graphql
     volumes:

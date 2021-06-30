@@ -12,6 +12,7 @@ WORKDIR /usr/src/app
 COPY package.json .
 COPY yarn.lock .
 RUN yarn
+RUN npm rebuild node-sass
 
 # Set env variables.
 # NODE_ENV, GRAPHQL_URI and BROWSER_GRAPHQL_URI cannot be set at runtime because they are used while building (nuxt.config.js)
