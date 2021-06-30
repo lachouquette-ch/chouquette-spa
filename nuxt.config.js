@@ -127,7 +127,10 @@ export default {
   },
   sentry: {
     dsn: 'https://aaf0c41235c44040ae01dcd356fb3e6f@o397059.ingest.sentry.io/5251223',
-    disabled: process.env.NODE_ENV === 'development',
+    disabled: process.env.DISABLE_SENTY ?? false,
+    config: {
+      environment: process.env.NODE_ENV === 'production' ? 'production' : 'development'
+    },
     // publishRelease: true, // TODO needs additional env https://sentry.nuxtjs.org/sentry/options/#publishrelease
     // attachCommits: true,
   },
