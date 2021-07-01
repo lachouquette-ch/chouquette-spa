@@ -281,7 +281,7 @@ export default {
       })
 
       const { postBySlug } = data
-      this.fiches = postBySlug.fiches
+      this.fiches = postBySlug.fiches || []
       this.comments = postBySlug.comments
       this.similarPosts = postBySlug.similarPosts
 
