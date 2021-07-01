@@ -12,9 +12,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import PageFiches from '~/components/PageFiches'
 import seo from '~/mixins/seo'
-import {mapState} from "vuex";
 
 export default {
   components: { PageFiches },

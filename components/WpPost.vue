@@ -232,13 +232,34 @@ export default {
     },
     preview: Boolean,
   },
+  data() {
+    return {
+      fiches: [],
+
+      comments: null,
+      similarPosts: null,
+
+      hideSidebar: true,
+
+      swiperFichesOptions: {
+        ...DEFAULT,
+        ...HASH,
+      },
+      swiperPostsOptions: {
+        ...DEFAULT,
+        ...RESPONSIVE,
+      },
+
+      mapShown: false,
+    }
+  },
   async fetch() {
     try {
       if (this.preview) return
 
       const { data } = await this.$apollo.query({
         query: gql`
-          query($slug: String!) {
+          query ($slug: String!) {
             postBySlug(slug: $slug) {
               id
               fiches {
@@ -274,27 +295,6 @@ export default {
     }
   },
   fetchOnServer: false,
-  data() {
-    return {
-      fiches: [],
-
-      comments: null,
-      similarPosts: null,
-
-      hideSidebar: true,
-
-      swiperFichesOptions: {
-        ...DEFAULT,
-        ...HASH,
-      },
-      swiperPostsOptions: {
-        ...DEFAULT,
-        ...RESPONSIVE,
-      },
-
-      mapShown: false,
-    }
-  },
   computed: {
     ...mapState(['wordpressUrl']),
     postCreatedDate() {

@@ -339,6 +339,7 @@ export default {
       this.fichesTotal = total
       this.fichesPages = totalPages
       this.hasMoreFiches = hasMore
+      this.$refs.map.loadFichesOnMap()
     } catch (e) {
       this.$sentry.captureException(e)
       this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(e) })

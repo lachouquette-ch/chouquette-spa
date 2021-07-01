@@ -56,10 +56,6 @@ export default {
       isMapShown: null,
     }
   },
-  watch: {
-    // the callback will be called immediately after the start of the observation
-    fiches: 'loadFichesOnMap',
-  },
   async mounted() {
     // build map
     this.google = await this.$googleMaps
