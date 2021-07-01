@@ -100,7 +100,7 @@ export default {
     '@nuxtjs/apollo',
     '@nuxtjs/style-resources',
     'bootstrap-vue/nuxt',
-    ['vue-scrollto/nuxt', { offset: -1 * (80 + 70) - 15 }], // fix default offset (do not work for home page)
+    ['vue-scrollto/nuxt', { offset: -1 * 80 - 15 }], // fix default offset (do not work for home page)
     '@nuxtjs/sentry',
     '@nuxtjs/sitemap',
     '@nuxtjs/recaptcha',
