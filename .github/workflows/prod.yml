@@ -15,7 +15,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: docker.lachouquette.ch/chouquette-spa:${{ env.GITHUB_REF }}
+          tags: docker.lachouquette.ch/chouquette-spa:${{ github.event.release.tag_name }}
         env:
           NODE_ENV: production
           GRAPHQL_URI: http://api-gateway-prod.default.svc.cluster.local:4000/graphql
@@ -26,7 +26,7 @@ jobs:
         uses: nickgronow/kubectl@master
         with:
           config_data: ${{ secrets.KUBE_CONFIG_DATA }}
-          args: set image deployment/chouquette-spa-prod chouquette-spa-prod=docker.lachouquette.ch/chouquette-spa:${{ env.GITHUB_REF }} --record
+          args: set image deployment/chouquette-spa-prod chouquette-spa-prod=docker.lachouquette.ch/chouquette-spa:${{ github.event.release.tag_name }} --record
       - name: Verify deployment
         uses: nickgronow/kubectl@master
         with:
