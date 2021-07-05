@@ -19,20 +19,20 @@
             target="_blank"
             variant="secondary"
           >
-            <span style="color: #4267b2;" class="mr-2"><i class="fab fa-facebook-square"></i></span> Facebook
+            <span style="color: #4267b2" class="mr-2"><i class="fab fa-facebook-square"></i></span> Facebook
           </b-dropdown-item>
           <b-dropdown-item
             :href="`https://twitter.com/share?text=${escapedTitle}&url=${encodeURI(fichePage)}`"
             target="_blank"
             variant="secondary"
           >
-            <span style="color: #38a1f3;" class="mr-2"><i class="fab fa-twitter-square"></i></span> Twitter
+            <span style="color: #38a1f3" class="mr-2"><i class="fab fa-twitter-square"></i></span> Twitter
           </b-dropdown-item>
           <b-dropdown-item
             :href="`mailto:?subject=${escapedTitle}&amp;body=Je te partage cet article ${fichePage}`"
             variant="secondary"
           >
-            <span style="color: #b7b7b7;" class="mr-2"><i class="fas fa-envelope-square"></i></span> Email
+            <span style="color: #b7b7b7" class="mr-2"><i class="fas fa-envelope-square"></i></span> Email
           </b-dropdown-item>
         </template>
       </b-dropdown>
@@ -41,7 +41,10 @@
 </template>
 
 <script>
+import share from '~/mixins/share'
+
 export default {
+  mixins: [share],
   props: {
     fiche: {
       required: true,
@@ -60,13 +63,7 @@ export default {
     },
   },
   mounted() {
-    this.shareApiAvailable = typeof navigator.share === 'function'
     this.fichePage = window.location.origin + `/fiche/${this.fiche.slug}`
-  },
-  methods: {
-    shareWith(title, text, url) {
-      return navigator.share({ title, text, url })
-    },
   },
 }
 </script>

@@ -32,7 +32,10 @@
 </template>
 
 <script>
+import share from '~/mixins/share'
+
 export default {
+  mixins: [share],
   props: {
     post: {
       required: true,
@@ -51,13 +54,7 @@ export default {
     },
   },
   mounted() {
-    this.shareApiAvailable = typeof navigator.share === 'function'
     this.currentPage = window.location.href
-  },
-  methods: {
-    shareWith(title, text, url) {
-      return navigator.share({ title, text, url })
-    },
   },
 }
 </script>
