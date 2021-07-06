@@ -9,13 +9,7 @@ export default {
   },
   methods: {
     shareWith(title, text, url) {
-      return navigator.share({ title, text, url }).catch((error) => {
-        if (error.name === 'AbortError') {
-          console.info('action canceled by user')
-        } else {
-          throw error
-        }
-      })
+      return navigator.share({ title, text, url })
     },
   },
 }
