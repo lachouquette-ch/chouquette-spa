@@ -1,8 +1,11 @@
 export default {
-  computed: {
-    shareApiAvailable() {
-      return typeof navigator.share === 'function'
-    },
+  data() {
+    return {
+      shareApiAvailable: false,
+    }
+  },
+  mounted() {
+    this.shareApiAvailable = typeof navigator.share === 'function'
   },
   methods: {
     shareWith(title, text, url) {
