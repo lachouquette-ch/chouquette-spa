@@ -56,6 +56,11 @@ export default {
       isMapShown: null,
     }
   },
+  watch: {
+    fiches() {
+      this.loadFichesOnMap()
+    },
+  },
   async mounted() {
     // build map
     this.google = await this.$googleMaps
