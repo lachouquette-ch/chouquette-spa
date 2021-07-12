@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:14.17.1
+FROM node:14.17.3-alpine3.14
 LABEL maintainer="La Chouquette"
 LABEL description="Single Page Application"
 LABEL version="1.0"
@@ -20,6 +20,7 @@ ENV NODE_ENV production
 ENV DISABLE_SENTY false
 ENV GRAPHQL_URI http://api-gateway-prod.default.svc.cluster.local:4000/graphql
 ENV BROWSER_GRAPHQL_URI https://api-gateway.lachouquette.ch/graphql
+ENV NUXT_VERSION 2.15.7
 ENV NUXT_HOST 0.0.0.0
 ENV NUXT_PORT 3000
 
@@ -27,8 +28,11 @@ ENV NUXT_PORT 3000
 COPY . .
 
 # Build and clean
-RUN yarn build
+RUN yarn build --standalone
+RUN rm -rf node_modules
+# install packages needed at runtime
+RUN yarn add "nuxt-start@${NUXT_VERSION}"
 RUN yarn cache clean
 
 EXPOSE $NUXT_PORT
-CMD yarn start
+CMD ["npx", "nuxt-start"]
