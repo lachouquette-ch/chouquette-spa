@@ -14,7 +14,7 @@
           @error="onMailchimpSubscriptionError"
           @success="onMailchimpSubscriptionSuccess"
         >
-          <template v-slot="{ subscribe, setEmail, loading }">
+          <template #default="{ subscribe, setEmail, loading }">
             <form class="form-inline mx-auto justify-content-center" @submit.prevent="subscribe">
               <div class="form-row w-100">
                 <div class="col-lg-8 mb-2">
@@ -62,22 +62,22 @@ export default {
 
     input {
       // .form-control-lg
-      height: $input-height-lg;
-      padding: $input-padding-y-lg $input-padding-x-lg;
-      @include font-size($input-font-size-lg);
-      line-height: $input-line-height-lg;
-      @include border-radius($input-border-radius-lg);
+      //height: $input-height-lg;
+      //padding: $input-padding-y-lg $input-padding-x-lg;
+      //@include font-size($input-font-size-lg);
+      //line-height: $input-line-height-lg;
+      //@include border-radius($input-border-radius-lg);
     }
 
     button {
       // .btn-lg
-      @include button-size(
-        $btn-padding-y-lg,
-        $btn-padding-x-lg,
-        $btn-font-size-lg,
-        $btn-line-height-lg,
-        $btn-border-radius-lg
-      );
+      //@include button-size(
+      //$btn-padding-y-lg,
+      //$btn-padding-x-lg,
+      //$btn-font-size-lg,
+      //$btn-line-height-lg,
+      //$btn-border-radius-lg
+      //);
     }
   }
 

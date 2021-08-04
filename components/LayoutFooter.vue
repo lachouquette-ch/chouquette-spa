@@ -51,7 +51,7 @@ export default {
 <style lang="scss" scoped>
 .footer {
   color: $white;
-  z-index: $zindex-fixed;
+  //z-index: $zindex-fixed;
   position: relative;
   display: inline-block;
 }
@@ -87,7 +87,7 @@ ul.footer-top-menu {
   left: 0;
   bottom: 0;
   background-color: $chouquette-dark-grey;
-  z-index: $zindex-popover;
+  //z-index: $zindex-popover;
 
   > div {
     min-height: 10vh;
@@ -98,7 +98,7 @@ ul.footer-top-menu {
   }
 
   span {
-    font-size: $font-size-lg;
+    //font-size: $font-size-lg;
     color: $white;
   }
 }

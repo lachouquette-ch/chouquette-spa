@@ -624,12 +624,12 @@ export default {
   position: absolute;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: $zindex-dropdown;
+  //z-index: $zindex-dropdown;
 }
 
 .fiche.selected {
   @include media-breakpoint-up(md) {
-    box-shadow: $box-shadow !important;
+    //box-shadow: $box-shadow !important;
   }
 }
 </style>

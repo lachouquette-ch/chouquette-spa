@@ -1,0 +1,18 @@
+// Custom helper classes and mixins
+@import '../css/wordpress';
+
+// Styling
+//@import "vue";
+//@import "layout";
+//@import "post-card-shuffler";
+//@import "marker-clusterer";
+//@import "google-map";
+//@import "toggle_content_btn";
+
+// Fonts
+@import '../css/fonts';
+
+// CookieConsent
+$cookieconstent-background: $chouquette-grey;
+@import "~vue-cookieconsent-component/src/scss/cookie-consent";
+@import "~vue-cookieconsent-component/src/scss/cookie-consent-bottom";

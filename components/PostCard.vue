@@ -51,7 +51,7 @@ export default {
   max-width: 100%;
 
   @include hover-focus {
-    box-shadow: $box-shadow !important;
+    //box-shadow: $box-shadow !important;
   }
 }
 
@@ -97,8 +97,8 @@ export default {
 
 .card-text {
   font-family: $font-family-heading;
-  font-size: $h5-font-size;
+  //font-size: $h5-font-size;
 
-  min-height: $line-height-base * 3rem;
+  //min-height: $line-height-base * 3rem;
 }
 </style>

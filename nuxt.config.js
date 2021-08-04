@@ -68,7 +68,7 @@ export default {
   /*
    ** Global CSS
    */
-  css: ['~/assets/css/main.scss'],
+  css: ['~/assets/scss/main.scss'],
   /*
    ** Plugins to load before mounting the App
    */
@@ -91,6 +91,7 @@ export default {
     // Doc: https://github.com/nuxt-community/eslint-module
     // '@nuxtjs/eslint-module',
     ['@nuxtjs/google-analytics', { id: 'UA-47894326-1' }],
+    ['@nuxtjs/vuetify'],
   ],
   /*
    ** Nuxt.js modules
@@ -105,6 +106,11 @@ export default {
     '@nuxtjs/sitemap',
     '@nuxtjs/recaptcha',
   ],
+  vuetify: {
+    optionsPath: '~/vuetify.options.js',
+    customVariables: ['~/assets/scss/vuetify.scss'],
+    treeShake: true,
+  },
   apollo: {
     tokenName: 'chouquette', // specify token name
     cookieAttributes: {
@@ -180,10 +186,10 @@ export default {
   },
   styleResources: {
     scss: [
-      '~/assets/css/_variables.scss',
+      '~/assets/css/variables.scss',
       '~/assets/css/_mixins.scss',
       '~/node_modules/bootstrap/scss/_functions.scss',
-      '~/node_modules/bootstrap/scss/_variables.scss',
+      '~/node_modules/bootstrap/scss/variables.scss',
       '~/node_modules/bootstrap/scss/_mixins.scss',
     ],
   },

@@ -34,7 +34,7 @@ export default {
   position: fixed;
   bottom: 10px;
   right: 10px;
-  z-index: $zindex-fixed + 1;
+  //z-index: $zindex-fixed + 1;
 
   height: 50px;
   width: 50px;

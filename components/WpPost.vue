@@ -432,11 +432,11 @@ export default {
 
 .post-sidebar {
   position: fixed;
-  top: $header-height;
+  //top: $header-height;
   bottom: 0;
   left: 0;
   width: 100%;
-  z-index: $zindex-sticky;
+  //z-index: $zindex-sticky;
   overflow-y: auto;
 
   @include media-breakpoint-up(md) {
@@ -525,7 +525,7 @@ export default {
 
   h5 {
     font-family: $font-family-heading;
-    font-size: $h3-font-size;
+    //font-size: $h3-font-size;
   }
 
   div.col {
@@ -546,14 +546,14 @@ export default {
 .post-similar {
   h3 {
     font-family: $font-family-heading;
-    font-size: $h1-font-size;
+    //font-size: $h1-font-size;
   }
 }
 
 .post-comments {
   h3 {
     font-family: $font-family-heading;
-    font-size: $h1-font-size;
+    //font-size: $h1-font-size;
   }
 
   ol {

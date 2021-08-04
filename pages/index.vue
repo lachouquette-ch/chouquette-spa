@@ -245,7 +245,7 @@ export default {
   background-color: $chouquette-grey;
 
   .home-header-name {
-    line-height: $header-height;
+    //line-height: $header-height;
     font-family: $font-family-brand;
     text-transform: uppercase;
     letter-spacing: 3px;
@@ -256,7 +256,7 @@ export default {
 
   h3 {
     font-family: $font-family-heading;
-    font-size: $h2-font-size;
+    //font-size: $h2-font-size;
     color: #f8ef28;
   }
 
@@ -272,12 +272,12 @@ export default {
   padding-top: 80px; // for menu
 
   position: relative;
-  top: -1 * $header-height;
+  //top: -1 * $header-height;
 }
 
 h3.home-header-menu-description {
   @include media-breakpoint-down(sm) {
-    font-size: $h4-font-size;
+    //font-size: $h4-font-size;
   }
 
   @media (max-height: 450px) {
@@ -290,13 +290,13 @@ h3.home-header-menu-description {
 
   a {
     color: $chouquette-yellow;
-    line-height: $header-height;
+    //line-height: $header-height;
   }
 }
 
 .home-header-category {
   h2 {
-    font-size: $h5-font-size;
+    //font-size: $h5-font-size;
     color: $chouquette-yellow;
   }
 }

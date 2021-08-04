@@ -92,7 +92,7 @@ export default {
   max-width: 300px;
 
   @include hover-focus {
-    box-shadow: $box-shadow !important;
+    //box-shadow: $box-shadow !important;
   }
 }
 

@@ -29,7 +29,7 @@ export default {
 <style lang="scss" scoped>
 .fiche {
   @include hover-focus {
-    box-shadow: $box-shadow !important;
+    //box-shadow: $box-shadow !important;
   }
 }
 

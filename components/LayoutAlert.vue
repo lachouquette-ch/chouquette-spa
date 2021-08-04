@@ -33,7 +33,7 @@ export default {
 
 <style lang="scss" scoped>
 .layout-alert {
-  z-index: $zindex-popover;
+  //z-index: $zindex-popover;
 }
 
 .alert {

@@ -579,7 +579,7 @@ export default {
 
   .card {
     @include hover-focus {
-      box-shadow: $box-shadow !important;
+      //box-shadow: $box-shadow !important;
     }
   }
 
@@ -657,7 +657,7 @@ export default {
   top: 7px;
   right: 7px;
 
-  font-size: $font-size-base;
+  //font-size: $font-size-base;
 
   > i {
     color: $chouquette-grey;

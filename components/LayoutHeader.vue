@@ -168,10 +168,10 @@ export default {
 .navbar-chouquette-light {
   top: 0;
   background-color: $chouquette-darker-grey;
-  z-index: $zindex-fixed + 2;
+  //z-index: $zindex-fixed + 2;
 
   .navbar-brand {
-    line-height: $header-height;
+    //line-height: $header-height;
     font-family: $font-family-brand;
     text-transform: uppercase;
     letter-spacing: 3px;

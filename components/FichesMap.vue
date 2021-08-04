@@ -198,8 +198,8 @@ export default {
   bottom: 0;
   right: 0;
   width: 100%;
-  z-index: $zindex-fixed + 1;
-  height: calc(100% - #{$header-height});
+  //z-index: $zindex-fixed + 1;
+  //height: calc(100% - #{$header-height});
 }
 
 .map-load-more {
