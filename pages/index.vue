@@ -10,7 +10,7 @@
           </v-row>
           <v-row>
             <v-col cols="12" md="6">
-              <v-select label="Où veux-tu aller ?" hide-details solo dense></v-select>
+              <v-select label="Où veux-tu aller ?" hide-details solo dense color="black" item-color="black"></v-select>
             </v-col>
             <v-col cols="12" md="6" class="py-0">
               <v-btn block elevation="3" color="primary" class="black--text">Rechercher</v-btn>
@@ -19,47 +19,98 @@
         </v-container>
       </v-form>
     </div>
-    <v-container>
-      <v-row>
-        <v-col>
-          <h3 class="text-center headline">En ce moment</h3>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12" md="6" class="pb-0">
-          <v-card class="post-thumb mx-auto" max-width="350" flat tile>
-            <v-img height="250" src="https://picsum.photos/350/250" class="rounded"></v-img>
-            <v-card-title class="post-thumb-title mt-2 py-0 text-h6"
-              >Le TOM Café et son petit dernier le TOM snack !</v-card-title
-            >
-            <v-card-subtitle class="post-thumb-subtitle mt-2 py-0 text-uppercase body-2">Bars et restaurants</v-card-subtitle>
-          </v-card>
-        </v-col>
-        <v-col cols="12" md="6" class="py-0">
-          <v-container fluid class="py-0">
-            <v-row v-for="i in 3" :key="i" class="my-2">
-              <v-col cols="6" class="py-0 px-1">
-                <v-img
-                  :aspect-ratio="16 / 9"
-                  src="https://picsum.photos/350/150"
-                  position="top center"
-                  class="rounded"
-                ></v-img>
-              </v-col>
-              <v-col cols="6" class="py-0 px-1">
-                <p class="post-thumb-subtitle my-0 py-0 text-uppercase body-2">Bars et restaurants</p>
-                <p class="post-thumb-title mt-1 py-0 body-1">Le TOM Café et son petit dernier le TOM snack !</p>
-              </v-col>
+    <v-sheet>
+      <h3 class="text-center headline my-0 py-5">En ce moment</h3>
+      <v-container>
+        <v-row>
+          <v-col cols="12" md="6" class="py-0">
+            <v-card class="post-thumb mx-auto mb-3" max-width="350" flat tile>
+              <v-img height="250" src="https://picsum.photos/350/250" class="rounded"></v-img>
+              <v-card-title class="post-thumb-title mt-2 py-0 text-h6"
+                ><span
+                  >Le TOM Café et son petit dernier le TOM snack !
+                  <small class="ml-3 post-thumb-subtitle text-uppercase body-2">Bars et restaurants</small></span
+                ></v-card-title
+              >
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="6" class="py-0">
+            <v-container fluid class="py-0">
+              <v-row v-for="i in 3" :key="i" class="my-3">
+                <v-col cols="6" class="py-0 px-1">
+                  <v-img
+                    :aspect-ratio="16 / 9"
+                    src="https://picsum.photos/350/150"
+                    position="top center"
+                    class="rounded"
+                  ></v-img>
+                </v-col>
+                <v-col cols="6" class="py-0 px-1">
+                  <p class="post-thumb-subtitle my-0 py-0 text-uppercase body-2">Bars et restaurants</p>
+                  <p class="post-thumb-title mt-1 py-0 body-1">Le TOM Café et son petit dernier le TOM snack !</p>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-col>
+        </v-row>
+      </v-container>
+      <div class="text-center my-3">
+        <nuxt-link to="/articles" class="text-button">Tous nos articles</nuxt-link>
+      </div>
+    </v-sheet>
+
+    <v-sheet class="green lighten-5 py-5">
+      <h3 class="text-center headline">Les valeurs de La Chouquette</h3>
+      <v-carousel class="valeurs-carousel" height="250" show-arrows-on-hover hide-delimiter-background interval="3000">
+        <v-carousel-item v-for="valeur in valeurs" :key="valeur.name">
+          <v-sheet height="100%" tile class="transparent">
+            <v-row class="fill-height flex-column" align="center" justify="center">
+              <v-btn fab dark color="green lighten-3" elevation="1">
+                <v-icon>{{ valeur.icon }}</v-icon>
+              </v-btn>
+              <h6 class="text-h5 my-3">{{ valeur.name }}</h6>
+              <p>{{ valeur.description }}</p>
             </v-row>
-          </v-container>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col class="text-center">
-          <nuxt-link to="/articles" class="secondary--text">Tous nos articles</nuxt-link>
-        </v-col>
-      </v-row>
-    </v-container>
+          </v-sheet>
+        </v-carousel-item>
+      </v-carousel>
+    </v-sheet>
+
+    <v-sheet class="pt-5">
+      <h3 class="text-center headline pb-3">Nos derniers tops</h3>
+      <div class="d-flex align-start overflow-auto pr-4">
+        <v-card v-for="i in 3" :key="i" class="ml-4 text-center">
+          <v-img
+            src="https://picsum.photos/175/175"
+            class="white--text align-center text-center"
+            gradient="to bottom, rgba(0,0,0,.2), rgba(0,0,0,.6)"
+            :aspect-ratio="4 / 3"
+            width="60vw"
+          >
+            <v-card-title class="justify-center">Mon titre</v-card-title>
+          </v-img>
+        </v-card>
+      </div>
+      <div class="text-center mt-5">
+        <nuxt-link to="/tops" class="text-button">Tous les tops</nuxt-link>
+      </div>
+    </v-sheet>
+
+    <v-sheet class="py-3">
+      <h3 class="text-center headline">Nos Chouquettisés</h3>
+      <p class="text-center text-subtitle-2 px-4">
+        Donec ut djafdlasf. fjadlséfjasdélfj . adlsfkjadélsfkj élasdfkjaésdfljk. fadlsféjasdf
+      </p>
+      <div class="d-flex align-start overflow-auto pr-4">
+        <v-card v-for="i in 3" :key="i" class="ml-4 transparent" flat tile hover>
+          <v-img src="https://picsum.photos/175/175" class="rounded" :aspect-ratio="4 / 3" width="60vw"></v-img>
+          <v-card-title class="text-h6 font-weight-bold px-1 py-2">Le Musée Olympique</v-card-title>
+        </v-card>
+      </div>
+      <div class="text-center mt-5">
+        <nuxt-link to="/tops" class="text-button">Tous nos Chouquettisés</nuxt-link>
+      </div>
+    </v-sheet>
   </div>
 </template>
 
@@ -96,7 +147,17 @@ export default {
     }
   },
   data() {
-    return {}
+    return {
+      valeurs: [
+        { name: "L'écologie", description: 'Blablabla ljfalsdf lasdfkj lasdfkjalsdfj', icon: 'mdi-leaf' },
+        { name: 'Le local', description: 'Blablabla ljfalsdf lasdfkj lasdfkjalsdfj', icon: 'mdi-map-marker-circle' },
+        {
+          name: 'Le solidaire',
+          description: 'Blablabla ljfalsdf lasdfkj lasdfkjalsdfj',
+          icon: 'mdi-handshake-outline',
+        },
+      ],
+    }
   },
   async fetch() {
     try {
@@ -161,7 +222,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .header {
   background: url('https://cdn.vuetifyjs.com/images/cards/docks.jpg') no-repeat center center fixed;
   background-size: cover;
@@ -170,10 +231,19 @@ export default {
   background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 100%);
 }
 
+h3.headline {
+  font-weight: bold;
+  margin: 1rem 0;
+}
+
 .post-thumb-title {
   line-height: 1.5rem;
 }
 .post-thumb-subtitle {
   color: $chouquette-grey;
+}
+
+.valeurs-carousel .v-btn.v-btn--icon {
+  color: $black;
 }
 </style>

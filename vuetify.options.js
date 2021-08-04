@@ -11,12 +11,12 @@ export default {
     themes: {
       light: {
         primary: '#F8EF28',
-        secondary: '#000000',
+        secondary: '#D7D7D7',
         anchor: '#000000',
       },
       dark: {
-        primary: '#FFFFFF',
-        secondary: '#D7D7D7',
+        primary: '#000000',
+        secondary: '#727272',
       },
     },
   },
