@@ -9,7 +9,7 @@
       </v-list-item>
     </v-navigation-drawer>
 
-    <v-app-bar fixed dark app class="app-bar">
+    <v-app-bar fixed dark app>
       <v-app-bar-nav-icon class="hidden-xs-only primary--text" @click="drawer = !drawer"></v-app-bar-nav-icon>
 
       <v-app-bar-title><h1 class="app-bar-title text-h5 primary--text">La Chouquette</h1></v-app-bar-title>
@@ -24,34 +24,13 @@
     <!-- Sizes your content based upon application components -->
     <v-main class="overflow-y-auto">
       <!-- Provides the application the proper gutter -->
-      <v-container fluid class="min-vh-100">
+      <v-container fluid class="main-container d-flex">
         <nuxt></nuxt>
-        <v-card flat tile class="text-center">
-          <v-card-text>
-            <v-btn class="mx-4" icon>
-              <v-icon size="24px">mdi-facebook</v-icon>
-            </v-btn>
-            <v-btn class="mx-4" icon>
-              <v-icon size="24px">mdi-instagram</v-icon>
-            </v-btn>
-          </v-card-text>
-
-          <v-card-text class="pt-0">
-            Phasellus feugiat arcu sapien, et iaculis ipsum elementum sit amet. Mauris cursus commodo interdum. Praesent
-            ut risus eget metus luctus accumsan id ultrices nunc. Sed at orci sed massa consectetur dignissim a sit amet
-            dui. Duis commodo vitae velit et faucibus. Morbi vehicula lacinia malesuada. Nulla placerat augue vel ipsum
-            ultrices, cursus iaculis dui sollicitudin. Vestibulum eu ipsum vel diam elementum tempor vel ut orci. Orci
-            varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-          </v-card-text>
-
-          <v-divider></v-divider>
-
-          <v-card-text class=""> {{ new Date().getFullYear() }} — <strong>Vuetify</strong> </v-card-text>
-        </v-card>
+        <CqFooter class="align-self-end"></CqFooter>
       </v-container>
     </v-main>
 
-    <v-bottom-navigation v-model="navigation" dark fixed app>
+    <v-bottom-navigation v-model="navigation" dark fixed app class="bottom-navigation">
       <v-btn>
         <span>Accueil</span>
         <v-icon>mdi-home</v-icon>
@@ -86,9 +65,10 @@
 <script>
 import CookieConsent from 'vue-cookieconsent-component'
 import isbot from 'isbot'
+import CqFooter from '~/components/CqFooter'
 
 export default {
-  components: { CookieConsent },
+  components: { CqFooter, CookieConsent },
   async middleware({ store }) {
     if (process.client) {
       await store.dispatch('nuxtServerInit')
@@ -116,7 +96,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-button.v-btn.v-btn--active.v-btn--is-elevated.v-btn--has-bg.theme--dark.v-size--default {
+.container.main-container {
+  padding: 0;
+  min-height: 100vh;
+}
+
+.bottom-navigation > button.v-btn.v-btn--active {
   color: $chouquette-yellow;
 }
 </style>
