@@ -24,13 +24,13 @@
     <!-- Sizes your content based upon application components -->
     <v-main class="overflow-y-auto">
       <!-- Provides the application the proper gutter -->
-      <v-container fluid class="main-container d-flex flex-column">
+      <v-container fluid class="pa-0 min-vh-100 d-flex flex-column">
         <nuxt></nuxt>
         <CqFooter class="mt-auto"></CqFooter>
       </v-container>
     </v-main>
 
-    <v-bottom-navigation v-model="navigation" dark fixed app class="bottom-navigation">
+    <v-bottom-navigation v-model="navigation" dark fixed app color="primary">
       <v-btn>
         <span>Accueil</span>
         <v-icon>mdi-home</v-icon>
@@ -95,13 +95,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.container.main-container {
-  padding: 0;
-  min-height: 100vh;
-}
-
-.bottom-navigation > button.v-btn.v-btn--active {
-  color: $chouquette-yellow;
-}
-</style>
+<style lang="scss" scoped></style>
