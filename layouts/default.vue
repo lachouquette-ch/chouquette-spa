@@ -24,9 +24,9 @@
     <!-- Sizes your content based upon application components -->
     <v-main class="overflow-y-auto">
       <!-- Provides the application the proper gutter -->
-      <v-container fluid class="main-container d-flex">
+      <v-container fluid class="main-container d-flex flex-column">
         <nuxt></nuxt>
-        <CqFooter class="align-self-end"></CqFooter>
+        <CqFooter class="mt-auto"></CqFooter>
       </v-container>
     </v-main>
 
