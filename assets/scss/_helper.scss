@@ -1,0 +1,16 @@
+.cq-scroll-x-container {
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 10px;
+  display: flex;
+  padding-bottom: 1.25rem;
+  margin: 0 1rem;
+
+  > * {
+    scroll-snap-align: start;
+
+    &:not(:last-child) {
+      margin-right: 1rem;
+    }
+  }
+}

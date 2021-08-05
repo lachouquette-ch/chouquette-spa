@@ -4,4 +4,9 @@
 $body-font-family: $font-family-base;
 $font-size-root: 14px;
 
+// Hack carousel btn
+.v-carousel__controls .v-btn.v-btn--icon {
+  color: $black;
+}
+
 @import '~vuetify/src/styles/styles.sass';

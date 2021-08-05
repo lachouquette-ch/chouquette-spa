@@ -78,18 +78,18 @@
 
     <v-sheet class="pt-5">
       <h3 class="text-center headline pb-3">Nos derniers tops</h3>
-      <div class="d-flex align-start overflow-auto pr-4">
-        <v-card v-for="i in 3" :key="i" class="ml-4 text-center">
-          <v-img
-            src="https://picsum.photos/175/175"
-            class="white--text align-center text-center"
-            gradient="to bottom, rgba(0,0,0,.2), rgba(0,0,0,.6)"
-            :aspect-ratio="4 / 3"
-            width="60vw"
-          >
-            <v-card-title class="justify-center">Mon titre</v-card-title>
-          </v-img>
-        </v-card>
+      <div class="cq-scroll-x-container">
+        <v-img
+          v-for="i in 3"
+          :key="i"
+          src="https://picsum.photos/175/175"
+          class="rounded white--text align-center text-center"
+          gradient="to bottom, rgba(0,0,0,.2), rgba(0,0,0,.6)"
+          :aspect-ratio="4 / 3"
+          width="60vw"
+        >
+          <v-card-title class="justify-center">Mon titre</v-card-title>
+        </v-img>
       </div>
       <div class="text-center mt-5">
         <nuxt-link to="/tops" class="text-button">Tous les tops</nuxt-link>
@@ -99,12 +99,13 @@
     <v-sheet class="py-3">
       <h3 class="text-center headline">Nos Chouquettisés</h3>
       <p class="text-center text-subtitle-2 px-4">
-        Donec ut djafdlasf. fjadlséfjasdélfj . adlsfkjadélsfkj élasdfkjaésdfljk. fadlsféjasdf
+        Ce sont les adresses testées et approuvées par la Chouquette. Ils sont membres de notre label : Chouquettisés et
+        partagent ainsi les mêmes valeurs que les nôtres.
       </p>
-      <div class="d-flex align-start overflow-auto pr-4">
-        <v-card v-for="i in 3" :key="i" class="ml-4 transparent" flat tile hover>
+      <div class="cq-scroll-x-container">
+        <v-card v-for="i in 3" :key="i" class="transparent" flat tile hover>
           <v-img src="https://picsum.photos/175/175" class="rounded" :aspect-ratio="4 / 3" width="60vw"></v-img>
-          <v-card-title class="text-h6 font-weight-bold px-1 py-2">Le Musée Olympique</v-card-title>
+          <v-card-title class="text-h6 font-weight-bold pa-0 mt-1">Le Musée Olympique</v-card-title>
         </v-card>
       </div>
       <div class="text-center mt-5">
@@ -222,7 +223,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .header {
   background: url('https://cdn.vuetifyjs.com/images/cards/docks.jpg') no-repeat center center fixed;
   background-size: cover;
@@ -241,9 +242,5 @@ h3.headline {
 }
 .post-thumb-subtitle {
   color: $chouquette-grey;
-}
-
-.valeurs-carousel .v-btn.v-btn--icon {
-  color: $black;
 }
 </style>
