@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-model="displayDrawer" app>
+    <v-navigation-drawer v-if="!$vuetify.breakpoint.mobile" v-model="toggleMenu" temporary app>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="text-h6"> Application </v-list-item-title>
@@ -10,7 +10,7 @@
     </v-navigation-drawer>
 
     <v-app-bar fixed dark app>
-      <v-app-bar-nav-icon class="hidden-xs-only primary--text" @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon class="hidden-xs-only primary--text" @click="toggleMenu = !toggleMenu"></v-app-bar-nav-icon>
 
       <v-app-bar-title><h1 class="app-bar-title text-h5 primary--text">La Chouquette</h1></v-app-bar-title>
 
@@ -30,7 +30,7 @@
       </v-container>
     </v-main>
 
-    <v-bottom-navigation v-model="navigation" dark fixed app color="primary">
+    <v-bottom-navigation v-model="selectedNav" dark fixed app color="primary">
       <v-btn>
         <span>Accueil</span>
         <v-icon>mdi-home</v-icon>
@@ -77,8 +77,8 @@ export default {
   data() {
     return {
       showCookieConsent: false,
-      drawer: null,
-      navigation: undefined,
+      toggleMenu: false,
+      selectedNav: undefined,
     }
   },
   computed: {

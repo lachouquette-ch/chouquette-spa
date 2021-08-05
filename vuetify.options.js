@@ -1,7 +1,9 @@
 import fr from 'vuetify/lib/locale/fr'
 
 export default {
-  breakpoint: {},
+  breakpoint: {
+    mobileBreakpoint: 'xs', // This is equivalent to a value of 960
+  },
   icons: {},
   lang: {
     locales: { fr },
