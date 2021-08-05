@@ -5,12 +5,26 @@
         <v-container fluid>
           <v-row>
             <v-col>
-              <h2 class="text-h5">Trouve les meilleures adresses écoresponsables et locals</h2>
+              <h2 class="text-h5">Trouve les meilleures adresses écoresponsables et locales</h2>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12" md="6">
-              <v-select label="Où veux-tu aller ?" hide-details solo dense color="black" item-color="black"></v-select>
+              <v-select
+                label="Où veux-tu aller ?"
+                hide-details
+                solo
+                dense
+                color="black"
+                item-color="black"
+                item-value="id"
+                item-text="name"
+                :items="locations"
+              >
+                <template slot="item" slot-scope="data">
+                  <span :class="data.item.level ? 'pl-2' : 'font-weight-bold'">{{ data.item.name }}</span>
+                </template>
+              </v-select>
             </v-col>
             <v-col cols="12" md="6" class="py-0">
               <v-btn block elevation="3" color="primary" class="black--text">Rechercher</v-btn>
@@ -149,6 +163,7 @@ export default {
   },
   data() {
     return {
+      locations: [],
       valeurs: [
         { name: "L'écologie", description: 'Blablabla ljfalsdf lasdfkj lasdfkjalsdfj', icon: 'mdi-leaf' },
         { name: 'Le local', description: 'Blablabla ljfalsdf lasdfkj lasdfkjalsdfj', icon: 'mdi-map-marker-circle' },
@@ -192,6 +207,9 @@ export default {
       categories: (state) => state.menus.headerCategories,
     }),
     ...mapState(['name', 'description', 'wordpressUrl']),
+  },
+  async created() {
+    this.locations = await this.$store.dispatch('locations/flatLocations')
   },
   head() {
     return {
