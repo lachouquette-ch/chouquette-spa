@@ -10,15 +10,38 @@
     </v-navigation-drawer>
 
     <v-app-bar fixed dark app>
-      <v-app-bar-nav-icon class="hidden-xs-only primary--text" @click="toggleMenu = !toggleMenu"></v-app-bar-nav-icon>
+      <template v-if="!toggleSearch">
+        <v-app-bar-nav-icon
+          v-if="!$vuetify.breakpoint.mobile"
+          class="primary--text"
+          @click="toggleMenu = !toggleMenu"
+        ></v-app-bar-nav-icon>
 
-      <v-app-bar-title><h1 class="app-bar-title text-h5 primary--text">La Chouquette</h1></v-app-bar-title>
+        <v-app-bar-title><h1 class="app-bar-title text-h5 primary--text">La Chouquette</h1></v-app-bar-title>
 
-      <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
 
-      <v-btn icon class="primary--text">
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
+        <v-btn icon class="primary--text" @click="toggleSearch = true">
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+      </template>
+      <template v-else>
+        <v-text-field
+          v-model="search"
+          placeholder="Je cherche..."
+          solo
+          autofocus
+          prepend-icon="mdi-close"
+          append-outer-icon="mdi-send"
+          clear-icon="mdi-close-circle-outline"
+          rounded
+          clearable
+          hide-details
+          flat
+          class="w-100"
+          @click:prepend="toggleSearch = false"
+        ></v-text-field>
+      </template>
     </v-app-bar>
 
     <!-- Sizes your content based upon application components -->
@@ -77,7 +100,11 @@ export default {
   data() {
     return {
       showCookieConsent: false,
+
       toggleMenu: false,
+      toggleSearch: false,
+      search: null,
+
       selectedNav: undefined,
     }
   },
