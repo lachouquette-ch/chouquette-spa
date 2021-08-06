@@ -5,6 +5,13 @@ export const state = () => ({
   topLevels: {},
 })
 
+export const getters = {
+  getById: (state) => (id) => {
+    console.log(id)
+    return state.all[id]
+  },
+}
+
 export const actions = {
   init({ state, commit, dispatch }, categories) {
     commit('SET_CATEGORIES', categories)

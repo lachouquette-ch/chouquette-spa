@@ -22,7 +22,8 @@
                 :items="locations"
               >
                 <template slot="item" slot-scope="data">
-                  <span :class="data.item.level ? 'pl-2' : 'font-weight-bold'">{{ data.item.name }}</span>
+                  <span v-if="data.item.level === 0" class="font-weight-bold">{{ data.item.name }} (canton)</span>
+                  <span v-else class="pl-2">{{ data.item.name }}</span>
                 </template>
               </v-select>
             </v-col>
@@ -36,37 +37,63 @@
     <v-sheet>
       <h3 class="text-center headline my-0 py-5">En ce moment</h3>
       <v-container>
-        <v-row>
-          <v-col cols="12" md="6" class="py-0">
-            <v-card class="post-thumb mx-auto mb-3" max-width="350" flat tile>
-              <v-img height="250" src="https://picsum.photos/350/250" class="rounded"></v-img>
-              <v-card-title class="post-thumb-title mt-2 py-0 text-h6"
-                ><span
-                  >Le TOM Café et son petit dernier le TOM snack !
-                  <small class="ml-3 post-thumb-subtitle text-uppercase body-2">Bars et restaurants</small></span
-                ></v-card-title
-              >
-            </v-card>
-          </v-col>
-          <v-col cols="12" md="6" class="py-0">
-            <v-container fluid class="py-0">
-              <v-row v-for="i in 3" :key="i" class="my-3">
-                <v-col cols="6" class="py-0 px-1">
-                  <v-img
-                    :aspect-ratio="16 / 9"
-                    src="https://picsum.photos/350/150"
-                    position="top center"
-                    class="rounded"
-                  ></v-img>
-                </v-col>
-                <v-col cols="6" class="py-0 px-1">
-                  <p class="post-thumb-subtitle my-0 py-0 text-uppercase body-2">Bars et restaurants</p>
-                  <p class="post-thumb-title mt-1 py-0 body-1">Le TOM Café et son petit dernier le TOM snack !</p>
-                </v-col>
-              </v-row>
-            </v-container>
-          </v-col>
-        </v-row>
+        <template v-if="$fetchState.pending">
+          <v-row>
+            <v-col cols="12" md="6" class="py-0">
+              <v-skeleton-loader
+                v-for="i in 3"
+                :key="i"
+                class="mx-auto mb-3"
+                elevation="1"
+                max-width="350"
+                type="card"
+              ></v-skeleton-loader>
+            </v-col>
+          </v-row>
+        </template>
+        <template v-else>
+          <v-row>
+            <v-col cols="12" md="6" class="py-0">
+              <v-card class="post-thumb mx-auto mb-3" max-width="350" flat tile>
+                <WpMediaNew
+                  :media="highlightedPost.image"
+                  size="medium_large"
+                  height="250"
+                  class="rounded"
+                ></WpMediaNew>
+                <v-card-title class="post-thumb-title mt-2 py-0 text-h6"
+                  ><span class="text-break"
+                    >{{ highlightedPost.title }}
+                    <small class="ml-3 post-thumb-subtitle text-uppercase body-2">{{
+                      getCategoryById(highlightedPost.categoryId).name
+                    }}</small>
+                  </span></v-card-title
+                >
+              </v-card>
+            </v-col>
+            <v-col cols="12" md="6" class="py-0">
+              <v-container fluid class="py-0">
+                <v-row v-for="post in otherPosts" :key="post.id" class="my-3">
+                  <v-col cols="6" class="py-0 px-1">
+                    <WpMediaNew
+                      :media="post.image"
+                      size="medium"
+                      :aspect-ratio="16 / 9"
+                      position="top center"
+                      class="rounded"
+                    ></WpMediaNew>
+                  </v-col>
+                  <v-col cols="6" class="py-0 px-1">
+                    <p class="post-thumb-subtitle my-0 py-0 text-uppercase body-2 text-truncate">
+                      {{ getCategoryById(post.categoryId).name }}
+                    </p>
+                    <p class="post-thumb-title mt-1 py-0 body-1 text-break">{{ post.title }}</p>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-col>
+          </v-row>
+        </template>
       </v-container>
       <div class="text-center my-3">
         <nuxt-link to="/articles" class="text-button">Tous nos articles</nuxt-link>
@@ -93,17 +120,18 @@
     <v-sheet class="pt-5">
       <h3 class="text-center headline pb-3">Nos derniers tops</h3>
       <div class="cq-scroll-x-container">
-        <v-img
-          v-for="i in 3"
-          :key="i"
-          src="https://picsum.photos/175/175"
+        <WpMediaNew
+          v-for="post in topPosts"
+          :key="post.id"
+          :media="post.image"
+          size="medium_large"
           class="rounded white--text align-center text-center"
-          gradient="to bottom, rgba(0,0,0,.2), rgba(0,0,0,.6)"
+          gradient="to bottom, rgba(0,0,0,.3), rgba(0,0,0,.6)"
           :aspect-ratio="4 / 3"
           width="60vw"
         >
-          <v-card-title class="justify-center">Mon titre</v-card-title>
-        </v-img>
+          <v-card-title class="justify-center text-break">{{ post.title }}</v-card-title>
+        </WpMediaNew>
       </div>
       <div class="text-center mt-5">
         <nuxt-link to="/tops" class="text-button">Tous les tops</nuxt-link>
@@ -131,15 +159,17 @@
 
 <script>
 import gql from 'graphql-tag'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
 import { seo as SeoFragments } from '@/apollo/fragments/seo'
 
 import seo from '~/mixins/seo'
 import graphql from '~/mixins/graphql'
+import WpMediaNew from '~/components/WpMediaNew'
 
 export default {
+  components: { WpMediaNew },
   mixins: [seo, graphql],
   async asyncData({ app }) {
     const yoast = await app.apolloProvider.defaultClient
@@ -164,6 +194,9 @@ export default {
   data() {
     return {
       locations: [],
+      latestPosts: [],
+      topPosts: [],
+
       valeurs: [
         { name: "L'écologie", description: 'Blablabla ljfalsdf lasdfkj lasdfkjalsdfj', icon: 'mdi-leaf' },
         { name: 'Le local', description: 'Blablabla ljfalsdf lasdfkj lasdfkjalsdfj', icon: 'mdi-map-marker-circle' },
@@ -203,10 +236,20 @@ export default {
   },
   fetchOnServer: false,
   computed: {
+    ...mapState(['name', 'description', 'wordpressUrl']),
     ...mapState({
       categories: (state) => state.menus.headerCategories,
     }),
-    ...mapState(['name', 'description', 'wordpressUrl']),
+    ...mapGetters({
+      getCategoryById: 'categories/getById',
+    }),
+    highlightedPost() {
+      return this.latestPosts[0]
+    },
+    otherPosts() {
+      // TODO latestPosts should only retrieve 4 posts
+      return this.latestPosts.slice(1, 4)
+    },
   },
   async created() {
     this.locations = await this.$store.dispatch('locations/flatLocations')
