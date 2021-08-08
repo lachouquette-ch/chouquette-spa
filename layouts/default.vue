@@ -25,8 +25,9 @@
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
       </template>
-      <template v-else>
+      <transition name="fade">
         <v-text-field
+          v-if="toggleSearch"
           v-model="search"
           placeholder="Je cherche..."
           solo
@@ -41,7 +42,7 @@
           class="w-100"
           @click:prepend="toggleSearch = false"
         ></v-text-field>
-      </template>
+      </transition>
     </v-app-bar>
 
     <!-- Sizes your content based upon application components -->
@@ -122,4 +123,12 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.fade-enter-active {
+  transition: opacity 1s;
+}
+.fade-enter,
+.fade-leave {
+  opacity: 0;
+}
+</style>

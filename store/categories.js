@@ -7,7 +7,6 @@ export const state = () => ({
 
 export const getters = {
   getById: (state) => (id) => {
-    console.log(id)
     return state.all[id]
   },
 }
