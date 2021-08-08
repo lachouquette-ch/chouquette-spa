@@ -30,12 +30,14 @@ spec:
             httpGet:
               path: /
               port: container-port
+            timeoutSeconds: 5
             failureThreshold: 8
             periodSeconds: 15
           readinessProbe:
             httpGet:
               path: /health
               port: container-port
+            timeoutSeconds: 3
             failureThreshold: 3
             periodSeconds: 10
           envFrom:
