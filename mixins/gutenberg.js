@@ -28,25 +28,25 @@ export default {
     $script(
       [
         /* DO NOT LOAD JQUERY SINCE ALREADY LOADED BY PROJECT */
-        // 'https://wordpress.jcloud-ver-jpc.ik-server.com/wp-includes/js/jquery/jquery.min.js?ver=3.5.1',
-        // 'https://wordpress.jcloud-ver-jpc.ik-server.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2',
+        // 'https://wordpress.lachouquette.ch/wp-includes/js/jquery/jquery.min.js?ver=3.5.1',
+        // 'https://wordpress.lachouquette.ch/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2',
 
-        'https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-includes/js/jquery/ui/core.min.js?ver=1.12.1',
-        'https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-includes/js/jquery/ui/tabs.min.js?ver=1.12.1',
+        'https://wordpress.lachouquette.ch/wp-includes/js/jquery/ui/core.min.js?ver=1.12.1',
+        'https://wordpress.lachouquette.ch/wp-includes/js/jquery/ui/tabs.min.js?ver=1.12.1',
       ],
       'jquery-ui'
     )
 
     $script(
       [
-        'https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-includes/js/wp-emoji-release.min.js?ver=5.7.2',
-        'https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-includes/js/wp-embed.min.js?ver=5.7.2',
+        'https://wordpress.lachouquette.ch/wp-includes/js/wp-emoji-release.min.js?ver=5.7.2',
+        'https://wordpress.lachouquette.ch/wp-includes/js/wp-embed.min.js?ver=5.7.2',
 
-        'https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-content/plugins/advanced-gutenberg/assets/js/jquery.colorbox.min.js?ver=2.8.0',
-        'https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-content/plugins/advanced-gutenberg/assets/js/gallery.colorbox.init.js?ver=2.8.0',
-        'https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-content/plugins/advanced-gutenberg/assets/blocks/summary/summaryMinimized.js?ver=5.7.2',
-        'https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-content/plugins/advanced-gutenberg/assets/blocks/advtabs/frontend.js?ver=2.8.0',
-        'https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-content/plugins/advanced-gutenberg/assets/js/slick.min.js?ver=2.8.0',
+        'https://wordpress.lachouquette.ch/wp-content/plugins/advanced-gutenberg/assets/js/jquery.colorbox.min.js?ver=2.8.0',
+        'https://wordpress.lachouquette.ch/wp-content/plugins/advanced-gutenberg/assets/js/gallery.colorbox.init.js?ver=2.8.0',
+        'https://wordpress.lachouquette.ch/wp-content/plugins/advanced-gutenberg/assets/blocks/summary/summaryMinimized.js?ver=5.7.2',
+        'https://wordpress.lachouquette.ch/wp-content/plugins/advanced-gutenberg/assets/blocks/advtabs/frontend.js?ver=2.8.0',
+        'https://wordpress.lachouquette.ch/wp-content/plugins/advanced-gutenberg/assets/js/slick.min.js?ver=2.8.0',
 
         '//www.instagram.com/embed.js',
       ],
@@ -75,27 +75,23 @@ export default {
       }
 
       return [
+        addStylesheet('https://wordpress.lachouquette.ch/wp-includes/css/dist/block-library/style.min.css?ver=5.7.2'),
+        addStylesheet('https://wordpress.lachouquette.ch/wp-includes/css/dist/block-library/theme.min.css?ver=5.7.2'),
+        addStylesheet('https://wordpress.lachouquette.ch/wp-includes/css/dashicons.min.css?ver=5.7.2'),
         addStylesheet(
-          'https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-includes/css/dist/block-library/style.min.css?ver=5.7.2'
+          'https://wordpress.lachouquette.ch/wp-content/plugins/advanced-gutenberg/assets/css/blocks.css?ver=2.8.0'
         ),
         addStylesheet(
-          'https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-includes/css/dist/block-library/theme.min.css?ver=5.7.2'
-        ),
-        addStylesheet('https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-includes/css/dashicons.min.css?ver=5.7.2'),
-        addStylesheet(
-          'https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-content/plugins/advanced-gutenberg/assets/css/blocks.css?ver=2.8.0'
+          'https://wordpress.lachouquette.ch/wp-content/plugins/advanced-gutenberg/assets/css/fonts/material-icons.min.css?ver=5.7.2'
         ),
         addStylesheet(
-          'https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-content/plugins/advanced-gutenberg/assets/css/fonts/material-icons.min.css?ver=5.7.2'
+          'https://wordpress.lachouquette.ch/wp-content/plugins/advanced-gutenberg/assets/css/colorbox.css?ver=2.8.0'
         ),
         addStylesheet(
-          'https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-content/plugins/advanced-gutenberg/assets/css/colorbox.css?ver=2.8.0'
+          'https://wordpress.lachouquette.ch/wp-content/plugins/advanced-gutenberg/assets/css/slick.css?ver=5.7.2'
         ),
         addStylesheet(
-          'https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-content/plugins/advanced-gutenberg/assets/css/slick.css?ver=5.7.2'
-        ),
-        addStylesheet(
-          'https://cq-wordpress.jcloud-ver-jpc.ik-server.com/wp-content/plugins/advanced-gutenberg/assets/css/slick-theme.css?ver=5.7.2'
+          'https://wordpress.lachouquette.ch/wp-content/plugins/advanced-gutenberg/assets/css/slick-theme.css?ver=5.7.2'
         ),
       ]
     },
