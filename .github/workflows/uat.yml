@@ -2,7 +2,7 @@ name: UAT - Continuous Deployment
 on:
   push:
     branches:
-      - api-gateway
+      - uat
 jobs:
   update-uat:
     runs-on: ubuntu-latest
