@@ -26,18 +26,20 @@ spec:
           ports:
             - name: container-port
               containerPort: 3000
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: container-port
-            failureThreshold: 3
-            periodSeconds: 15
           startupProbe:
             httpGet:
               path: /
               port: container-port
-            failureThreshold: 12
-            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 8
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: container-port
+            timeoutSeconds: 3
+            failureThreshold: 3
+            periodSeconds: 10
           envFrom:
             - configMapRef:
                 name: chouquette-spa-uat
