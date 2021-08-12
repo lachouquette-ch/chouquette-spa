@@ -1,101 +1,113 @@
 <template>
   <div>
-    <div class="header text-center white--text">
-      <v-form class="header-form pa-5">
-        <v-container fluid>
-          <v-row>
-            <v-col>
-              <h2 class="text-h5">Trouve les meilleures adresses écoresponsables et locales</h2>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12" md="6">
-              <v-select
-                label="Où veux-tu aller ?"
-                hide-details
-                solo
-                dense
-                color="black"
-                item-color="black"
-                item-value="id"
-                item-text="name"
-                :items="locations"
-              >
-                <template slot="item" slot-scope="data">
-                  <span v-if="data.item.level === 0" class="font-weight-bold">{{ data.item.name }} (canton)</span>
-                  <span v-else class="pl-2">{{ data.item.name }}</span>
-                </template>
-              </v-select>
-            </v-col>
-            <v-col cols="12" md="6" class="py-0">
-              <v-btn block elevation="3" color="primary" class="black--text">Rechercher</v-btn>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-form>
-    </div>
+    <v-card flat>
+      <v-img
+        src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+        gradient="to bottom, rgba(0,0,0,.6), rgba(0,0,0,.3)"
+        class="rounded-0 align-center text-center"
+        height="300"
+      >
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col>
+                <h2 class="text-h5 white--text">Trouve les meilleures adresses écoresponsables et locales</h2>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-select
+                  label="Où veux-tu aller ?"
+                  hide-details
+                  solo
+                  dense
+                  color="black"
+                  item-color="black"
+                  item-value="id"
+                  item-text="name"
+                  :items="locations"
+                >
+                  <template slot="item" slot-scope="data">
+                    <span v-if="data.item.level === 0" class="font-weight-bold">{{ data.item.name }} (canton)</span>
+                    <span v-else class="pl-2">{{ data.item.name }}</span>
+                  </template>
+                </v-select>
+              </v-col>
+              <v-col cols="12" md="6" class="pt-0">
+                <v-btn block elevation="3" color="primary" class="black--text">Rechercher</v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+      </v-img>
+    </v-card>
     <v-sheet>
       <h3 class="text-center headline my-0 py-5">En ce moment</h3>
       <v-container>
-        <template v-if="$fetchState.pending">
-          <v-row>
-            <v-col cols="12" md="6" class="py-0">
+        <v-row>
+          <v-col cols="12" md="6" class="py-0">
+            <v-skeleton-loader
+              v-if="$fetchState.pending"
+              class="mx-auto mb-3"
+              elevation="1"
+              max-width="350"
+              type="card"
+            ></v-skeleton-loader>
+            <v-card v-else class="post-thumb mx-auto mb-3" max-width="350" flat tile>
+              <WpMediaNew
+                :media="highlightedPost.image"
+                size="medium_large"
+                width="100%"
+                :aspect-ratio="1 / 1"
+                class="rounded"
+              ></WpMediaNew>
+              <v-card-title class="post-thumb-title mt-2 pa-0 text-h6"
+                ><span class="text-break"
+                  >{{ highlightedPost.title }}
+                  <small class="post-thumb-subtitle text-uppercase body-2">{{
+                    getCategoryById(highlightedPost.categoryId).name
+                  }}</small>
+                </span></v-card-title
+              >
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="6" class="py-0">
+            <template v-if="$fetchState.pending">
               <v-skeleton-loader
                 v-for="i in 3"
                 :key="i"
-                class="mx-auto mb-3"
+                class="mb-3"
                 elevation="1"
-                max-width="350"
-                type="card"
+                type="list-item-avatar-three-line"
               ></v-skeleton-loader>
-            </v-col>
-          </v-row>
-        </template>
-        <template v-else>
-          <v-row>
-            <v-col cols="12" md="6" class="py-0">
-              <v-card class="post-thumb mx-auto mb-3" max-width="350" flat tile>
-                <WpMediaNew
-                  :media="highlightedPost.image"
-                  size="medium_large"
-                  height="250"
-                  class="rounded"
-                ></WpMediaNew>
-                <v-card-title class="post-thumb-title mt-2 py-0 text-h6"
-                  ><span class="text-break"
-                    >{{ highlightedPost.title }}
-                    <small class="ml-3 post-thumb-subtitle text-uppercase body-2">{{
-                      getCategoryById(highlightedPost.categoryId).name
-                    }}</small>
-                  </span></v-card-title
-                >
+            </template>
+            <template v-else>
+              <v-card v-for="post in otherPosts" :key="post.id" dense flat class="mb-3">
+                <v-container class="pa-0">
+                  <v-row no-gutters>
+                    <v-col cols="4">
+                      <WpMediaNew
+                        :media="post.image"
+                        size="thumbnail"
+                        :aspect-ratio="1 / 1"
+                        position="top center"
+                        class="rounded"
+                      ></WpMediaNew>
+                    </v-col>
+                    <v-col cols="8" class="px-2">
+                      <p class="post-thumb-subtitle my-0 py-0 text-uppercase body-2 text-truncate">
+                        {{ getCategoryById(post.categoryId).name }}
+                      </p>
+                      <p class="post-thumb-title mt-1 py-0 body-1 text-break">{{ post.title }}</p>
+                    </v-col>
+                  </v-row>
+                </v-container>
               </v-card>
-            </v-col>
-            <v-col cols="12" md="6" class="py-0">
-              <v-container fluid class="py-0">
-                <v-row v-for="post in otherPosts" :key="post.id" class="my-3">
-                  <v-col cols="6" class="py-0 px-1">
-                    <WpMediaNew
-                      :media="post.image"
-                      size="medium"
-                      :aspect-ratio="16 / 9"
-                      position="top center"
-                      class="rounded"
-                    ></WpMediaNew>
-                  </v-col>
-                  <v-col cols="6" class="py-0 px-1">
-                    <p class="post-thumb-subtitle my-0 py-0 text-uppercase body-2 text-truncate">
-                      {{ getCategoryById(post.categoryId).name }}
-                    </p>
-                    <p class="post-thumb-title mt-1 py-0 body-1 text-break">{{ post.title }}</p>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-col>
-          </v-row>
-        </template>
+            </template>
+          </v-col>
+        </v-row>
       </v-container>
-      <div class="text-center my-3">
+      <div class="text-center mb-3">
         <nuxt-link to="/articles" class="text-button">Tous nos articles</nuxt-link>
       </div>
     </v-sheet>
@@ -120,20 +132,20 @@
     <v-sheet class="pt-5">
       <h3 class="text-center headline pb-3">Nos derniers tops</h3>
       <div class="cq-scroll-x-container">
-        <WpMediaNew
-          v-for="post in topPosts"
-          :key="post.id"
-          :media="post.image"
-          size="medium_large"
-          class="rounded white--text align-center text-center"
-          gradient="to bottom, rgba(0,0,0,.3), rgba(0,0,0,.6)"
-          :aspect-ratio="4 / 3"
-          width="60vw"
-        >
-          <v-card-title class="justify-center text-break">{{ post.title }}</v-card-title>
-        </WpMediaNew>
+        <v-card v-for="post in topPosts" :key="post.id">
+          <WpMediaNew
+            :media="post.image"
+            size="medium_large"
+            class="rounded white--text align-center text-center"
+            gradient="to bottom, rgba(0,0,0,.3), rgba(0,0,0,.6)"
+            :aspect-ratio="1 / 1"
+            width="60vw"
+          >
+            <v-card-title class="justify-center text-break">{{ post.title }}</v-card-title>
+          </WpMediaNew>
+        </v-card>
       </div>
-      <div class="text-center mt-5">
+      <div class="text-center">
         <nuxt-link to="/tops" class="text-button">Tous les tops</nuxt-link>
       </div>
     </v-sheet>
@@ -146,11 +158,11 @@
       </p>
       <div class="cq-scroll-x-container">
         <v-card v-for="i in 3" :key="i" class="transparent" flat tile hover>
-          <v-img src="https://picsum.photos/175/175" class="rounded" :aspect-ratio="4 / 3" width="60vw"></v-img>
+          <v-img src="https://picsum.photos/175/175" class="rounded" :aspect-ratio="1 / 1" width="60vw"></v-img>
           <v-card-title class="text-h6 font-weight-bold pa-0 mt-1">Le Musée Olympique</v-card-title>
         </v-card>
       </div>
-      <div class="text-center mt-5">
+      <div class="text-center">
         <nuxt-link to="/tops" class="text-button">Tous nos Chouquettisés</nuxt-link>
       </div>
     </v-sheet>
@@ -172,23 +184,21 @@ export default {
   components: { WpMediaNew },
   mixins: [seo, graphql],
   async asyncData({ app }) {
-    const yoast = await app.apolloProvider.defaultClient
-      .query({
-        query: gql`
-          query {
-            home {
-              seo {
-                ...SeoFragments
-              }
+    const { data } = await app.apolloProvider.defaultClient.query({
+      query: gql`
+        query {
+          home {
+            seo {
+              ...SeoFragments
             }
           }
-          ${SeoFragments}
-        `,
-      })
-      .then(({ data }) => data.home.seo)
+        }
+        ${SeoFragments}
+      `,
+    })
 
     return {
-      yoast,
+      seo: data.home.seo,
     }
   },
   data() {
@@ -234,7 +244,7 @@ export default {
       this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(e) })
     }
   },
-  fetchOnServer: false,
+  fetchOnServer: true,
   computed: {
     ...mapState(['name', 'description', 'wordpressUrl']),
     ...mapState({
@@ -256,9 +266,9 @@ export default {
   },
   head() {
     return {
-      title: this.yoast.title,
+      title: this.seo.title,
       meta: [
-        ...this.seoMetaProperties(JSON.parse(this.yoast.metadata), true),
+        ...this.seoMetaProperties(JSON.parse(this.seo.metadata), true),
         {
           hid: 'og:image',
           property: 'og:image',
@@ -269,8 +279,8 @@ export default {
         this.jsonLDScript({
           '@context': 'http://schema.org',
           '@type': 'WebPage',
-          name: this.yoast.title,
-          description: this.seoGetDescription(JSON.parse(this.yoast.metadata)),
+          name: this.seo.title,
+          description: this.seoGetDescription(JSON.parse(this.seo.metadata)),
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
@@ -285,14 +295,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.header {
-  background: url('https://cdn.vuetifyjs.com/images/cards/docks.jpg') no-repeat center center fixed;
-  background-size: cover;
-}
-.header-form {
-  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 100%);
-}
-
 h3.headline {
   font-weight: bold;
   margin: 1rem 0;
