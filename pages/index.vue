@@ -53,7 +53,7 @@
               max-width="350"
               type="card"
             ></v-skeleton-loader>
-            <v-card v-else class="post-thumb mx-auto mb-3" max-width="350" flat tile>
+            <v-card v-else class="post-thumb mx-auto mb-3" max-width="350" flat hover ripple>
               <WpMediaNew
                 :media="highlightedPost.image"
                 size="medium_large"
@@ -82,7 +82,7 @@
               ></v-skeleton-loader>
             </template>
             <template v-else>
-              <v-card v-for="post in otherPosts" :key="post.id" dense flat class="mb-3">
+              <v-card v-for="post in otherPosts" :key="post.id" class="mb-3" dense flat hover ripple>
                 <v-container class="pa-0">
                   <v-row no-gutters>
                     <v-col cols="4">
@@ -132,7 +132,7 @@
     <v-sheet class="pt-5">
       <h3 class="text-center headline pb-3">Nos derniers tops</h3>
       <div class="cq-scroll-x-container">
-        <v-card v-for="post in topPosts" :key="post.id">
+        <v-card v-for="post in topPosts" :key="post.id" flat hover ripple>
           <WpMediaNew
             :media="post.image"
             size="medium_large"
@@ -157,7 +157,7 @@
         partagent ainsi les mêmes valeurs que les nôtres.
       </p>
       <div class="cq-scroll-x-container">
-        <v-card v-for="i in 3" :key="i" class="transparent" flat tile hover>
+        <v-card v-for="i in 3" :key="i" class="transparent" flat hover ripple>
           <v-img src="https://picsum.photos/175/175" class="rounded" :aspect-ratio="1 / 1" width="60vw"></v-img>
           <v-card-title class="text-h6 font-weight-bold pa-0 mt-1">Le Musée Olympique</v-card-title>
         </v-card>
@@ -257,8 +257,7 @@ export default {
       return this.latestPosts[0]
     },
     otherPosts() {
-      // TODO latestPosts should only retrieve 4 posts
-      return this.latestPosts.slice(1, 4)
+      return this.latestPosts.slice(1)
     },
   },
   async created() {
