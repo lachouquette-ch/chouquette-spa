@@ -61,14 +61,10 @@
                 :aspect-ratio="1 / 1"
                 class="rounded"
               ></WpMediaNew>
-              <v-card-title class="post-thumb-title mt-2 pa-0 text-h6"
-                ><span class="text-break"
-                  >{{ highlightedPost.title }}
-                  <small class="post-thumb-subtitle text-uppercase body-2">{{
-                    getCategoryById(highlightedPost.categoryId).name
-                  }}</small>
-                </span></v-card-title
-              >
+              <v-card-title class="px-0 pt-1 text-break">{{ highlightedPost.title }}</v-card-title>
+              <v-card-subtitle class="text-uppercase px-0 pb-0">{{
+                getCategoryById(highlightedPost.categoryId).name
+              }}</v-card-subtitle>
             </v-card>
           </v-col>
           <v-col cols="12" md="6" class="py-0">
@@ -82,26 +78,24 @@
               ></v-skeleton-loader>
             </template>
             <template v-else>
-              <v-card v-for="post in otherPosts" :key="post.id" class="mb-3" dense flat hover ripple>
-                <v-container class="pa-0">
-                  <v-row no-gutters>
-                    <v-col cols="4">
-                      <WpMediaNew
-                        :media="post.image"
-                        size="thumbnail"
-                        :aspect-ratio="1 / 1"
-                        position="top center"
-                        class="rounded"
-                      ></WpMediaNew>
-                    </v-col>
-                    <v-col cols="8" class="px-2">
-                      <p class="post-thumb-subtitle my-0 py-0 text-uppercase body-2 text-truncate">
-                        {{ getCategoryById(post.categoryId).name }}
-                      </p>
-                      <p class="post-thumb-title mt-1 py-0 body-1 text-break">{{ post.title }}</p>
-                    </v-col>
-                  </v-row>
-                </v-container>
+              <v-card v-for="post in otherPosts" :key="post.id" class="horizontal-card mb-3 d-flex" dense flat hover ripple>
+                <div>
+                  <WpMediaNew
+                    :media="post.image"
+                    size="thumbnail"
+                    :aspect-ratio="1 / 1"
+                    position="center center"
+                    class="rounded float-left"
+                    width="100"
+                  ></WpMediaNew>
+                </div>
+
+                <div class="px-2">
+                  <h2 class="horizontal-card-title text-h6 text-break">{{ post.title }}</h2>
+                  <small class="horizontal-card-subtitle body-2 text-uppercase text-truncate">
+                    {{ getCategoryById(post.categoryId).name }}
+                  </small>
+                </div>
               </v-card>
             </template>
           </v-col>
@@ -308,10 +302,14 @@ h3.headline {
   margin: 1rem 0;
 }
 
-.post-thumb-title {
+.horizontal-card {
+  max-width: 400px;
+}
+
+.horizontal-card-title {
   line-height: 1.5rem;
 }
-.post-thumb-subtitle {
+.horizontal-card-subtitle {
   color: $chouquette-grey;
 }
 </style>
