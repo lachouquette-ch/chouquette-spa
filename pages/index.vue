@@ -157,9 +157,11 @@
         partagent ainsi les mêmes valeurs que les nôtres.
       </p>
       <div class="cq-scroll-x-container">
-        <v-card v-for="i in 3" :key="i" class="transparent" flat hover ripple>
-          <v-img src="https://picsum.photos/175/175" class="rounded" :aspect-ratio="1 / 1" width="60vw"></v-img>
-          <v-card-title class="text-h6 font-weight-bold pa-0 mt-1">Le Musée Olympique</v-card-title>
+        <v-card v-for="fiche in latestChouquettises" :key="fiche.id" class="transparent" flat hover ripple>
+          <WpMediaNew :media="fiche.image" size="medium_large" class="rounded" :aspect-ratio="1 / 1" width="60vw">
+          </WpMediaNew>
+          <v-card-title class="text-h6 font-weight-bold pt-1 px-0">{{ fiche.title }}</v-card-title>
+          <v-card-subtitle class="px-0 pb-0">{{ getCategoryById(fiche.principalCategoryId).name }}</v-card-subtitle>
         </v-card>
       </div>
       <div class="text-center">
@@ -174,6 +176,7 @@ import gql from 'graphql-tag'
 import { mapState, mapGetters } from 'vuex'
 
 import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
+import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
 import { seo as SeoFragments } from '@/apollo/fragments/seo'
 
 import seo from '~/mixins/seo'
@@ -205,6 +208,7 @@ export default {
     return {
       locations: [],
       latestPosts: [],
+      latestChouquettises: [],
       topPosts: [],
 
       valeurs: [
@@ -227,17 +231,22 @@ export default {
               latestPosts {
                 ...PostCardFragments
               }
+              latestChouquettises {
+                ...FicheFragments
+              }
               topPosts {
                 ...PostCardFragments
               }
             }
           }
           ${PostCardFragments}
+          ${FicheFragments}
         `,
       })
 
-      const { latestPosts, topPosts } = data.home
+      const { latestPosts, latestChouquettises, topPosts } = data.home
       this.latestPosts = latestPosts
+      this.latestChouquettises = latestChouquettises
       this.topPosts = topPosts
     } catch (e) {
       this.$sentry.captureException(e)
