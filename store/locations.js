@@ -12,7 +12,7 @@ export const actions = {
     return [locations, state.hierarchy]
   },
 
-  fetchBySlug({ state }, slug) {
+  getBySlug({ state }, slug) {
     const key = _.findKey(state.all, ({ slug: locationSlug }) => locationSlug === slug)
     if (key) {
       return state.all[key]

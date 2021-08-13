@@ -17,6 +17,7 @@
             <v-row>
               <v-col cols="12" md="6">
                 <v-select
+                  v-model="selectedLocation"
                   label="Où veux-tu aller ?"
                   hide-details
                   solo
@@ -26,7 +27,6 @@
                   item-value="slug"
                   item-text="name"
                   :items="locations"
-                  v-model="selectedLocation"
                 >
                   <template slot="item" slot-scope="data">
                     <span v-if="data.item.level === 0" class="font-weight-bold">{{ data.item.name }} (canton)</span>
@@ -67,8 +67,8 @@
               <WpMediaNew
                 :media="highlightedPost.image"
                 size="medium_large"
+                aspect-ratio="1"
                 width="100%"
-                :aspect-ratio="1 / 1"
                 class="rounded"
               ></WpMediaNew>
               <v-card-title class="px-0 pt-1 text-break">{{ highlightedPost.title }}</v-card-title>
@@ -101,7 +101,7 @@
                   <WpMediaNew
                     :media="post.image"
                     size="thumbnail"
-                    :aspect-ratio="1 / 1"
+                    aspect-ratio="1"
                     position="center center"
                     class="rounded float-left"
                     width="100"
@@ -150,7 +150,7 @@
             size="medium_large"
             class="rounded white--text align-center text-center"
             gradient="to bottom, rgba(0,0,0,.3), rgba(0,0,0,.6)"
-            :aspect-ratio="1 / 1"
+            aspect-ratio="1"
             width="60vw"
           >
             <v-card-title class="justify-center text-break">{{ post.title }}</v-card-title>
@@ -170,8 +170,13 @@
       </p>
       <div class="cq-scroll-x-container">
         <v-card v-for="fiche in latestChouquettises" :key="fiche.id" class="transparent" flat hover ripple>
-          <WpMediaNew :media="fiche.image" size="medium_large" class="rounded" :aspect-ratio="1 / 1" width="60vw">
-          </WpMediaNew>
+          <WpMediaNew
+            :media="fiche.image"
+            size="medium_large"
+            class="rounded"
+            aspect-ratio="1"
+            width="60vw"
+          ></WpMediaNew>
           <v-card-title class="text-h6 font-weight-bold pt-1 px-0">{{ fiche.title }}</v-card-title>
           <v-card-subtitle class="px-0 pb-0">{{ getCategoryById(fiche.principalCategoryId).name }}</v-card-subtitle>
         </v-card>
@@ -198,7 +203,10 @@ import WpMediaNew from '~/components/WpMediaNew'
 export default {
   components: { WpMediaNew },
   mixins: [seo, graphql],
-  async asyncData({ app }) {
+  async asyncData({ store, app }) {
+    // store initialization
+    await store.dispatch('nuxtServerInit')
+
     const { data } = await app.apolloProvider.defaultClient.query({
       query: gql`
         query {
