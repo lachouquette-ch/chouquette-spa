@@ -23,9 +23,10 @@
                   dense
                   color="black"
                   item-color="black"
-                  item-value="id"
+                  item-value="slug"
                   item-text="name"
                   :items="locations"
+                  v-model="selectedLocation"
                 >
                   <template slot="item" slot-scope="data">
                     <span v-if="data.item.level === 0" class="font-weight-bold">{{ data.item.name }} (canton)</span>
@@ -34,7 +35,16 @@
                 </v-select>
               </v-col>
               <v-col cols="12" md="6" class="pt-0">
-                <v-btn block elevation="3" color="primary" class="black--text">Rechercher</v-btn>
+                <v-btn
+                  block
+                  dark
+                  elevation="3"
+                  color="primary"
+                  class="black--text"
+                  :disabled="!selectedLocation"
+                  @click="goToLocation(selectedLocation)"
+                  >Rechercher</v-btn
+                >
               </v-col>
             </v-row>
           </v-container>
@@ -78,7 +88,15 @@
               ></v-skeleton-loader>
             </template>
             <template v-else>
-              <v-card v-for="post in otherPosts" :key="post.id" class="horizontal-card mb-3 d-flex" dense flat hover ripple>
+              <v-card
+                v-for="post in otherPosts"
+                :key="post.id"
+                class="horizontal-card mb-3 d-flex"
+                dense
+                flat
+                hover
+                ripple
+              >
                 <div>
                   <WpMediaNew
                     :media="post.image"
@@ -201,6 +219,7 @@ export default {
   data() {
     return {
       locations: [],
+      selectedLocation: null,
       latestPosts: [],
       latestChouquettises: [],
       topPosts: [],
@@ -248,6 +267,11 @@ export default {
     }
   },
   fetchOnServer: true,
+  methods: {
+    goToLocation(location) {
+      this.$router.push(`/location/${location}`)
+    },
+  },
   computed: {
     ...mapState(['name', 'description', 'wordpressUrl']),
     ...mapState({

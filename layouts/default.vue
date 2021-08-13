@@ -55,17 +55,17 @@
     </v-main>
 
     <v-bottom-navigation v-model="selectedNav" dark fixed app color="primary">
-      <v-btn>
+      <v-btn nuxt to="/">
         <span>Accueil</span>
         <v-icon>mdi-home</v-icon>
       </v-btn>
 
-      <v-btn>
+      <v-btn nuxt to="/fiches">
         <span>Addresses</span>
         <v-icon>mdi-map-marker-multiple-outline</v-icon>
       </v-btn>
 
-      <v-btn>
+      <v-btn nuxt to="/blog">
         <span>Articles</span>
         <v-icon>mdi-newspaper-variant-multiple</v-icon>
       </v-btn>
