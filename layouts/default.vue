@@ -94,9 +94,7 @@ import CqFooter from '~/components/CqFooter'
 export default {
   components: { CqFooter, CookieConsent },
   async middleware({ store }) {
-    if (process.client) {
-      await store.dispatch('nuxtServerInit')
-    }
+    await store.dispatch('nuxtServerInit')
   },
   data() {
     return {

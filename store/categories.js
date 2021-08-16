@@ -2,7 +2,8 @@ import _ from 'lodash'
 
 export const state = () => ({
   all: {},
-  topLevels: {},
+  hierarchy: {},
+  topLevels: [],
 })
 
 export const getters = {
@@ -19,7 +20,7 @@ export const getters = {
   },
 
   getChildrenForId: (state) => (parentId) => {
-    return state.topLevels[parentId]
+    return state.hierarchy[parentId]
   },
 }
 
@@ -34,7 +35,7 @@ export const mutations = {
   SET_CATEGORIES(state, categories) {
     // add top levels
     _.merge(
-      state.topLevels,
+      state.hierarchy,
       categories
         .filter(({ parentId }) => parentId === 0)
         .reduce((acc, category) => {
@@ -49,10 +50,13 @@ export const mutations = {
       // add to all categories
       state.all[category.id] = category
       // setup category if not root category
-      if (category.parentId === 0) continue
-      state.topLevels[category.parentId]
-        ? state.topLevels[category.parentId].push(category)
-        : console.warn(`No parent category for ${category.slug} (${category.id}). 3rd level category ?`)
+      if (category.parentId === 0) {
+        state.topLevels.push(category)
+      } else {
+        state.hierarchy[category.parentId]
+          ? state.hierarchy[category.parentId].push(category)
+          : console.warn(`No parent category for ${category.slug} (${category.id}). 3rd level category ?`)
+      }
     }
   },
 }

@@ -387,7 +387,7 @@ export default {
       locationAll: (state) => state.locations.all,
       locationHierarchy: (state) => state.locations.hierarchy,
       categoryAll: (state) => state.categories.all,
-      categoryHierarchy: (state) => state.categories.topLevels,
+      categoryHierarchy: (state) => state.categories.hierarchy,
       categoryMenu: (state) => state.menus.headerCategories,
     }),
     title() {

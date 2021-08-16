@@ -5,12 +5,13 @@ export const state = () => ({
   name: null,
   description: null,
   wordpressUrl: null,
+  loadingPromise: null,
 })
 
 export const actions = {
   async nuxtServerInit({ state, commit, dispatch }) {
     // avoid double initialization
-    if (state.name) return Promise.resolve()
+    if (state.loadingPromise) return state.loadingPromise
 
     // eslint-disable-next-line no-undef
     const client = this.app.apolloProvider.defaultClient
@@ -71,7 +72,7 @@ export const actions = {
       })
       .then(({ data }) => data.nuxtServerInit)
 
-    return Promise.all([
+    const loadingPromise = Promise.all([
       commit('SET_SETTINGS', nuxtServerInit.settings),
       /* Init all stores */
       await dispatch('yoast/init', nuxtServerInit.redirects),
@@ -79,10 +80,15 @@ export const actions = {
       await dispatch('menus/init', nuxtServerInit.menus),
       await dispatch('locations/init', nuxtServerInit.locations),
     ])
+    commit('SET_LOADING', loadingPromise)
+    return loadingPromise
   },
 }
 
 export const mutations = {
+  SET_LOADING(state, loadingPromise) {
+    state.loadingPromise = loadingPromise
+  },
   SET_SETTINGS(state, { name, description, url, home }) {
     state.name = name
     state.description = description

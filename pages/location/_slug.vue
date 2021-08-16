@@ -1,31 +1,86 @@
 <template>
   <v-container>
-    <h1 class="text-h5 text-center mt-3 mb-5">Lausanne et environs</h1>
-    <div v-if="getTopLevels">
-      <div class="cq-scroll-x-container">
-        <div class="d-inline-flex">
-          <v-card
-            v-for="topCategory in getTopLevels"
-            :key="topCategory.id"
-            class="grey darken-3 d-flex align-center mr-2"
-            height="70"
-            width="180"
-            dark
-            ripple
-          >
-            <h2 class="text-h6 pa-3" style="line-height: 1.5rem">{{ topCategory.name }}</h2>
-            <div class="ml-auto pa-3">
-              <WpMediaNew :media="topCategory.logoYellow" size="thumbnail" aspect-ratio="1" width="40"></WpMediaNew>
-            </div>
-          </v-card>
-        </div>
+    <v-dialog v-model="dialog" fullscreen hide-overlay transition="scale-transition">
+      <v-card tile>
+        <v-toolbar flat>
+          <v-toolbar-title>Filtrer</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="dialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-divider></v-divider>
+        <v-list>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>Adresse Chouquettisée</v-list-item-title>
+              <v-list-item-content>
+                <p class="small">
+                  Selectionner les adresses ayant le label Chouquettisé. C'est à dire testées et validées par l'équipe.
+                  Qui respectent nos valeurs : Local, Ecologie, Equitable, Solidaire et Expertise
+                </p>
+                <v-btn></v-btn>
+              </v-list-item-content>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>Password</v-list-item-title>
+              <v-list-item-subtitle
+                >Require password for purchase or use password to restrict purchase</v-list-item-subtitle
+              >
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-card>
+    </v-dialog>
+
+    <h1 class="text-h5 text-center mt-3">Lausanne et environs</h1>
+    <div class="cq-scroll-x-container mt-4">
+      <div class="d-inline-flex">
+        <v-card v-for="topCategory in topCategories" :key="topCategory.id" width="200" class="mr-2" outlined flat>
+          <v-list-item :key="topCategory.name">
+            <v-list-item-avatar class="rounded-0">
+              <WpMediaNew :media="topCategory.logoYellow" size="thumbnail"></WpMediaNew>
+            </v-list-item-avatar>
+
+            <v-list-item-content>
+              <v-list-item-subtitle v-html="topCategory.description"></v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-card>
+      </div>
+    </div>
+    <div class="cq-scroll-x-container mt-4">
+      <div class="d-inline-flex">
+        <v-chip v-for="topCategory in topCategories" :key="topCategory.id" class="mr-2" outlined>{{
+          topCategory.name
+        }}</v-chip>
+      </div>
+    </div>
+    <div class="mt-4 d-inline-flex align-stretch">
+      <v-text-field
+        outlined
+        label="Rechercher dans la categorie"
+        prepend-inner-icon="mdi-magnify"
+        dense
+        clearable
+        hide-details
+        color="grey darker-3"
+        class="mr-2"
+      ></v-text-field>
+      <div>
+        <v-btn height="100%" outlined @click="dialog = true">
+          <v-icon left>mdi-tune</v-icon>
+          Filtrer
+        </v-btn>
       </div>
     </div>
   </v-container>
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapState } from 'vuex'
 import gql from 'graphql-tag'
 import seo from '~/mixins/seo'
 import { fiche as FicheFragments } from '~/apollo/fragments/fiche'
@@ -42,10 +97,7 @@ const MapStates = Object.freeze({
 export default {
   components: { WpMediaNew },
   mixins: [seo, graphql],
-  async asyncData({ store, params, query }) {
-    // store initialization
-    await store.dispatch('nuxtServerInit')
-
+  async asyncData({ store, params }) {
     const rootLocation = await store.dispatch('locations/getBySlug', params.slug)
 
     return {
@@ -59,6 +111,7 @@ export default {
       fichesTotal: null,
       fichesPages: null,
       hasMoreFiches: false,
+      dialog: false,
     }
   },
   async fetch() {
@@ -129,9 +182,7 @@ export default {
   },
   computed: {
     ...mapState(['wordpressUrl']),
-    ...mapGetters({
-      getTopLevels: 'categories/getTopLevels',
-    }),
+    ...mapState('categories', { topCategories: 'topLevels' }),
   },
   head() {
     return {
