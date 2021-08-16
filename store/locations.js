@@ -3,6 +3,7 @@ import _ from 'lodash'
 export const state = () => ({
   all: {},
   hierarchy: {},
+  flatSorted: [],
 })
 
 export const actions = {
@@ -24,18 +25,6 @@ export const actions = {
   findChildren({ state }, location) {
     return state.hierarchy[location.id]
   },
-
-  /**
-   * Return an array with all locations sorted as a hierarchy
-   */
-  flatLocations({ state }) {
-    const result = []
-    for (const [parentId, children] of Object.entries(state.hierarchy)) {
-      const parent = state.all.find(({ id }) => id === parentId)
-      result.push(parent, ...children)
-    }
-    return result
-  },
 }
 
 export const mutations = {
@@ -49,6 +38,8 @@ export const mutations = {
       const subLocations = locations.filter(({ parentId }) => parentId === parseInt(location.id))
       subLocations.forEach((subLocation) => (subLocation.level = 1))
       state.hierarchy[location.id] = subLocations
+      // add to flatSorted
+      state.flatSorted.push(location, ...subLocations)
     })
   },
 }

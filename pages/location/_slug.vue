@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-dialog v-model="dialog" fullscreen hide-overlay transition="scale-transition">
-      <v-card tile>
+      <v-card tile style="margin-bottom: 60px !important">
         <v-toolbar flat>
           <v-toolbar-title>Filtrer</v-toolbar-title>
           <v-spacer></v-spacer>
@@ -10,29 +10,37 @@
           </v-btn>
         </v-toolbar>
         <v-divider></v-divider>
-        <v-list>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>Adresse Chouquettisée</v-list-item-title>
-              <v-list-item-content>
-                <p class="small">
-                  Selectionner les adresses ayant le label Chouquettisé. C'est à dire testées et validées par l'équipe.
-                  Qui respectent nos valeurs : Local, Ecologie, Equitable, Solidaire et Expertise
-                </p>
-                <v-btn></v-btn>
+        <v-container>
+          <v-list>
+            <v-subheader class="text-h6 black--text">Adresse Chouquettisée</v-subheader>
+            <v-list-item three-line>
+              <v-list-item-content class="pt-0">
+                <div class="d-inline-flex align-center mt-1">
+                  <p class="body-2 secondary--text text--lighten-2 ma-0">
+                    Sélectionner que les adresses testées et approuvées par l'équipe. tesa fadsf
+                    kldasjféladsjféalsdfkjasdélf jasdf
+                  </p>
+                  <v-switch v-model="switch1" inset color="primary ml-auto"></v-switch>
+                </div>
               </v-list-item-content>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>Password</v-list-item-title>
-              <v-list-item-subtitle
-                >Require password for purchase or use password to restrict purchase</v-list-item-subtitle
-              >
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
+            </v-list-item>
+          </v-list>
+          <v-divider></v-divider>
+          <v-list>
+            <v-subheader class="text-h6 black--text">Destination</v-subheader>
+            <v-list-item v-for="location in locations.slice(0, -1)" :key="location.id">
+              <v-list-item-title>{{ location.name }}</v-list-item-title>
+              <v-list-item-action>
+                <v-checkbox hide-details></v-checkbox>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+        </v-container>
       </v-card>
+      <v-footer fixed height="60" class="justify-space-around">
+        <v-btn outlined class="flex-grow-2 mx-1">Tout effacer</v-btn>
+        <v-btn dark class="flex-grow-1 mx-1">Appliquer</v-btn>
+      </v-footer>
     </v-dialog>
 
     <h1 class="text-h5 text-center mt-3">Lausanne et environs</h1>
@@ -41,9 +49,9 @@
         <button
           v-for="topCategory in topCategories"
           :key="topCategory.id"
+          v-ripple
           class="top-category-btn rounded mr-2"
           :class="{ 'grey darken-3': topCategory === selectedTopCategory }"
-          v-ripple
           @click="selectTopCategory(topCategory)"
         >
           <v-list-item two-line>
@@ -138,7 +146,7 @@ export default {
       selectedCategory: null,
       categories: [],
 
-      dialog: false,
+      dialog: true,
     }
   },
   async fetch() {
@@ -220,6 +228,7 @@ export default {
   computed: {
     ...mapState(['wordpressUrl']),
     ...mapState('categories', { topCategories: 'topLevels' }),
+    ...mapState('locations', { locations: 'flatSorted' }),
   },
   head() {
     return {
