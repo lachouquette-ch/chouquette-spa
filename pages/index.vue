@@ -124,13 +124,13 @@
       </div>
     </v-sheet>
 
-    <v-sheet class="green lighten-5 py-5">
+    <v-sheet class="green-chouquette lighten-1 py-5">
       <h3 class="text-center headline">Les valeurs de La Chouquette</h3>
       <v-carousel class="valeurs-carousel" height="250" show-arrows-on-hover hide-delimiter-background interval="3000">
         <v-carousel-item v-for="valeur in valeurs" :key="valeur.name">
           <v-sheet height="100%" tile class="transparent">
             <v-row class="fill-height flex-column" align="center" justify="center">
-              <v-btn fab dark color="green lighten-3" elevation="1">
+              <v-btn fab dark color="green-chouquette" elevation="1">
                 <v-icon>{{ valeur.icon }}</v-icon>
               </v-btn>
               <h6 class="text-h5 my-3">{{ valeur.name }}</h6>
