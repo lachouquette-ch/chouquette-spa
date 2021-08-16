@@ -10,15 +10,13 @@ export default {
     current: 'fr',
   },
   theme: {
+    options: { customProperties: true },
     themes: {
       light: {
         primary: '#F8EF28',
-        secondary: '#D7D7D7',
         anchor: '#000000',
-      },
-      dark: {
-        primary: '#000000',
-        secondary: '#727272',
+        'green-chouquette': '#A5D6A7',
+        'yellow-chouquette': '#F8EF28',
       },
     },
   },
