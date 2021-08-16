@@ -38,27 +38,49 @@
     <h1 class="text-h5 text-center mt-3">Lausanne et environs</h1>
     <div class="cq-scroll-x-container mt-4">
       <div class="d-inline-flex">
-        <v-card v-for="topCategory in topCategories" :key="topCategory.id" width="200" class="mr-2" outlined flat>
-          <v-list-item :key="topCategory.name">
+        <button
+          v-for="topCategory in topCategories"
+          :key="topCategory.id"
+          class="top-category-btn rounded mr-2"
+          :class="{ 'grey darken-3': topCategory === selectedTopCategory }"
+          v-ripple
+          @click="selectTopCategory(topCategory)"
+        >
+          <v-list-item two-line>
             <v-list-item-avatar class="rounded-0">
-              <WpMediaNew :media="topCategory.logoYellow" size="thumbnail"></WpMediaNew>
+              <WpMediaNew
+                v-if="topCategory === selectedTopCategory"
+                :media="topCategory.logoWhite"
+                size="thumbnail"
+              ></WpMediaNew>
+              <WpMediaNew v-else :media="topCategory.logoBlack" size="thumbnail"></WpMediaNew>
             </v-list-item-avatar>
 
             <v-list-item-content>
-              <v-list-item-subtitle v-html="topCategory.description"></v-list-item-subtitle>
+              <v-list-item-title :class="{ 'yellow--text': topCategory === selectedTopCategory }">{{
+                topCategory.name
+              }}</v-list-item-title>
+              <v-list-item-subtitle :class="{ 'white--text': topCategory === selectedTopCategory }">{{
+                topCategory.description
+              }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-        </v-card>
+        </button>
       </div>
     </div>
-    <div class="cq-scroll-x-container mt-4">
+    <div v-if="categories.length" class="cq-scroll-x-container mt-1">
       <div class="d-inline-flex">
-        <v-chip v-for="topCategory in topCategories" :key="topCategory.id" class="mr-2" outlined>{{
-          topCategory.name
-        }}</v-chip>
+        <v-chip
+          v-for="category in categories"
+          :key="category.id"
+          class="mr-2"
+          :dark="category === selectedCategory"
+          @click="selectCategory(category)"
+          >{{ category.name }}</v-chip
+        >
       </div>
     </div>
-    <div class="mt-4 d-inline-flex align-stretch">
+    <div class="mt-1 d-inline-flex align-stretch">
       <v-text-field
         outlined
         label="Rechercher dans la categorie"
@@ -66,7 +88,7 @@
         dense
         clearable
         hide-details
-        color="grey darker-3"
+        color="grey darken-3"
         class="mr-2"
       ></v-text-field>
       <div>
@@ -111,6 +133,11 @@ export default {
       fichesTotal: null,
       fichesPages: null,
       hasMoreFiches: false,
+
+      selectedTopCategory: null,
+      selectedCategory: null,
+      categories: [],
+
       dialog: false,
     }
   },
@@ -180,6 +207,16 @@ export default {
       }
     }
   },
+  methods: {
+    selectTopCategory(topCategory) {
+      this.selectedTopCategory = topCategory
+      this.selectedCategory = null
+      this.categories = this.$store.getters['categories/getChildrenForId'](topCategory.id)
+    },
+    selectCategory(category) {
+      this.selectedCategory = category
+    },
+  },
   computed: {
     ...mapState(['wordpressUrl']),
     ...mapState('categories', { topCategories: 'topLevels' }),
@@ -230,4 +267,9 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+.top-category-btn {
+  width: 200px;
+  border: 1px solid grey;
+}
+</style>
