@@ -1,15 +1,14 @@
 <template>
   <v-container>
     <v-dialog v-model="dialog" fullscreen hide-overlay transition="scale-transition">
-      <v-card tile style="margin-bottom: 60px !important">
-        <v-toolbar flat>
-          <v-toolbar-title>Filtrer</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn icon @click="dialog = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar>
-        <v-divider></v-divider>
+      <v-app-bar class="filter-header" height="56" color="white" fixed flat>
+        <v-toolbar-title>Filtrer</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="dialog = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-app-bar>
+      <v-card class="filter-content" tile>
         <v-container>
           <v-list>
             <v-subheader class="text-h6 black--text">Adresse Chouquettisée</v-subheader>
@@ -20,24 +19,17 @@
                     Sélectionner que les adresses testées et approuvées par l'équipe. tesa fadsf
                     kldasjféladsjféalsdfkjasdélf jasdf
                   </p>
-                  <v-switch v-model="switch1" inset color="primary ml-auto"></v-switch>
+                  <v-switch v-model="switch1" color="primary ml-auto" inset :ripple="false"></v-switch>
                 </div>
               </v-list-item-content>
             </v-list-item>
           </v-list>
           <v-divider></v-divider>
-          <v-list>
-            <v-subheader class="text-h6 black--text">Destination</v-subheader>
-            <v-list-item v-for="location in locations.slice(0, -1)" :key="location.id">
-              <v-list-item-title>{{ location.name }}</v-list-item-title>
-              <v-list-item-action>
-                <v-checkbox hide-details></v-checkbox>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
+          <FilterExpansion title="Destination" :items="locations"></FilterExpansion>
         </v-container>
       </v-card>
-      <v-footer fixed height="60" class="justify-space-around">
+      <v-divider></v-divider>
+      <v-footer class="filter-bottom justify-space-around" color="white" fixed>
         <v-btn outlined class="flex-grow-2 mx-1">Tout effacer</v-btn>
         <v-btn dark class="flex-grow-1 mx-1">Appliquer</v-btn>
       </v-footer>
@@ -83,6 +75,7 @@
           :key="category.id"
           class="mr-2"
           :dark="category === selectedCategory"
+          label
           @click="selectCategory(category)"
           >{{ category.name }}</v-chip
         >
@@ -93,11 +86,11 @@
         outlined
         label="Rechercher dans la categorie"
         prepend-inner-icon="mdi-magnify"
-        dense
-        clearable
-        hide-details
         color="grey darken-3"
         class="mr-2"
+        clearable
+        hide-details
+        dense
       ></v-text-field>
       <div>
         <v-btn height="100%" outlined @click="dialog = true">
@@ -106,17 +99,41 @@
         </v-btn>
       </div>
     </div>
+    <div v-if="$fetchState.pending" class="mt-3">
+      <v-skeleton-loader
+        v-for="i in 3"
+        :key="i"
+        class="mb-3"
+        elevation="1"
+        type="image, article, actions"
+      ></v-skeleton-loader>
+    </div>
+    <template v-else>
+      <v-subheader class="px-0 text-body-2">{{ fichesTotal }} résultats</v-subheader>
+      <v-card v-for="fiche in fiches" :key="fiche.id" class="mb-3">
+        <WpMediaNew :media="fiche.image" size="medium_large" height="200" contains></WpMediaNew>
+        <v-card-title class="text-h5">{{ fiche.title }}</v-card-title>
+        <v-card-subtitle class="text-uppercase">{{ getCategoryById(fiche.principalCategoryId).name }}</v-card-subtitle>
+        <v-card-text class="black--text">
+          <div v-html="fiche.content"></div>
+          <v-chip-group>
+            <v-chip color="primary lighten-1" text-color="grey darken-3" label small>Test</v-chip>
+          </v-chip-group>
+        </v-card-text>
+      </v-card>
+    </template>
   </v-container>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import gql from 'graphql-tag'
 import seo from '~/mixins/seo'
 import { fiche as FicheFragments } from '~/apollo/fragments/fiche'
 import { PER_PAGE_NUMBER } from '~/constants/default'
 import WpMediaNew from '~/components/WpMediaNew'
 import graphql from '~/mixins/graphql'
+import FilterExpansion from '~/components/FilterExpansion'
 
 const MapStates = Object.freeze({
   HIDDEN: Symbol('hidden'),
@@ -125,7 +142,7 @@ const MapStates = Object.freeze({
 })
 
 export default {
-  components: { WpMediaNew },
+  components: { FilterExpansion, WpMediaNew },
   mixins: [seo, graphql],
   async asyncData({ store, params }) {
     const rootLocation = await store.dispatch('locations/getBySlug', params.slug)
@@ -146,7 +163,7 @@ export default {
       selectedCategory: null,
       categories: [],
 
-      dialog: true,
+      dialog: false,
     }
   },
   async fetch() {
@@ -229,6 +246,9 @@ export default {
     ...mapState(['wordpressUrl']),
     ...mapState('categories', { topCategories: 'topLevels' }),
     ...mapState('locations', { locations: 'flatSorted' }),
+    ...mapGetters({
+      getCategoryById: 'categories/getById',
+    }),
   },
   head() {
     return {
@@ -280,5 +300,19 @@ export default {
 .top-category-btn {
   width: 200px;
   border: 1px solid grey;
+}
+
+.filter-content.v-card.v-sheet {
+  margin-top: 56px !important;
+  margin-bottom: 60px !important;
+}
+
+.filter-header {
+  height: 56px;
+  border-bottom: 1px solid var(--v-secondary-base);
+}
+
+.filter-bottom {
+  height: 60px;
 }
 </style>
