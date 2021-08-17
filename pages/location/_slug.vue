@@ -19,7 +19,7 @@
                     Sélectionner que les adresses testées et approuvées par l'équipe. tesa fadsf
                     kldasjféladsjféalsdfkjasdélf jasdf
                   </p>
-                  <v-switch v-model="switch1" color="primary ml-auto" inset :ripple="false"></v-switch>
+                  <v-switch color="primary ml-auto" inset :ripple="false"></v-switch>
                 </div>
               </v-list-item-content>
             </v-list-item>
@@ -73,8 +73,9 @@
         <v-chip
           v-for="category in categories"
           :key="category.id"
-          class="mr-2"
           :dark="category === selectedCategory"
+          class="mr-2"
+          color="grey lighten-4"
           label
           @click="selectCategory(category)"
           >{{ category.name }}</v-chip
@@ -99,7 +100,38 @@
         </v-btn>
       </div>
     </div>
-    <div v-if="$fetchState.pending" class="mt-3">
+    <template v-if="fiches.length">
+      <v-subheader class="px-0 text-body-2">{{ fichesTotal }} résultats</v-subheader>
+      <v-card v-for="fiche in fiches" :key="fiche.id" class="mb-3" outlined height="450" bench="2">
+        <WpMediaNew :media="fiche.image" size="medium_large" height="200" contains>
+          <v-chip v-if="fiche.isChouquettise" color="primary" text-color="black" class="ma-2" small>
+            Testé et Chouquettisé
+            <v-icon right>mdi-check</v-icon>
+          </v-chip>
+        </WpMediaNew>
+        <v-card-title class="text-h5">{{ fiche.title }}</v-card-title>
+        <v-card-subtitle class="text-uppercase">{{ getCategoryById(fiche.principalCategoryId).name }}</v-card-subtitle>
+        <v-card-text class="black--text">
+          <div class="fiche-content" v-html="fiche.content"></div>
+          <v-chip-group v-if="fiche.criteria" class="mt-3" column>
+            <v-chip
+              v-for="criteriaValue in sampleCriteriaValues(fiche)"
+              :key="criteriaValue.id"
+              color="primary lighten-4"
+              text-color="grey darken-3"
+              label
+              small
+            >
+              {{ criteriaValue.name }}</v-chip
+            >
+          </v-chip-group>
+        </v-card-text>
+      </v-card>
+      <v-btn color="secondary" :loading="$fetchState.pending" :disabled="!hasMoreFiches" block outlined @click="$fetch">
+        Plus d'adresses
+      </v-btn>
+    </template>
+    <div v-else-if="$fetchState.pending" class="mt-3">
       <v-skeleton-loader
         v-for="i in 3"
         :key="i"
@@ -108,20 +140,7 @@
         type="image, article, actions"
       ></v-skeleton-loader>
     </div>
-    <template v-else>
-      <v-subheader class="px-0 text-body-2">{{ fichesTotal }} résultats</v-subheader>
-      <v-card v-for="fiche in fiches" :key="fiche.id" class="mb-3">
-        <WpMediaNew :media="fiche.image" size="medium_large" height="200" contains></WpMediaNew>
-        <v-card-title class="text-h5">{{ fiche.title }}</v-card-title>
-        <v-card-subtitle class="text-uppercase">{{ getCategoryById(fiche.principalCategoryId).name }}</v-card-subtitle>
-        <v-card-text class="black--text">
-          <div v-html="fiche.content"></div>
-          <v-chip-group>
-            <v-chip color="primary lighten-1" text-color="grey darken-3" label small>Test</v-chip>
-          </v-chip-group>
-        </v-card-text>
-      </v-card>
-    </template>
+    <ScrollTop></ScrollTop>
   </v-container>
 </template>
 
@@ -134,6 +153,7 @@ import { PER_PAGE_NUMBER } from '~/constants/default'
 import WpMediaNew from '~/components/WpMediaNew'
 import graphql from '~/mixins/graphql'
 import FilterExpansion from '~/components/FilterExpansion'
+import ScrollTop from '~/components/ScrollTop'
 
 const MapStates = Object.freeze({
   HIDDEN: Symbol('hidden'),
@@ -142,7 +162,7 @@ const MapStates = Object.freeze({
 })
 
 export default {
-  components: { FilterExpansion, WpMediaNew },
+  components: { FilterExpansion, WpMediaNew, ScrollTop },
   mixins: [seo, graphql],
   async asyncData({ store, params }) {
     const rootLocation = await store.dispatch('locations/getBySlug', params.slug)
@@ -241,6 +261,9 @@ export default {
     selectCategory(category) {
       this.selectedCategory = category
     },
+    sampleCriteriaValues(fiche) {
+      return fiche.criteria.flatMap(({ values }) => values).slice(0, 3)
+    },
   },
   computed: {
     ...mapState(['wordpressUrl']),
@@ -314,5 +337,12 @@ export default {
 
 .filter-bottom {
   height: 60px;
+}
+
+.fiche-content {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
 }
 </style>

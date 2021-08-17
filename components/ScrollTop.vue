@@ -1,14 +1,18 @@
 <template>
-  <a v-if="showLink" href="" class="scroll-top rounded-circle" @click.prevent="$scrollTo({ offset: 0 })">
-    <i class="fas fa-chevron-up"></i>
-  </a>
+  <v-fade-transition>
+    <v-btn v-if="show" class="btn-top primary--text" fab small dark @click="scrollTop">
+      <v-icon>mdi-chevron-up</v-icon>
+    </v-btn>
+  </v-fade-transition>
 </template>
 
 <script>
+import goTo from 'vuetify/lib/services/goto'
+
 export default {
   data() {
     return {
-      showLink: false,
+      show: false,
     }
   },
   mounted() {
@@ -16,9 +20,9 @@ export default {
     $(window).on('scroll', () => {
       const height = $(window).scrollTop()
       if (height >= $(window).height() / 2) {
-        this.showLink = true
+        this.show = true
       } else {
-        this.showLink = false
+        this.show = false
       }
     })
   },
@@ -26,21 +30,20 @@ export default {
     const $ = require('jquery')
     $(window).off('scroll')
   },
+  methods: {
+    scrollTop() {
+      goTo(0)
+    },
+  },
 }
 </script>
 
 <style lang="scss" scoped>
-.scroll-top {
+.btn-top {
   position: fixed;
-  bottom: 10px;
+  bottom: 56px;
+  margin-bottom: 10px;
   right: 10px;
-  //z-index: $zindex-fixed + 1;
-
-  height: 50px;
-  width: 50px;
-  line-height: 50px;
-  text-align: center;
-  color: $chouquette-yellow;
-  background-color: rgba($black, 0.5);
+  opacity: 0.7;
 }
 </style>
