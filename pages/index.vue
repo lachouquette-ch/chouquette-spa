@@ -190,7 +190,7 @@
 
 <script>
 import gql from 'graphql-tag'
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
 import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
@@ -226,7 +226,6 @@ export default {
   },
   data() {
     return {
-      locations: [],
       selectedLocation: null,
       latestPosts: [],
       latestChouquettises: [],
@@ -276,6 +275,9 @@ export default {
   },
   fetchOnServer: true,
   methods: {
+    ...mapActions('categories', {
+      getCategoryById: 'getById',
+    }),
     goToLocation(location) {
       this.$router.push(`/location/${location}`)
     },
@@ -284,9 +286,7 @@ export default {
     ...mapState(['name', 'description', 'wordpressUrl']),
     ...mapState({
       categories: (state) => state.menus.headerCategories,
-    }),
-    ...mapGetters({
-      getCategoryById: 'categories/getById',
+      locations: (state) => state.locations.flatSorted,
     }),
     highlightedPost() {
       return this.latestPosts[0]
@@ -294,9 +294,6 @@ export default {
     otherPosts() {
       return this.latestPosts.slice(1)
     },
-  },
-  async created() {
-    this.locations = await this.$store.dispatch('locations/flatLocations')
   },
   head() {
     return {
