@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-dialog v-model="dialog" fullscreen hide-overlay transition="scale-transition">
-      <v-app-bar class="filter-header" height="56" color="white" fixed flat>
+      <v-app-bar class="filter-header" color="white" fixed flat>
         <v-toolbar-title>Filtrer</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon @click="dialog = false">
@@ -28,7 +28,6 @@
           <FilterExpansion title="Destination" :items="locations"></FilterExpansion>
         </v-container>
       </v-card>
-      <v-divider></v-divider>
       <v-footer class="filter-bottom justify-space-around" color="white" fixed>
         <v-btn outlined class="flex-grow-2 mx-1">Tout effacer</v-btn>
         <v-btn dark class="flex-grow-1 mx-1">Appliquer</v-btn>
@@ -44,6 +43,7 @@
           v-ripple
           class="top-category-btn rounded mr-2"
           :class="{ 'grey darken-3': topCategory === selectedTopCategory }"
+          :disabled="$fetchState.pending"
           @click="selectTopCategory(topCategory)"
         >
           <v-list-item two-line>
@@ -68,17 +68,18 @@
         </button>
       </div>
     </div>
-    <div v-if="categories.length" class="cq-scroll-x-container mt-1">
+    <div v-if="subCategories.length" class="cq-scroll-x-container mt-1">
       <div class="d-inline-flex">
         <v-chip
-          v-for="category in categories"
-          :key="category.id"
-          :dark="category === selectedCategory"
+          v-for="subCategory in subCategories"
+          :key="subCategory.id"
+          :dark="subCategory === selectedSubCategory"
+          :class="{ 'grey lighten-4': subCategory !== selectedSubCategory }"
+          :disabled="$fetchState.pending"
           class="mr-2"
-          color="grey lighten-4"
           label
-          @click="selectCategory(category)"
-          >{{ category.name }}</v-chip
+          @click="selectSubCategory(subCategory)"
+          >{{ subCategory.name }}</v-chip
         >
       </div>
     </div>
@@ -145,7 +146,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 import gql from 'graphql-tag'
 import seo from '~/mixins/seo'
 import { fiche as FicheFragments } from '~/apollo/fragments/fiche'
@@ -164,11 +165,31 @@ const MapStates = Object.freeze({
 export default {
   components: { FilterExpansion, WpMediaNew, ScrollTop },
   mixins: [seo, graphql],
-  async asyncData({ store, params }) {
-    const rootLocation = await store.dispatch('locations/getBySlug', params.slug)
+  async asyncData({ store, params, query }) {
+    const location = await store.dispatch('locations/getBySlug', params.slug)
+
+    const category = store.dispatch('categories/getBySlug', query.category)
+    let selectedTopCategory = null
+    let selectedSubCategory = null
+    if (category.parentId) {
+      selectedSubCategory = category
+      selectedTopCategory = store.dispatch('categories/getById', category.parentId)
+    } else {
+      selectedTopCategory = category
+    }
+
+    const search = query.search
+    // const criteria = Object.entries(query)
+    //   .filter(([key]) => key.startsWith('cq_'))
+    //   .map(([key, value]) => {
+    //     return { taxonomy: key, values: value.split(',') }
+    //   })
 
     return {
-      rootLocation,
+      location,
+      search,
+      selectedTopCategory,
+      selectedSubCategory,
     }
   },
   data() {
@@ -180,27 +201,27 @@ export default {
       hasMoreFiches: false,
 
       selectedTopCategory: null,
-      selectedCategory: null,
-      categories: [],
+      selectedSubCategory: null,
+      subCategories: [],
 
       dialog: false,
     }
   },
   async fetch() {
     try {
-      const queryLocation = this.$route.params.location || this.rootLocation.slug
-      const queryCategory = this.$route.params.category
-      const querySearch = this.$route.params.search
-      const queryCriteria = Object.entries(this.$route.params)
-        .filter(([key]) => key.startsWith('cq_'))
-        .map(([key, value]) => {
-          return { taxonomy: key, values: value.split(',') }
-        })
+      const queryLocation = this.location.slug
+      // select category
+      let queryCategory = null
+      if (this.selectedSubCategory) {
+        queryCategory = this.selectedSubCategory.slug
+      } else if (this.selectedTopCategory) {
+        queryCategory = this.selectedTopCategory.slug
+      }
 
       const { data } = await this.$apollo.query({
         query: gql`
           query (
-            $slug: String
+            $category: String
             $location: String
             $search: String
             $criteria: [CriteriaSearch!]
@@ -208,7 +229,7 @@ export default {
             $pageSize: Int!
           ) {
             fichesByFilters(
-              slug: $slug
+              slug: $category
               location: $location
               search: $search
               criteria: $criteria
@@ -226,10 +247,10 @@ export default {
           ${FicheFragments}
         `,
         variables: {
-          slug: queryCategory,
           location: queryLocation,
-          search: querySearch,
-          criteria: queryCriteria,
+          category: queryCategory,
+          // search: querySearch,
+          // criteria: this.criteria,
           page: this.fichesNextPage++,
           pageSize: PER_PAGE_NUMBER,
         },
@@ -253,13 +274,27 @@ export default {
     }
   },
   methods: {
-    selectTopCategory(topCategory) {
+    ...mapActions('categories', {
+      getCategoryById: 'getById',
+      getCategoriesByParentId: 'getChildrenForId',
+    }),
+    async selectTopCategory(topCategory) {
       this.selectedTopCategory = topCategory
-      this.selectedCategory = null
-      this.categories = this.$store.getters['categories/getChildrenForId'](topCategory.id)
+      this.selectedSubCategory = null
+      this.subCategories = await this.getCategoriesByParentId(topCategory.id)
+
+      this.fichesNextPage = 1
+      this.fiches = []
+      this.$router.replace({ query: { category: topCategory.slug } })
+      this.$fetch()
     },
-    selectCategory(category) {
-      this.selectedCategory = category
+    selectSubCategory(category) {
+      this.selectedSubCategory = category
+
+      this.fichesNextPage = 1
+      this.fiches = []
+      this.$router.replace({ query: { category: category.slug } })
+      this.$fetch()
     },
     sampleCriteriaValues(fiche) {
       return fiche.criteria.flatMap(({ values }) => values).slice(0, 3)
@@ -269,34 +304,31 @@ export default {
     ...mapState(['wordpressUrl']),
     ...mapState('categories', { topCategories: 'topLevels' }),
     ...mapState('locations', { locations: 'flatSorted' }),
-    ...mapGetters({
-      getCategoryById: 'categories/getById',
-    }),
   },
   head() {
     return {
-      title: this.rootLocation.name,
+      title: this.location.name,
       meta: this.seoMetaProperties([
         {
           name: 'description',
-          content: this.$options.filters.heDecode(this.rootLocation.description || this.rootLocation.name),
+          content: this.$options.filters.heDecode(this.location.description || this.location.name),
         },
 
         { property: 'og:type', content: 'article' },
         { property: 'og:locale', content: 'fr_FR' },
         { property: 'og:url', content: this.currentURL },
-        { property: 'og:title', content: this.$options.filters.heDecode(this.rootLocation.name) },
+        { property: 'og:title', content: this.$options.filters.heDecode(this.location.name) },
         {
           property: 'og:description',
-          content: this.$options.filters.heDecode(this.rootLocation.description || this.rootLocation.name),
+          content: this.$options.filters.heDecode(this.location.description || this.location.name),
         },
         { property: 'og:image', content: '' },
 
         { name: 'twitter:card', content: 'summary' },
-        { name: 'twitter:title', content: this.$options.filters.heDecode(this.rootLocation.name) },
+        { name: 'twitter:title', content: this.$options.filters.heDecode(this.location.name) },
         {
           name: 'twitter:description',
-          content: this.$options.filters.heDecode(this.rootLocation.description || this.rootLocation.name),
+          content: this.$options.filters.heDecode(this.location.description || this.location.name),
         },
         { name: 'twitter:image', content: '' },
       ]),
@@ -304,8 +336,8 @@ export default {
         this.jsonLDScript({
           '@context': 'http://schema.org',
           '@type': 'WebPage',
-          name: this.$options.filters.heDecode(this.rootLocation.name),
-          description: this.$options.filters.heDecode(this.rootLocation.description || this.rootLocation.name),
+          name: this.$options.filters.heDecode(this.location.name),
+          description: this.$options.filters.heDecode(this.location.description || this.location.name),
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
@@ -323,6 +355,11 @@ export default {
 .top-category-btn {
   width: 200px;
   border: 1px solid grey;
+
+  &:disabled,
+  &button[disabled] {
+    opacity: 0.6;
+  }
 }
 
 .filter-content.v-card.v-sheet {
@@ -332,7 +369,6 @@ export default {
 
 .filter-header {
   height: 56px;
-  border-bottom: 1px solid var(--v-secondary-base);
 }
 
 .filter-bottom {
