@@ -19,24 +19,38 @@
                     Sélectionner que les adresses testées et approuvées par l'équipe. tesa fadsf
                     kldasjféladsjféalsdfkjasdélf jasdf
                   </p>
-                  <v-switch color="primary ml-auto" inset :ripple="false"></v-switch>
+                  <v-switch v-model="chouquettiseOnly" color="primary ml-auto" inset :ripple="false"></v-switch>
                 </div>
               </v-list-item-content>
             </v-list-item>
           </v-list>
           <v-divider></v-divider>
-          <div v-for="criteria in criteriaList" :key="criteria.id">
-            <FilterExpansion
-              :title="criteria.name"
-              :items="criteria.values"
-              @update="(selected) => (criteria.selectedIndexes = selected)"
-            ></FilterExpansion>
-          </div>
+          <template v-if="criteriaList.length">
+            <div v-for="criteria in criteriaList" :key="criteria.id">
+              <FilterExpansion
+                ref="criteriaFilter"
+                :title="criteria.name"
+                :items="criteria.values"
+                :init-filter="criteria.selectedIndexes"
+                @update="(selected) => (criteria.selectedIndexes = selected)"
+              ></FilterExpansion>
+            </div>
+          </template>
+          <v-alert
+            v-else
+            border="left"
+            color="primary lighten-3"
+            class="mt-3 mb-0 text-center"
+            elevation="1"
+            colored-border
+          >
+            Selectionner une catégorie pour plus de filtres
+          </v-alert>
         </v-container>
       </v-card>
       <v-footer class="filter-bottom justify-space-around" color="white" fixed>
-        <v-btn outlined class="flex-grow-2 mx-1">Tout effacer</v-btn>
-        <v-btn dark class="flex-grow-1 mx-1" @click.prevent="searchByCriteria">Appliquer</v-btn>
+        <v-btn outlined class="flex-grow-2 mx-1" @click.prevent="clearCriteria">Tout effacer</v-btn>
+        <v-btn dark class="flex-grow-1 mx-1" @click.prevent="searchByFilters">Appliquer</v-btn>
       </v-footer>
     </v-dialog>
 
@@ -50,7 +64,7 @@
           class="top-category-btn rounded mr-2"
           :class="{ 'grey darken-3': topCategory === selectedTopCategory }"
           :disabled="$fetchState.pending"
-          @click="selectTopCategory(topCategory)"
+          @click.prevent="selectTopCategory(topCategory)"
         >
           <v-list-item two-line>
             <v-list-item-avatar class="rounded-0">
@@ -84,7 +98,7 @@
           :disabled="$fetchState.pending"
           class="mr-2"
           label
-          @click="selectSubCategory(subCategory)"
+          @click.prevent="selectSubCategory(subCategory)"
           >{{ subCategory.name }}</v-chip
         >
       </div>
@@ -101,6 +115,7 @@
         hide-details
         dense
         @change="searchByText"
+        @click:clear.capture="clearSearch"
       ></v-text-field>
       <v-badge bordered color="secondary" :content="filterCount" :value="filterCount" overlap>
         <v-btn outlined height="100%" @click="filtersDialog = true">
@@ -124,6 +139,7 @@
         <v-card-subtitle class="text-uppercase">{{ getCategoryById(fiche.principalCategoryId).name }}</v-card-subtitle>
         <v-card-text class="black--text">
           <div class="fiche-content" v-html="fiche.content"></div>
+          <a href="" @click.prevent="">Voir Plus</a>
           <v-chip-group v-if="fiche.criteria" class="mt-3" column>
             <v-chip
               v-for="criteriaValue in sampleCriteriaValues(fiche)"
@@ -188,34 +204,8 @@ export default {
   async asyncData({ store, params, query }) {
     const location = await store.dispatch('locations/getBySlug', params.slug)
 
-    let category = null
-    let selectedTopCategory = null
-    let selectedSubCategory = null
-    if (query.category) {
-      category = await store.dispatch('categories/getBySlug', query.category)
-      if (category.parentId) {
-        selectedSubCategory = category
-        selectedTopCategory = await store.dispatch('categories/getById', category.parentId)
-      } else {
-        selectedTopCategory = category
-      }
-    }
-
-    const search = query.search
-    const criteriaList = []
-    // const criteriaList = Object.entries(query)
-    //   .filter(([key]) => key.startsWith('cq_'))
-    //   .map(([key, value]) => {
-    //     return { taxonomy: key, values: value.split(',') }
-    //   })
-
     return {
       location,
-      search,
-      category,
-      selectedTopCategory,
-      selectedSubCategory,
-      criteriaList,
     }
   },
   data() {
@@ -228,10 +218,17 @@ export default {
 
       subCategories: [],
 
-      filterCount: 0,
-      criteriaLoading: false,
+      search: this.$route.query.search,
+      chouquettiseOnly: this.$route.query.chouquettiseOnly,
+      category: null,
+      selectedTopCategory: null,
+      selectedSubCategory: null,
+      criteriaList: [],
 
+      filterCount: 0,
       filtersDialog: false,
+
+      criteriaLoading: false,
     }
   },
   async fetch() {
@@ -246,15 +243,7 @@ export default {
         queryCategory = this.selectedTopCategory.slug
       }
       // select criteria
-      const queryCriteria = this.criteriaList
-        .filter(({ selectedIndexes }) => selectedIndexes.length)
-        .map((criteria) => {
-          const values = criteria.selectedIndexes.map((index) => criteria.values[index].slug)
-          return {
-            taxonomy: criteria.taxonomy,
-            values,
-          }
-        })
+      const queryCriteria = this.getSelectedCriteriaSlugs()
 
       const { data } = await this.$apollo.query({
         query: gql`
@@ -312,58 +301,104 @@ export default {
     }
   },
   async mounted() {
-    if (this.selectedSubCategory) {
-      await this.fetchCriteria(this.selectedSubCategory)
-    } else if (this.selectedTopCategory) {
+    // build criteria query from route
+    const criteriaQuery = Object.entries(this.$route.query)
+      .filter(([key]) => key.startsWith('cq_'))
+      .map(([key, value]) => {
+        return { taxonomy: key, values: value.split(',') }
+      })
+
+    // initialize categories
+    if (this.$route.query.category) {
+      this.category = await this.$store.dispatch('categories/getBySlug', this.$route.query.category)
+      if (this.category.parentId) {
+        this.selectedSubCategory = this.category
+        this.selectedTopCategory = await this.$store.dispatch('categories/getById', this.category.parentId)
+      } else {
+        this.selectedTopCategory = this.category
+      }
       this.subCategories = await this.getCategoriesByParentId(this.selectedTopCategory.id)
-      await this.fetchCriteria(this.selectedTopCategory)
+      await this.fetchCriteria(this.category, criteriaQuery)
     }
+  },
+  created() {
+    // watch for filter changes
+    this.$watch(
+      (vm) => [vm.chouquettiseOnly, vm.criteriaList],
+      () => {
+        this.filterCount = this.criteriaList.reduce((acc, criteria) => (acc += criteria.selectedIndexes.length), 0)
+        if (this.chouquettiseOnly) this.filterCount++
+      },
+      {
+        immediate: true,
+        deep: true,
+      }
+    )
   },
   methods: {
     ...mapActions('categories', {
       getCategoryById: 'getById',
       getCategoriesByParentId: 'getChildrenForId',
     }),
+    getSelectedCriteriaSlugs() {
+      return this.criteriaList
+        .filter(({ selectedIndexes }) => selectedIndexes.length)
+        .map((criteria) => {
+          const values = criteria.selectedIndexes.map((index) => criteria.values[index].slug)
+          return {
+            taxonomy: criteria.taxonomy,
+            values,
+          }
+        })
+    },
+    fetchWithFilters() {
+      this.fichesNextPage = 1
+      this.fiches = []
+
+      const query = this.getSelectedCriteriaSlugs().reduce((acc, { taxonomy, values }) => {
+        acc[taxonomy] = values.join(',')
+        return acc
+      }, {})
+      if (this.category) query.category = this.category.slug
+      if (this.search) query.search = this.search
+      if (this.chouquettiseOnly) query.chouquettiseOnly = this.chouquettiseOnly
+
+      this.$router.replace({ query })
+      return this.$fetch()
+    },
     async selectTopCategory(topCategory) {
       this.category = topCategory
       this.selectedTopCategory = this.category
       this.selectedSubCategory = null
       this.subCategories = await this.getCategoriesByParentId(this.category.id)
 
-      this.fichesNextPage = 1
-      this.fiches = []
-      this.$router.replace({ query: { category: this.category.slug } })
-      this.$fetch()
-      this.fetchCriteria(this.category)
+      return Promise.all([this.fetchWithFilters(), this.fetchCriteria(this.category)])
     },
     selectSubCategory(category) {
       this.category = category
       this.selectedSubCategory = this.category
 
-      this.fichesNextPage = 1
-      this.fiches = []
-      this.$router.replace({ query: { category: this.category.slug } })
-      this.$fetch()
-      this.fetchCriteria(this.category)
+      return Promise.all([this.fetchWithFilters(), this.fetchCriteria(this.category)])
     },
     searchByText() {
-      this.fichesNextPage = 1
-      this.fiches = []
-      this.$router.replace({ query: { search: this.search } })
-      this.$fetch()
+      if (this.search != null) this.fetchWithFilters()
     },
-    searchByCriteria() {
+    clearSearch() {
+      this.search = null
+      this.fetchWithFilters()
+    },
+    searchByFilters() {
       this.filtersDialog = false
-
-      this.fichesNextPage = 1
-      this.fiches = []
-      this.$router.replace({ query: { search: this.search } })
-      this.$fetch()
+      this.fetchWithFilters()
+    },
+    clearCriteria() {
+      this.chouquettiseOnly = false
+      this.$refs.criteriaFilter.forEach((comp) => comp.clear())
     },
     sampleCriteriaValues(fiche) {
       return fiche.criteria.flatMap(({ values }) => values).slice(0, 3)
     },
-    async fetchCriteria(category) {
+    async fetchCriteria(category, criteriaSlugs = []) {
       try {
         this.criteriaLoading = true
         const { data } = await this.$apollo.query({
@@ -391,11 +426,12 @@ export default {
         data.criteriaByCategory.forEach((criteria) => {
           criteria.selectedIndexes = []
           // try to map with default criteria
-          // const matchingDefaultCriteria = this.defaultCriteria.find(({ taxonomy }) => taxonomy === criteria.taxonomy)
-          // if (matchingDefaultCriteria) {
-          //   const matchingCriteria = criteria.values.filter(({ slug }) => matchingDefaultCriteria.values.includes(slug))
-          //   criteria.selectedValues.push(...matchingCriteria)
-          // }
+          const matchingQueryCriteria = criteriaSlugs.find(({ taxonomy }) => taxonomy === criteria.taxonomy)
+          if (matchingQueryCriteria) {
+            criteria.selectedIndexes = matchingQueryCriteria.values.map((queryValue) =>
+              criteria.values.findIndex(({ slug }) => slug === queryValue)
+            )
+          }
         })
         this.criteriaList = data.criteriaByCategory
       } catch (e) {
@@ -410,14 +446,6 @@ export default {
     ...mapState(['wordpressUrl']),
     ...mapState('categories', { topCategories: 'topLevels' }),
     ...mapState('locations', { locations: 'flatSorted' }),
-  },
-  watch: {
-    criteriaList: {
-      deep: true,
-      handler() {
-        this.filterCount = this.criteriaList.reduce((acc, criteria) => (acc += criteria.selectedIndexes.length), 0)
-      },
-    },
   },
   head() {
     return {
