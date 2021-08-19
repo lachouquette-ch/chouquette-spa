@@ -27,7 +27,7 @@
     <v-container fluid>
       <v-row>
         <v-spacer></v-spacer>
-        <v-col cols="auto">
+        <v-col cols="auto py-0">
           <a v-if="selectedItems.length" href="" class="mr-2" @click.prevent="selectedItems = []">Effacer</a>
           <template v-if="items.length > foldedCount">
             <a v-if="folded" href="" @click.prevent="folded = false">Afficher tout</a>
