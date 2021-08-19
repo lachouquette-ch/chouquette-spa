@@ -315,17 +315,17 @@ export default {
   },
   created() {
     // watch for filter changes
-    // this.$watch(
-    //   (vm) => [vm.chouquettiseOnly, vm.criteriaList],
-    //   () => {
-    //     this.filterCount = this.criteriaList.reduce((acc, criteria) => (acc += criteria.selectedIndexes.length), 0)
-    //     if (this.chouquettiseOnly) this.filterCount++
-    //   },
-    //   {
-    //     immediate: true,
-    //     deep: true,
-    //   }
-    // )
+    this.$watch(
+      (vm) => [vm.chouquettiseOnly, vm.criteriaList],
+      () => {
+        this.filterCount = this.criteriaList.reduce((acc, criteria) => (acc += criteria.values.length), 0)
+        if (this.chouquettiseOnly) this.filterCount++
+      },
+      {
+        immediate: true,
+        deep: true,
+      }
+    )
   },
   methods: {
     ...mapActions('categories', {
