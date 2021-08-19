@@ -3,12 +3,12 @@
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title class="text-h6 black--text">{{ title }}</v-list-item-title>
-        <v-list-item-subtitle v-if="selectedItems.length"
-          >{{ selectedItems.length }} sélectionné(s)</v-list-item-subtitle
+        <v-list-item-subtitle v-if="selectedIndexes.length"
+          >{{ selectedIndexes.length }} sélectionné(s)</v-list-item-subtitle
         >
       </v-list-item-content>
     </v-list-item>
-    <v-list-item-group v-model="selectedItems" active-class="" multiple>
+    <v-list-item-group v-model="selectedIndexes" active-class="" multiple>
       <v-list-item v-for="item in displayedItems" :key="item[itemKeyAttr]" active-class="" dense>
         <template #default="{ active }">
           <v-list-item-content>
@@ -28,7 +28,7 @@
       <v-row>
         <v-spacer></v-spacer>
         <v-col cols="auto py-0">
-          <a v-if="selectedItems.length" href="" class="mr-2" @click.prevent="clear">Effacer</a>
+          <a v-if="selectedIndexes.length" href="" class="mr-2" @click.prevent="clear">Effacer</a>
           <template v-if="items.length > foldedCount">
             <a v-if="folded" href="" @click.prevent="folded = false">Afficher tout</a>
             <a v-else href="" @click.prevent="folded = true">Masquer</a>
@@ -44,7 +44,7 @@ export default {
   props: {
     title: String,
     items: Array,
-    initFilter: Array,
+    initialize: Array,
     itemKeyAttr: {
       type: String,
       default: 'id',
@@ -57,7 +57,7 @@ export default {
   data() {
     return {
       folded: true,
-      selectedItems: [],
+      selectedIndexes: [],
     }
   },
   computed: {
@@ -66,18 +66,19 @@ export default {
     },
   },
   watch: {
-    selectedItems() {
-      this.$emit('update', this.selectedItems)
+    selectedIndexes() {
+      const selectedItems = this.selectedIndexes.map((i) => this.items[i])
+      this.$emit('update', selectedItems)
     },
   },
   mounted() {
-    if (this.initFilter.length) {
-      this.selectedItems = [...this.initFilter] // copy only
+    if (this.initialize.length) {
+      this.selectedIndexes = [...this.initialize] // copy only
     }
   },
   methods: {
     clear() {
-      this.selectedItems = []
+      this.selectedIndexes = []
     },
   },
 }
