@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-dialog v-model="dialog" fullscreen hide-overlay transition="scale-transition">
+    <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
       <v-app-bar class="filter-header" color="white" fixed flat>
         <v-toolbar-title>Filtrer</v-toolbar-title>
         <v-spacer></v-spacer>
@@ -25,7 +25,13 @@
             </v-list-item>
           </v-list>
           <v-divider></v-divider>
-          <FilterExpansion title="Destination" :items="locations"></FilterExpansion>
+          <div v-for="criteria in criteriaList" :key="criteria.id">
+            <FilterExpansion
+              :title="criteria.name"
+              :items="criteria.values"
+              @update="(selected) => (criteria.selectedIndexes = selected)"
+            ></FilterExpansion>
+          </div>
         </v-container>
       </v-card>
       <v-footer class="filter-bottom justify-space-around" color="white" fixed>
@@ -103,14 +109,17 @@
         </v-btn>
       </div>
     </div>
+    {{ criteriaList }}
     <template v-if="fiches.length">
       <v-subheader class="px-0 text-body-2">{{ fichesTotal }} résultats</v-subheader>
       <v-card v-for="fiche in fiches" :key="fiche.id" class="mb-3" outlined height="450" bench="2">
         <WpMediaNew :media="fiche.image" size="medium_large" height="200" contains>
-          <v-chip v-if="fiche.isChouquettise" color="primary" text-color="black" class="ma-2" small>
-            Testé et Chouquettisé
-            <v-icon right>mdi-check</v-icon>
-          </v-chip>
+          <v-card-subtitle v-if="fiche.isChouquettise">
+            <v-chip color="primary" text-color="black" small>
+              Testé et Chouquettisé
+              <v-icon right>mdi-check</v-icon>
+            </v-chip>
+          </v-card-subtitle>
         </WpMediaNew>
         <v-card-title class="text-h5 d-block text-break">{{ fiche.title }}</v-card-title>
         <v-card-subtitle class="text-uppercase">{{ getCategoryById(fiche.principalCategoryId).name }}</v-card-subtitle>
@@ -180,28 +189,29 @@ export default {
   async asyncData({ store, params, query }) {
     const location = await store.dispatch('locations/getBySlug', params.slug)
 
-    const category = store.dispatch('categories/getBySlug', query.category)
+    const category = await store.dispatch('categories/getBySlug', query.category)
     let selectedTopCategory = null
     let selectedSubCategory = null
     if (category.parentId) {
       selectedSubCategory = category
-      selectedTopCategory = store.dispatch('categories/getById', category.parentId)
+      selectedTopCategory = await store.dispatch('categories/getById', category.parentId)
     } else {
       selectedTopCategory = category
     }
 
     const search = query.search
-    // const criteria = Object.entries(query)
-    //   .filter(([key]) => key.startsWith('cq_'))
-    //   .map(([key, value]) => {
-    //     return { taxonomy: key, values: value.split(',') }
-    //   })
+    const selectedCriteria = Object.entries(query)
+      .filter(([key]) => key.startsWith('cq_'))
+      .map(([key, value]) => {
+        return { taxonomy: key, values: value.split(',') }
+      })
 
     return {
       location,
       search,
       selectedTopCategory,
       selectedSubCategory,
+      selectedCriteria,
     }
   },
   data() {
@@ -212,9 +222,10 @@ export default {
       fichesPages: null,
       hasMoreFiches: false,
 
-      selectedTopCategory: null,
-      selectedSubCategory: null,
       subCategories: [],
+
+      criteriaList: [],
+      criteriaLoading: false,
 
       dialog: false,
     }
@@ -286,6 +297,14 @@ export default {
       }
     }
   },
+  async mounted() {
+    if (this.selectedSubCategory) {
+      await this.fetchCriteria(this.selectedSubCategory)
+    } else if (this.selectedTopCategory) {
+      this.subCategories = await this.getCategoriesByParentId(this.selectedTopCategory.id)
+      await this.fetchCriteria(this.selectedTopCategory)
+    }
+  },
   methods: {
     ...mapActions('categories', {
       getCategoryById: 'getById',
@@ -300,6 +319,7 @@ export default {
       this.fiches = []
       this.$router.replace({ query: { category: topCategory.slug } })
       this.$fetch()
+      this.fetchCriteria(topCategory)
     },
     selectSubCategory(category) {
       this.selectedSubCategory = category
@@ -317,6 +337,48 @@ export default {
     },
     sampleCriteriaValues(fiche) {
       return fiche.criteria.flatMap(({ values }) => values).slice(0, 3)
+    },
+    async fetchCriteria(category) {
+      try {
+        this.criteriaLoading = true
+        const { data } = await this.$apollo.query({
+          query: gql`
+            query ($id: Int!) {
+              criteriaByCategory(id: $id) {
+                id
+                name
+                taxonomy
+                values {
+                  id
+                  slug
+                  name
+                  description
+                }
+              }
+            }
+          `,
+          variables: {
+            id: parseInt(category.id),
+          },
+        })
+
+        // build selectedValues "add-on"
+        data.criteriaByCategory.forEach((criteria) => {
+          criteria.selectedValues = []
+          // try to map with default criteria
+          // const matchingDefaultCriteria = this.defaultCriteria.find(({ taxonomy }) => taxonomy === criteria.taxonomy)
+          // if (matchingDefaultCriteria) {
+          //   const matchingCriteria = criteria.values.filter(({ slug }) => matchingDefaultCriteria.values.includes(slug))
+          //   criteria.selectedValues.push(...matchingCriteria)
+          // }
+        })
+        this.criteriaList = data.criteriaByCategory
+      } catch (e) {
+        this.$sentry.captureException(e)
+        this.handleGQLError(e, 'Impossible de charger les critères :')
+      } finally {
+        this.criteriaLoading = false
+      }
     },
   },
   computed: {
