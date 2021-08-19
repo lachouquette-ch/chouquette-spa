@@ -85,6 +85,7 @@
     </div>
     <div class="mt-1 d-inline-flex align-stretch">
       <v-text-field
+        v-model="search"
         outlined
         label="Rechercher dans la categorie"
         prepend-inner-icon="mdi-magnify"
@@ -93,6 +94,7 @@
         clearable
         hide-details
         dense
+        @change="searchByText"
       ></v-text-field>
       <div>
         <v-btn height="100%" outlined @click="dialog = true">
@@ -110,7 +112,7 @@
             <v-icon right>mdi-check</v-icon>
           </v-chip>
         </WpMediaNew>
-        <v-card-title class="text-h5">{{ fiche.title }}</v-card-title>
+        <v-card-title class="text-h5 d-block text-break">{{ fiche.title }}</v-card-title>
         <v-card-subtitle class="text-uppercase">{{ getCategoryById(fiche.principalCategoryId).name }}</v-card-subtitle>
         <v-card-text class="black--text">
           <div class="fiche-content" v-html="fiche.content"></div>
@@ -141,6 +143,16 @@
         type="image, article, actions"
       ></v-skeleton-loader>
     </div>
+    <v-alert
+      v-else
+      border="bottom"
+      color="primary lighten-3"
+      class="mt-3 mb-0 text-center"
+      elevation="2"
+      colored-border
+    >
+      Aucun résultat
+    </v-alert>
     <ScrollTop></ScrollTop>
   </v-container>
 </template>
@@ -210,6 +222,7 @@ export default {
   async fetch() {
     try {
       const queryLocation = this.location.slug
+      const querySearch = this.search
       // select category
       let queryCategory = null
       if (this.selectedSubCategory) {
@@ -249,7 +262,7 @@ export default {
         variables: {
           location: queryLocation,
           category: queryCategory,
-          // search: querySearch,
+          search: querySearch,
           // criteria: this.criteria,
           page: this.fichesNextPage++,
           pageSize: PER_PAGE_NUMBER,
@@ -294,6 +307,12 @@ export default {
       this.fichesNextPage = 1
       this.fiches = []
       this.$router.replace({ query: { category: category.slug } })
+      this.$fetch()
+    },
+    searchByText() {
+      this.fichesNextPage = 1
+      this.fiches = []
+      this.$router.replace({ query: { search: this.search } })
       this.$fetch()
     },
     sampleCriteriaValues(fiche) {
