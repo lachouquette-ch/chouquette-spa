@@ -202,10 +202,11 @@ export default {
   components: { FilterExpansion, WpMediaNew, ScrollTop },
   mixins: [seo, graphql],
   async asyncData({ store, params, query }) {
-    const location = await store.dispatch('locations/getBySlug', params.slug)
-
     return {
-      location,
+      location: await store.dispatch('locations/getBySlug', params.slug),
+      category: query.category ? await store.dispatch('categories/getBySlug', query.category) : null,
+      search: query.search,
+      chouquettiseOnly: Boolean(query.chouquettiseOnly),
     }
   },
   data() {
@@ -218,8 +219,6 @@ export default {
 
       subCategories: [],
 
-      search: this.$route.query.search,
-      chouquettiseOnly: this.$route.query.chouquettiseOnly,
       category: null,
       selectedTopCategory: null,
       selectedSubCategory: null,
@@ -235,13 +234,9 @@ export default {
     try {
       const queryLocation = this.location.slug
       const querySearch = this.search
+      const queryChouqettiseOnly = this.chouquettiseOnly
       // select category
-      let queryCategory = null
-      if (this.selectedSubCategory) {
-        queryCategory = this.selectedSubCategory.slug
-      } else if (this.selectedTopCategory) {
-        queryCategory = this.selectedTopCategory.slug
-      }
+      const queryCategory = this.category ? this.category.slug : null
       // select criteria
       const queryCriteria = this.getSelectedCriteriaSlugs()
 
@@ -251,14 +246,16 @@ export default {
             $category: String
             $location: String
             $search: String
+            $chouquettiseOnly: Boolean
             $criteria: [CriteriaSearch!]
             $page: Int!
             $pageSize: Int!
           ) {
             fichesByFilters(
-              slug: $category
+              category: $category
               location: $location
               search: $search
+              chouquettiseOnly: $chouquettiseOnly
               criteria: $criteria
               page: $page
               pageSize: $pageSize
@@ -274,9 +271,10 @@ export default {
           ${FicheFragments}
         `,
         variables: {
-          location: queryLocation,
           category: queryCategory,
+          location: queryLocation,
           search: querySearch,
+          chouquettiseOnly: queryChouqettiseOnly,
           criteria: queryCriteria,
           page: this.fichesNextPage++,
           pageSize: PER_PAGE_NUMBER,
@@ -309,8 +307,7 @@ export default {
       })
 
     // initialize categories
-    if (this.$route.query.category) {
-      this.category = await this.$store.dispatch('categories/getBySlug', this.$route.query.category)
+    if (this.category) {
       if (this.category.parentId) {
         this.selectedSubCategory = this.category
         this.selectedTopCategory = await this.$store.dispatch('categories/getById', this.category.parentId)
