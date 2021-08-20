@@ -1,184 +1,234 @@
 <template>
-  <v-container>
-    <v-dialog v-model="filtersDialog" fullscreen hide-overlay transition="dialog-bottom-transition">
-      <v-app-bar class="filter-header" color="white" fixed flat>
-        <v-toolbar-title>Filtrer</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn icon @click="filtersDialog = false">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </v-app-bar>
-      <v-card class="filter-content" tile>
-        <v-container>
-          <v-list>
-            <v-subheader class="text-h6 black--text">Adresse Chouquettisée</v-subheader>
-            <v-list-item three-line>
-              <v-list-item-content class="pt-0">
-                <div class="d-inline-flex align-center mt-1">
-                  <p class="body-2 secondary--text text--lighten-2 ma-0">
-                    Sélectionner que les adresses testées et approuvées par l'équipe. tesa fadsf
-                    kldasjféladsjféalsdfkjasdélf jasdf
-                  </p>
-                  <v-switch v-model="chouquettiseOnly" color="primary ml-auto" inset :ripple="false"></v-switch>
-                </div>
+  <div>
+    <v-expand-transition>
+      <div v-if="mapSheet" style="height: calc(100vh - 56px - 56px)" class="d-flex flex-column">
+        <div class="flex-grow-1"><FichesMap :fiches="fiches"></FichesMap></div>
+        <v-container fluid>
+          <v-row class="align-center" no-gutters>
+            <v-col>
+              <span>xxx articles affichés</span>
+              <v-tooltip top max-width="90vw">
+                <template #activator="{ on, attrs }">
+                  <v-icon small v-bind="attrs" v-on="on">mdi-help-circle-outline</v-icon>
+                </template>
+                <span class="text-wrap">Retourne sur la liste et affine tes critères pour voir d'autres adresses</span>
+              </v-tooltip>
+            </v-col>
+            <v-col cols="auto">
+              <v-btn outlined rounded small @click="mapSheet = false">
+                <v-icon left>mdi-format-list-text</v-icon>
+                Liste
+              </v-btn>
+            </v-col>
+          </v-row>
+        </v-container>
+      </div>
+    </v-expand-transition>
+    <v-container>
+      <v-dialog v-model="filtersDialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+        <v-app-bar class="filter-header" color="white" fixed flat>
+          <v-toolbar-title>Filtrer</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="filtersDialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-app-bar>
+        <v-card class="filter-content" tile>
+          <v-container>
+            <v-list>
+              <v-subheader class="text-h6 black--text">Adresse Chouquettisée</v-subheader>
+              <v-list-item three-line>
+                <v-list-item-content class="pt-0">
+                  <div class="d-inline-flex align-center mt-1">
+                    <p class="body-2 secondary--text text--lighten-2 ma-0">
+                      Sélectionner que les adresses testées et approuvées par l'équipe. tesa fadsf
+                      kldasjféladsjféalsdfkjasdélf jasdf
+                    </p>
+                    <v-switch v-model="chouquettiseOnly" color="primary ml-auto" inset :ripple="false"></v-switch>
+                  </div>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+            <v-divider></v-divider>
+            <template v-if="criteriaFilters.length">
+              <div v-for="criteriaFilter in criteriaFilters" :key="criteriaFilter.id">
+                <FilterExpansion
+                  ref="criteriaFilters"
+                  :title="criteriaFilter.name"
+                  :items="criteriaFilter.values"
+                  :initialize="criteriaFilter.selectedIndexes"
+                  @update="(indexes) => updateCriteria(criteriaFilter, indexes)"
+                ></FilterExpansion>
+              </div>
+            </template>
+            <v-alert
+              v-else
+              border="left"
+              color="primary lighten-3"
+              class="mt-3 mb-0 text-center"
+              elevation="1"
+              colored-border
+            >
+              Selectionner une catégorie pour plus de filtres
+            </v-alert>
+          </v-container>
+        </v-card>
+        <v-footer class="filter-bottom justify-space-around" color="white" fixed>
+          <v-btn outlined class="flex-grow-2 mx-1" @click.prevent="clearCriteria">Tout effacer</v-btn>
+          <v-btn dark class="flex-grow-1 mx-1" @click.prevent="searchByFilters">Appliquer</v-btn>
+        </v-footer>
+      </v-dialog>
+
+      <h1 class="text-h5 text-center mt-3">Lausanne et environs</h1>
+      <div class="cq-scroll-x-container mt-4">
+        <div class="d-inline-flex">
+          <button
+            v-for="topCategory in topCategories"
+            :key="topCategory.id"
+            v-ripple
+            class="top-category-btn rounded mr-2"
+            :class="{ 'grey darken-3': topCategory === selectedTopCategory }"
+            :disabled="$fetchState.pending"
+            @click.prevent="selectTopCategory(topCategory)"
+          >
+            <v-list-item two-line>
+              <v-list-item-avatar class="rounded-0">
+                <WpMediaNew
+                  v-if="topCategory === selectedTopCategory"
+                  :media="topCategory.logoWhite"
+                  size="thumbnail"
+                ></WpMediaNew>
+                <WpMediaNew v-else :media="topCategory.logoBlack" size="thumbnail"></WpMediaNew>
+              </v-list-item-avatar>
+
+              <v-list-item-content>
+                <v-list-item-title :class="{ 'yellow--text': topCategory === selectedTopCategory }">{{
+                  topCategory.name
+                }}</v-list-item-title>
+                <v-list-item-subtitle :class="{ 'white--text': topCategory === selectedTopCategory }">{{
+                  topCategory.description
+                }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
-          </v-list>
-          <v-divider></v-divider>
-          <template v-if="criteriaFilters.length">
-            <div v-for="criteriaFilter in criteriaFilters" :key="criteriaFilter.id">
-              <FilterExpansion
-                ref="criteriaFilters"
-                :title="criteriaFilter.name"
-                :items="criteriaFilter.values"
-                :initialize="criteriaFilter.selectedIndexes"
-                @update="(indexes) => updateCriteria(criteriaFilter, indexes)"
-              ></FilterExpansion>
-            </div>
-          </template>
-          <v-alert
-            v-else
-            border="left"
-            color="primary lighten-3"
-            class="mt-3 mb-0 text-center"
-            elevation="1"
-            colored-border
+          </button>
+        </div>
+      </div>
+      <div v-if="subCategories.length" class="cq-scroll-x-container mt-1">
+        <div class="d-inline-flex">
+          <v-chip
+            v-for="subCategory in subCategories"
+            :key="subCategory.id"
+            :dark="subCategory === selectedSubCategory"
+            :class="{ 'grey lighten-4': subCategory !== selectedSubCategory }"
+            :disabled="$fetchState.pending"
+            class="mr-2"
+            label
+            @click.prevent="selectSubCategory(subCategory)"
+            >{{ subCategory.name }}</v-chip
           >
-            Selectionner une catégorie pour plus de filtres
-          </v-alert>
-        </v-container>
-      </v-card>
-      <v-footer class="filter-bottom justify-space-around" color="white" fixed>
-        <v-btn outlined class="flex-grow-2 mx-1" @click.prevent="clearCriteria">Tout effacer</v-btn>
-        <v-btn dark class="flex-grow-1 mx-1" @click.prevent="searchByFilters">Appliquer</v-btn>
-      </v-footer>
-    </v-dialog>
-
-    <h1 class="text-h5 text-center mt-3">Lausanne et environs</h1>
-    <div class="cq-scroll-x-container mt-4">
-      <div class="d-inline-flex">
-        <button
-          v-for="topCategory in topCategories"
-          :key="topCategory.id"
-          v-ripple
-          class="top-category-btn rounded mr-2"
-          :class="{ 'grey darken-3': topCategory === selectedTopCategory }"
-          :disabled="$fetchState.pending"
-          @click.prevent="selectTopCategory(topCategory)"
-        >
-          <v-list-item two-line>
-            <v-list-item-avatar class="rounded-0">
-              <WpMediaNew
-                v-if="topCategory === selectedTopCategory"
-                :media="topCategory.logoWhite"
-                size="thumbnail"
-              ></WpMediaNew>
-              <WpMediaNew v-else :media="topCategory.logoBlack" size="thumbnail"></WpMediaNew>
-            </v-list-item-avatar>
-
-            <v-list-item-content>
-              <v-list-item-title :class="{ 'yellow--text': topCategory === selectedTopCategory }">{{
-                topCategory.name
-              }}</v-list-item-title>
-              <v-list-item-subtitle :class="{ 'white--text': topCategory === selectedTopCategory }">{{
-                topCategory.description
-              }}</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </button>
+        </div>
       </div>
-    </div>
-    <div v-if="subCategories.length" class="cq-scroll-x-container mt-1">
-      <div class="d-inline-flex">
-        <v-chip
-          v-for="subCategory in subCategories"
-          :key="subCategory.id"
-          :dark="subCategory === selectedSubCategory"
-          :class="{ 'grey lighten-4': subCategory !== selectedSubCategory }"
-          :disabled="$fetchState.pending"
+      <div class="mt-1 d-inline-flex align-stretch">
+        <v-text-field
+          v-model="search"
+          outlined
+          label="Rechercher dans la categorie"
+          prepend-inner-icon="mdi-magnify"
+          color="grey darken-3"
           class="mr-2"
-          label
-          @click.prevent="selectSubCategory(subCategory)"
-          >{{ subCategory.name }}</v-chip
-        >
+          clearable
+          hide-details
+          dense
+          @change="searchByText"
+          @click:clear.capture="clearSearch"
+        ></v-text-field>
+        <v-badge bordered color="secondary" :content="filterCount" :value="filterCount" overlap>
+          <v-btn outlined height="100%" @click="filtersDialog = true">
+            <v-icon left>mdi-tune</v-icon>
+            Filtrer
+          </v-btn>
+        </v-badge>
       </div>
-    </div>
-    <div class="mt-1 d-inline-flex align-stretch">
-      <v-text-field
-        v-model="search"
-        outlined
-        label="Rechercher dans la categorie"
-        prepend-inner-icon="mdi-magnify"
-        color="grey darken-3"
-        class="mr-2"
-        clearable
-        hide-details
-        dense
-        @change="searchByText"
-        @click:clear.capture="clearSearch"
-      ></v-text-field>
-      <v-badge bordered color="secondary" :content="filterCount" :value="filterCount" overlap>
-        <v-btn outlined height="100%" @click="filtersDialog = true">
-          <v-icon left>mdi-tune</v-icon>
-          Filtrer
+      <template v-if="fiches.length">
+        <v-subheader class="px-0 text-body-2">{{ fichesTotal }} résultats</v-subheader>
+        <v-card v-for="fiche in fiches" :key="fiche.id" class="mb-3" outlined height="450" bench="2">
+          <WpMediaNew :media="fiche.image" size="medium_large" height="200" contains>
+            <v-card-subtitle v-if="fiche.isChouquettise">
+              <v-chip color="primary" text-color="black" small>
+                Testé et Chouquettisé
+                <v-icon right>mdi-check</v-icon>
+              </v-chip>
+            </v-card-subtitle>
+          </WpMediaNew>
+          <v-card-title class="text-h5 d-block text-break">{{ fiche.title }}</v-card-title>
+          <v-card-subtitle class="text-uppercase">{{
+            getCategoryById(fiche.principalCategoryId).name
+          }}</v-card-subtitle>
+          <v-card-text class="black--text">
+            <div class="fiche-content" v-html="fiche.content"></div>
+            <a href="" @click.prevent="">Voir Plus</a>
+            <v-chip-group v-if="fiche.criteria" class="mt-3" column>
+              <v-chip
+                v-for="criteriaValue in sampleCriteriaValues(fiche)"
+                :key="criteriaValue.id"
+                color="primary lighten-4"
+                text-color="grey darken-3"
+                label
+                small
+              >
+                {{ criteriaValue.name }}</v-chip
+              >
+            </v-chip-group>
+          </v-card-text>
+        </v-card>
+        <v-btn
+          color="secondary"
+          :loading="$fetchState.pending"
+          :disabled="!hasMoreFiches"
+          block
+          outlined
+          @click="$fetch"
+        >
+          Plus d'adresses
         </v-btn>
-      </v-badge>
-    </div>
-    <template v-if="fiches.length">
-      <v-subheader class="px-0 text-body-2">{{ fichesTotal }} résultats</v-subheader>
-      <v-card v-for="fiche in fiches" :key="fiche.id" class="mb-3" outlined height="450" bench="2">
-        <WpMediaNew :media="fiche.image" size="medium_large" height="200" contains>
-          <v-card-subtitle v-if="fiche.isChouquettise">
-            <v-chip color="primary" text-color="black" small>
-              Testé et Chouquettisé
-              <v-icon right>mdi-check</v-icon>
-            </v-chip>
-          </v-card-subtitle>
-        </WpMediaNew>
-        <v-card-title class="text-h5 d-block text-break">{{ fiche.title }}</v-card-title>
-        <v-card-subtitle class="text-uppercase">{{ getCategoryById(fiche.principalCategoryId).name }}</v-card-subtitle>
-        <v-card-text class="black--text">
-          <div class="fiche-content" v-html="fiche.content"></div>
-          <a href="" @click.prevent="">Voir Plus</a>
-          <v-chip-group v-if="fiche.criteria" class="mt-3" column>
-            <v-chip
-              v-for="criteriaValue in sampleCriteriaValues(fiche)"
-              :key="criteriaValue.id"
-              color="primary lighten-4"
-              text-color="grey darken-3"
-              label
-              small
-            >
-              {{ criteriaValue.name }}</v-chip
-            >
-          </v-chip-group>
-        </v-card-text>
-      </v-card>
-      <v-btn color="secondary" :loading="$fetchState.pending" :disabled="!hasMoreFiches" block outlined @click="$fetch">
-        Plus d'adresses
-      </v-btn>
-    </template>
-    <div v-else-if="$fetchState.pending" class="mt-3">
-      <v-skeleton-loader
-        v-for="i in 3"
-        :key="i"
-        class="mb-3"
-        elevation="1"
-        type="image, article, actions"
-      ></v-skeleton-loader>
-    </div>
-    <v-alert
-      v-else
-      border="bottom"
-      color="primary lighten-3"
-      class="mt-3 mb-0 text-center"
-      elevation="2"
-      colored-border
-    >
-      Aucun résultat
-    </v-alert>
-    <ScrollTop></ScrollTop>
-  </v-container>
+      </template>
+      <div v-else-if="$fetchState.pending" class="mt-3">
+        <v-skeleton-loader
+          v-for="i in 3"
+          :key="i"
+          class="mb-3"
+          elevation="1"
+          type="image, article, actions"
+        ></v-skeleton-loader>
+      </div>
+      <v-alert
+        v-else
+        border="bottom"
+        color="primary lighten-3"
+        class="mt-3 mb-0 text-center"
+        elevation="2"
+        colored-border
+      >
+        Aucun résultat
+      </v-alert>
+
+      <v-fade-transition>
+        <v-btn
+          v-if="!mapSheet"
+          style="opacity: 0.9; bottom: 65px; left: 50%; transform: translateX(-50%)"
+          dark
+          rounded
+          small
+          fixed
+          @click="mapSheet = true"
+        >
+          <v-icon left>mdi-map</v-icon>
+          Carte
+        </v-btn>
+      </v-fade-transition>
+      <ScrollTop></ScrollTop>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -191,6 +241,7 @@ import WpMediaNew from '~/components/WpMediaNew'
 import graphql from '~/mixins/graphql'
 import FilterExpansion from '~/components/FilterExpansion'
 import ScrollTop from '~/components/ScrollTop'
+import FichesMap from '~/components/FichesMap'
 
 const MapStates = Object.freeze({
   HIDDEN: Symbol('hidden'),
@@ -199,7 +250,7 @@ const MapStates = Object.freeze({
 })
 
 export default {
-  components: { FilterExpansion, WpMediaNew, ScrollTop },
+  components: { FilterExpansion, WpMediaNew, ScrollTop, FichesMap },
   mixins: [seo, graphql],
   async asyncData({ store, params, query }) {
     const location = await store.dispatch('locations/getBySlug', params.slug)
@@ -236,8 +287,9 @@ export default {
       filterCount: 0,
       filtersDialog: false,
       criteriaFilters: [],
-
       criteriaLoading: false,
+
+      mapSheet: false,
     }
   },
   async fetch() {

@@ -1,6 +1,6 @@
 <template>
   <div class="map">
-    <div ref="map" class="h-100 w-100" />
+    <div ref="map" style="height: 100%; width: 100%" />
     <button
       v-if="!!countNextFiches"
       class="map-load-more google-map-control bg-yellow w-auto"
@@ -194,10 +194,12 @@ export default {
 
 <style lang="scss" scoped>
 .map {
-  position: fixed;
-  bottom: 0;
-  right: 0;
+  height: 100%;
   width: 100%;
+  //position: fixed;
+  //bottom: 0;
+  //right: 0;
+  //width: 100%;
   //z-index: $zindex-fixed + 1;
   //height: calc(100% - #{$header-height});
 }
