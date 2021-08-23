@@ -191,9 +191,10 @@
           </v-card-text>
         </v-card>
         <v-btn
+          v-if="!$fetchState.pending && hasMoreFiches"
+          v-intersect.quiet="$fetch"
           color="secondary"
           :loading="$fetchState.pending"
-          :disabled="!hasMoreFiches"
           block
           outlined
           @click="$fetch"
@@ -201,7 +202,7 @@
           Plus d'adresses
         </v-btn>
       </template>
-      <div v-else-if="$fetchState.pending" class="mt-3">
+      <div v-if="$fetchState.pending" class="mt-3">
         <v-skeleton-loader
           v-for="i in 3"
           :key="i"
@@ -211,14 +212,15 @@
         ></v-skeleton-loader>
       </div>
       <v-alert
-        v-else
+        v-else-if="!hasMoreFiches"
         border="bottom"
         color="primary lighten-3"
         class="mt-3 mb-0 text-center"
         elevation="2"
         colored-border
       >
-        Aucun résultat
+        <span v-if="fiches.length">Tu as tout vu !</span>
+        <span v-else>Aucun résultat pour ta recherche</span>
       </v-alert>
 
       <v-fade-transition>
@@ -286,7 +288,7 @@ export default {
       fiches: [],
       fichesTotal: null,
       fichesPages: null,
-      hasMoreFiches: false,
+      hasMoreFiches: true,
 
       subCategories: [],
 
@@ -302,6 +304,11 @@ export default {
     }
   },
   async fetch() {
+    if (!this.hasMoreFiches) {
+      console.info('Plus de fiches disponibles')
+      return
+    }
+
     try {
       const { data } = await this.$apollo.query({
         query: gql`
