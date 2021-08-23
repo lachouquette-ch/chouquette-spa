@@ -30,7 +30,6 @@ export const MAP_OPTIONS = {
   zoom: ZOOM_LEVELS.default,
   clickableIcons: false,
   disableDefaultUI: true,
-  fullscreenControl: true,
   gestureHandling: 'greedy',
   restriction: {
     latLngBounds: SWITZERLAND_BOUNDS,

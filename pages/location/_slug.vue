@@ -1,30 +1,39 @@
 <template>
   <div>
-    <v-expand-transition>
-      <div v-if="mapSheet" style="height: calc(100vh - 56px - 56px)" class="d-flex flex-column">
-        <div class="flex-grow-1"><FichesMap :fiches="fiches"></FichesMap></div>
-        <v-container fluid>
-          <v-row class="align-center" no-gutters>
+    <v-container>
+      <v-dialog v-model="mapDialog" fullscreen hide-overlay transition="dialog-top-transition">
+        <FichesMap :fiches="fiches"></FichesMap>
+        <v-container
+          v-touch="{
+            up: () => {
+              mapDialog = false
+            },
+          }"
+          class="white rounded-t-xl"
+          fluid
+          style="position: absolute; bottom: 0; height: 64px"
+        >
+          <v-divider class="mx-auto grey" style="width: 40px; border: 2px solid; border-radius: 5px"></v-divider>
+          <v-row class="align-center mt-2 grey--text text--darken-3" no-gutters>
             <v-col>
-              <span>xxx articles affichés</span>
-              <v-tooltip top max-width="90vw">
+              <span>{{ fiches.length }} adresses affichées</span>
+              <v-tooltip max-width="90vw" top>
                 <template #activator="{ on, attrs }">
-                  <v-icon small v-bind="attrs" v-on="on">mdi-help-circle-outline</v-icon>
+                  <v-icon v-bind="attrs" small v-on="on">mdi-help-circle-outline</v-icon>
                 </template>
                 <span class="text-wrap">Retourne sur la liste et affine tes critères pour voir d'autres adresses</span>
               </v-tooltip>
             </v-col>
             <v-col cols="auto">
-              <v-btn outlined rounded small @click="mapSheet = false">
+              <v-btn style="opacity: 0.9" dark rounded small @click="mapDialog = false">
                 <v-icon left>mdi-format-list-text</v-icon>
                 Liste
               </v-btn>
             </v-col>
           </v-row>
         </v-container>
-      </div>
-    </v-expand-transition>
-    <v-container>
+      </v-dialog>
+
       <v-dialog v-model="filtersDialog" fullscreen hide-overlay transition="dialog-bottom-transition">
         <v-app-bar class="filter-header" color="white" fixed flat>
           <v-toolbar-title>Filtrer</v-toolbar-title>
@@ -214,13 +223,13 @@
 
       <v-fade-transition>
         <v-btn
-          v-if="!mapSheet"
+          v-if="!mapDialog"
           style="opacity: 0.9; bottom: 65px; left: 50%; transform: translateX(-50%)"
           dark
           rounded
           small
           fixed
-          @click="mapSheet = true"
+          @click="mapDialog = true"
         >
           <v-icon left>mdi-map</v-icon>
           Carte
@@ -289,7 +298,7 @@ export default {
       criteriaFilters: [],
       criteriaLoading: false,
 
-      mapSheet: false,
+      mapDialog: false,
     }
   },
   async fetch() {

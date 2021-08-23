@@ -1,20 +1,28 @@
 <template>
-  <div class="fiche-infowindow text-center">
-    <h2 class="h4">{{ fiche.title }}</h2>
-    <WpMedia :media="fiche.image" size="medium" :no-src-set="true" class="fiche-infowindow-img" />
-    <p class="my-2 muted">{{ fiche.poi.address }}</p>
-    <a v-if="fiche.isChouquettise" :href="googleMapsURL" class="" title="Ouvrir avec Google maps" target="_blank">
-      <i class="fas fa-map-marker-alt pr-1"></i> Ouvrir dans google maps
-    </a>
-    <button class="btn btn-sm btn-outline-secondary d-block my-2 mx-auto" @click="showBtnAction">Voir la fiche</button>
-  </div>
+  <v-card class="d-flex flex-row" height="75" width="250" flat tile ripple>
+    <WpMediaNew
+      :media="fiche.image"
+      size="thumbnail"
+      width="75"
+      contain
+      aspect-ratio="1"
+      class="flex-grow-0"
+    ></WpMediaNew>
+    <v-list class="pa-2 flex-grow-1 overflow-hidden">
+      <v-list-item-content class="pa-0">
+        <v-list-item-title class="text-body-1">{{ fiche.title }}</v-list-item-title>
+        <v-list-item-subtitle class="text-body-2 font-italic">{{ categoryName }}</v-list-item-subtitle>
+        <v-list-item-subtitle class="text-caption"><a href="">Voir Plus</a></v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list>
+  </v-card>
 </template>
 
 <script>
-import WpMedia from '~/components/WpMedia'
+import WpMediaNew from '~/components/WpMediaNew'
 
 export default {
-  components: { WpMedia },
+  components: { WpMediaNew },
   props: {
     fiche: {
       type: Object,
@@ -31,6 +39,10 @@ export default {
   computed: {
     googleMapsURL() {
       return `https://maps.google.com/?q=${this.fiche.poi.address}`
+    },
+    categoryName() {
+      // hack since no $nuxt context attached (component created manually)
+      return this.$nuxt.$store.state.categories.all[this.fiche.principalCategoryId].name
     },
   },
 }

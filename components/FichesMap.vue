@@ -66,6 +66,9 @@ export default {
     this.google = await this.$googleMaps
     this.map = new this.google.maps.Map(this.$refs.map, {
       ...MAP_OPTIONS,
+      zoomControlOptions: {
+        position: this.google.maps.ControlPosition.TOP_RIGHT,
+      },
     })
 
     // create cluster
@@ -86,10 +89,12 @@ export default {
     centerControlButton.className = 'google-map-control'
     centerControlButton.title = 'Voir toutes les fiches sur la carte'
     const centerControlButtonContent = document.createElement('i')
-    centerControlButtonContent.className = 'far fa-map'
+    // centerControlButtonContent.className = 'material-icons'
+    centerControlButtonContent.className = 'mdi mdi-arrow-expand-all gm-control-active'
+    centerControlButtonContent.style = 'color: #666666; font-size: 30px; font-weight: bold;'
     centerControlButton.appendChild(centerControlButtonContent)
     centerControlButton.addEventListener('click', () => this.resetMap())
-    this.map.controls[this.google.maps.ControlPosition.RIGHT_TOP].push(centerControlButton)
+    this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(centerControlButton)
 
     this.loadFichesOnMap()
   },
@@ -125,7 +130,7 @@ export default {
 
       // need to fit map twice... (magic)
       if (this.markers.size) {
-        this.$nextTick(() => this.markerClusterer.fitMapToMarkers())
+        this.$nextTick(() => this.markerClusterer.fitMapToMarkers({ top: 5, right: 5, bottom: 64, left: 5 }))
       } else {
         this.map.setCenter(LAUSANNE_LAT_LNG)
       }
@@ -196,17 +201,15 @@ export default {
 .map {
   height: 100%;
   width: 100%;
-  //position: fixed;
-  //bottom: 0;
-  //right: 0;
-  //width: 100%;
-  //z-index: $zindex-fixed + 1;
-  //height: calc(100% - #{$header-height});
 }
 
-.map-load-more {
-  position: absolute;
-  bottom: 0;
-  left: 0;
+// hack google map style
+
+::v-deep .gm-style-iw.gm-style-iw-c {
+  padding: 0 !important;
+}
+
+::v-deep .gm-style-iw-d {
+  overflow: hidden !important;
 }
 </style>
