@@ -214,7 +214,7 @@
       <v-alert
         v-else-if="!hasMoreFiches"
         border="bottom"
-        color="primary lighten-3"
+        color="secondary lighten-3"
         class="mt-3 mb-0 text-center"
         elevation="2"
         colored-border
