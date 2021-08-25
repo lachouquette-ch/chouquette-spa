@@ -43,6 +43,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    preview: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -84,17 +88,22 @@ export default {
       },
     })
 
-    // create map controls
-    const centerControlButton = document.createElement('button')
-    centerControlButton.className = 'google-map-control'
-    centerControlButton.title = 'Voir toutes les fiches sur la carte'
-    const centerControlButtonContent = document.createElement('i')
-    // centerControlButtonContent.className = 'material-icons'
-    centerControlButtonContent.className = 'mdi mdi-arrow-expand-all gm-control-active'
-    centerControlButtonContent.style = 'color: #666666; font-size: 30px; font-weight: bold;'
-    centerControlButton.appendChild(centerControlButtonContent)
-    centerControlButton.addEventListener('click', () => this.resetMap())
-    this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(centerControlButton)
+    // map specificities
+    if (this.preview) {
+      this.map.gestureHandling = 'none'
+    } else {
+      // create map controls
+      const centerControlButton = document.createElement('button')
+      centerControlButton.className = 'google-map-control'
+      centerControlButton.title = 'Voir toutes les fiches sur la carte'
+      const centerControlButtonContent = document.createElement('i')
+      // centerControlButtonContent.className = 'material-icons'
+      centerControlButtonContent.className = 'mdi mdi-arrow-expand-all gm-control-active'
+      centerControlButtonContent.style = 'color: #666666; font-size: 30px; font-weight: bold;'
+      centerControlButton.appendChild(centerControlButtonContent)
+      centerControlButton.addEventListener('click', () => this.resetMap())
+      this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(centerControlButton)
+    }
 
     this.loadFichesOnMap()
   },
@@ -138,7 +147,8 @@ export default {
       this.currentMarker = this.markers.values().next().value
       this.currentInfoWindow = this.infoWindows.values().next().value
 
-      if (this.markers.size === 1) this.currentInfoWindow.open(this.map, this.currentMarker)
+      if (this.preview) this.$nextTick(() => this.map.setZoom(ZOOM_LEVELS.default))
+      else if (this.markers.size === 1) this.currentInfoWindow.open(this.map, this.currentMarker)
     },
     loadFichesOnMap() {
       this.clear()
@@ -176,15 +186,17 @@ export default {
         marker.defaultZIndex = fiche.isChouquettise ? Z_INDEXES.chouquettise : Z_INDEXES.default
         marker.chouquettise = fiche.isChouquettise
         marker.setZIndex(marker.defaultZIndex)
-        marker.addListener('click', () => {
-          this.resetMapObjects()
+        if (!this.preview) {
+          marker.addListener('click', () => {
+            this.resetMapObjects()
 
-          marker.setZIndex(Z_INDEXES.selected)
-          infoWindow.open(this.map, marker)
+            marker.setZIndex(Z_INDEXES.selected)
+            infoWindow.open(this.map, marker)
 
-          this.currentMarker = marker
-          this.currentInfoWindow = infoWindow
-        })
+            this.currentMarker = marker
+            this.currentInfoWindow = infoWindow
+          })
+        }
         this.markers.set(fiche.id, marker)
       }
 

@@ -46,7 +46,7 @@
     </v-app-bar>
 
     <!-- Sizes your content based upon application components -->
-    <v-main class="overflow-y-auto">
+    <v-main>
       <!-- Provides the application the proper gutter -->
       <v-container fluid class="pa-0 min-vh-100 d-flex flex-column">
         <nuxt></nuxt>

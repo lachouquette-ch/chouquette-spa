@@ -1,43 +1,38 @@
 <template>
-  <span id="share">
+  <div>
     <template v-if="shareApiAvailable">
-      <button
-        class="btn btn-sm btn-outline-secondary text-black"
-        @click.prevent="shareWith('Fiche sur La Chouquette', escapedTitle, fichePage)"
+      <v-btn dark fab @click.prevent="shareWith('Fiche sur La Chouquette', escapedTitle, fichePage)"
+        ><v-icon>mdi-share-variant</v-icon></v-btn
       >
-        <span class="mx-1"><i class="fas fa-share-alt"></i></span>
-      </button>
     </template>
     <template v-else>
-      <b-dropdown size="sm" dropup no-caret variant="outline-secondary" toggle-class="text-black">
-        <template #button-content>
-          <span title="Partager" class="mx-1"><i class="fas fa-share-alt"></i></span>
+      <v-menu top>
+        <template #activator="{ on, attrs }">
+          <v-btn dark fab v-bind="attrs" v-on="on">
+            <v-icon>mdi-share-variant</v-icon>
+          </v-btn>
         </template>
-        <template #default>
-          <b-dropdown-item
-            :href="`https://www.facebook.com/sharer/sharer.php?u=${fichePage}`"
+
+        <v-list>
+          <v-list-item target="_blank" :to="`https://www.facebook.com/sharer/sharer.php?u=${fichePage}`">
+            <v-list-item-title><v-icon color="#4267b2" class="mr-2">mdi-facebook</v-icon>Facebook</v-list-item-title>
+          </v-list-item>
+          <v-list-item
             target="_blank"
-            variant="secondary"
+            :to="`https://twitter.com/share?text=${escapedTitle}&url=${encodeURI(fichePage)}`"
           >
-            <span style="color: #4267b2" class="mr-2"><i class="fab fa-facebook-square"></i></span> Facebook
-          </b-dropdown-item>
-          <b-dropdown-item
-            :href="`https://twitter.com/share?text=${escapedTitle}&url=${encodeURI(fichePage)}`"
+            <v-list-item-title><v-icon color="#38a1f3" class="mr-2">mdi-twitter</v-icon>Twitter</v-list-item-title>
+          </v-list-item>
+          <v-list-item
             target="_blank"
-            variant="secondary"
+            :to="`mailto:?subject=${escapedTitle}&amp;body=Je te partage cet article ${fichePage}`"
           >
-            <span style="color: #38a1f3" class="mr-2"><i class="fab fa-twitter-square"></i></span> Twitter
-          </b-dropdown-item>
-          <b-dropdown-item
-            :href="`mailto:?subject=${escapedTitle}&amp;body=Je te partage cet article ${fichePage}`"
-            variant="secondary"
-          >
-            <span style="color: #b7b7b7" class="mr-2"><i class="fas fa-envelope-square"></i></span> Email
-          </b-dropdown-item>
-        </template>
-      </b-dropdown>
+            <v-list-item-title><v-icon color="#b7b7b7" class="mr-2">mdi-at</v-icon> Email</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </template>
-  </span>
+  </div>
 </template>
 
 <script>
@@ -67,8 +62,4 @@ export default {
 }
 </script>
 
-<style scoped>
-a.dropdown-item span {
-  font-size: 1.2rem;
-}
-</style>
+<style scoped></style>

@@ -12,8 +12,10 @@ export const actions = {
 
     return [locations, state.hierarchy]
   },
+}
 
-  getBySlug({ state }, slug) {
+export const getters = {
+  getBySlug: (state) => (slug) => {
     const key = _.findKey(state.all, ({ slug: locationSlug }) => locationSlug === slug)
     if (key) {
       return state.all[key]
@@ -22,14 +24,21 @@ export const actions = {
     }
   },
 
-  findChildren({ state }, location) {
+  getById: (state) => (id) => {
+    return state.all[id]
+  },
+
+  getChildren: (state) => (location) => {
     return state.hierarchy[location.id]
   },
 }
 
 export const mutations = {
   SET_LOCATIONS(state, locations) {
-    state.all = locations
+    state.all = locations.reduce((acc, location) => {
+      acc[parseInt(location.id)] = location
+      return acc
+    }, {})
 
     const topLocations = locations.filter(({ parentId }) => parentId === 0)
     // single level only. Add level property
@@ -37,7 +46,7 @@ export const mutations = {
       location.level = 0
       const subLocations = locations.filter(({ parentId }) => parentId === parseInt(location.id))
       subLocations.forEach((subLocation) => (subLocation.level = 1))
-      state.hierarchy[location.id] = subLocations
+      state.hierarchy[parseInt(location.id)] = subLocations
       // add to flatSorted
       state.flatSorted.push(location, ...subLocations)
     })
