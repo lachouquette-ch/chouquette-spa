@@ -160,7 +160,15 @@
       </div>
       <template v-if="fiches.length">
         <v-subheader class="px-0 text-body-2">{{ fichesTotal }} résultats</v-subheader>
-        <v-card v-for="fiche in fiches" :key="fiche.id" class="mb-3" outlined height="450" bench="2">
+        <v-card
+          v-for="fiche in fiches"
+          :key="fiche.id"
+          class="mb-3"
+          outlined
+          bench="2"
+          :to="`/fiche/${fiche.slug}`"
+          nuxt
+        >
           <WpMediaNew :media="fiche.image" size="medium_large" height="200" contains>
             <v-card-subtitle v-if="fiche.isChouquettise">
               <v-chip color="primary" text-color="black" small>
@@ -246,7 +254,7 @@
 import { mapGetters, mapState } from 'vuex'
 import gql from 'graphql-tag'
 import seo from '~/mixins/seo'
-import { ficheCard as FicheCardFragments } from '~/apollo/fragments/ficheCard'
+import { fiche as FicheFragments } from '~/apollo/fragments/fiche'
 import { PER_PAGE_NUMBER } from '~/constants/default'
 import WpMediaNew from '~/components/WpMediaNew'
 import graphql from '~/mixins/graphql'
@@ -334,11 +342,11 @@ export default {
               total
               totalPages
               fiches {
-                ...FicheCardFragments
+                ...FicheFragments
               }
             }
           }
-          ${FicheCardFragments}
+          ${FicheFragments}
         `,
         variables: {
           category: this.category ? this.category.slug : null,
