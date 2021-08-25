@@ -9,9 +9,9 @@
       class="flex-grow-0"
     ></WpMediaNew>
     <v-card-text class="pa-2 flex-grow-1 overflow-hidden">
-      <p class="ma-0 text-body-1">{{ fiche.title }}</p>
+      <p class="ma-0 text-body-1 text-truncate">{{ fiche.title }}</p>
       <p class="ma-0 text-body-2 font-italic">{{ categoryName }}</p>
-      <a href="" class="text-caption">Voir Plus</a>
+      <span class="text-caption text-decoration-underline">Voir Plus</span>
     </v-card-text>
   </v-card>
 </template>

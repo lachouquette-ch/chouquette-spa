@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 import { media as MediaParts } from '@/apollo/fragments/media'
 import { seo as SeoParts } from '@/apollo/fragments/seo'
 
-export const fiche = gql`
+export const ficheCard = gql`
   fragment FicheFragments on Fiche {
     id
     slug

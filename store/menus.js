@@ -11,7 +11,7 @@ export const state = () => ({
 })
 
 export const actions = {
-  async init({ state, commit, dispatch }, menus) {
+  async init({ state, commit }, menus) {
     /* Process header menu */
     // get menu and add to store
     const headerMenu = menus.find((menu) => menu.slug === HEADER_SLUG)
@@ -23,7 +23,7 @@ export const actions = {
           return type === 'category'
         })
         .map(({ id }) => {
-          return dispatch('categories/getById', parseInt(id), { root: true })
+          return this.getters['categories/getById'](parseInt(id))
         })
     )
     commit('SET_HEADER_CATEGORIES', categories)
@@ -45,10 +45,8 @@ export const actions = {
   /**
    * Return an array with all hleader categories and subcategories
    */
-  getHeaderCategories({ state, dispatch }) {
-    return state.headerCategories.map((headerCategoryId) =>
-      dispatch('categories/get', headerCategoryId, { root: true })
-    )
+  getHeaderCategories({ state }) {
+    return state.headerCategories.map((headerCategoryId) => this.getters['categories/getById'](headerCategoryId))
   },
 }
 

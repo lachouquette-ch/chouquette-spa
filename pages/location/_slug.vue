@@ -246,7 +246,7 @@
 import { mapGetters, mapState } from 'vuex'
 import gql from 'graphql-tag'
 import seo from '~/mixins/seo'
-import { fiche as FicheFragments } from '~/apollo/fragments/fiche'
+import { ficheCard as FicheCardFragments } from '~/apollo/fragments/ficheCard'
 import { PER_PAGE_NUMBER } from '~/constants/default'
 import WpMediaNew from '~/components/WpMediaNew'
 import graphql from '~/mixins/graphql'
@@ -334,11 +334,11 @@ export default {
               total
               totalPages
               fiches {
-                ...FicheFragments
+                ...FicheCardFragments
               }
             }
           }
-          ${FicheFragments}
+          ${FicheCardFragments}
         `,
         variables: {
           category: this.category ? this.category.slug : null,
