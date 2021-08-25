@@ -63,7 +63,7 @@
               max-width="350"
               type="card"
             ></v-skeleton-loader>
-            <v-card v-else class="post-thumb mx-auto mb-3" max-width="350" flat hover ripple>
+            <v-card v-else class="mx-auto mb-3" max-width="350" flat hover ripple>
               <WpMediaNew
                 :media="highlightedPost.image"
                 size="medium_large"
@@ -97,23 +97,21 @@
                 hover
                 ripple
               >
-                <div>
-                  <WpMediaNew
-                    :media="post.image"
-                    size="thumbnail"
-                    aspect-ratio="1"
-                    position="center center"
-                    class="rounded float-left"
-                    width="100"
-                  ></WpMediaNew>
-                </div>
+                <WpMediaNew
+                  :media="post.image"
+                  size="thumbnail"
+                  width="100"
+                  contain
+                  aspect-ratio="1"
+                  class="flex-grow-0 rounded"
+                ></WpMediaNew>
 
-                <div class="px-2">
+                <v-card-text class="pa-0 px-2 flex-grow-1 overflow-hidden">
                   <h2 class="horizontal-card-title text-h6 text-break">{{ post.title }}</h2>
                   <small class="horizontal-card-subtitle body-2 text-uppercase text-truncate">
                     {{ getCategoryById(post.categoryId).name }}
                   </small>
-                </div>
+                </v-card-text>
               </v-card>
             </template>
           </v-col>
@@ -143,7 +141,7 @@
 
     <v-sheet class="pt-5">
       <h3 class="text-center headline pb-3">Nos derniers tops</h3>
-      <div class="cq-scroll-x-container">
+      <div class="cq-scroll-x-container px-3">
         <v-card v-for="post in topPosts" :key="post.id" flat hover ripple>
           <WpMediaNew
             :media="post.image"
@@ -168,7 +166,7 @@
         Ce sont les adresses testées et approuvées par la Chouquette. Ils sont membres de notre label : Chouquettisés et
         partagent ainsi les mêmes valeurs que les nôtres.
       </p>
-      <div class="cq-scroll-x-container">
+      <div class="cq-scroll-x-container px-3">
         <v-card v-for="fiche in latestChouquettises" :key="fiche.id" class="transparent" flat hover ripple>
           <WpMediaNew
             :media="fiche.image"
@@ -190,7 +188,7 @@
 
 <script>
 import gql from 'graphql-tag'
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
 import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
@@ -275,9 +273,6 @@ export default {
   },
   fetchOnServer: true,
   methods: {
-    ...mapActions('categories', {
-      getCategoryById: 'getById',
-    }),
     goToLocation(location) {
       this.$router.push(`/location/${location}`)
     },
@@ -288,6 +283,7 @@ export default {
       categories: (state) => state.menus.headerCategories,
       locations: (state) => state.locations.flatSorted,
     }),
+    ...mapGetters('categories', { getCategoryById: 'getById' }),
     highlightedPost() {
       return this.latestPosts[0]
     },

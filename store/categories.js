@@ -10,24 +10,24 @@ export const getters = {
   getTopLevels: (state) => {
     return Object.values(state.all).filter((category) => category.parentId === 0)
   },
+
+  getById: (state) => (id) => {
+    return state.all[id]
+  },
+
+  getBySlug: (state) => (slug) => {
+    return Object.values(state.all).find((category) => category.slug === slug)
+  },
+
+  getChildrenForId: (state) => (parentId) => {
+    return state.hierarchy[parentId]
+  },
 }
 
 export const actions = {
   init({ state, commit, dispatch }, categories) {
     commit('SET_CATEGORIES', categories)
     return categories
-  },
-
-  getById({ state }, id) {
-    return state.all[id]
-  },
-
-  getBySlug({ state }, slug) {
-    return Object.values(state.all).find((category) => category.slug === slug)
-  },
-
-  getChildrenForId({ state }, parentId) {
-    return state.hierarchy[parentId]
   },
 }
 

@@ -8,13 +8,11 @@
       aspect-ratio="1"
       class="flex-grow-0"
     ></WpMediaNew>
-    <v-list class="pa-2 flex-grow-1 overflow-hidden">
-      <v-list-item-content class="pa-0">
-        <v-list-item-title class="text-body-1">{{ fiche.title }}</v-list-item-title>
-        <v-list-item-subtitle class="text-body-2 font-italic">{{ categoryName }}</v-list-item-subtitle>
-        <v-list-item-subtitle class="text-caption"><a href="">Voir Plus</a></v-list-item-subtitle>
-      </v-list-item-content>
-    </v-list>
+    <v-card-text class="pa-2 flex-grow-1 overflow-hidden">
+      <p class="ma-0 text-body-1">{{ fiche.title }}</p>
+      <p class="ma-0 text-body-2 font-italic">{{ categoryName }}</p>
+      <a href="" class="text-caption">Voir Plus</a>
+    </v-card-text>
   </v-card>
 </template>
 

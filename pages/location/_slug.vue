@@ -88,7 +88,7 @@
         </v-footer>
       </v-dialog>
 
-      <h1 class="text-h5 text-center mt-3">Lausanne et environs</h1>
+      <h1 class="text-h5 text-center mt-3">{{ location.name }}</h1>
       <div class="cq-scroll-x-container mt-4">
         <div class="d-inline-flex">
           <button
@@ -243,7 +243,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import gql from 'graphql-tag'
 import seo from '~/mixins/seo'
 import { fiche as FicheFragments } from '~/apollo/fragments/fiche'
@@ -373,7 +373,7 @@ export default {
     if (this.category) {
       if (this.category.parentId) {
         this.selectedSubCategory = this.category
-        this.selectedTopCategory = await this.$store.dispatch('categories/getById', this.category.parentId)
+        this.selectedTopCategory = this.getCategoryById(this.category.parentId)
       } else {
         this.selectedTopCategory = this.category
       }
@@ -396,10 +396,6 @@ export default {
     )
   },
   methods: {
-    ...mapActions('categories', {
-      getCategoryById: 'getById',
-      getCategoriesByParentId: 'getChildrenForId',
-    }),
     updateCriteria(criteriaFilter, selectedCriteria) {
       const values = selectedCriteria.map(({ slug }) => slug)
       const criteria = this.criteriaList.find(({ taxonomy }) => criteriaFilter.taxonomy)
@@ -507,6 +503,10 @@ export default {
     ...mapState(['wordpressUrl']),
     ...mapState('categories', { topCategories: 'topLevels' }),
     ...mapState('locations', { locations: 'flatSorted' }),
+    ...mapGetters('categories', {
+      getCategoryById: 'getById',
+      getCategoriesByParentId: 'getChildrenForId',
+    }),
   },
   head() {
     return {

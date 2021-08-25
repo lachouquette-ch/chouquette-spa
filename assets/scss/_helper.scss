@@ -1,6 +1,6 @@
 .cq-scroll-x-container {
   overflow-x: scroll;
-  scroll-snap-type: x proximity;
+  scroll-snap-type: x mandatory;
   scroll-padding-left: 10px;
   display: flex;
   padding-bottom: 1.25rem;
