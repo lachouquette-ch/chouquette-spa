@@ -152,8 +152,8 @@
 
       <v-divider class="my-3"></v-divider>
       <h2 class="text-h6">Adresses similaires</h2>
-      <div class="my-3">
-        <PostCard v-for="post in fiche.postCards" :key="post.id" :post="post" class="mb-3"></PostCard>
+      <div class="cq-scroll-x-container my-3">
+        <FicheCard v-for="fiche in fiche.similarFiches" :key="fiche.id" class="mb-3" :fiche="fiche"></FicheCard>
       </div>
     </v-card>
 
@@ -224,6 +224,7 @@
 <script>
 import gql from 'graphql-tag'
 import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
+import { ficheCard as FicheCardFragments } from '@/apollo/fragments/ficheCard'
 import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
@@ -235,9 +236,10 @@ import FichesMap from '~/components/FichesMap'
 import FicheShare from '~/components/FicheShare'
 import graphql from '~/mixins/graphql'
 import PostCard from '~/components/PostCard'
+import FicheCard from '~/components/FicheCard'
 
 export default {
-  components: { PostCard, FicheShare, FichesMap, WpMediaNew },
+  components: { FicheCard, PostCard, FicheShare, FichesMap, WpMediaNew },
   mixins: [seo, graphql],
   async asyncData(context) {
     const { app, store, params, route, error } = context
@@ -254,10 +256,15 @@ export default {
               postCards {
                 ...PostCardFragments
               }
+
+              similarFiches {
+                ...FicheCardFragments
+              }
             }
           }
           ${FicheFragments}
           ${PostCardFragments}
+          ${FicheCardFragments}
         `,
         variables: { slug: params.slug },
       })

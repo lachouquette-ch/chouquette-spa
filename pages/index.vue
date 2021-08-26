@@ -116,6 +116,20 @@
     </v-sheet>
 
     <v-sheet class="pt-5">
+      <h3 class="text-center headline">Nos Chouquettisés</h3>
+      <p class="text-center text-subtitle-2 px-4">
+        Ce sont les adresses testées et approuvées par la Chouquette. Ils sont membres de notre label : Chouquettisés et
+        partagent ainsi les mêmes valeurs que les nôtres.
+      </p>
+      <div class="cq-scroll-x-container px-3">
+        <FicheCard v-for="fiche in latestChouquettises" :key="fiche.id" :fiche="fiche"></FicheCard>
+      </div>
+      <div class="text-center">
+        <nuxt-link to="/tops" class="text-button">Tous nos Chouquettisés</nuxt-link>
+      </div>
+    </v-sheet>
+
+    <v-sheet class="py-3">
       <h3 class="text-center headline pb-3">Nos derniers tops</h3>
       <div class="cq-scroll-x-container px-3">
         <v-card v-for="post in topPosts" :key="post.id" flat hover ripple>
@@ -135,30 +149,6 @@
         <nuxt-link to="/tops" class="text-button">Tous les tops</nuxt-link>
       </div>
     </v-sheet>
-
-    <v-sheet class="py-3">
-      <h3 class="text-center headline">Nos Chouquettisés</h3>
-      <p class="text-center text-subtitle-2 px-4">
-        Ce sont les adresses testées et approuvées par la Chouquette. Ils sont membres de notre label : Chouquettisés et
-        partagent ainsi les mêmes valeurs que les nôtres.
-      </p>
-      <div class="cq-scroll-x-container px-3">
-        <v-card v-for="fiche in latestChouquettises" :key="fiche.id" class="transparent" flat hover ripple>
-          <WpMediaNew
-            :media="fiche.image"
-            size="medium_large"
-            class="rounded"
-            aspect-ratio="1"
-            width="60vw"
-          ></WpMediaNew>
-          <v-card-title class="text-h6 font-weight-bold pt-1 px-0">{{ fiche.title }}</v-card-title>
-          <v-card-subtitle class="px-0 pb-0">{{ getCategoryById(fiche.principalCategoryId).name }}</v-card-subtitle>
-        </v-card>
-      </div>
-      <div class="text-center">
-        <nuxt-link to="/tops" class="text-button">Tous nos Chouquettisés</nuxt-link>
-      </div>
-    </v-sheet>
   </div>
 </template>
 
@@ -174,9 +164,10 @@ import seo from '~/mixins/seo'
 import graphql from '~/mixins/graphql'
 import WpMediaNew from '~/components/WpMediaNew'
 import PostCard from '~/components/PostCard'
+import FicheCard from '~/components/FicheCard'
 
 export default {
-  components: { PostCard, WpMediaNew },
+  components: { FicheCard, PostCard, WpMediaNew },
   mixins: [seo, graphql],
   async asyncData({ store, app }) {
     // store initialization
