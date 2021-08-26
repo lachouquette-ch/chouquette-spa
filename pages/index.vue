@@ -88,31 +88,7 @@
               ></v-skeleton-loader>
             </template>
             <template v-else>
-              <v-card
-                v-for="post in otherPosts"
-                :key="post.id"
-                class="horizontal-card mb-3 d-flex"
-                dense
-                flat
-                hover
-                ripple
-              >
-                <WpMediaNew
-                  :media="post.image"
-                  size="thumbnail"
-                  width="100"
-                  contain
-                  aspect-ratio="1"
-                  class="flex-grow-0 rounded"
-                ></WpMediaNew>
-
-                <v-card-text class="pa-0 px-2 flex-grow-1 overflow-hidden">
-                  <h2 class="horizontal-card-title text-h6 text-break">{{ post.title }}</h2>
-                  <small class="horizontal-card-subtitle body-2 text-uppercase text-truncate">
-                    {{ getCategoryById(post.categoryId).name }}
-                  </small>
-                </v-card-text>
-              </v-card>
+              <PostCard v-for="post in otherPosts" :key="post.id" :post="post" class="mb-3"></PostCard>
             </template>
           </v-col>
         </v-row>
@@ -197,9 +173,10 @@ import { seo as SeoFragments } from '@/apollo/fragments/seo'
 import seo from '~/mixins/seo'
 import graphql from '~/mixins/graphql'
 import WpMediaNew from '~/components/WpMediaNew'
+import PostCard from '~/components/PostCard'
 
 export default {
-  components: { WpMediaNew },
+  components: { PostCard, WpMediaNew },
   mixins: [seo, graphql],
   async asyncData({ store, app }) {
     // store initialization
@@ -325,16 +302,5 @@ export default {
 h3.headline {
   font-weight: bold;
   margin: 1rem 0;
-}
-
-.horizontal-card {
-  max-width: 400px;
-}
-
-.horizontal-card-title {
-  line-height: 1.5rem;
-}
-.horizontal-card-subtitle {
-  color: $chouquette-grey;
 }
 </style>
