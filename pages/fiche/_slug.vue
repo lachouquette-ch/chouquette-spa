@@ -33,18 +33,23 @@
       <h2 class="text-h6">Plus d'informations ?</h2>
       <v-list v-if="fiche.isChouquettise" class="pa-0">
         <v-subheader>Contact</v-subheader>
-        <v-list-item>
+        <v-list-item
+          @click="
+            isContactForm = true
+            showDialog = true
+          "
+        >
           <v-list-item-avatar size="30"><v-icon>mdi-message</v-icon></v-list-item-avatar>
           <v-list-item-title>
             Envoyer un message au propriétaire
             <v-list-item-subtitle>Depuis La Chouquette</v-list-item-subtitle>
           </v-list-item-title>
         </v-list-item>
-        <v-list-item v-if="fiche.info.telephone">
+        <v-list-item v-if="fiche.info.telephone" :href="`tel: ${fiche.info.telephone}`">
           <v-list-item-avatar size="30"><v-icon>mdi-phone</v-icon></v-list-item-avatar>
           <v-list-item-title>{{ fiche.info.telephone }}</v-list-item-title>
         </v-list-item>
-        <v-list-item v-if="fiche.info.website">
+        <v-list-item v-if="fiche.info.website" :href="fiche.info.website" target="_blank">
           <v-list-item-avatar size="30"><v-icon>mdi-web</v-icon></v-list-item-avatar>
           <v-list-item-title>
             {{ fiche.info.website | prettyURL }}
@@ -52,8 +57,8 @@
           </v-list-item-title>
         </v-list-item>
         <v-list-item
-          v-if="fiche.info.website"
-          :to="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
+          v-if="fiche.info.mail"
+          :href="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
         >
           <v-list-item-avatar size="30"><v-icon>mdi-at</v-icon></v-list-item-avatar>
           <v-list-item-title>
@@ -96,14 +101,14 @@
       </v-menu>
       <v-list>
         <v-subheader
-          >Tags&nbsp;
+          >Critères&nbsp;
           <v-tooltip max-width="90vw" top>
             <template #activator="{ on, attrs }">
               <v-icon v-bind="attrs" small v-on="on">mdi-help-circle-outline</v-icon>
             </template>
             <span class="text-wrap"
-              >Ce sont les tags liés à cette adresse. Les tags te permettent notamment d'affiner tes rechercher
-              d'adresses.</span
+              >Ce sont les critères validés par cette adresse. Les critères te permettent notamment d'affiner tes
+              rechercher dans les filtres.</span
             >
           </v-tooltip>
         </v-subheader>
@@ -124,10 +129,79 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-      <v-btn color="secondary" block outlined
-        ><v-icon left>mdi-alert-circle-outline</v-icon>Indiquer une erreur / précision</v-btn
+      <v-btn
+        color="secondary"
+        block
+        outlined
+        @click.prevent="
+          isContactForm = false
+          showDialog = true
+        "
+        ><v-icon left>mdi-alert-circle-outline</v-icon>Signaler une erreur / précision</v-btn
       >
     </v-card>
+
+    <v-dialog v-model="showDialog" max-width="600px" @click:outside="clear">
+      <v-form @submit.prevent="submit(isContactForm)">
+        <v-card :loading="dialogLoading">
+          <v-card-title>Formulaire de contact </v-card-title>
+          <v-card-subtitle>
+            <span v-if="isContactForm"
+              >Une question, une demande, une réservation... écris-lui un petit mot directement ici</span
+            >
+            <span v-else>Une erreur, une remarque, une suggestion sur la fiche ? Merci de nous en faire part</span>
+            <v-icon small>mdi-emoticon-happy-outline</v-icon>
+          </v-card-subtitle>
+          <v-card-text>
+            <v-container class="pa-0">
+              <v-row>
+                <v-col cols="12">
+                  <v-textarea
+                    v-model="formFiche.message"
+                    :error-messages="messageErrors"
+                    color="secondary"
+                    label="Ton message *"
+                    counter="300"
+                    required
+                    autofocus
+                    @blur="$v.formFiche.message.$touch"
+                  ></v-textarea>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    v-model="formFiche.name"
+                    :error-messages="nameErrors"
+                    name="name"
+                    color="secondary"
+                    label="Ton nom / prénom *"
+                    required
+                    @blur="$v.formFiche.name.$touch"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="12" md="6">
+                  <v-text-field
+                    v-model="formFiche.email"
+                    :error-messages="emailErrors"
+                    name="email"
+                    type="email"
+                    color="secondary"
+                    label="Ton email *"
+                    required
+                    @blur="$v.formFiche.email.$touch"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+          <v-card-text>* champs obligatoires</v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn text @click.prevent="clear">Fermer</v-btn>
+            <v-btn color="info" text :loading="dialogLoading" type="submit">Envoyer</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-form>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -138,14 +212,16 @@ import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 import _ from 'lodash'
+import { email, minLength, maxLength, required } from 'vuelidate/lib/validators'
 import seo from '~/mixins/seo'
 import WpMediaNew from '~/components/WpMediaNew'
 import FichesMap from '~/components/FichesMap'
 import FicheShare from '~/components/FicheShare'
+import graphql from '~/mixins/graphql'
 
 export default {
   components: { FicheShare, FichesMap, WpMediaNew },
-  mixins: [seo],
+  mixins: [seo, graphql],
   async asyncData(context) {
     const { app, store, params, route, error } = context
 
@@ -178,6 +254,22 @@ export default {
       fiche,
     }
   },
+  validations: {
+    formFiche: {
+      name: {
+        required,
+      },
+      email: {
+        required,
+        email,
+      },
+      message: {
+        required,
+        minLength: minLength(20),
+        maxLength: maxLength(300),
+      },
+    },
+  },
   computed: {
     ...mapGetters('locations', {
       getLocationById: 'getById',
@@ -203,6 +295,27 @@ export default {
         'id'
       )
     },
+    nameErrors() {
+      const errors = []
+      if (!this.$v.formFiche.name.$dirty) return errors
+      !this.$v.formFiche.name.required && errors.push("Merci d'indiquer ton nom")
+      return errors
+    },
+    emailErrors() {
+      const errors = []
+      if (!this.$v.formFiche.email.$dirty) return errors
+      !this.$v.formFiche.email.required && errors.push("Merci d'indiquer ton email")
+      !this.$v.formFiche.email.email && errors.push("Merci d'indiquer un email valide")
+      return errors
+    },
+    messageErrors() {
+      const errors = []
+      if (!this.$v.formFiche.message.$dirty) return errors
+      !this.$v.formFiche.message.required && errors.push("Merci d'indiquer un message")
+      !this.$v.formFiche.message.minLength && errors.push('Ton messasge doit comporter au moins 20 caractères')
+      !this.$v.formFiche.message.maxLength && errors.push('Ton messasge doit comporter au maximum 300 caractères')
+      return errors
+    },
   },
   methods: {
     getOpeningValue(dayOfWeek = new Date().getDay()) {
@@ -213,12 +326,116 @@ export default {
         return ''
       }
     },
+    async submit(isContactForm) {
+      this.$v.formFiche.$touch()
+      if (!this.$v.formFiche.$invalid) {
+        this.dialogLoading = true
+        // Get recaptcha token
+        await this.$recaptcha.init()
+        // Execute reCAPTCHA with action "login".
+        const token = await this.$recaptcha.execute(isContactForm ? 'report' : 'contact')
+
+        const data = {
+          name: this.formFiche.name,
+          email: this.formFiche.email,
+          message: this.formFiche.message,
+          recaptcha: token,
+        }
+
+        // post report
+        try {
+          if (isContactForm) {
+            // contact
+            await this.$apollo.mutate({
+              mutation: gql`
+                mutation contactFicheOwner(
+                  $ficheId: Int!
+                  $name: String!
+                  $email: String!
+                  $message: String!
+                  $recaptcha: String!
+                ) {
+                  contactFicheOwner(
+                    ficheId: $ficheId
+                    name: $name
+                    email: $email
+                    message: $message
+                    recaptcha: $recaptcha
+                  )
+                }
+              `,
+              variables: {
+                ficheId: parseInt(this.fiche.id),
+                ...data,
+              },
+            })
+            this.$store.dispatch('alerts/addAction', {
+              type: 'success',
+              message: `Nous avons bien envoyé ton message à ${this.fiche.title}.`,
+            })
+          } else {
+            // report
+            await this.$apollo.mutate({
+              mutation: gql`
+                mutation reportFicheInfo(
+                  $ficheId: Int!
+                  $name: String!
+                  $email: String!
+                  $message: String!
+                  $recaptcha: String!
+                ) {
+                  reportFicheInfo(
+                    ficheId: $ficheId
+                    name: $name
+                    email: $email
+                    message: $message
+                    recaptcha: $recaptcha
+                  )
+                }
+              `,
+              variables: {
+                ficheId: parseInt(this.fiche.id),
+                ...data,
+              },
+            })
+            this.$store.dispatch('alerts/addAction', {
+              type: 'success',
+              message:
+                'Ton message nous est bien parvenu : merci :-). Nous modifierons le contenu de la fiche sous peu.',
+            })
+          }
+
+          this.clear()
+          this.$refs.ficheModal.hide()
+        } catch (e) {
+          this.$sentry.captureException(e)
+          this.handleGQLError(e, "L'envoi de ton message à échouer :")
+        } finally {
+          this.dialogLoading = false
+        }
+      }
+    },
+    clear() {
+      this.$v.$reset()
+      this.formFiche.email = null
+      this.formFiche.name = null
+      this.formFiche.message = null
+      this.showDialog = false
+    },
   },
   data() {
     return {
       fiche: null,
       posts: [],
-      show: false,
+
+      showDialog: false,
+      isContactForm: false,
+      dialogLoading: false,
+      formFiche: {
+        name: null,
+        email: null,
+        message: null,
+      },
     }
   },
   head() {
