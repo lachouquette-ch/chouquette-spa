@@ -1,5 +1,7 @@
 <template>
   <v-app>
+    <LayoutAlert></LayoutAlert>
+
     <v-navigation-drawer v-if="!$vuetify.breakpoint.mobile" v-model="toggleMenu" temporary app>
       <v-list-item>
         <v-list-item-content>
@@ -90,9 +92,10 @@
 import CookieConsent from 'vue-cookieconsent-component'
 import isbot from 'isbot'
 import CqFooter from '~/components/CqFooter'
+import LayoutAlert from '~/components/LayoutAlert'
 
 export default {
-  components: { CqFooter, CookieConsent },
+  components: { LayoutAlert, CqFooter, CookieConsent },
   async middleware({ store }) {
     await store.dispatch('nuxtServerInit')
   },

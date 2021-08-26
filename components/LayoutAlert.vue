@@ -1,16 +1,24 @@
 <template>
-  <div class="layout-alert fixed-top">
-    <b-alert
-      v-for="alert in alerts"
-      :key="alert.message"
-      :show="5"
-      dismissible
-      :variant="alert.type"
-      @dismissed="removeAlert(alert)"
-    >
-      <!-- eslint-disable-next-line vue/no-v-html -->
-      <span v-html="alert.message" />
-    </b-alert>
+  <div class="layout-alert">
+    <v-fade-transition group>
+      <v-alert
+        v-for="alert in alerts"
+        :key="alert.message"
+        :show="5"
+        dismissible
+        dense
+        :icon="false"
+        :type="alert.type"
+        toggle="removeAlert(alert)"
+        class="mb-1"
+      >
+        <template #close="">
+          <v-btn icon @click="removeAlert(alert)"><v-icon>mdi-close-circle-outline</v-icon></v-btn>
+        </template>
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-html="alert.message" />
+      </v-alert>
+    </v-fade-transition>
   </div>
 </template>
 
@@ -33,15 +41,9 @@ export default {
 
 <style lang="scss" scoped>
 .layout-alert {
-  //z-index: $zindex-popover;
-}
-
-.alert {
-  margin: 5px 10px;
-  border-radius: 5px;
-
-  a {
-    color: $black;
-  }
+  position: fixed;
+  width: 100vw;
+  padding: 10px;
+  z-index: 10;
 }
 </style>

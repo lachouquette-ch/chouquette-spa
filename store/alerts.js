@@ -2,20 +2,22 @@ export const state = () => ({
   all: [],
 })
 
-const AlertType = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'light', 'dark']
+const AlertType = ['success', 'info', 'warning', 'error']
 
 export const actions = {
-  addAction({ commit, state }, { type, message }) {
+  addAction({ commit, state, dispatch }, alert) {
+    const { type } = alert
     if (!AlertType.includes(type)) {
       // eslint-disable-next-line no-console
       console.error(`Unkown alert type '${type}'`)
       return
     }
 
-    commit('SET_ALERT', {
-      type,
-      message,
-    })
+    commit('SET_ALERT', alert)
+
+    setTimeout(() => {
+      dispatch('removeAction', alert)
+    }, 5000)
   },
   removeAction({ commit, state }, alert) {
     const index = state.all.findIndex((el) => el.type === alert.type && el.message === alert.message)
