@@ -271,10 +271,10 @@ const MapStates = Object.freeze({
 export default {
   components: { FilterExpansion, WpMediaNew, ScrollTop, FichesMap },
   mixins: [seo, graphql],
-  async asyncData({ store, params, query }) {
-    const location = await store.dispatch('locations/getBySlug', params.slug)
+  asyncData({ store, params, query }) {
+    const location = store.getters['locations/getBySlug'](params.slug)
 
-    const category = query.category ? await store.dispatch('categories/getBySlug', query.category) : null
+    const category = query.category ? store.getters['categories/getBySlug'](query.category) : null
 
     const criteriaList = Object.entries(query)
       .filter(([key]) => key.startsWith('cq_'))

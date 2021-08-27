@@ -2,13 +2,11 @@
   <v-container>
     <FicheShare :fiche="fiche" class="share"></FicheShare>
     <v-card flat>
-      <WpMediaNew :media="fiche.image" size="medium_large" max-height="30vh" class="rounded">
-        <v-card-subtitle class="d-flex">
-          <v-chip v-if="fiche.isChouquettise" color="primary" text-color="black" small>
-            Testé et Chouquettisé
-            <v-icon right>mdi-check</v-icon>
-          </v-chip>
-        </v-card-subtitle>
+      <WpMediaNew :media="fiche.image" size="medium_large" height="250" class="rounded">
+        <v-chip v-if="fiche.isChouquettise" color="primary" text-color="black" small class="ma-2" style="opacity: 0.9">
+          Testé et Chouquettisé
+          <v-icon right>mdi-check</v-icon>
+        </v-chip>
       </WpMediaNew>
       <v-card-title class="pa-0 mt-2 align-center">
         <h1 class="text-h4">{{ fiche.title }}</h1>
@@ -18,18 +16,22 @@
           <v-btn fab icon small><v-icon color="#E1306C">mdi-instagram</v-icon></v-btn>
         </div>
       </v-card-title>
-      <p>{{ getLocationById(fiche.locationId).name }} / {{ categories }}</p>
+      <p>
+        <span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} / </span>{{ categories }}
+      </p>
       <p v-html="fiche.content"></p>
 
-      <v-divider class="my-3"></v-divider>
-      <h2 class="text-h6 mb-2">Comment s'y rendre ?</h2>
-      <a
-        :href="`https://www.google.com/maps?q=${fiche.address}`"
-        target="_blank"
-        class="d-inline-block text-decoration-none mb-1"
-        >{{ fiche.address }} <span class="text-caption text-decoration-underline">(Ouvrir dans Maps)</span></a
-      >
-      <FichesMap :fiches="[fiche]" style="height: 300px" preview></FichesMap>
+      <div v-if="fiche.poi">
+        <v-divider class="my-3"></v-divider>
+        <h2 class="text-h6 mb-2">Comment s'y rendre ?</h2>
+        <a
+          :href="`https://www.google.com/maps?q=${fiche.address}`"
+          target="_blank"
+          class="d-inline-block text-decoration-none mb-1"
+          >{{ fiche.address }} <span class="text-caption text-decoration-underline">(Ouvrir dans Maps)</span></a
+        >
+        <FichesMap :fiches="[fiche]" style="height: 200px" preview></FichesMap>
+      </div>
 
       <v-divider class="my-3"></v-divider>
       <h2 class="text-h6">Plus d'informations ?</h2>
@@ -86,7 +88,7 @@
             </v-list-item-title>
           </v-list-item>
         </v-list>
-        <v-menu offset-y>
+        <v-menu v-if="fiche.info.openings" offset-y>
           <template #activator="{ on, attrs }">
             <v-list-item v-bind="attrs" v-on="on">
               <v-list-item-avatar size="30"><v-icon>mdi-clock</v-icon></v-list-item-avatar>
@@ -144,16 +146,20 @@
         >
       </div>
 
-      <v-divider class="my-3"></v-divider>
-      <h2 class="text-h6">Articles sur l'adresse</h2>
-      <div class="my-3">
-        <PostCard v-for="post in fiche.postCards" :key="post.id" :post="post" class="mb-3"></PostCard>
+      <div v-if="fiche.postCards">
+        <v-divider class="my-3"></v-divider>
+        <h2 class="text-h6">Articles sur l'adresse</h2>
+        <div class="my-3">
+          <PostCard v-for="post in fiche.postCards" :key="post.id" :post="post" class="mb-3"></PostCard>
+        </div>
       </div>
 
-      <v-divider class="my-3"></v-divider>
-      <h2 class="text-h6">Adresses similaires</h2>
-      <div class="cq-scroll-x-container my-3">
-        <FicheCard v-for="fiche in fiche.similarFiches" :key="fiche.id" class="mb-3" :fiche="fiche"></FicheCard>
+      <div v-if="fiche.similarFiches">
+        <v-divider class="my-3"></v-divider>
+        <h2 class="text-h6">Adresses similaires</h2>
+        <div class="cq-scroll-x-container my-3">
+          <FicheCard v-for="fiche in fiche.similarFiches" :key="fiche.id" class="mb-3" :fiche="fiche"></FicheCard>
+        </div>
       </div>
     </v-card>
 

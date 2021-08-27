@@ -1,6 +1,11 @@
 <template>
   <v-card class="transparent" flat hover ripple :to="`/fiche/${fiche.slug}`" nuxt>
-    <WpMediaNew :media="fiche.image" size="medium_large" class="rounded" aspect-ratio="1" width="60vw"></WpMediaNew>
+    <WpMediaNew :media="fiche.image" size="medium_large" class="rounded" aspect-ratio="1" width="60vw">
+      <v-chip v-if="fiche.isChouquettise" color="primary" text-color="black" small class="ma-2" style="opacity: 0.9">
+        Testé et Chouquettisé
+        <v-icon right>mdi-check</v-icon>
+      </v-chip>
+    </WpMediaNew>
     <v-card-title class="pa-0 pt-1"
       ><h2 class="text-h6 text-break black--text" style="line-height: 1.5rem">{{ fiche.title }}</h2></v-card-title
     >

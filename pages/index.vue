@@ -52,7 +52,7 @@
       </v-img>
     </v-card>
     <v-sheet>
-      <h3 class="text-center headline my-0 py-5">En ce moment</h3>
+      <h3 class="text-center headline my-0 py-5">Articles à la une</h3>
       <v-container>
         <v-row>
           <v-col cols="12" md="6" class="py-0">
@@ -71,10 +71,12 @@
                 width="100%"
                 class="rounded"
               ></WpMediaNew>
-              <v-card-title class="px-0 pt-1 text-break">{{ highlightedPost.title }}</v-card-title>
-              <v-card-subtitle class="text-uppercase px-0 pb-0">{{
-                getCategoryById(highlightedPost.categoryId).name
-              }}</v-card-subtitle>
+              <v-card-title class="pa-0 mt-1 text-break">
+                {{ highlightedPost.title }}
+                <v-card-subtitle class="text-uppercase ma-0 pa-0">{{
+                  getCategoryById(highlightedPost.categoryId).name
+                }}</v-card-subtitle>
+              </v-card-title>
             </v-card>
           </v-col>
           <v-col cols="12" md="6" class="py-0">
@@ -141,6 +143,9 @@
             aspect-ratio="1"
             width="60vw"
           >
+            <v-chip color="white" small class="ma-2" style="opacity: 0.9; position: absolute; top: 0; left: 0">
+              Top
+            </v-chip>
             <v-card-title class="justify-center text-break">{{ post.title }}</v-card-title>
           </WpMediaNew>
         </v-card>
