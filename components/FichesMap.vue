@@ -140,8 +140,6 @@ export default {
 
       for (const fiche of this.fiches) {
         if (!fiche.poi) {
-          // eslint-disable-next-line no-console
-          console.info(`${fiche.slug} has no location`)
           continue
         }
 
