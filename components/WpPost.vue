@@ -69,7 +69,7 @@
       </div>
     </nav>
 
-    <main role="main" class="post layout-content" :class="{ 'with-sidebar': fiches.length }">
+    <main role="main" class="post layout-content" :class="{ 'with-sidebar': fiches && fiches.length }">
       <div v-if="preview" class="alert alert-warning text-center" role="alert">
         Mode prévisualisation : toutes les données ne seront pas affichées
       </div>
@@ -152,7 +152,7 @@
       <FichesMap v-show="mapShown" ref="map" :fiches="fiches" @fichesMapSelection="viewFiche" />
     </client-only>
 
-    <template v-if="fiches.length">
+    <template v-if="fiches && fiches.length">
       <b-button-group v-if="isTops" size="sm" class="toggle-content-btn d-none d-md-inline-flex">
         <b-button variant="primary" :pressed="!mapShown" @click="mapShown = false">
           <span class="mr-1"><i class="far fa-newspaper"></i></span> Article
