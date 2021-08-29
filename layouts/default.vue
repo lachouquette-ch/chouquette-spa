@@ -63,7 +63,7 @@
       </v-btn>
 
       <v-btn nuxt to="/fiches">
-        <span>Addresses</span>
+        <span>Adresses</span>
         <v-icon>mdi-map-marker-multiple-outline</v-icon>
       </v-btn>
 

@@ -26,10 +26,11 @@
                   item-color="black"
                   item-value="slug"
                   item-text="name"
-                  :items="locations"
+                  :items="locationsPlusAll"
                 >
-                  <template slot="item" slot-scope="data">
+                  <template #item="data">
                     <span v-if="data.item.level === 0" class="font-weight-bold">{{ data.item.name }} (canton)</span>
+                    <span v-else-if="data.item.slug === ''" class="font-weight-bold">{{ data.item.name }}</span>
                     <span v-else class="pl-2">{{ data.item.name }}</span>
                   </template>
                 </v-select>
@@ -41,7 +42,7 @@
                   elevation="3"
                   color="primary"
                   class="black--text"
-                  :disabled="!selectedLocation"
+                  :disabled="selectedLocation === null"
                   @click="goToLocation(selectedLocation)"
                   >Rechercher</v-btn
                 >
@@ -247,7 +248,7 @@ export default {
   fetchOnServer: true,
   methods: {
     goToLocation(location) {
-      this.$router.push(`/location/${location}`)
+      this.$router.push(`/fiches/${location}`)
     },
   },
   computed: {
@@ -262,6 +263,9 @@ export default {
     },
     otherPosts() {
       return this.latestPosts.slice(1)
+    },
+    locationsPlusAll() {
+      return [...this.locations, { divider: true }, { slug: '', name: 'Partout' }]
     },
   },
   head() {

@@ -77,7 +77,7 @@
               elevation="1"
               colored-border
             >
-              Selectionner une catégorie pour plus de filtres
+              Selectionner une catégorie pour obtenir plus de filtres
             </v-alert>
           </v-container>
         </v-card>
@@ -87,7 +87,7 @@
         </v-footer>
       </v-dialog>
 
-      <h1 class="text-h5 text-center mt-3">{{ location.name }}</h1>
+      <h1 class="text-h5 text-center mt-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
       <div class="cq-scroll-x-container mt-4">
         <div class="d-inline-flex">
           <button
@@ -271,7 +271,7 @@ export default {
   components: { FilterExpansion, WpMediaNew, ScrollTop, FichesMap },
   mixins: [seo, graphql],
   asyncData({ store, params, query }) {
-    const location = store.getters['locations/getBySlug'](params.slug)
+    const location = params.slug ? store.getters['locations/getBySlug'](params.slug) : null
 
     const category = query.category ? store.getters['categories/getBySlug'](query.category) : null
 
@@ -349,7 +349,7 @@ export default {
         `,
         variables: {
           category: this.category ? this.category.slug : null,
-          location: this.location.slug,
+          location: this.location ? this.location.slug : null,
           search: this.search,
           chouquettiseOnly: this.chouquettiseOnly,
           criteria: this.criteriaList,
@@ -516,29 +516,37 @@ export default {
     }),
   },
   head() {
+    const title = this.location ? this.location.name : 'Adresses'
+    const content = this.location
+      ? this.$options.filters.heDecode(this.location.description || this.location.name)
+      : 'Toutes les adresses du site'
+
     return {
-      title: this.location.name,
+      title,
       meta: this.seoMetaProperties([
         {
           name: 'description',
-          content: this.$options.filters.heDecode(this.location.description || this.location.name),
+          content,
         },
 
         { property: 'og:type', content: 'article' },
         { property: 'og:locale', content: 'fr_FR' },
         { property: 'og:url', content: this.currentURL },
-        { property: 'og:title', content: this.$options.filters.heDecode(this.location.name) },
+        {
+          property: 'og:title',
+          content: title,
+        },
         {
           property: 'og:description',
-          content: this.$options.filters.heDecode(this.location.description || this.location.name),
+          content,
         },
         { property: 'og:image', content: '' },
 
         { name: 'twitter:card', content: 'summary' },
-        { name: 'twitter:title', content: this.$options.filters.heDecode(this.location.name) },
+        { name: 'twitter:title', content: title },
         {
           name: 'twitter:description',
-          content: this.$options.filters.heDecode(this.location.description || this.location.name),
+          content,
         },
         { name: 'twitter:image', content: '' },
       ]),
@@ -546,8 +554,8 @@ export default {
         this.jsonLDScript({
           '@context': 'http://schema.org',
           '@type': 'WebPage',
-          name: this.$options.filters.heDecode(this.location.name),
-          description: this.$options.filters.heDecode(this.location.description || this.location.name),
+          name: title,
+          description: content,
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
