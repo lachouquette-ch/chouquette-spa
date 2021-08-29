@@ -3,17 +3,16 @@
     <v-container>
       <v-dialog v-model="mapDialog" fullscreen hide-overlay transition="dialog-top-transition">
         <FichesMap :fiches="fiches"></FichesMap>
-        <v-container
-          v-touch="{
-            up: () => {
-              mapDialog = false
-            },
-          }"
-          class="white rounded-t-xl"
-          fluid
-          style="position: absolute; bottom: 0; height: 64px"
-        >
-          <v-divider class="mx-auto grey" style="width: 40px; border: 2px solid; border-radius: 5px"></v-divider>
+        <v-container class="white rounded-t-xl" fluid style="position: absolute; bottom: 0; height: 64px">
+          <v-divider
+            v-touch="{
+              up: () => {
+                mapDialog = false
+              },
+            }"
+            class="mx-auto grey"
+            style="width: 40px; border: 2px solid; border-radius: 5px"
+          ></v-divider>
           <v-row class="align-center mt-2 grey--text text--darken-3" no-gutters>
             <v-col>
               <span>{{ fiches.length }} adresses affichées</span>

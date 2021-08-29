@@ -1,5 +1,5 @@
 <template>
-  <v-card class="d-flex" dense flat hover ripple max-width="400">
+  <v-card class="d-flex" dense flat hover ripple max-width="400" :to="`/${post.slug}`" nuxt>
     <WpMediaNew
       :media="post.image"
       size="thumbnail"

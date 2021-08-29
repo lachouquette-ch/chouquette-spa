@@ -63,7 +63,7 @@
               max-width="350"
               type="card"
             ></v-skeleton-loader>
-            <v-card v-else class="mx-auto mb-3" max-width="350" flat hover ripple>
+            <v-card v-else class="mx-auto mb-3" max-width="350" :to="`/${highlightedPost.slug}`" nuxt flat hover ripple>
               <WpMediaNew
                 :media="highlightedPost.image"
                 size="medium_large"
@@ -134,7 +134,7 @@
     <v-sheet class="py-3">
       <h3 class="text-center headline pb-3">Nos derniers tops</h3>
       <div class="cq-scroll-x-container px-3">
-        <v-card v-for="post in topPosts" :key="post.id" flat hover ripple>
+        <v-card v-for="post in topPosts" :key="post.id" :to="`/${post.slug}`" nuxt flat hover ripple>
           <WpMediaNew
             :media="post.image"
             size="medium_large"

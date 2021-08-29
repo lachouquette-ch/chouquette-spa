@@ -1,7 +1,7 @@
 <template>
   <div>
     <WpPage v-if="pageType === 'page'" :page="page" />
-    <WpPost v-else-if="pageType === 'post'" :post="post" />
+    <WpPostNew v-else-if="pageType === 'post'" :post="post" />
   </div>
 </template>
 
@@ -11,13 +11,13 @@ import gql from 'graphql-tag'
 
 import { post as PostFragments } from '@/apollo/fragments/post'
 import { page as PageFragments } from '@/apollo/fragments/page'
-import WpPost from '~/components/WpPost'
+import WpPostNew from '~/components/WpPostNew'
 import WpPage from '~/components/WpPage'
 
 export default {
   components: {
     WpPage,
-    WpPost,
+    WpPostNew,
   },
   async asyncData(context) {
     const { app, store, params, route, error } = context
@@ -30,7 +30,7 @@ export default {
     const post = await client
       .query({
         query: gql`
-          query($slug: String!) {
+          query ($slug: String!) {
             postBySlug(slug: $slug) {
               ...PostFragments
             }
@@ -51,7 +51,7 @@ export default {
     const page = await client
       .query({
         query: gql`
-          query($slug: String!) {
+          query ($slug: String!) {
             pageBySlug(slug: $slug) {
               ...PageFragments
             }
