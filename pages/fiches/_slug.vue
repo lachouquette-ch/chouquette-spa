@@ -88,10 +88,11 @@
       </v-dialog>
 
       <h1 class="text-h5 text-center mt-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
-      <div class="cq-scroll-x-container mt-4">
+      <div id="categoryContainer" class="cq-scroll-x-container mt-4">
         <div class="d-inline-flex">
           <button
             v-for="topCategory in topCategories"
+            :id="topCategory.slug"
             :key="topCategory.id"
             v-ripple
             class="top-category-btn rounded mr-2"
@@ -203,6 +204,8 @@
           color="secondary"
           :loading="$fetchState.pending"
           block
+          tag="a"
+          rel="next"
           outlined
           @click="$fetch"
         >
@@ -386,6 +389,12 @@ export default {
       }
       this.subCategories = await this.getCategoriesByParentId(this.selectedTopCategory.id)
       await this.fetchCriteria(this.category)
+
+      // move to selected category using jquery
+      /* eslint-disable no-undef */
+      const leftOffset = $(`#${this.selectedTopCategory.slug}`).position().left
+      $('#categoryContainer').animate({ scrollLeft: leftOffset - 15 }, 250)
+      /* eslint-enable no-undef */
     }
   },
   created() {
