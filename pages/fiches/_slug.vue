@@ -1,92 +1,113 @@
 <template>
   <div>
-    <v-container>
-      <v-dialog v-model="mapDialog" fullscreen hide-overlay transition="dialog-top-transition">
-        <FichesMap :fiches="fiches"></FichesMap>
-        <v-container class="white rounded-t-xl" fluid style="position: absolute; bottom: 0; height: 64px">
-          <v-divider
-            v-touch="{
-              up: () => {
-                mapDialog = false
-              },
-            }"
-            class="mx-auto grey"
-            style="width: 40px; border: 2px solid; border-radius: 5px"
-          ></v-divider>
-          <v-row class="align-center mt-2 grey--text text--darken-3" no-gutters>
-            <v-col>
-              <span>{{ fiches.length }} adresses affichées</span>
-              <v-tooltip max-width="90vw" top>
-                <template #activator="{ on, attrs }">
-                  <v-icon v-bind="attrs" small v-on="on">mdi-help-circle-outline</v-icon>
-                </template>
-                <span class="text-wrap">Retourne sur la liste et affine tes critères pour voir d'autres adresses</span>
-              </v-tooltip>
-            </v-col>
-            <v-col cols="auto">
-              <v-btn style="opacity: 0.9" dark rounded small @click="mapDialog = false">
-                <v-icon left>mdi-format-list-text</v-icon>
-                Liste
-              </v-btn>
-            </v-col>
-          </v-row>
+    <v-dialog v-model="mapDialog" fullscreen hide-overlay transition="dialog-top-transition">
+      <FichesMap :fiches="fiches"></FichesMap>
+      <v-container class="white rounded-t-xl" fluid style="position: absolute; bottom: 0; height: 64px">
+        <v-divider
+          v-touch="{
+            up: () => {
+              mapDialog = false
+            },
+          }"
+          class="mx-auto grey"
+          style="width: 40px; border: 2px solid; border-radius: 5px"
+        ></v-divider>
+        <v-row class="align-center mt-2 grey--text text--darken-3" no-gutters>
+          <v-col>
+            <span>{{ fiches.length }} adresses affichées</span>
+            <v-tooltip max-width="90vw" top>
+              <template #activator="{ on, attrs }">
+                <v-icon v-bind="attrs" small v-on="on">mdi-help-circle-outline</v-icon>
+              </template>
+              <span class="text-wrap">Retourne sur la liste et affine tes critères pour voir d'autres adresses</span>
+            </v-tooltip>
+          </v-col>
+          <v-col cols="auto">
+            <v-btn style="opacity: 0.9" dark rounded small @click="mapDialog = false">
+              <v-icon left>mdi-format-list-text</v-icon>
+              Liste
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-dialog>
+
+    <v-dialog v-model="filtersDialog" fullscreen hide-overlay transition="dialog-bottom-transition">
+      <v-app-bar class="dialog-header" color="white" fixed flat>
+        <v-toolbar-title>Filtrer</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="filtersDialog = false">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-app-bar>
+      <v-card class="dialog-content" tile>
+        <v-container>
+          <v-list>
+            <v-subheader class="text-h6 black--text">Adresse Chouquettisée</v-subheader>
+            <v-list-item three-line>
+              <v-list-item-content class="pt-0">
+                <div class="d-inline-flex align-center mt-1">
+                  <p class="body-2 secondary--text text--lighten-2 ma-0">
+                    Sélectionner que les adresses testées et approuvées par l'équipe. tesa fadsf
+                    kldasjféladsjféalsdfkjasdélf jasdf
+                  </p>
+                  <v-switch v-model="chouquettiseOnly" color="primary ml-auto" inset :ripple="false"></v-switch>
+                </div>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+          <v-divider></v-divider>
+          <template v-if="criteriaFilters.length">
+            <div v-for="criteriaFilter in criteriaFilters" :key="criteriaFilter.id">
+              <FilterExpansion
+                ref="criteriaFilters"
+                :title="criteriaFilter.name"
+                :items="criteriaFilter.values"
+                :initialize="criteriaFilter.selectedIndexes"
+                @update="(indexes) => updateCriteria(criteriaFilter, indexes)"
+              ></FilterExpansion>
+            </div>
+          </template>
+          <v-alert
+            v-else
+            border="left"
+            color="primary lighten-3"
+            class="mt-3 mb-0 text-center"
+            elevation="1"
+            colored-border
+          >
+            Selectionner une catégorie pour obtenir plus de filtres
+          </v-alert>
         </v-container>
-      </v-dialog>
+      </v-card>
+      <v-footer class="dialog-footer justify-space-around" color="white" fixed>
+        <v-btn outlined class="flex-grow-2 mx-1" @click.prevent="clearCriteria">Tout effacer</v-btn>
+        <v-btn dark class="flex-grow-1 mx-1" @click.prevent="searchByFilters">Appliquer</v-btn>
+      </v-footer>
+    </v-dialog>
 
-      <v-dialog v-model="filtersDialog" fullscreen hide-overlay transition="dialog-bottom-transition">
-        <v-app-bar class="filter-header" color="white" fixed flat>
-          <v-toolbar-title>Filtrer</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn icon @click="filtersDialog = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-app-bar>
-        <v-card class="filter-content" tile>
-          <v-container>
-            <v-list>
-              <v-subheader class="text-h6 black--text">Adresse Chouquettisée</v-subheader>
-              <v-list-item three-line>
-                <v-list-item-content class="pt-0">
-                  <div class="d-inline-flex align-center mt-1">
-                    <p class="body-2 secondary--text text--lighten-2 ma-0">
-                      Sélectionner que les adresses testées et approuvées par l'équipe. tesa fadsf
-                      kldasjféladsjféalsdfkjasdélf jasdf
-                    </p>
-                    <v-switch v-model="chouquettiseOnly" color="primary ml-auto" inset :ripple="false"></v-switch>
-                  </div>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-            <v-divider></v-divider>
-            <template v-if="criteriaFilters.length">
-              <div v-for="criteriaFilter in criteriaFilters" :key="criteriaFilter.id">
-                <FilterExpansion
-                  ref="criteriaFilters"
-                  :title="criteriaFilter.name"
-                  :items="criteriaFilter.values"
-                  :initialize="criteriaFilter.selectedIndexes"
-                  @update="(indexes) => updateCriteria(criteriaFilter, indexes)"
-                ></FilterExpansion>
-              </div>
-            </template>
-            <v-alert
-              v-else
-              border="left"
-              color="primary lighten-3"
-              class="mt-3 mb-0 text-center"
-              elevation="1"
-              colored-border
-            >
-              Selectionner une catégorie pour obtenir plus de filtres
-            </v-alert>
-          </v-container>
-        </v-card>
-        <v-footer class="filter-bottom justify-space-around" color="white" fixed>
-          <v-btn outlined class="flex-grow-2 mx-1" @click.prevent="clearCriteria">Tout effacer</v-btn>
-          <v-btn dark class="flex-grow-1 mx-1" @click.prevent="searchByFilters">Appliquer</v-btn>
-        </v-footer>
-      </v-dialog>
+    <v-dialog
+      ref="ficheDialog"
+      v-model="ficheDialog"
+      color="white"
+      fullscreen
+      hide-overlay
+      transition="dialog-fade-transition"
+      class="position-relative"
+    >
+      <v-app-bar class="dialog-header" color="white" fixed flat>
+        <FicheShare :fiche="selectedFiche" small outlined color="white--text grey darken-3">Partager</FicheShare>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="clearFicheSelection">
+          <v-icon>mdi-arrow-right</v-icon>
+        </v-btn>
+      </v-app-bar>
+      <v-container class="dialog-content white">
+        <Fiche v-if="selectedFiche" :fiche="selectedFiche"></Fiche>
+      </v-container>
+    </v-dialog>
 
+    <v-container>
       <h1 class="text-h5 text-center mt-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
       <div id="categoryContainer" class="cq-scroll-x-container mt-4">
         <div class="d-inline-flex">
@@ -164,10 +185,11 @@
           v-for="fiche in fiches"
           :key="fiche.id"
           class="mb-3"
+          :loading="selectedFicheCard === fiche"
           outlined
           bench="2"
-          :to="`/fiche/${fiche.slug}`"
-          nuxt
+          active-class=" "
+          @click="selectFiche(fiche)"
         >
           <WpMediaNew :media="fiche.image" size="medium_large" height="200" contains>
             <v-card-subtitle v-if="fiche.isChouquettise">
@@ -263,6 +285,10 @@ import graphql from '~/mixins/graphql'
 import FilterExpansion from '~/components/FilterExpansion'
 import ScrollTop from '~/components/ScrollTop'
 import FichesMap from '~/components/FichesMap'
+import Fiche from '~/components/Fiche'
+import { postCard as PostCardFragments } from '~/apollo/fragments/postCard'
+import { ficheCard as FicheCardFragments } from '~/apollo/fragments/ficheCard'
+import FicheShare from '~/components/FicheShare'
 
 const MapStates = Object.freeze({
   HIDDEN: Symbol('hidden'),
@@ -271,7 +297,7 @@ const MapStates = Object.freeze({
 })
 
 export default {
-  components: { FilterExpansion, WpMediaNew, ScrollTop, FichesMap },
+  components: { FicheShare, Fiche, FilterExpansion, WpMediaNew, ScrollTop, FichesMap },
   mixins: [seo, graphql],
   asyncData({ store, params, query }) {
     const location = params.slug ? store.getters['locations/getBySlug'](params.slug) : null
@@ -299,6 +325,9 @@ export default {
       fichesTotal: null,
       fichesPages: null,
       hasMoreFiches: true,
+      selectedFicheCard: null,
+      selectedFiche: null,
+      ficheDialog: false,
 
       subCategories: [],
 
@@ -514,6 +543,37 @@ export default {
         this.criteriaLoading = false
       }
     },
+    async selectFiche(ficheCard) {
+      this.selectedFicheCard = ficheCard
+      this.selectedFiche = await this.$apollo
+        .query({
+          query: gql`
+            query ($slug: String!) {
+              ficheBySlug(slug: $slug) {
+                ...FicheFragments
+
+                postCards {
+                  ...PostCardFragments
+                }
+
+                similarFiches {
+                  ...FicheCardFragments
+                }
+              }
+            }
+            ${FicheFragments}
+            ${PostCardFragments}
+            ${FicheCardFragments}
+          `,
+          variables: { slug: ficheCard.slug },
+        })
+        .then(({ data }) => data.ficheBySlug)
+      this.ficheDialog = true
+    },
+    clearFicheSelection() {
+      this.selectedFicheCard = null
+      this.ficheDialog = false
+    },
   },
   computed: {
     ...mapState(['wordpressUrl']),
@@ -589,16 +649,19 @@ export default {
   }
 }
 
-.filter-content.v-card.v-sheet {
+.dialog-content {
   margin-top: 56px !important;
-  margin-bottom: 60px !important;
+
+  & + dialog-footer {
+    margin-bottom: 60px !important;
+  }
 }
 
-.filter-header {
+.dialog-header {
   height: 56px;
 }
 
-.filter-bottom {
+.dialog-footer {
   height: 60px;
 }
 

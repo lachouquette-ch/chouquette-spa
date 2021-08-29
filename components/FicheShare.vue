@@ -1,15 +1,20 @@
 <template>
   <div>
     <template v-if="shareApiAvailable">
-      <v-btn dark fab @click.prevent="shareWith('Fiche sur La Chouquette', escapedTitle, fichePage)"
-        ><v-icon>mdi-share-variant</v-icon></v-btn
+      <v-btn
+        v-bind="{ ...$props, ...$attrs }"
+        @click.prevent="shareWith('Fiche sur La Chouquette', escapedTitle, fichePage)"
       >
+        <v-icon :left="$slots.default">mdi-share-variant</v-icon>
+        <slot></slot>
+      </v-btn>
     </template>
     <template v-else>
       <v-menu top>
         <template #activator="{ on, attrs }">
-          <v-btn dark fab v-bind="attrs" v-on="on">
-            <v-icon>mdi-share-variant</v-icon>
+          <v-btn v-bind="{ ...attrs, ...$props, ...$attrs }" v-on="on">
+            <v-icon :left="$slots.default">mdi-share-variant</v-icon>
+            <slot></slot>
           </v-btn>
         </template>
 
