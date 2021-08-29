@@ -164,8 +164,8 @@ export default {
         const ficheInfoWindow = new FicheInfoWindowClass({
           propsData: {
             fiche,
-            showBtnAction: () => {
-              this.$emit('fichesMapSelection', fiche.id)
+            btnAction: () => {
+              this.$emit('mapSelectFiche', fiche)
             },
           },
         })

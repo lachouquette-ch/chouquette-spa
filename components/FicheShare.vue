@@ -5,7 +5,7 @@
         v-bind="{ ...$props, ...$attrs }"
         @click.prevent="shareWith('Fiche sur La Chouquette', escapedTitle, fichePage)"
       >
-        <v-icon :left="$slots.default">mdi-share-variant</v-icon>
+        <v-icon :left="!!$slots.default">mdi-share-variant</v-icon>
         <slot></slot>
       </v-btn>
     </template>
@@ -13,7 +13,7 @@
       <v-menu top>
         <template #activator="{ on, attrs }">
           <v-btn v-bind="{ ...attrs, ...$props, ...$attrs }" v-on="on">
-            <v-icon :left="$slots.default">mdi-share-variant</v-icon>
+            <v-icon :left="!!$slots.default">mdi-share-variant</v-icon>
             <slot></slot>
           </v-btn>
         </template>

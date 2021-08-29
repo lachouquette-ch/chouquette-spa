@@ -1,5 +1,5 @@
 <template>
-  <v-card class="d-flex flex-row" height="75" width="250" flat tile ripple>
+  <v-card class="d-flex flex-row" height="75" width="250" flat tile ripple @click="btnAction">
     <WpMediaNew
       :media="fiche.image"
       size="thumbnail"
@@ -26,7 +26,7 @@ export default {
       type: Object,
       required: true,
     },
-    showBtnAction: {
+    btnAction: {
       type: Function,
       default: () => {
         // eslint-disable-next-line no-console

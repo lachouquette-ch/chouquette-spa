@@ -236,9 +236,11 @@ import WpMediaNew from '~/components/WpMediaNew'
 import FichesMap from '~/components/FichesMap'
 import PostCard from '~/components/PostCard'
 import FicheCard from '~/components/FicheCard'
+import seo from '~/mixins/seo'
 
 export default {
   components: { FicheCard, PostCard, FichesMap, WpMediaNew },
+  mixins: [seo],
   props: {
     fiche: Object,
   },

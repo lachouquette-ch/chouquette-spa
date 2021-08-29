@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-dialog v-model="mapDialog" fullscreen hide-overlay transition="dialog-top-transition">
-      <FichesMap :fiches="fiches"></FichesMap>
+      <FichesMap :fiches="fiches" @mapSelectFiche="selectFiche"></FichesMap>
       <v-container class="white rounded-t-xl" fluid style="position: absolute; bottom: 0; height: 64px">
         <v-divider
           v-touch="{
