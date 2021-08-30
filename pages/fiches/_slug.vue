@@ -32,16 +32,17 @@
       </v-container>
     </v-dialog>
 
-    <v-dialog v-model="filtersDialog" fullscreen hide-overlay transition="dialog-bottom-transition">
-      <v-app-bar class="dialog-header" color="white" fixed flat>
-        <v-toolbar-title>Filtrer</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn icon @click="filtersDialog = false">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </v-app-bar>
-      <v-card class="dialog-content" tile>
-        <v-container>
+    <v-dialog v-model="filtersDialog" fullscreen scrollable transition="dialog-bottom-transition">
+      <v-card tile>
+        <v-card-title>
+          Filtrer
+          <v-spacer></v-spacer>
+          <v-btn icon @click="filtersDialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text class="pa-2 pb-0">
           <v-list>
             <v-subheader class="text-h6 black--text">Adresse Chouquettisée</v-subheader>
             <v-list-item three-line>
@@ -78,12 +79,12 @@
           >
             Selectionner une catégorie pour obtenir plus de filtres
           </v-alert>
-        </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn outlined class="flex-grow-2 mx-1" @click.prevent="clearCriteria">Tout effacer</v-btn>
+          <v-btn dark class="flex-grow-1 mx-1" @click.prevent="searchByFilters">Appliquer</v-btn>
+        </v-card-actions>
       </v-card>
-      <v-footer class="dialog-footer justify-space-around" color="white" fixed>
-        <v-btn outlined class="flex-grow-2 mx-1" @click.prevent="clearCriteria">Tout effacer</v-btn>
-        <v-btn dark class="flex-grow-1 mx-1" @click.prevent="searchByFilters">Appliquer</v-btn>
-      </v-footer>
     </v-dialog>
 
     <v-dialog
@@ -91,20 +92,22 @@
       v-model="ficheDialog"
       color="white"
       fullscreen
-      hide-overlay
-      transition="dialog-fade-transition"
-      class="position-relative"
+      scrollable
+      transition="slide-x-reverse-transition"
     >
-      <v-app-bar class="dialog-header" color="white" fixed flat>
-        <FicheShare :fiche="selectedFiche" small outlined color="white--text grey darken-3">Partager</FicheShare>
-        <v-spacer></v-spacer>
-        <v-btn icon @click="clearFicheSelection">
-          <v-icon>mdi-arrow-right</v-icon>
-        </v-btn>
-      </v-app-bar>
-      <v-container class="dialog-content white">
-        <Fiche v-if="selectedFiche" :fiche="selectedFiche"></Fiche>
-      </v-container>
+      <v-card tile>
+        <v-card-title>
+          <FicheShare :fiche="selectedFiche" small outlined color="white--text grey darken-3">Partager</FicheShare>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="clearFicheSelection">
+            <v-icon>mdi-arrow-right</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text class="pa-2 pb-0">
+          <Fiche v-if="selectedFiche" :fiche="selectedFiche"></Fiche>
+        </v-card-text>
+      </v-card>
     </v-dialog>
 
     <v-container>
@@ -647,22 +650,6 @@ export default {
   &button[disabled] {
     opacity: 0.6;
   }
-}
-
-.dialog-content {
-  margin-top: 56px !important;
-
-  & + dialog-footer {
-    margin-bottom: 60px !important;
-  }
-}
-
-.dialog-header {
-  height: 56px;
-}
-
-.dialog-footer {
-  height: 60px;
 }
 
 .fiche-content {
