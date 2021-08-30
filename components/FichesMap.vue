@@ -1,5 +1,5 @@
 <template>
-  <div class="map">
+  <div class="map" style="position: relative">
     <v-overlay :value="ficheLoading">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
