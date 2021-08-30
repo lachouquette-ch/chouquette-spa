@@ -1,7 +1,15 @@
 <template>
   <div>
     <v-dialog v-model="mapDialog" fullscreen hide-overlay transition="dialog-top-transition">
-      <FichesMap :fiches="fiches" @mapSelectFiche="selectFiche"></FichesMap>
+      <FichesMap
+        :fiches="fiches"
+        :selected-fiche="selectedFiche"
+        :has-more-fiches="hasMoreFiches"
+        :ficheLoading="!!selectedFicheCard"
+        :fetchLoading="$fetchState.pending"
+        @mapSelectFiche="selectFiche"
+        @moreFiches="$fetch"
+      ></FichesMap>
       <v-container
         ref="mapFooter"
         v-hammer:pan.vertical="mapOnPanVertical"
@@ -14,12 +22,15 @@
         <div class="pa-3">
           <v-divider class="mx-auto grey" style="width: 40px; border: 2px solid; border-radius: 5px"></v-divider>
           <div class="align-center mt-2 grey--text text--darken-3 d-flex">
-            <span>{{ fiches.length }} adresses affichées</span>&nbsp;
+            <span>{{ ficheCountWithPoi }} adresses affichées</span>&nbsp;
             <v-tooltip max-width="90vw" top>
               <template #activator="{ on, attrs }">
                 <v-icon v-bind="attrs" small v-on="on">mdi-help-circle-outline</v-icon>
               </template>
-              <span class="text-wrap">Retourne sur la liste et affine tes critères pour voir d'autres adresses</span>
+              <span class="text-wrap"
+                >Seules les adresses physiques sont affichées. Retourne sur la 'Liste' pour voir toutes les adresses ou
+                clique sur 'Plus de fiches' pour en voir d'avantage</span
+              >
             </v-tooltip>
             <v-spacer></v-spacer>
             <v-btn style="opacity: 0.9" dark rounded small @click="mapDialog = false">
@@ -602,6 +613,9 @@ export default {
       getCategoryById: 'getById',
       getCategoriesByParentId: 'getChildrenForId',
     }),
+    ficheCountWithPoi() {
+      return this.fiches.filter(({ poi }) => !!poi).length
+    },
   },
   head() {
     const title = this.location ? this.location.name : 'Adresses'

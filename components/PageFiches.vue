@@ -225,7 +225,7 @@
         ref="map"
         :fiches="fiches"
         :count-next-fiches="countNextFiches"
-        :loading="$fetchState.pending"
+        fetchLoading="$fetchState.pending"
         :class="{ 'd-none': mapState != $mapState.SHOWN }"
         @fichesMapSelection="selectFiche"
         @fetchMofetchMoreFiches="$fetch"

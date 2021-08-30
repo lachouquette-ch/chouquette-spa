@@ -1,17 +1,15 @@
 <template>
   <div class="map">
+    <v-overlay :value="ficheLoading">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
     <div ref="map" style="height: 100%; width: 100%" />
-    <button
-      v-if="!!countNextFiches"
-      class="map-load-more google-map-control bg-yellow w-auto"
-      :disabled="loading || !countNextFiches"
-      title="Afficher plus de fiches"
-      @click="$emit('fetchMoreFiches')"
-    >
-      <b-spinner v-show="loading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
-      <strong>+{{ countNextFiches }}</strong>
-      <sub>Fiches</sub>
-    </button>
+    <div style="position: absolute; top: 0; width: 100vw; padding-top: 20px" class="d-flex justify-center">
+      <v-btn v-if="hasMoreFiches" :loading="fetchLoading" small rounded class="white" @click="$emit('moreFiches')">
+        Plus de fiches
+        <v-icon right>mdi-cloud-upload</v-icon>
+      </v-btn>
+    </div>
   </div>
 </template>
 
@@ -35,11 +33,15 @@ export default {
       type: Object,
       default: null,
     },
-    countNextFiches: {
-      type: Number,
-      default: 0,
+    hasMoreFiches: {
+      type: Boolean,
+      default: true,
     },
-    loading: {
+    ficheLoading: {
+      type: Boolean,
+      default: false,
+    },
+    fetchLoading: {
       type: Boolean,
       default: false,
     },
