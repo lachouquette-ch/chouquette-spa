@@ -83,6 +83,7 @@ export default {
     { src: '~/plugins/pretty-url-filter.js' },
     { src: '~/plugins/vue-content-placeholders.js' },
     { src: '~/plugins/vue-observe-visibility.js' },
+    { src: '~/plugins/vue2-hammer.js' },
   ],
   /*
    ** Nuxt.js dev-modules

@@ -2,33 +2,32 @@
   <div>
     <v-dialog v-model="mapDialog" fullscreen hide-overlay transition="dialog-top-transition">
       <FichesMap :fiches="fiches" @mapSelectFiche="selectFiche"></FichesMap>
-      <v-container class="white rounded-t-xl" fluid style="position: absolute; bottom: 0; height: 64px">
-        <v-divider
-          v-touch="{
-            up: () => {
-              mapDialog = false
-            },
-          }"
-          class="mx-auto grey"
-          style="width: 40px; border: 2px solid; border-radius: 5px"
-        ></v-divider>
-        <v-row class="align-center mt-2 grey--text text--darken-3" no-gutters>
-          <v-col>
-            <span>{{ fiches.length }} adresses affichées</span>
+      <v-container
+        ref="mapFooter"
+        v-hammer:pan.vertical="mapOnPanVertical"
+        v-hammer:panend="mapOnPanEnd"
+        class="white rounded-t-xl pa-0"
+        fluid
+        style="position: absolute; bottom: 0"
+        :style="`height: ${mapFooterHeight}`"
+      >
+        <div class="pa-3">
+          <v-divider class="mx-auto grey" style="width: 40px; border: 2px solid; border-radius: 5px"></v-divider>
+          <div class="align-center mt-2 grey--text text--darken-3 d-flex">
+            <span>{{ fiches.length }} adresses affichées</span>&nbsp;
             <v-tooltip max-width="90vw" top>
               <template #activator="{ on, attrs }">
                 <v-icon v-bind="attrs" small v-on="on">mdi-help-circle-outline</v-icon>
               </template>
               <span class="text-wrap">Retourne sur la liste et affine tes critères pour voir d'autres adresses</span>
             </v-tooltip>
-          </v-col>
-          <v-col cols="auto">
+            <v-spacer></v-spacer>
             <v-btn style="opacity: 0.9" dark rounded small @click="mapDialog = false">
               <v-icon left>mdi-format-list-text</v-icon>
               Liste
             </v-btn>
-          </v-col>
-        </v-row>
+          </div>
+        </div>
       </v-container>
     </v-dialog>
 
@@ -343,6 +342,7 @@ export default {
       criteriaLoading: false,
 
       mapDialog: false,
+      mapFooterHeight: 64,
     }
   },
   async fetch() {
@@ -444,6 +444,22 @@ export default {
     )
   },
   methods: {
+    mapOnPanEnd() {
+      /* eslint-disable no-undef */
+      if ($(this.$refs.mapFooter).height() > $(window).height() / 3) {
+        this.mapDialog = false
+      }
+      $(this.$refs.mapFooter).height(this.mapFooterHeight)
+      /* eslint-enable no-undef */
+    },
+    mapOnPanVertical(event) {
+      /* eslint-disable no-undef */
+      const height = this.mapFooterHeight - event.deltaY
+      if (height > this.mapFooterHeight) {
+        $(this.$refs.mapFooter).height(this.mapFooterHeight + height)
+      }
+      /* eslint-enable no-undef */
+    },
     updateCriteria(criteriaFilter, selectedCriteria) {
       const values = selectedCriteria.map(({ slug }) => slug)
       const criteria = this.criteriaList.find(({ taxonomy }) => criteriaFilter.taxonomy)
