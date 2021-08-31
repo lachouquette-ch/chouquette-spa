@@ -81,6 +81,7 @@ export default {
     { src: '~/plugins/vuelidate.js' },
     { src: '~/plugins/html-entity-filter.js' },
     { src: '~/plugins/pretty-url-filter.js' },
+    { src: '~/plugins/iso-date-filter.js' },
     { src: '~/plugins/vue-content-placeholders.js' },
     { src: '~/plugins/vue-observe-visibility.js' },
     { src: '~/plugins/vue2-hammer.js' },

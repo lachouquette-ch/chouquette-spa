@@ -5,8 +5,8 @@
         :fiches="fiches"
         :selected-fiche="selectedFiche"
         :has-more-fiches="hasMoreFiches"
-        :ficheLoading="!!selectedFicheCard"
-        :fetchLoading="$fetchState.pending"
+        :fiche-loading="!!selectedFicheCard"
+        :fetch-loading="$fetchState.pending"
         @mapSelectFiche="selectFiche"
         @moreFiches="$fetch"
       ></FichesMap>

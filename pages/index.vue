@@ -72,12 +72,15 @@
                 width="100%"
                 class="rounded"
               ></WpMediaNew>
-              <v-card-title class="pa-0 mt-1 text-break">
-                {{ highlightedPost.title }}
-                <v-card-subtitle class="text-uppercase ma-0 pa-0">{{
-                  getCategoryById(highlightedPost.categoryId).name
-                }}</v-card-subtitle>
-              </v-card-title>
+              <v-card-text class="pa-0 mt-1">
+                <v-card-title class="pa-0">
+                  <h2 class="text-h6 text-break black--text">{{ highlightedPost.title }}</h2>
+                  <v-card-subtitle class="pa-0">
+                    <p class="text-uppercase ma-0">{{ getCategoryById(highlightedPost.categoryId).name }}</p>
+                    <p class="ma-0">Le {{ highlightedPost.date | fromISO }} par {{ highlightedPost.authorName }}</p>
+                  </v-card-subtitle>
+                </v-card-title>
+              </v-card-text>
             </v-card>
           </v-col>
           <v-col cols="12" md="6" class="py-0">
