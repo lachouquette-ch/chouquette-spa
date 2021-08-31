@@ -124,36 +124,15 @@
       <h1 class="text-h5 text-center mt-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
       <div id="categoryContainer" class="cq-scroll-x-container mt-4">
         <div class="d-inline-flex">
-          <button
+          <CategoryButton
             v-for="topCategory in topCategories"
             :id="topCategory.slug"
             :key="topCategory.id"
-            v-ripple
-            class="top-category-btn rounded mr-2"
-            :class="{ 'grey darken-3': topCategory === selectedTopCategory }"
+            :top-category="topCategory"
+            :selected="topCategory === selectedTopCategory"
             :disabled="$fetchState.pending"
-            @click.prevent="selectTopCategory(topCategory)"
-          >
-            <v-list-item two-line>
-              <v-list-item-avatar class="rounded-0">
-                <WpMediaNew
-                  v-if="topCategory === selectedTopCategory"
-                  :media="topCategory.logoWhite"
-                  size="thumbnail"
-                ></WpMediaNew>
-                <WpMediaNew v-else :media="topCategory.logoBlack" size="thumbnail"></WpMediaNew>
-              </v-list-item-avatar>
-
-              <v-list-item-content>
-                <v-list-item-title :class="{ 'yellow--text': topCategory === selectedTopCategory }">{{
-                  topCategory.name
-                }}</v-list-item-title>
-                <v-list-item-subtitle :class="{ 'white--text': topCategory === selectedTopCategory }">{{
-                  topCategory.description
-                }}</v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </button>
+            @topCategorySelected="selectTopCategory(topCategory)"
+          ></CategoryButton>
         </div>
       </div>
       <div v-if="subCategories.length" class="cq-scroll-x-container mt-1">
@@ -302,6 +281,7 @@ import Fiche from '~/components/Fiche'
 import { postCard as PostCardFragments } from '~/apollo/fragments/postCard'
 import { ficheCard as FicheCardFragments } from '~/apollo/fragments/ficheCard'
 import FicheShare from '~/components/FicheShare'
+import CategoryButton from '~/components/CategoryButton'
 
 const MapStates = Object.freeze({
   HIDDEN: Symbol('hidden'),
@@ -310,7 +290,7 @@ const MapStates = Object.freeze({
 })
 
 export default {
-  components: { FicheShare, Fiche, FilterExpansion, WpMediaNew, ScrollTop, FichesMap },
+  components: { CategoryButton, FicheShare, Fiche, FilterExpansion, WpMediaNew, ScrollTop, FichesMap },
   mixins: [seo, graphql],
   asyncData({ store, params, query }) {
     const location = params.slug ? store.getters['locations/getBySlug'](params.slug) : null
