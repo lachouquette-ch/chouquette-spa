@@ -131,7 +131,7 @@
             :top-category="topCategory"
             :selected="topCategory === selectedTopCategory"
             :disabled="$fetchState.pending"
-            @topCategorySelected="selectTopCategory(topCategory)"
+            @click="selectTopCategory(topCategory)"
           ></CategoryButton>
         </div>
       </div>
@@ -413,11 +413,13 @@ export default {
       this.subCategories = await this.getCategoriesByParentId(this.selectedTopCategory.id)
       await this.fetchCriteria(this.category)
 
-      // move to selected category using jquery
-      /* eslint-disable no-undef */
-      const leftOffset = $(`#${this.selectedTopCategory.slug}`).position().left
-      $('#categoryContainer').animate({ scrollLeft: leftOffset - 15 }, 250)
-      /* eslint-enable no-undef */
+      // move to selected category
+      const categoryButton = document.getElementById(this.category.slug)
+      const categoryContainer = document.getElementById('categoryContainer')
+      const buttonLeftOffset = categoryButton.offsetLeft
+      const maxLeftOffset = categoryContainer.scrollWidth - categoryContainer.clientWidth
+      const leftOffset = buttonLeftOffset > maxLeftOffset ? maxLeftOffset : buttonLeftOffset - 50 // need to view previous
+      categoryContainer.scrollLeft = leftOffset
     }
   },
   created() {
@@ -463,6 +465,7 @@ export default {
     },
     fetchWithFilters() {
       this.fichesNextPage = 1
+      this.hasMorePosts = true
       this.fiches = []
 
       const query = this.criteriaList.reduce((acc, { taxonomy, values }) => {

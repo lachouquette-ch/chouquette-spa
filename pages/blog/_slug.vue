@@ -32,9 +32,12 @@
             :id="topCategory.slug"
             :key="topCategory.id"
             :top-category="topCategory"
-            :selected="topCategory === selectedTopCategory"
+            :selected="topCategory === category"
             :disabled="$fetchState.pending"
-            @topCategorySelected="selectTopCategory(topCategory)"
+            @click="
+              category = topCategory
+              fetchWithFilters()
+            "
           ></CategoryButton>
         </div>
       </div>
@@ -61,19 +64,16 @@
             <template #activator="{ on, attrs }">
               <v-btn text v-bind="attrs" v-on="on">
                 Trier
-                <v-icon right>mdi-chevron-down</v-icon>
+                <v-icon v-if="sortAsc" right>mdi-chevron-up</v-icon>
+                <v-icon v-else right>mdi-chevron-down</v-icon>
               </v-btn>
             </template>
-            <v-list>
-              <v-list-item>
-                <v-list-item-title>Les plus récents <v-icon x-large>mdi-circle-small</v-icon></v-list-item-title>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-title
-                  >Les plus anciens <v-icon v-if="false" x-large>mdi-circle-small</v-icon></v-list-item-title
-                >
-              </v-list-item>
-            </v-list>
+            <v-container class="white">
+              <v-radio-group v-model="sortAsc" class="mt-0" hide-details @change="fetchWithFilters">
+                <v-radio label="Les plus récents" :value="false" color="grey"></v-radio>
+                <v-radio label="Les plus anciens" :value="true" color="grey"></v-radio>
+              </v-radio-group>
+            </v-container>
           </v-menu>
         </div>
         <PostCard
@@ -81,9 +81,9 @@
           :key="post.id"
           :loading="selectedPostCard === post"
           :post="post"
-          @click="selectPost(post)"
           class="mb-3"
           large
+          @click="selectPost(post)"
         ></PostCard>
         <v-btn
           v-if="!$fetchState.pending && hasMorePosts"
@@ -100,7 +100,13 @@
         </v-btn>
       </template>
       <div v-if="$fetchState.pending" class="mt-3">
-        <v-skeleton-loader v-for="i in 3" :key="i" class="mb-3" elevation="1" type="article image"></v-skeleton-loader>
+        <v-skeleton-loader
+          v-for="i in 5"
+          :key="i"
+          class="mb-3"
+          elevation="1"
+          type="list-item-avatar-three-line"
+        ></v-skeleton-loader>
       </div>
       <v-alert
         v-else-if="!hasMorePosts"
@@ -138,8 +144,7 @@ export default {
     return {
       category,
       search: query.search,
-      sortDesc: query.sort === 'desc',
-      chouquettiseOnly: Boolean(query.chouquettiseOnly),
+      sortAsc: query.sort === 'asc',
     }
   },
   data() {
@@ -152,9 +157,6 @@ export default {
       selectedPostCard: null,
       selectedPost: null,
       postDialog: false,
-
-      selectedTopCategory: null,
-      selectedSubCategory: null,
     }
   },
   async fetch() {
@@ -181,6 +183,7 @@ export default {
         variables: {
           category: this.category ? this.category.slug : null,
           search: this.search,
+          asc: this.sortAsc,
           page: this.postsNextPage++,
           pageSize: PER_PAGE_NUMBER,
         },
@@ -199,31 +202,38 @@ export default {
   mounted() {
     // initialize categories
     if (this.category) {
-      // move to selected category using jquery
-      /* eslint-disable no-undef */
-      const leftOffset = $(`#${this.category.slug}`).position().left
-      $('#categoryContainer').animate({ scrollLeft: leftOffset - 15 }, 250)
-      /* eslint-enable no-undef */
+      // move to selected category
+      const categoryButton = document.getElementById(this.category.slug)
+      const categoryContainer = document.getElementById('categoryContainer')
+      const buttonLeftOffset = categoryButton.offsetLeft
+      const maxLeftOffset = categoryContainer.scrollWidth - categoryContainer.clientWidth
+      const leftOffset = buttonLeftOffset > maxLeftOffset ? maxLeftOffset : buttonLeftOffset - 50 // need to view previous
+      categoryContainer.scrollLeft = leftOffset
     }
   },
   methods: {
     fetchWithFilters() {
       this.postsNextPage = 1
+      this.hasMorePosts = true
       this.posts = []
 
+      const path = this.category ? `/blog/${this.category.slug}` : null
+      const query = {}
+      if (this.search) query.search = this.search
+      if (this.sortAsc) query.sort = 'asc'
+
       this.$router.replace({
-        search: this.search,
-        asc: this.asc,
+        path,
+        query,
       })
       return this.$fetch()
     },
-    selectTopCategory(topCategory) {
-      this.category = topCategory
-
-      return this.fetchWithFilters()
-    },
     searchByText() {
       if (this.search != null) this.fetchWithFilters()
+    },
+    clearSearch() {
+      this.search = null
+      this.fetchWithFilters()
     },
     selectPost(ficheCard) {
       // this.selectedPostCard = ficheCard

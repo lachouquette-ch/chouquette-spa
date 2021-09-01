@@ -4,7 +4,7 @@
     class="top-category-btn rounded mr-2"
     :class="{ 'grey darken-3': selected }"
     :disabled="disabled"
-    @click.prevent="$emit('topCategorySelected', topCategory)"
+    @click.prevent="$emit('click', topCategory)"
   >
     <v-list-item two-line>
       <v-list-item-avatar class="rounded-0">
