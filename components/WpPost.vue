@@ -78,14 +78,15 @@
           <WPMediaRaw v-if="preview" :media="post._embedded['wp:featuredmedia'][0]" class="post-header-img" />
           <WPMedia v-else-if="post.image" :media="post.image" class="post-header-img" />
           <template v-if="!preview">
-            <WpAvatar
-              :size="150"
-              :avatar-urls="post.author.avatar"
-              :alt="post.author.name"
+            <img
+              :alt="firstAuthor.name"
+              :src="firstAuthor.avatar"
               class="post-header-author-img rounded-circle"
+              height="150"
+              width="150"
             />
             <div class="post-header-meta">
-              <span>par {{ post.author.name }}</span>
+              <span>par {{ firstAuthor.name }}</span>
               <span v-if="postModifiedDate">
                 mise à jour le <time :datetime="post.modified">{{ postModifiedDate }}</time>
               </span>
@@ -105,14 +106,15 @@
 
         <section v-if="!preview" class="post-author container mb-5">
           <div class="border shadow-sm text-center position-relative">
-            <WpAvatar
-              :size="150"
-              :avatar-urls="post.author.avatar"
-              :alt="post.author.name"
+            <img
+              :alt="firstAuthor.name"
+              :src="firstAuthor.avatar"
               class="post-header-author-img rounded-circle"
+              height="150"
+              width="150"
             />
-            <h5 class="mt-3 mb-4">{{ post.author.name }}</h5>
-            <p class="px-2 pb-1">{{ post.author.description }}</p>
+            <h5 class="mt-3 mb-4">{{ firstAuthor.name }}</h5>
+            <p class="px-2 pb-1">{{ firstAuthor.description }}</p>
           </div>
         </section>
 
@@ -193,7 +195,6 @@ import { mapState } from 'vuex'
 import WPMediaRaw from '../components/WpMediaRaw'
 import PostShare from '../components/PostShare'
 import PostComment from '../components/PostComment'
-import WpAvatar from '../components/WpAvatar'
 import PostCommentReply from '../components/PostCommentReply'
 import FicheThumbnail from '../components/FicheThumbnail'
 import ScrollTop from '../components/ScrollTop'
@@ -215,7 +216,6 @@ export default {
     Fiche,
     FicheThumbnail,
     PostCommentReply,
-    WpAvatar,
     PostComment,
     WPMedia,
     WPMediaRaw,
@@ -314,6 +314,10 @@ export default {
         return slug === 'tops'
       })
     },
+    // TODO : currently focus on first (single) author
+    firstAuthor() {
+      return this.post.authors[0]
+    },
   },
   mounted() {
     this.initModal()
@@ -382,7 +386,7 @@ export default {
           headline: this.post.title,
           image: this.post.image,
           description: this.seoGetDescription(JSON.parse(this.post.seo.metadata)),
-          author: this.post.author.name,
+          author: this.firstAuthor.name,
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',

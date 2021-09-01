@@ -20,7 +20,7 @@ export const post = gql`
     tags {
       ...TagFragments
     }
-    author {
+    authors {
       ...AuthorFragments
     }
     seo {
