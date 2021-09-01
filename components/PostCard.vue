@@ -1,6 +1,7 @@
 <template>
   <v-card class="d-flex" dense flat hover ripple max-width="400" :to="`/${post.slug}`" nuxt>
     <WpMediaNew
+      v-if="post.image"
       :media="post.image"
       size="thumbnail"
       :width="large ? '150' : '100'"

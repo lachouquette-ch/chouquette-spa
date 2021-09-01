@@ -66,6 +66,7 @@
             ></v-skeleton-loader>
             <v-card v-else class="mx-auto mb-3" max-width="350" :to="`/${highlightedPost.slug}`" nuxt flat hover ripple>
               <WpMediaNew
+                v-if="highlightedPost.image"
                 :media="highlightedPost.image"
                 size="medium_large"
                 aspect-ratio="1"
