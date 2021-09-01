@@ -71,6 +71,23 @@
             </v-list-item-title>
           </v-list-item>
         </v-list>
+        <v-list>
+          <v-subheader>Valeurs&nbsp; </v-subheader>
+          <v-list-item>
+            <v-list-item-content class="pa-0">
+              <v-chip-group v-if="values" column>
+                <v-tooltip v-for="value in values" :key="value.id" max-width="90vw" top>
+                  <template #activator="{ on, attrs }">
+                    <v-chip v-bind="attrs" color="primary lighten-4" text-color="grey darken-3" label small v-on="on">
+                      {{ value.name }}
+                    </v-chip>
+                  </template>
+                  {{ value.description }}
+                </v-tooltip>
+              </v-chip-group>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
         <v-list class="pa-0">
           <v-subheader>Extra</v-subheader>
           <v-list-item
@@ -149,7 +166,7 @@
         <v-divider class="my-3"></v-divider>
         <h2 class="text-h6">Articles sur l'adresse</h2>
         <div class="my-3">
-          <PostCard v-for="post in fiche.postCards" :key="post.id" :post="post" class="mb-3"></PostCard>
+          <PostCard v-for="post in fiche.postCards" :key="post.id" :post="post" class="mb-3" large></PostCard>
         </div>
       </div>
 
@@ -267,8 +284,14 @@ export default {
     ...mapGetters('categories', {
       getCategoryById: 'getById',
     }),
+    ...mapGetters('values', {
+      getValueById: 'getById',
+    }),
     categories() {
       return this.fiche.categoryIds.map((id) => this.getCategoryById(id).name).join(', ')
+    },
+    values() {
+      return this.fiche.valueIds.map(this.getValueById)
     },
     fichePrice() {
       return ['$'.repeat(this.fiche.info.cost), '$'.repeat(5 - this.fiche.info.cost)]

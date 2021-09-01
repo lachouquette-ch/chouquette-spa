@@ -65,6 +65,15 @@ export const actions = {
                 slug
                 description
               }
+              values {
+                id
+                name
+                slug
+                description
+                image {
+                  ...MediaFragments
+                }
+              }
             }
           }
           ${MediaFragments}
@@ -79,6 +88,7 @@ export const actions = {
       await dispatch('categories/init', nuxtServerInit.categories),
       await dispatch('menus/init', nuxtServerInit.menus),
       await dispatch('locations/init', nuxtServerInit.locations),
+      await dispatch('values/init', nuxtServerInit.values),
     ])
     commit('SET_LOADING', loadingPromise)
     return loadingPromise

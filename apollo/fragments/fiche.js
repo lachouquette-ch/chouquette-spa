@@ -16,6 +16,7 @@ export const fiche = gql`
     principalCategoryId
     categoryIds
     locationId
+    valueIds
 
     info {
       mail

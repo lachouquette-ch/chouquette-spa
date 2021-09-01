@@ -198,16 +198,16 @@
           <v-card-text class="black--text">
             <div class="fiche-content" v-html="fiche.content"></div>
             <a href="" @click.prevent="">Voir Plus</a>
-            <v-chip-group v-if="fiche.criteria" class="mt-3" column>
+            <v-chip-group v-if="fiche.valueIds" class="mt-3" column>
               <v-chip
-                v-for="criteriaValue in sampleCriteriaValues(fiche)"
-                :key="criteriaValue.id"
+                v-for="valueId in fiche.valueIds"
+                :key="valueId"
                 color="primary lighten-4"
                 text-color="grey darken-3"
                 label
                 small
               >
-                {{ criteriaValue.name }}</v-chip
+                {{ getValueById(valueId).name }}</v-chip
               >
             </v-chip-group>
           </v-card-text>
@@ -367,11 +367,11 @@ export default {
               total
               totalPages
               fiches {
-                ...FicheFragments
+                ...FicheCardFragments
               }
             }
           }
-          ${FicheFragments}
+          ${FicheCardFragments}
         `,
         variables: {
           category: this.category ? this.category.slug : null,
@@ -595,6 +595,9 @@ export default {
     ...mapGetters('categories', {
       getCategoryById: 'getById',
       getCategoriesByParentId: 'getChildrenForId',
+    }),
+    ...mapGetters('values', {
+      getValueById: 'getById',
     }),
     ficheCountWithPoi() {
       return this.fiches.filter(({ poi }) => !!poi).length

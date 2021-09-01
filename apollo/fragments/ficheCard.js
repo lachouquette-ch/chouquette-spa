@@ -7,10 +7,12 @@ export const ficheCard = gql`
     id
     slug
     title
+    content
     isChouquettise
 
     principalCategoryId
     locationId
+    valueIds
 
     image {
       ...MediaFragments

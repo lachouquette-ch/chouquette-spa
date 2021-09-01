@@ -108,16 +108,20 @@
     <v-sheet class="green-chouquette lighten-1 py-5">
       <h3 class="text-center headline">Les valeurs de La Chouquette</h3>
       <v-carousel class="valeurs-carousel" height="250" show-arrows-on-hover hide-delimiter-background interval="3000">
-        <v-carousel-item v-for="valeur in valeurs" :key="valeur.name">
-          <v-sheet height="100%" tile class="transparent">
-            <v-row class="fill-height flex-column" align="center" justify="center">
-              <v-btn fab dark color="green-chouquette" elevation="1">
-                <v-icon>{{ valeur.icon }}</v-icon>
-              </v-btn>
-              <h6 class="text-h5 my-3">{{ valeur.name }}</h6>
-              <p>{{ valeur.description }}</p>
-            </v-row>
-          </v-sheet>
+        <v-carousel-item v-for="value in values" :key="value.id">
+          <v-card color="transparent" class="text-center" height="250" flat tile>
+            <WpMediaNew
+              :media="value.image"
+              size="thumbnail"
+              width="100"
+              height="100"
+              contain
+              class="mx-auto"
+              flat
+            ></WpMediaNew>
+            <v-card-title class="justify-center">{{ value.name }}</v-card-title>
+            <v-card-subtitle>{{ value.description }}</v-card-subtitle>
+          </v-card>
         </v-carousel-item>
       </v-carousel>
     </v-sheet>
@@ -206,16 +210,6 @@ export default {
       latestPosts: [],
       latestChouquettises: [],
       topPosts: [],
-
-      valeurs: [
-        { name: "L'écologie", description: 'Blablabla ljfalsdf lasdfkj lasdfkjalsdfj', icon: 'mdi-leaf' },
-        { name: 'Le local', description: 'Blablabla ljfalsdf lasdfkj lasdfkjalsdfj', icon: 'mdi-map-marker-circle' },
-        {
-          name: 'Le solidaire',
-          description: 'Blablabla ljfalsdf lasdfkj lasdfkjalsdfj',
-          icon: 'mdi-handshake-outline',
-        },
-      ],
     }
   },
   async fetch() {
@@ -260,6 +254,7 @@ export default {
     ...mapState({
       categories: (state) => state.menus.headerCategories,
       locations: (state) => state.locations.flatSorted,
+      values: (state) => state.values.flat,
     }),
     ...mapGetters('categories', { getCategoryById: 'getById' }),
     highlightedPost() {
