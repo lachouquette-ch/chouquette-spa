@@ -71,11 +71,11 @@
             </v-list-item-title>
           </v-list-item>
         </v-list>
-        <v-list>
+        <v-list v-if="values.length">
           <v-subheader>Valeurs&nbsp; </v-subheader>
           <v-list-item>
             <v-list-item-content class="pa-0">
-              <v-chip-group v-if="values" column>
+              <v-chip-group column>
                 <v-tooltip v-for="value in values" :key="value.id" max-width="90vw" top>
                   <template #activator="{ on, attrs }">
                     <v-chip v-bind="attrs" color="primary lighten-4" text-color="grey darken-3" label small v-on="on">
@@ -120,7 +120,7 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <v-list>
+        <v-list v-if="fiche.criteria">
           <v-subheader
             >Critères&nbsp;
             <v-tooltip max-width="90vw" top>
@@ -135,7 +135,7 @@
           </v-subheader>
           <v-list-item>
             <v-list-item-content class="pa-0">
-              <v-chip-group v-if="fiche.criteria" column>
+              <v-chip-group column>
                 <v-chip
                   v-for="criteriaValue in criteriaValues"
                   :key="criteriaValue.id"
