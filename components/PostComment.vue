@@ -2,7 +2,13 @@
   <article class="my-3">
     <header>
       <div>
-        <WpAvatar :size="32" :avatar-urls="comment.authorAvatar" :alt="comment.authorName" class="rounded-circle" />
+        <img
+          :alt="comment.authorName"
+          :src="comment.authorAvatar"
+          class="rounded-circle"
+          height="32"
+          width="32"
+        />
         <b class="ml-2">{{ comment.authorName }}</b> <span class="says">dit&nbsp;:</span>
       </div>
       <div class="comment-metadata">
@@ -31,12 +37,11 @@
 
 <script>
 import moment from 'moment'
-import WpAvatar from './WpAvatar'
 import PostCommentReply from './PostCommentReply'
 
 export default {
   name: 'PostComment',
-  components: { PostCommentReply, WpAvatar },
+  components: { PostCommentReply },
   props: {
     post: {
       type: String,

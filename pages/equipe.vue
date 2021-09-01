@@ -4,11 +4,12 @@
       <div class="my-3">
         <div class="d-flex flex-wrap justify-content-around">
           <div v-for="member in team" :key="member.id" class="card mr-3 mb-4">
-            <WpAvatar
-              :size="150"
-              :avatar-urls="member.avatar"
+            <img
               :alt="member.name"
+              :src="`${member.avatar}&s=150`"
               class="card-img-top mx-auto mt-3 rounded-circle"
+              height="150"
+              width="150"
             />
             <div class="card-body text-center">
               <h3 class="card-title">{{ member.name }}</h3>
@@ -29,14 +30,12 @@ import { page as PageFragments } from '@/apollo/fragments/page'
 import { author as AuthorParts } from '@/apollo/fragments/author'
 
 import { mapState } from 'vuex'
-import WpAvatar from '../components/WpAvatar'
 import WpPage from '~/components/WpPage'
 import seo from '~/mixins/seo'
 
 export default {
   components: {
     WpPage,
-    WpAvatar,
   },
   mixins: [seo],
   async asyncData({ app }) {
