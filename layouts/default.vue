@@ -67,7 +67,7 @@
         <v-icon>mdi-map-marker-multiple-outline</v-icon>
       </v-btn>
 
-      <v-btn nuxt to="/blog">
+      <v-btn nuxt to="/articles">
         <span>Articles</span>
         <v-icon>mdi-newspaper-variant-multiple</v-icon>
       </v-btn>
