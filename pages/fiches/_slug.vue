@@ -3,7 +3,7 @@
     <v-dialog v-model="mapDialog" fullscreen hide-overlay transition="dialog-top-transition">
       <FichesMap
         :fiches="fiches"
-        :selected-fiche="selectedFiche"
+        :selected-fiche="selectedFicheCard"
         :has-more-fiches="hasMoreFiches"
         :fiche-loading="!!selectedFicheCard"
         :fetch-loading="$fetchState.pending"
@@ -107,7 +107,7 @@
     >
       <v-card tile>
         <v-card-title>
-          <FicheShare :fiche="selectedFiche" small outlined color="white--text grey darken-3">Partager</FicheShare>
+          <FicheShare :fiche="selectedFicheCard" small outlined color="white--text grey darken-3">Partager</FicheShare>
           <v-spacer></v-spacer>
           <v-btn icon @click="clearFicheSelection">
             <v-icon>mdi-arrow-right</v-icon>
@@ -115,7 +115,7 @@
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="pa-2 pb-0">
-          <Fiche v-if="selectedFiche" :fiche="selectedFiche"></Fiche>
+          <Fiche v-if="selectedFicheCard" :fiche="selectedFicheCard.slug"></Fiche>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -177,7 +177,6 @@
           v-for="fiche in fiches"
           :key="fiche.id"
           class="mb-3"
-          :loading="selectedFicheCard === fiche"
           outlined
           bench="2"
           active-class=" "
@@ -589,7 +588,6 @@ export default {
     },
   },
   computed: {
-    ...mapState(['wordpressUrl']),
     ...mapState('categories', { topCategories: 'topLevels' }),
     ...mapState('locations', { locations: 'flatSorted' }),
     ...mapGetters('categories', {
@@ -619,7 +617,7 @@ export default {
 
         { property: 'og:type', content: 'article' },
         { property: 'og:locale', content: 'fr_FR' },
-        { property: 'og:url', content: this.currentURL },
+        { property: 'og:url', content: location.href },
         {
           property: 'og:title',
           content: title,
@@ -647,9 +645,9 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.wordpressUrl}/logo.png`,
+            logo: `${location.href}/logo.png`,
           },
-          url: this.currentURL,
+          url: location.href,
         }),
       ],
     }

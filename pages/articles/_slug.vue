@@ -268,7 +268,6 @@ export default {
     },
   },
   computed: {
-    ...mapState(['wordpressUrl']),
     ...mapState('categories', { topCategories: 'topLevels' }),
     ...mapGetters('categories', {
       getCategoryById: 'getById',
@@ -290,7 +289,7 @@ export default {
 
         { property: 'og:type', content: 'article' },
         { property: 'og:locale', content: 'fr_FR' },
-        { property: 'og:url', content: this.currentURL },
+        { property: 'og:url', content: location.href },
         {
           property: 'og:title',
           content: title,
@@ -318,9 +317,9 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.wordpressUrl}/logo.png`,
+            logo: `${location.href}/logo.png`,
           },
-          url: this.currentURL,
+          url: location.href,
         }),
       ],
     }

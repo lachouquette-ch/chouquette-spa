@@ -250,7 +250,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(['name', 'description', 'wordpressUrl']),
+    ...mapState(['name', 'description']),
     ...mapState({
       categories: (state) => state.menus.headerCategories,
       locations: (state) => state.locations.flatSorted,
@@ -275,7 +275,7 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: `${this.wordpressUrl}/logo.png`,
+          content: `${location.href}/logo.png`,
         },
       ],
       script: [
@@ -287,9 +287,9 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.wordpressUrl}/logo.png`,
+            logo: `${location.href}/logo.png`,
           },
-          url: this.currentURL,
+          url: location.href,
         }),
       ],
     }

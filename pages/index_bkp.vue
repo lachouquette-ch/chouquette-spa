@@ -197,7 +197,7 @@ export default {
     ...mapState({
       categories: (state) => state.menus.headerCategories,
     }),
-    ...mapState(['name', 'description', 'wordpressUrl']),
+    ...mapState(['name', 'description']),
   },
   mounted() {
     // execute anchor fixing
@@ -212,7 +212,7 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: `${this.wordpressUrl}/logo.png`,
+          content: `${location.href}/logo.png`,
         },
       ],
       script: [
@@ -224,9 +224,9 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.wordpressUrl}/logo.png`,
+            logo: `${location.href}/logo.png`,
           },
-          url: this.currentURL,
+          url: location.href,
         }),
       ],
     }

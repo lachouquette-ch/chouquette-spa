@@ -296,7 +296,6 @@ export default {
   },
   fetchOnServer: false,
   computed: {
-    ...mapState(['wordpressUrl']),
     postCreatedDate() {
       return moment(this.post.date).format('DD/MM/YY')
     },
@@ -390,9 +389,9 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.wordpressUrl}/logo.png`,
+            logo: `${location.href}/logo.png`,
           },
-          url: this.currentURL,
+          url: location.href,
           datePublished: this.post.date,
           dateModified: this.post.modified,
         }),

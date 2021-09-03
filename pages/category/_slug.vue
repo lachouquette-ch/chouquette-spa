@@ -42,9 +42,6 @@ export default {
     this.querySearch = this.$route.query.search
     this.queryCriteria = this.buildSelectedCriteriaFromQuery(this.$route.query)
   },
-  computed: {
-    ...mapState(['wordpressUrl']),
-  },
   methods: {
     buildSelectedCriteriaFromQuery(query) {
       return Object.entries(query)
@@ -85,7 +82,7 @@ export default {
 
           { property: 'og:type', content: 'article' },
           { property: 'og:locale', content: 'fr_FR' },
-          { property: 'og:url', content: this.currentURL },
+          { property: 'og:url', content: location.href },
           { property: 'og:title', content: this.rootCategory.name },
           {
             property: 'og:description',
@@ -112,9 +109,9 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.wordpressUrl}/logo.png`,
+            logo: `${location.href}/logo.png`,
           },
-          url: this.currentURL,
+          url: location.href,
         }),
       ],
     }

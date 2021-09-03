@@ -80,7 +80,7 @@ export default {
           telephone: this.fiche.telephone,
           photo: this.fiche.image.source,
 
-          url: this.currentURL,
+          url: location.href,
           datePublished: this.fiche.date,
           dateModified: this.fiche.modified,
         }),

@@ -38,7 +38,6 @@ export default {
     preview: Boolean,
   },
   computed: {
-    ...mapState(['wordpressUrl']),
   },
   head() {
     if (this.preview) return { meta: [{ name: 'robots', content: 'none' }] }
@@ -51,7 +50,7 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: `${this.wordpressUrl}/logo.png`,
+          content: `${location.href}/logo.png`,
         },
       ],
       script: [
@@ -63,9 +62,9 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.wordpressUrl}/logo.png`,
+            logo: `${location.href}/logo.png`,
           },
-          url: this.currentURL,
+          url: location.href,
           datePublished: this.page.date,
           dateModified: this.page.modified,
         }),

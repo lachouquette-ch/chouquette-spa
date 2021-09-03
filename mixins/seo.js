@@ -1,12 +1,4 @@
-import { mapState } from 'vuex'
-
 export default {
-  computed: {
-    currentURL() {
-      return `${this.wordpressUrl}${this.$route.fullPath}`
-    },
-    ...mapState(['wordpressUrl']),
-  },
   methods: {
     seoGetDescription(yoastMeta) {
       const ogDescription = yoastMeta.find(({ property }) => property === 'og:description')
@@ -37,12 +29,12 @@ export default {
       }
 
       // hack URL
-      metadataUpdateHelper('og:url', this.currentURL, 'property')
+      metadataUpdateHelper('og:url', location.href, 'property')
 
       // add twitter missing meta data
-      metadataUpdateHelper('twitter:site', this.currentURL)
+      metadataUpdateHelper('twitter:site', location.href)
       const image = metaProperties.find(({ property }) => property === 'og:image')
-      metadataUpdateHelper('twitter:image', image ? image.content : `${this.wordpressUrl}/logo.png`)
+      metadataUpdateHelper('twitter:image', image ? image.content : `${location.href}/logo.png`)
 
       return metaProperties
     },
@@ -51,8 +43,8 @@ export default {
         '@context': 'http://www.schema.org',
         '@type': 'Organization',
         name: 'La Chouquette',
-        url: this.wordpressUrl,
-        logo: `${this.wordpressUrl}/logo.png`,
+        url: location.href,
+        logo: `${location.href}/logo.png`,
         foundingDate: '2014',
         founders: [
           {
@@ -77,11 +69,11 @@ export default {
         '@context': 'http://schema.org',
         '@type': 'WebSite',
         name: 'La Chouquette',
-        url: this.wordpressUrl,
+        url: location.href,
         sameAs: ['https://www.facebook.com/lachouquettelausanne', 'https://www.instagram.com/lachouquette.ch/?hl=fr'],
         potentialAction: {
           '@type': 'SearchAction',
-          target: `${this.wordpressUrl}/search/{search_term}`,
+          target: `${location.href}/search/{search_term}`,
           'query-input': 'required name=search_term',
         },
       }

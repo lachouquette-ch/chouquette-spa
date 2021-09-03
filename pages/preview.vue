@@ -28,9 +28,6 @@ export default {
       fiche: null,
     }
   },
-  computed: {
-    ...mapState(['wordpressUrl']),
-  },
   async created() {
     // first try as a page
     if (!this.$route.query.type || !this.$route.query.id || !this.$route.query.nonce) {

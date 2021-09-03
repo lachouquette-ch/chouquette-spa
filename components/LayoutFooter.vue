@@ -40,7 +40,6 @@ export default {
     ...mapState('menus', {
       pages: 'footerPages',
     }),
-    ...mapState(['wordpressUrl']),
     currentYear() {
       return moment().format('YYYY')
     },

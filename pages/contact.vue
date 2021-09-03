@@ -215,9 +215,6 @@ export default {
       },
     },
   },
-  computed: {
-    ...mapState(['wordpressUrl']),
-  },
   head() {
     return {
       title: "Contacte un membre de l'équipe La Chouquette",
@@ -230,9 +227,9 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.wordpressUrl}/logo.png`,
+            logo: `${location.href}/logo.png`,
           },
-          url: this.currentURL,
+          url: location.href,
         }),
       ],
     }
