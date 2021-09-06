@@ -52,11 +52,11 @@
               @fullScreenOn="tabTouchless = true"
               @fullScreenOff="tabTouchless = false"
             ></FichesMap>
-            <small
+            <span
               :href="`https://www.google.com/maps?q=${fiche.address}`"
               target="_blank"
-              class="d-inline-block text-decoration-none mb-1"
-              >{{ fiche.address }} <span class="text-decoration-underline">(Ouvrir dans Maps)</span></small
+              class="d-inline-block text-caption text-decoration-none mb-1"
+              >{{ fiche.address }} <span class="text-decoration-underline">(Ouvrir dans Maps)</span></span
             >
           </div>
 
@@ -69,13 +69,16 @@
             >
               <v-list-item-avatar size="30"><v-icon>mdi-message</v-icon></v-list-item-avatar>
               <v-list-item-title>
-                Envoyer un message au lieu
+                Envoyer un message à l'adresse
                 <v-list-item-subtitle>Depuis La Chouquette</v-list-item-subtitle>
               </v-list-item-title>
             </v-list-item>
             <v-list-item v-if="fiche.info.telephone" :href="`tel: ${fiche.info.telephone}`">
               <v-list-item-avatar size="30"><v-icon>mdi-phone</v-icon></v-list-item-avatar>
-              <v-list-item-title>{{ fiche.info.telephone }}</v-list-item-title>
+              <v-list-item-title>
+                {{ fiche.info.telephone }}
+                <v-list-item-subtitle>Appeler l'adresse</v-list-item-subtitle>
+              </v-list-item-title>
             </v-list-item>
             <v-list-item v-if="fiche.info.website" :href="fiche.info.website" target="_blank">
               <v-list-item-avatar size="30"><v-icon>mdi-web</v-icon></v-list-item-avatar>

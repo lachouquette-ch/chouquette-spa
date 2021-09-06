@@ -4,16 +4,15 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
     <div ref="map" style="height: 100%; width: 100%" />
-    <div
-      v-if="!preview"
-      style="position: absolute; top: 0; width: 100vw; padding-top: 20px"
-      class="d-flex justify-center"
+    <span
+      v-if="!preview && hasMoreFiches"
+      style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%)"
     >
-      <v-btn v-if="hasMoreFiches" :loading="fetchLoading" small rounded class="white" @click="$emit('moreFiches')">
+      <v-btn :loading="fetchLoading" small rounded class="white" @click="$emit('moreFiches')">
         Plus de fiches
         <v-icon right>mdi-cloud-upload</v-icon>
       </v-btn>
-    </div>
+    </span>
   </div>
 </template>
 

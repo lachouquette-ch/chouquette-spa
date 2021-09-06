@@ -107,7 +107,9 @@
     >
       <v-card tile>
         <v-card-title>
-          <FicheShare :fiche="selectedFicheCard" small outlined color="white--text grey darken-3">Partager</FicheShare>
+          <FicheShare v-if="selectedFiche" :fiche="selectedFiche" small outlined color="white--text grey darken-3"
+            >Partager</FicheShare
+          >
           <v-spacer></v-spacer>
           <v-btn icon @click="clearFicheSelection">
             <v-icon>mdi-arrow-right</v-icon>
@@ -115,7 +117,7 @@
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="pa-2 pb-0">
-          <Fiche :fiche="selectedFicheCard"></Fiche>
+          <Fiche :fiche="selectedFiche"></Fiche>
         </v-card-text>
       </v-card>
     </v-dialog>

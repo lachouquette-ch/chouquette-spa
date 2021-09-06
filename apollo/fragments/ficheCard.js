@@ -13,6 +13,12 @@ export const ficheCard = gql`
     principalCategoryId
     locationId
     valueIds
+    poi {
+      address
+      lat
+      lng
+      marker
+    }
 
     image {
       ...MediaFragments
