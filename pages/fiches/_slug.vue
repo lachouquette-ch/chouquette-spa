@@ -198,7 +198,7 @@
           <v-card-text class="black--text">
             <div class="fiche-content" v-html="fiche.content"></div>
             <a href="" @click.prevent="">Voir Plus</a>
-            <v-chip-group v-if="fiche.valueIds" class="mt-3" column>
+            <v-chip-group v-if="fiche.valueIds.length" class="mt-3" column>
               <v-chip
                 v-for="valueId in fiche.valueIds"
                 :key="valueId"

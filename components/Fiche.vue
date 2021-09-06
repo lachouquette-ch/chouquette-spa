@@ -7,18 +7,20 @@
           <v-icon right>mdi-check</v-icon>
         </v-chip>
       </WpMediaNew>
-      <div class="mt-2 d-flex flex-nowrap align-baseline">
+      <v-card-title class="mt-2 px-0 pt-0 flex-nowrap align-baseline">
         <h1 class="text-h4 text-break">{{ fiche.title }}</h1>
         <v-spacer></v-spacer>
         <div class="d-flex">
           <v-btn fab icon small><v-icon color="#4267b2">mdi-facebook</v-icon></v-btn>
           <v-btn fab icon small><v-icon color="#E1306C">mdi-instagram</v-icon></v-btn>
         </div>
-      </div>
-      <p class="grey--text text--darken-1">
+      </v-card-title>
+      <v-card-subtitle class="px-0">
         <span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} / </span>{{ categories }}
-      </p>
+      </v-card-subtitle>
       <p v-html="fiche.content"></p>
+
+      <v-divider class="my-3"></v-divider>
 
       <div v-if="values.length" class="mt-2">
         <h2 class="text-h5">Valeurs</h2>
@@ -173,7 +175,7 @@
 
       <div v-if="fiche.postCards">
         <v-divider class="my-3"></v-divider>
-        <h2 class="text-h6">Articles sur l'adresse</h2>
+        <h2 class="text-h5">Articles sur l'adresse</h2>
         <div class="my-3">
           <PostCard v-for="post in fiche.postCards" :key="post.id" :post="post" class="mb-3" large></PostCard>
         </div>
@@ -181,7 +183,7 @@
 
       <div v-if="fiche.similarFiches">
         <v-divider class="my-3"></v-divider>
-        <h2 class="text-h6">Adresses similaires</h2>
+        <h2 class="text-h5">Adresses similaires</h2>
         <div class="cq-scroll-x-container my-3">
           <FicheCard v-for="fiche in fiche.similarFiches" :key="fiche.id" class="mb-3" :fiche="fiche"></FicheCard>
         </div>

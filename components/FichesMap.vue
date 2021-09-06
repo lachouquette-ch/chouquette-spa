@@ -120,7 +120,6 @@ export default {
     document.onfullscreenchange = () => {
       if (fullScreen) {
         this.$emit('fullScreenOff')
-        console.log('fullScreenOff')
         fullScreen = false
         if (this.preview) {
           this.map.gestureHandling = 'none'
@@ -128,7 +127,6 @@ export default {
         }
       } else {
         this.$emit('fullScreenOn')
-        console.log('fullScreenOn')
         fullScreen = true
         if (this.preview) {
           this.map.gestureHandling = 'greedy'
