@@ -115,7 +115,7 @@
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text class="pa-2 pb-0">
-          <Fiche v-if="selectedFicheCard" :fiche="selectedFicheCard.slug"></Fiche>
+          <Fiche :fiche="selectedFicheCard"></Fiche>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -180,6 +180,7 @@
           outlined
           bench="2"
           active-class=" "
+          :loading="selectedFiche === fiche"
           @click="selectFiche(fiche)"
         >
           <WpMediaNew :media="fiche.image" size="medium_large" height="200" contains>
@@ -312,6 +313,8 @@ export default {
   },
   data() {
     return {
+      currentURL: null,
+
       fichesNextPage: 1,
       fiches: [],
       fichesTotal: null,
@@ -556,9 +559,10 @@ export default {
       }
     },
     async selectFiche(ficheCard) {
-      this.selectedFicheCard = ficheCard
-      this.selectedFiche = await this.$apollo
-        .query({
+      try {
+        this.selectedFicheCard = ficheCard
+        this.currentURL = location.href
+        const { data } = await this.$apollo.query({
           query: gql`
             query ($slug: String!) {
               ficheBySlug(slug: $slug) {
@@ -579,11 +583,18 @@ export default {
           `,
           variables: { slug: ficheCard.slug },
         })
-        .then(({ data }) => data.ficheBySlug)
-      this.ficheDialog = true
+
+        this.selectedFiche = data.ficheBySlug
+        history.replaceState(null, null, `/fiche/${ficheCard.slug}`)
+        this.ficheDialog = true
+      } catch (e) {
+        this.$sentry.captureException(e)
+        this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(e) })
+      }
     },
     clearFicheSelection() {
       this.selectedFicheCard = null
+      history.replaceState(null, null, this.currentURL)
       this.ficheDialog = false
     },
   },
@@ -602,6 +613,7 @@ export default {
     },
   },
   head() {
+    // TODO (Fiche) : finish migrating Fiche slug init. Need to remove fetching Fiche from any other component that Fiche or fiche/_slug
     const title = this.location ? this.location.name : 'Adresses'
     const content = this.location
       ? this.$options.filters.heDecode(this.location.description || this.location.name)

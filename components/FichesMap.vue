@@ -97,6 +97,10 @@ export default {
     // map specificities
     if (this.preview) {
       this.map.gestureHandling = 'none'
+      this.map.setOptions({
+        fullscreenControl: true,
+        fullscreenControlOptions: { position: this.google.maps.ControlPosition.TOP_LEFT },
+      })
     } else {
       // create map controls
       const centerControlButton = document.createElement('button')
@@ -109,6 +113,27 @@ export default {
       centerControlButton.appendChild(centerControlButtonContent)
       centerControlButton.addEventListener('click', () => this.resetMap())
       this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(centerControlButton)
+    }
+
+    // fullscreen handler
+    let fullScreen = false
+    document.onfullscreenchange = () => {
+      if (fullScreen) {
+        this.$emit('fullScreenOff')
+        console.log('fullScreenOff')
+        fullScreen = false
+        if (this.preview) {
+          this.map.gestureHandling = 'none'
+          this.resetMap()
+        }
+      } else {
+        this.$emit('fullScreenOn')
+        console.log('fullScreenOn')
+        fullScreen = true
+        if (this.preview) {
+          this.map.gestureHandling = 'greedy'
+        }
+      }
     }
 
     this.loadFichesOnMap()

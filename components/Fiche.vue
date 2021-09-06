@@ -7,160 +7,169 @@
           <v-icon right>mdi-check</v-icon>
         </v-chip>
       </WpMediaNew>
-      <v-card-title class="pa-0 mt-2 flex-nowrap align-baseline">
+      <div class="mt-2 d-flex flex-nowrap align-baseline">
         <h1 class="text-h4 text-break">{{ fiche.title }}</h1>
         <v-spacer></v-spacer>
         <div class="d-flex">
           <v-btn fab icon small><v-icon color="#4267b2">mdi-facebook</v-icon></v-btn>
           <v-btn fab icon small><v-icon color="#E1306C">mdi-instagram</v-icon></v-btn>
         </div>
-      </v-card-title>
-      <p>
+      </div>
+      <p class="grey--text text--darken-1">
         <span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} / </span>{{ categories }}
       </p>
       <p v-html="fiche.content"></p>
 
-      <div v-if="fiche.poi">
-        <v-divider class="my-3"></v-divider>
-        <h2 class="text-h6 mb-2">Comment s'y rendre ?</h2>
-        <a
-          :href="`https://www.google.com/maps?q=${fiche.address}`"
-          target="_blank"
-          class="d-inline-block text-decoration-none mb-1"
-          >{{ fiche.address }} <span class="text-caption text-decoration-underline">(Ouvrir dans Maps)</span></a
-        >
-        <FichesMap :fiches="[fiche]" style="height: 200px" preview></FichesMap>
+      <div v-if="values.length" class="mt-2">
+        <h2 class="text-h5">Valeurs</h2>
+        <v-chip-group>
+          <v-tooltip v-for="value in values" :key="value.id" max-width="90vw" top>
+            <template #activator="{ on, attrs }">
+              <v-chip v-bind="attrs" color="primary lighten-4" text-color="grey darken-3" label small v-on="on">
+                {{ value.name }}
+              </v-chip>
+            </template>
+            {{ value.description }}
+          </v-tooltip>
+        </v-chip-group>
       </div>
 
-      <v-divider class="my-3"></v-divider>
-      <h2 class="text-h6">Plus d'informations ?</h2>
-      <div>
-        <v-list v-if="fiche.isChouquettise" class="pa-0">
-          <v-subheader>Contact</v-subheader>
-          <v-list-item
-            @click="
-              isContactForm = true
-              showDialog = true
-            "
-          >
-            <v-list-item-avatar size="30"><v-icon>mdi-message</v-icon></v-list-item-avatar>
-            <v-list-item-title>
-              Envoyer un message au propriétaire
-              <v-list-item-subtitle>Depuis La Chouquette</v-list-item-subtitle>
-            </v-list-item-title>
-          </v-list-item>
-          <v-list-item v-if="fiche.info.telephone" :href="`tel: ${fiche.info.telephone}`">
-            <v-list-item-avatar size="30"><v-icon>mdi-phone</v-icon></v-list-item-avatar>
-            <v-list-item-title>{{ fiche.info.telephone }}</v-list-item-title>
-          </v-list-item>
-          <v-list-item v-if="fiche.info.website" :href="fiche.info.website" target="_blank">
-            <v-list-item-avatar size="30"><v-icon>mdi-web</v-icon></v-list-item-avatar>
-            <v-list-item-title>
-              {{ fiche.info.website | prettyURL }}
-              <v-list-item-subtitle>Site Web</v-list-item-subtitle>
-            </v-list-item-title>
-          </v-list-item>
-          <v-list-item
-            v-if="fiche.info.mail"
-            :href="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
-          >
-            <v-list-item-avatar size="30"><v-icon>mdi-at</v-icon></v-list-item-avatar>
-            <v-list-item-title>
-              {{ fiche.info.mail }}
-              <v-list-item-subtitle>Email</v-list-item-subtitle>
-            </v-list-item-title>
-          </v-list-item>
-        </v-list>
-        <v-list v-if="values.length">
-          <v-subheader>Valeurs&nbsp; </v-subheader>
-          <v-list-item>
-            <v-list-item-content class="pa-0">
-              <v-chip-group column>
-                <v-tooltip v-for="value in values" :key="value.id" max-width="90vw" top>
-                  <template #activator="{ on, attrs }">
-                    <v-chip v-bind="attrs" color="primary lighten-4" text-color="grey darken-3" label small v-on="on">
-                      {{ value.name }}
-                    </v-chip>
-                  </template>
-                  {{ value.description }}
-                </v-tooltip>
-              </v-chip-group>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <v-list class="pa-0">
-          <v-subheader>Extra</v-subheader>
-          <v-list-item
-            v-if="fiche.info.cost"
-            :to="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
-            :inactive="true"
-            :ripple="false"
-          >
-            <v-list-item-avatar size="30"><v-icon>mdi-cash</v-icon></v-list-item-avatar>
-            <v-list-item-title>
-              <span>{{ fichePrice[0] }}</span
-              ><span class="grey--text text-lighten-3">{{ fichePrice[1] }}</span>
-              <v-list-item-subtitle>Budget estimé</v-list-item-subtitle>
-            </v-list-item-title>
-          </v-list-item>
-        </v-list>
-        <v-menu v-if="fiche.info.openings" offset-y>
-          <template #activator="{ on, attrs }">
-            <v-list-item v-bind="attrs" v-on="on">
-              <v-list-item-avatar size="30"><v-icon>mdi-clock</v-icon></v-list-item-avatar>
+      <h2 class="text-h5 mt-2">Informations</h2>
+      <v-tabs v-model="tab" class="mt-3" color="secondary" background-color="grey lighten-5" grow>
+        <v-tab key="contact"> Contact </v-tab>
+        <v-tab key="infos"> Plus d'infos </v-tab>
+      </v-tabs>
+
+      <v-tabs-items v-model="tab" class="py-3" :touchless="tabTouchless">
+        <v-tab-item key="contact">
+          <div v-if="fiche.poi">
+            <FichesMap
+              :fiches="[fiche]"
+              style="height: 200px"
+              preview
+              @fullScreenOn="tabTouchless = true"
+              @fullScreenOff="tabTouchless = false"
+            ></FichesMap>
+            <small
+              :href="`https://www.google.com/maps?q=${fiche.address}`"
+              target="_blank"
+              class="d-inline-block text-decoration-none mb-1"
+              >{{ fiche.address }} <span class="text-decoration-underline">(Ouvrir dans Maps)</span></small
+            >
+          </div>
+
+          <v-list v-if="fiche.isChouquettise" class="">
+            <v-list-item
+              @click="
+                isContactForm = true
+                showDialog = true
+              "
+            >
+              <v-list-item-avatar size="30"><v-icon>mdi-message</v-icon></v-list-item-avatar>
               <v-list-item-title>
-                Aujourd'hui : {{ getOpeningValue() }}
-                <v-list-item-subtitle>Autres jours</v-list-item-subtitle>
+                Envoyer un message au lieu
+                <v-list-item-subtitle>Depuis La Chouquette</v-list-item-subtitle>
               </v-list-item-title>
             </v-list-item>
-          </template>
-          <v-list dense>
-            <v-list-item v-for="(item, index) in openingLabels" :key="index">
-              <v-list-item-title>{{ item }} : {{ getOpeningValue(index) }}</v-list-item-title>
+            <v-list-item v-if="fiche.info.telephone" :href="`tel: ${fiche.info.telephone}`">
+              <v-list-item-avatar size="30"><v-icon>mdi-phone</v-icon></v-list-item-avatar>
+              <v-list-item-title>{{ fiche.info.telephone }}</v-list-item-title>
+            </v-list-item>
+            <v-list-item v-if="fiche.info.website" :href="fiche.info.website" target="_blank">
+              <v-list-item-avatar size="30"><v-icon>mdi-web</v-icon></v-list-item-avatar>
+              <v-list-item-title>
+                {{ fiche.info.website | prettyURL }}
+                <v-list-item-subtitle>Accéder au site Web</v-list-item-subtitle>
+              </v-list-item-title>
+            </v-list-item>
+            <v-list-item
+              v-if="fiche.info.mail"
+              :href="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
+            >
+              <v-list-item-avatar size="30"><v-icon>mdi-at</v-icon></v-list-item-avatar>
+              <v-list-item-title>
+                {{ fiche.info.mail }}
+                <v-list-item-subtitle>Envoyer un email</v-list-item-subtitle>
+              </v-list-item-title>
             </v-list-item>
           </v-list>
-        </v-menu>
-        <v-list v-if="fiche.criteria">
-          <v-subheader
-            >Critères&nbsp;
-            <v-tooltip max-width="90vw" top>
-              <template #activator="{ on, attrs }">
-                <v-icon v-bind="attrs" small v-on="on">mdi-help-circle-outline</v-icon>
-              </template>
-              <span class="text-wrap"
-                >Ce sont les critères validés par cette adresse. Les critères te permettent notamment d'affiner tes
-                rechercher dans les filtres.</span
-              >
-            </v-tooltip>
-          </v-subheader>
-          <v-list-item>
-            <v-list-item-content class="pa-0">
-              <v-chip-group column>
-                <v-chip
-                  v-for="criteriaValue in criteriaValues"
-                  :key="criteriaValue.id"
-                  color="primary lighten-4"
-                  text-color="grey darken-3"
-                  label
-                  small
+        </v-tab-item>
+
+        <v-tab-item key="infos">
+          <v-list class="pa-0">
+            <v-subheader>Extra</v-subheader>
+            <v-list-item
+              v-if="fiche.info.cost"
+              :to="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
+              :inactive="true"
+              :ripple="false"
+            >
+              <v-list-item-avatar size="30"><v-icon>mdi-cash</v-icon></v-list-item-avatar>
+              <v-list-item-title>
+                <span>{{ fichePrice[0] }}</span
+                ><span class="grey--text text-lighten-3">{{ fichePrice[1] }}</span>
+                <v-list-item-subtitle>Budget estimé</v-list-item-subtitle>
+              </v-list-item-title>
+            </v-list-item>
+          </v-list>
+          <v-menu v-if="fiche.info.openings" offset-y>
+            <template #activator="{ on, attrs }">
+              <v-list-item v-bind="attrs" v-on="on">
+                <v-list-item-avatar size="30"><v-icon>mdi-clock</v-icon></v-list-item-avatar>
+                <v-list-item-title>
+                  Aujourd'hui : {{ getOpeningValue() }}
+                  <v-list-item-subtitle>Voir les autres jours</v-list-item-subtitle>
+                </v-list-item-title>
+              </v-list-item>
+            </template>
+            <v-list dense>
+              <v-list-item v-for="(item, index) in openingLabels" :key="index">
+                <v-list-item-title>{{ item }} : {{ getOpeningValue(index) }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+          <v-list v-if="fiche.criteria">
+            <v-subheader
+              >Critères&nbsp;
+              <v-tooltip max-width="90vw" top>
+                <template #activator="{ on, attrs }">
+                  <v-icon v-bind="attrs" small v-on="on">mdi-help-circle-outline</v-icon>
+                </template>
+                <span class="text-wrap"
+                  >Ce sont les critères validés par cette adresse. Les critères te permettent notamment d'affiner tes
+                  rechercher dans les filtres.</span
                 >
-                  {{ criteriaValue.name }}</v-chip
-                >
-              </v-chip-group>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-        <v-btn
-          color="secondary"
-          block
-          outlined
-          @click.prevent="
-            isContactForm = false
-            showDialog = true
-          "
-          ><v-icon left>mdi-alert-circle-outline</v-icon>Signaler une erreur / précision</v-btn
-        >
-      </div>
+              </v-tooltip>
+            </v-subheader>
+            <v-list-item>
+              <v-list-item-content class="pa-0">
+                <v-chip-group column>
+                  <v-chip
+                    v-for="criteriaValue in criteriaValues"
+                    :key="criteriaValue.id"
+                    color="primary lighten-4"
+                    text-color="grey darken-3"
+                    label
+                    small
+                  >
+                    {{ criteriaValue.name }}</v-chip
+                  >
+                </v-chip-group>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-tab-item>
+      </v-tabs-items>
+      <v-btn
+        color="secondary"
+        block
+        outlined
+        @click.prevent="
+          isContactForm = false
+          showDialog = true
+        "
+        ><v-icon left>mdi-alert-circle-outline</v-icon>Signaler une erreur / précision</v-btn
+      >
 
       <div v-if="fiche.postCards">
         <v-divider class="my-3"></v-divider>
@@ -287,6 +296,9 @@ export default {
     ...mapGetters('values', {
       getValueById: 'getById',
     }),
+    currentURL() {
+      return location.href
+    },
     categories() {
       return this.fiche.categoryIds.map((id) => this.getCategoryById(id).name).join(', ')
     },
@@ -439,6 +451,9 @@ export default {
   data() {
     return {
       posts: [],
+
+      tab: null,
+      tabTouchless: false,
 
       showDialog: false,
       isContactForm: false,
