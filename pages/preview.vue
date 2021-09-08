@@ -9,10 +9,10 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import WpPage from '~/components/WpPage'
 import WpPost from '~/components/WpPost'
 import Fiche from '~/components/Fiche'
-import {mapState} from "vuex";
 
 export default {
   components: {
@@ -27,6 +27,9 @@ export default {
       post: null,
       fiche: null,
     }
+  },
+  computed: {
+    ...mapState(['wordpressUrl']),
   },
   async created() {
     // first try as a page

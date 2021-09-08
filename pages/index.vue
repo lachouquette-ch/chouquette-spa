@@ -274,7 +274,7 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: `${location.href}/logo.png`,
+          content: `${this.$config.siteUrl}/logo.png`,
         },
       ],
       script: [
@@ -286,9 +286,9 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.wordpressUrl}/logo.png`,
+            logo: `${this.$config.siteUrl}/logo.png`,
           },
-          url: this.currentURL,
+          url: this.$config.siteUrl,
         }),
       ],
     }

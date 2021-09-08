@@ -18,13 +18,13 @@
         style="color: #38a1f3"
         title="Twitter"
         target="_blank"
-        :href="`https://twitter.com/share?text=${escapedTitle}&url=${encodeURI(currentPage)}`"
+        :href="`https://twitter.com/share?text=${escapedTitle}&url=${encodeURI(currentURL)}`"
         ><i class="fab fa-twitter-square"></i
       ></a>
       <a
         style="color: #b7b7b7"
         title="Email"
-        :href="`mailto:?subject=${escapedTitle}&amp;body=Je te partage cet article ${currentPage}`"
+        :href="`mailto:?subject=${escapedTitle}&amp;body=Je te partage cet article ${currentURL}`"
         ><i class="fas fa-envelope-square"></i
       ></a>
     </template>
@@ -33,9 +33,10 @@
 
 <script>
 import share from '~/mixins/share'
+import seo from '~/mixins/seo'
 
 export default {
-  mixins: [share],
+  mixins: [share, seo],
   props: {
     post: {
       required: true,
@@ -51,9 +52,6 @@ export default {
     escapedTitle() {
       return this.post.title
     },
-  },
-  mounted() {
-    this.currentPage = window.location.href
   },
 }
 </script>

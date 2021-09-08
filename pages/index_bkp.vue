@@ -212,7 +212,7 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: `${location.href}/logo.png`,
+          content: `${this.$config.siteUrl}/logo.png`,
         },
       ],
       script: [
@@ -224,9 +224,9 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${location.href}/logo.png`,
+            logo: `${this.$config.siteUrl}/logo.png`,
           },
-          url: location.href,
+          url: this.$config.siteUrl,
         }),
       ],
     }

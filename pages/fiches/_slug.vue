@@ -541,7 +541,6 @@ export default {
     async selectFiche(ficheCard) {
       try {
         this.selectedFicheCard = ficheCard
-        this.currentURL = location.href
         const { data } = await this.$apollo.query({
           query: gql`
             query ($slug: String!) {
@@ -641,9 +640,9 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${location.href}/logo.png`,
+            logo: `${this.$config.siteUrl}/logo.png`,
           },
-          url: location.href,
+          url: this.$config.siteUrl,
         }),
       ],
     }

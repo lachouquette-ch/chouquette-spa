@@ -301,9 +301,6 @@ export default {
     ...mapGetters('values', {
       getValueById: 'getById',
     }),
-    currentURL() {
-      return location.href
-    },
     categories() {
       return this.fiche.categoryIds.map((id) => this.getCategoryById(id).name).join(', ')
     },

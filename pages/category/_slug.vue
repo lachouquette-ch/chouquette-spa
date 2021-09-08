@@ -106,9 +106,9 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.wordpressUrl}/logo.png`,
+            logo: `${this.$config.siteUrl}/logo.png`,
           },
-          url: this.currentURL,
+          url: this.$config.siteUrl,
         }),
       ],
     }

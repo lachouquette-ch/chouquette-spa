@@ -37,6 +37,7 @@ import moment from 'moment'
 
 export default {
   computed: {
+    ...mapState(['wordpressUrl']),
     ...mapState('menus', {
       pages: 'footerPages',
     }),
