@@ -457,17 +457,17 @@ export default {
     },
     updateCriteria(criteriaFilter, selectedCriteria) {
       const values = selectedCriteria.map(({ slug }) => slug)
-      const criteria = this.criteriaList.find(({ taxonomy }) => criteriaFilter.taxonomy)
+      const criteria = this.criteriaList.find(({ taxonomy }) => taxonomy === criteriaFilter.taxonomy)
       if (criteria) {
-        if (values) criteria.values = values
-        else this.criteriaList = this.criteriaList.filter(({ taxonomy }) => criteria.taxonomy)
+        if (values.length) criteria.values = values
+        else this.criteriaList = this.criteriaList.filter(({ taxonomy }) => taxonomy !== criteria.taxonomy)
       } else if (values) {
         this.criteriaList.push({ taxonomy: criteriaFilter.taxonomy, values })
       }
     },
     fetchWithFilters() {
       this.fichesNextPage = 1
-      this.hasMorePosts = true
+      this.hasMoreFiches = true
       this.fiches = []
 
       const query = this.criteriaList.reduce((acc, { taxonomy, values }) => {
