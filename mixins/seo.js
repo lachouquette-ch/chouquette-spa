@@ -3,7 +3,7 @@ import { mapState } from 'vuex'
 export default {
   computed: {
     currentURL() {
-      return `${this.wordpressUrl}${this.$route.fullPath}`
+      return `${this.$config.siteUrl}${this.$route.fullPath}`
     },
     ...mapState(['wordpressUrl']),
   },
@@ -51,8 +51,8 @@ export default {
         '@context': 'http://www.schema.org',
         '@type': 'Organization',
         name: 'La Chouquette',
-        url: this.wordpressUrl,
-        logo: `${this.wordpressUrl}/logo.png`,
+        url: this.currentURL,
+        logo: `${this.currentURL}/logo.png`,
         foundingDate: '2014',
         founders: [
           {
