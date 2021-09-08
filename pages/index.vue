@@ -208,7 +208,7 @@ export default {
     return {
       title: this.yoast.title,
       meta: [
-        ...this.seoMetaProperties(JSON.parse(this.yoast.metadata), true),
+        ...this.seoMetaProperties(JSON.parse(this.yoast.metadata)),
         {
           hid: 'og:image',
           property: 'og:image',
