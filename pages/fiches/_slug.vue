@@ -62,7 +62,13 @@
                     Sélectionner que les adresses testées et approuvées par l'équipe. tesa fadsf
                     kldasjféladsjféalsdfkjasdélf jasdf
                   </p>
-                  <v-switch v-model="chouquettiseOnly" color="primary ml-auto" inset :ripple="false"></v-switch>
+                  <v-switch
+                    v-model="chouquettiseOnly"
+                    color="primary ml-auto"
+                    inset
+                    :ripple="false"
+                    @change="updateFilterCounter"
+                  ></v-switch>
                 </div>
               </v-list-item-content>
             </v-list-item>
@@ -72,10 +78,10 @@
             <div v-for="criteriaFilter in criteriaFilters" :key="criteriaFilter.id">
               <FilterExpansion
                 ref="criteriaFilters"
+                v-model="criteriaFilter.selectedSlugs"
                 :title="criteriaFilter.name"
                 :items="criteriaFilter.values"
-                :initialize="criteriaFilter.selectedIndexes"
-                @update="(indexes) => updateCriteria(criteriaFilter, indexes)"
+                @updateCount="updateFilterCounter"
               ></FilterExpansion>
             </div>
           </template>
@@ -294,21 +300,13 @@ export default {
   mixins: [seo, graphql],
   asyncData({ store, params, query }) {
     const location = params.slug ? store.getters['locations/getBySlug'](params.slug) : null
-
     const category = query.category ? store.getters['categories/getBySlug'](query.category) : null
-
-    const criteriaList = Object.entries(query)
-      .filter(([key]) => key.startsWith('cq_'))
-      .map(([key, value]) => {
-        return { taxonomy: key, values: value.split(',') }
-      })
 
     return {
       location,
       category,
       search: query.search,
       chouquettiseOnly: Boolean(query.chouquettiseOnly),
-      criteriaList,
     }
   },
   data() {
@@ -380,7 +378,9 @@ export default {
           location: this.location ? this.location.slug : null,
           search: this.search,
           chouquettiseOnly: this.chouquettiseOnly,
-          criteria: this.criteriaList,
+          criteria: this.criteriaFilters.map(({ taxonomy, selectedSlugs }) => {
+            return { taxonomy, values: selectedSlugs }
+          }),
           page: this.fichesNextPage++,
           pageSize: PER_PAGE_NUMBER,
         },
@@ -415,6 +415,15 @@ export default {
       this.subCategories = await this.getCategoriesByParentId(this.selectedTopCategory.id)
       await this.fetchCriteria(this.category)
 
+      // update criteriaFilter
+      Object.entries(this.$route.query)
+        .filter(([key]) => key.startsWith('cq_'))
+        .forEach(([key, value]) => {
+          const criteriaFilter = this.criteriaFilters.find(({ taxonomy }) => taxonomy === key)
+          if (criteriaFilter) criteriaFilter.selectedSlugs = value.split(',')
+        })
+      this.updateFilterCounter()
+
       // move to selected category
       const categoryButton = document.getElementById(this.category.slug)
       const categoryContainer = document.getElementById('categoryContainer')
@@ -423,20 +432,6 @@ export default {
       const leftOffset = buttonLeftOffset > maxLeftOffset ? maxLeftOffset : buttonLeftOffset
       categoryContainer.scrollLeft = leftOffset
     }
-  },
-  created() {
-    // watch for filter changes
-    this.$watch(
-      (vm) => [vm.chouquettiseOnly, vm.criteriaList],
-      () => {
-        this.filterCount = this.criteriaList.reduce((acc, criteria) => (acc += criteria.values.length), 0)
-        if (this.chouquettiseOnly) this.filterCount++
-      },
-      {
-        immediate: true,
-        deep: true,
-      }
-    )
   },
   methods: {
     mapOnPanEnd() {
@@ -455,23 +450,13 @@ export default {
       }
       /* eslint-enable no-undef */
     },
-    updateCriteria(criteriaFilter, selectedCriteria) {
-      const values = selectedCriteria.map(({ slug }) => slug)
-      const criteria = this.criteriaList.find(({ taxonomy }) => taxonomy === criteriaFilter.taxonomy)
-      if (criteria) {
-        if (values.length) criteria.values = values
-        else this.criteriaList = this.criteriaList.filter(({ taxonomy }) => taxonomy !== criteria.taxonomy)
-      } else if (values) {
-        this.criteriaList.push({ taxonomy: criteriaFilter.taxonomy, values })
-      }
-    },
     fetchWithFilters() {
       this.fichesNextPage = 1
       this.hasMoreFiches = true
       this.fiches = []
 
-      const query = this.criteriaList.reduce((acc, { taxonomy, values }) => {
-        if (values.length) acc[taxonomy] = values.join(',')
+      const query = this.criteriaFilters.reduce((acc, { taxonomy, selectedSlugs }) => {
+        if (selectedSlugs.length) acc[taxonomy] = selectedSlugs.join(',')
         return acc
       }, {})
       if (this.category) query.category = this.category.slug
@@ -487,13 +472,15 @@ export default {
       this.selectedSubCategory = null
       this.subCategories = await this.getCategoriesByParentId(this.category.id)
 
-      return Promise.all([this.fetchWithFilters(), this.fetchCriteria(this.category)])
+      await this.fetchCriteria(this.category)
+      return this.fetchWithFilters()
     },
-    selectSubCategory(category) {
+    async selectSubCategory(category) {
       this.category = category
       this.selectedSubCategory = this.category
 
-      return Promise.all([this.fetchWithFilters(), this.fetchCriteria(this.category)])
+      await this.fetchCriteria(this.category)
+      return this.fetchWithFilters()
     },
     searchByText() {
       if (this.search != null) this.fetchWithFilters()
@@ -537,18 +524,11 @@ export default {
           },
         })
 
-        // build selected indexes based on criteria list
-        data.criteriaByCategory.forEach((criteria) => {
-          criteria.selectedIndexes = []
-          // try to map with default criteria
-          const currentCriteria = this.criteriaList.find(({ taxonomy }) => taxonomy === criteria.taxonomy)
-          if (currentCriteria) {
-            criteria.selectedIndexes = currentCriteria.values.reduce((acc, currentSlug) => {
-              const index = criteria.values.findIndex(({ slug }) => slug === currentSlug)
-              if (index !== -1) acc.push(index)
-              return acc
-            }, [])
-          }
+        // try to map with previous criteria
+        data.criteriaByCategory.forEach((criteriaFilter) => {
+          const previousFilter = this.criteriaFilters.find(({ taxonomy }) => taxonomy === criteriaFilter.taxonomy)
+          if (previousFilter) criteriaFilter.selectedSlugs = previousFilter.selectedSlugs
+          else criteriaFilter.selectedSlugs = []
         })
         this.criteriaFilters = data.criteriaByCategory
       } catch (e) {
@@ -596,6 +576,10 @@ export default {
       this.selectedFicheCard = null
       history.replaceState(null, null, this.currentURL)
       this.ficheDialog = false
+    },
+    updateFilterCounter() {
+      this.filterCount = this.criteriaFilters.reduce((acc, criteria) => (acc += criteria.selectedSlugs.length), 0)
+      if (this.chouquettiseOnly) this.filterCount++
     },
   },
   computed: {

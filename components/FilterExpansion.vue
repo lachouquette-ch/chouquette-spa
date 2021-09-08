@@ -9,7 +9,7 @@
       </v-list-item-content>
     </v-list-item>
     <v-list-item-group v-model="selectedIndexes" active-class="" multiple>
-      <v-list-item v-for="item in displayedItems" :key="item[itemKeyAttr]" active-class="" dense>
+      <v-list-item v-for="item in displayedItems" :key="item.id" active-class="" dense>
         <template #default="{ active }">
           <v-list-item-content>
             <v-list-item-title class="text-body-1">
@@ -44,11 +44,7 @@ export default {
   props: {
     title: String,
     items: Array,
-    initialize: Array,
-    itemKeyAttr: {
-      type: String,
-      default: 'id',
-    },
+    value: Array,
     foldedCount: {
       type: Number,
       default: 4,
@@ -58,6 +54,7 @@ export default {
     return {
       folded: true,
       selectedIndexes: [],
+      selectedSlugs: this.value,
     }
   },
   computed: {
@@ -67,14 +64,16 @@ export default {
   },
   watch: {
     selectedIndexes() {
-      const selectedItems = this.selectedIndexes.map((i) => this.items[i])
-      this.$emit('update', selectedItems)
+      this.selectedSlugs = this.selectedIndexes.map((i) => this.items[i].slug)
+      this.$emit('input', this.selectedSlugs)
+      this.$emit('updateCount', this.selectedSlugs.length)
     },
   },
   mounted() {
-    if (this.initialize.length) {
-      this.selectedIndexes = [...this.initialize] // copy only
-    }
+    // initialize
+    this.selectedIndexes = this.selectedSlugs.map((selectedSlug) => {
+      return this.items.findIndex(({ slug }) => slug === selectedSlug)
+    })
   },
   methods: {
     clear() {
