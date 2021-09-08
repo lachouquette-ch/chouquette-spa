@@ -124,18 +124,16 @@
 
     <v-container>
       <h1 class="text-h5 text-center mt-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
-      <div id="categoryContainer" class="cq-scroll-x-container mt-4">
-        <div class="d-inline-flex">
-          <CategoryButton
-            v-for="topCategory in topCategories"
-            :id="topCategory.slug"
-            :key="topCategory.id"
-            :top-category="topCategory"
-            :selected="topCategory === selectedTopCategory"
-            :disabled="$fetchState.pending"
-            @click="selectTopCategory(topCategory)"
-          ></CategoryButton>
-        </div>
+      <div id="categoryContainer" class="cq-scroll-x-container mt-4 justify-start">
+        <CategoryButton
+          v-for="topCategory in topCategories"
+          :id="topCategory.slug"
+          :key="topCategory.id"
+          :top-category="topCategory"
+          :selected="topCategory === selectedTopCategory"
+          :disabled="$fetchState.pending"
+          @click="selectTopCategory(topCategory)"
+        ></CategoryButton>
       </div>
       <div v-if="subCategories.length" class="cq-scroll-x-container mt-1">
         <div class="d-inline-flex">
@@ -422,7 +420,7 @@ export default {
       const categoryContainer = document.getElementById('categoryContainer')
       const buttonLeftOffset = categoryButton.offsetLeft
       const maxLeftOffset = categoryContainer.scrollWidth - categoryContainer.clientWidth
-      const leftOffset = buttonLeftOffset > maxLeftOffset ? maxLeftOffset : buttonLeftOffset - 50 // need to view previous
+      const leftOffset = buttonLeftOffset > maxLeftOffset ? maxLeftOffset : buttonLeftOffset
       categoryContainer.scrollLeft = leftOffset
     }
   },
@@ -473,7 +471,7 @@ export default {
       this.fiches = []
 
       const query = this.criteriaList.reduce((acc, { taxonomy, values }) => {
-        acc[taxonomy] = values.join(',')
+        if (values.length) acc[taxonomy] = values.join(',')
         return acc
       }, {})
       if (this.category) query.category = this.category.slug
@@ -510,7 +508,7 @@ export default {
     },
     clearCriteria() {
       this.chouquettiseOnly = false
-      this.$refs.criteriaFilters.forEach((comp) => comp.clear())
+      this.$refs.criteriaFilters.forEach((f) => f.clear())
     },
     sampleCriteriaValues(fiche) {
       return fiche.criteria.flatMap(({ values }) => values).slice(0, 3)

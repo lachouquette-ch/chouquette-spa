@@ -1,7 +1,7 @@
 <template>
   <button
     v-ripple
-    class="top-category-btn rounded mr-2"
+    class="top-category-btn rounded"
     :class="{ 'grey darken-3': selected }"
     :disabled="disabled"
     @click.prevent="$emit('click', topCategory)"
