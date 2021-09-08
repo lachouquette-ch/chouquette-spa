@@ -6,7 +6,7 @@
   align-items: center;
 
   border-radius: 100%;
-  border: 1px solid $chouquette-grey;
+  border: 1px solid map-get($chouquette-colors, "grey");
   box-shadow: $shadow-key-umbra-opacity;
 }
 

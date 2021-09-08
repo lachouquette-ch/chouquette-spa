@@ -1,13 +1,15 @@
 // Colors
-$chouquette-yellow: rgb(248, 239, 40);
-$chouquette-light-grey: rgb(215, 215, 215);
-$chouquette-grey: rgb(114, 114, 114);
-$chouquette-dark-grey: rgb(53, 53, 53);
-$chouquette-darker-grey: rgb(41, 41, 41);
-$white: #ffffff;
-$black: #000000;
+$chouquette-colors: (
+  "yellow": #EFE407,
+  "blue": #8DE3CE,
+  "blue-light": #C5F9F5,
+  "red": #D99056,
+  "red-light": #F8B999,
+  "grey": #3D3B3C,
+  "grey-light": #9E9696,
+  "beige": #F5F0EA,
+);
 
 // Fonts
 $font-family-base: 'Lato', sans-serif;
-$font-family-brand: 'heading_pro_bold', cursive;
-$font-family-heading: 'Lobster Two', sans-serif;
+$font-family-heading: 'Oswalt', sans-serif;

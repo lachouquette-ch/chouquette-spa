@@ -1,8 +1,13 @@
+// FIXME to remove
+@import "../css/variables";
 @import 'variables';
+
+$color-pack: false; // no color from vuetify
 
 // Globals
 $body-font-family: $font-family-base;
 $font-size-root: 14px;
+$btn-border-radius: 25px;
 
 // Hack carousel btn
 .v-carousel__controls .v-btn.v-btn--icon {

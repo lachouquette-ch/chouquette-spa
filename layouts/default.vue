@@ -2,7 +2,9 @@
   <v-app>
     <LayoutAlert></LayoutAlert>
 
-    <v-navigation-drawer v-if="!$vuetify.breakpoint.mobile" v-model="toggleMenu" temporary app>
+    <v-system-bar class="blue grey-background" app><span>En savoir plus + highlight titre</span></v-system-bar>
+
+    <v-navigation-drawer v-model="toggleMenu" temporary app right>
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="text-h6"> Application </v-list-item-title>
@@ -11,21 +13,17 @@
       </v-list-item>
     </v-navigation-drawer>
 
-    <v-app-bar fixed dark app>
+    <v-app-bar fixed app>
       <template v-if="!toggleSearch">
-        <v-app-bar-nav-icon
-          v-if="!$vuetify.breakpoint.mobile"
-          class="primary--text"
-          @click="toggleMenu = !toggleMenu"
-        ></v-app-bar-nav-icon>
-
-        <v-app-bar-title><h1 class="app-bar-title text-h5 primary--text">La Chouquette</h1></v-app-bar-title>
+        <img src="/lachouquette_logo_horizontal_black.png" alt="La Chouquette" height="100%" class="py-2" />
 
         <v-spacer></v-spacer>
 
-        <v-btn icon class="primary--text" @click="toggleSearch = true">
+        <v-btn icon @click="toggleSearch = true" class="grey" small>
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
+
+        <v-app-bar-nav-icon @click="toggleMenu = !toggleMenu" class="grey"></v-app-bar-nav-icon>
       </template>
       <transition name="fade">
         <v-text-field
@@ -56,7 +54,7 @@
       </v-container>
     </v-main>
 
-    <v-bottom-navigation v-model="selectedNav" dark fixed app color="primary">
+    <v-bottom-navigation v-model="selectedNav" fixed app>
       <v-btn nuxt to="/">
         <span>Accueil</span>
         <v-icon>mdi-home</v-icon>
@@ -131,5 +129,10 @@ export default {
 .fade-enter,
 .fade-leave {
   opacity: 0;
+}
+
+.v-app-bar-title__content {
+  display: flex;
+  align-content: center;
 }
 </style>

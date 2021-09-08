@@ -55,7 +55,7 @@ export default {
 
       {
         rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css?family=Lobster+Two|Shadows+Into+Light+Two|Lato&display=swap',
+        href: 'ttps://fonts.googleapis.com/css2?family=Lato:wght@300;400;900&family=Oswald&display=swap',
       },
     ],
   },
