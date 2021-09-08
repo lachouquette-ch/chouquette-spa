@@ -1,12 +1,19 @@
+import { mapState } from 'vuex'
+
 export default {
+  computed: {
+    currentURL() {
+      return `${this.$config.siteUrl}${this.$route.fullPath}`
+    },
+    ...mapState(['wordpressUrl']),
+  },
   methods: {
     seoGetDescription(yoastMeta) {
       const ogDescription = yoastMeta.find(({ property }) => property === 'og:description')
       return ogDescription ? this.$options.filters.heDecode(ogDescription.content) : ''
     },
-    seoMetaProperties(metadata, noIndex = false) {
-      const seoMetaProperties = noIndex ? [{ name: 'robots', content: 'noindex' }, ...metadata] : metadata
-      const metaProperties = seoMetaProperties.map((metaProperty) => {
+    seoMetaProperties(metadata) {
+      const metaProperties = metadata.map((metaProperty) => {
         return {
           ...metaProperty,
           content: this.$options.filters.heDecode(metaProperty.content),
@@ -29,12 +36,12 @@ export default {
       }
 
       // hack URL
-      metadataUpdateHelper('og:url', location.href, 'property')
+      metadataUpdateHelper('og:url', this.currentURL, 'property')
 
       // add twitter missing meta data
-      metadataUpdateHelper('twitter:site', location.href)
+      metadataUpdateHelper('twitter:site', this.currentURL)
       const image = metaProperties.find(({ property }) => property === 'og:image')
-      metadataUpdateHelper('twitter:image', image ? image.content : `${location.href}/logo.png`)
+      metadataUpdateHelper('twitter:image', image ? image.content : `${this.wordpressUrl}/logo.png`)
 
       return metaProperties
     },
@@ -43,8 +50,8 @@ export default {
         '@context': 'http://www.schema.org',
         '@type': 'Organization',
         name: 'La Chouquette',
-        url: location.href,
-        logo: `${location.href}/logo.png`,
+        url: this.currentURL,
+        logo: `${this.currentURL}/logo.png`,
         foundingDate: '2014',
         founders: [
           {
@@ -69,11 +76,11 @@ export default {
         '@context': 'http://schema.org',
         '@type': 'WebSite',
         name: 'La Chouquette',
-        url: location.href,
+        url: this.wordpressUrl,
         sameAs: ['https://www.facebook.com/lachouquettelausanne', 'https://www.instagram.com/lachouquette.ch/?hl=fr'],
         potentialAction: {
           '@type': 'SearchAction',
-          target: `${location.href}/search/{search_term}`,
+          target: `${this.wordpressUrl}/search/{search_term}`,
           'query-input': 'required name=search_term',
         },
       }

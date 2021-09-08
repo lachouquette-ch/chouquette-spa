@@ -7,6 +7,7 @@ export default {
     mailChimpUserId: process.env.MAILCHIMP_USER_ID,
     mailChimpListId: process.env.MAILCHIMP_LIST_ID,
     googleMapsKey: process.env.GOOGLE_MAPS_KEY,
+    siteUrl: process.env.SITE_URL || 'https://lachouquette.ch',
     recaptcha: {
       /* reCAPTCHA options */
       siteKey: process.env.RECAPTCHA_SITE_KEY,

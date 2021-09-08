@@ -73,33 +73,30 @@ export default {
   head() {
     return {
       title: this.rootCategory.name + ' - ' + this.rootCategory.description,
-      meta: this.seoMetaProperties(
-        [
-          {
-            name: 'description',
-            content: this.rootCategory.description || this.rootCategory.name,
-          },
+      meta: this.seoMetaProperties([
+        {
+          name: 'description',
+          content: this.rootCategory.description || this.rootCategory.name,
+        },
 
-          { property: 'og:type', content: 'article' },
-          { property: 'og:locale', content: 'fr_FR' },
-          { property: 'og:url', content: location.href },
-          { property: 'og:title', content: this.rootCategory.name },
-          {
-            property: 'og:description',
-            content: this.rootCategory.description || this.rootCategory.name,
-          },
-          { property: 'og:image', content: this.rootCategory.logoBlack.source },
+        { property: 'og:type', content: 'article' },
+        { property: 'og:locale', content: 'fr_FR' },
+        { property: 'og:url', content: this.currentURL },
+        { property: 'og:title', content: this.rootCategory.name },
+        {
+          property: 'og:description',
+          content: this.rootCategory.description || this.rootCategory.name,
+        },
+        { property: 'og:image', content: this.rootCategory.logoBlack.source },
 
-          { name: 'twitter:card', content: 'summary' },
-          { name: 'twitter:title', content: this.rootCategory.name },
-          {
-            name: 'twitter:description',
-            content: this.rootCategory.description || this.rootCategory.name,
-          },
-          { name: 'twitter:image', content: this.rootCategory.logoBlack.source },
-        ],
-        true
-      ),
+        { name: 'twitter:card', content: 'summary' },
+        { name: 'twitter:title', content: this.rootCategory.name },
+        {
+          name: 'twitter:description',
+          content: this.rootCategory.description || this.rootCategory.name,
+        },
+        { name: 'twitter:image', content: this.rootCategory.logoBlack.source },
+      ]),
       script: [
         this.jsonLDScript({
           '@context': 'http://schema.org',
@@ -109,9 +106,9 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${location.href}/logo.png`,
+            logo: `${this.wordpressUrl}/logo.png`,
           },
-          url: location.href,
+          url: this.currentURL,
         }),
       ],
     }

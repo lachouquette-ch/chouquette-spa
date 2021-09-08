@@ -243,7 +243,6 @@ export default {
       this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(e) })
     }
   },
-  fetchOnServer: true,
   methods: {
     goToLocation(location) {
       this.$router.push(`/fiches/${location}`)
@@ -287,9 +286,9 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${location.href}/logo.png`,
+            logo: `${this.wordpressUrl}/logo.png`,
           },
-          url: location.href,
+          url: this.currentURL,
         }),
       ],
     }
