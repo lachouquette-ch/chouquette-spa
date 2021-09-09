@@ -11,7 +11,7 @@
           <v-container>
             <v-row>
               <v-col>
-                <h2 class="text-h5 white--text">Trouve les meilleures adresses écoresponsables et locales</h2>
+                <h2 class="text-h4 white--text font-weight-bold">trouve les meilleures adresses écoresponsables et locales</h2>
               </v-col>
             </v-row>
             <v-row>
@@ -22,6 +22,7 @@
                   hide-details
                   solo
                   dense
+                  rounded
                   color="black"
                   item-color="black"
                   item-value="slug"
@@ -38,11 +39,9 @@
               <v-col cols="12" md="6" class="pt-0">
                 <v-btn
                   block
-                  dark
                   elevation="3"
-                  color="primary"
+                  color="cq-yellow"
                   class="black--text"
-                  :disabled="selectedLocation === null"
                   @click="goToLocation(selectedLocation)"
                   >Rechercher</v-btn
                 >
@@ -53,7 +52,7 @@
       </v-img>
     </v-card>
     <v-sheet>
-      <h3 class="text-center headline my-0 py-5">Articles à la une</h3>
+      <h3 class="font-heading text-center py-5">ARTICLES À LA UNE</h3>
       <v-container>
         <v-row>
           <v-col cols="12" md="6" class="py-0">
@@ -106,7 +105,7 @@
     </v-sheet>
 
     <v-sheet class="green-chouquette lighten-1 py-5">
-      <h3 class="text-center headline">Les valeurs de La Chouquette</h3>
+      <h3 class="font-heading text-center">Les valeurs de La Chouquette</h3>
       <v-carousel class="valeurs-carousel" height="250" show-arrows-on-hover hide-delimiter-background interval="3000">
         <v-carousel-item v-for="value in values" :key="value.id">
           <v-card color="transparent" class="text-center" height="250" flat tile>
@@ -127,7 +126,7 @@
     </v-sheet>
 
     <v-sheet class="pt-5">
-      <h3 class="text-center headline">Nos Chouquettisés</h3>
+      <h3 class="font-heading text-center">Nos Chouquettisés</h3>
       <p class="text-center text-subtitle-2 px-4">
         Ce sont les adresses testées et approuvées par la Chouquette. Ils sont membres de notre label : Chouquettisés et
         partagent ainsi les mêmes valeurs que les nôtres.
@@ -297,8 +296,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-h3.headline {
-  font-weight: bold;
-  margin: 1rem 0;
+button.v-btn.cq-yellow {
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: var(--v-cq-red-base) !important;
+    color: white !important;
+  }
 }
 </style>

@@ -2,13 +2,17 @@
   <v-app>
     <LayoutAlert></LayoutAlert>
 
-    <v-system-bar class="blue grey-background" app><span>En savoir plus + highlight titre</span></v-system-bar>
+    <v-system-bar color="primary" class="cq-blue--text" app height="30"
+      ><span>En savoir plus + highlight titre</span></v-system-bar
+    >
 
     <v-navigation-drawer v-model="toggleMenu" temporary app right>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="text-h6"> Application </v-list-item-title>
-          <v-list-item-subtitle> subtext </v-list-item-subtitle>
+          <v-list-item-title
+            ><h1 class="text-h6">{{ name }}</h1></v-list-item-title
+          >
+          <v-list-item-subtitle>{{ description }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </v-navigation-drawer>
@@ -19,11 +23,11 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn icon @click="toggleSearch = true" class="grey" small>
+        <v-btn icon class="primary--text" small @click="toggleSearch = true">
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
 
-        <v-app-bar-nav-icon @click="toggleMenu = !toggleMenu" class="grey"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon class="primary--text" @click="toggleMenu = !toggleMenu"></v-app-bar-nav-icon>
       </template>
       <transition name="fade">
         <v-text-field
@@ -89,6 +93,7 @@
 <script>
 import CookieConsent from 'vue-cookieconsent-component'
 import isbot from 'isbot'
+import { mapState } from 'vuex'
 import CqFooter from '~/components/CqFooter'
 import LayoutAlert from '~/components/LayoutAlert'
 
@@ -115,6 +120,7 @@ export default {
     isIndex() {
       return this.$route.name === 'index'
     },
+    ...mapState(['name', 'description']),
   },
   mounted() {
     this.showCookieConsent = !isbot(navigator.userAgent)

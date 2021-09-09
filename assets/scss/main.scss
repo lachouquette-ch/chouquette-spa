@@ -8,20 +8,12 @@
 @import "google-map";
 
 // Helper classes
-@each $name, $color in $chouquette-colors {
-  .#{$name} {
-    color: $color !important;
-  }
-
-  .#{$name}-background {
-    background-color: $color !important;
-  }
-}
-.font-base {
-  font-family: $font-family-base !important;
-}
 .font-heading {
-  font-family: $font-family-heading !important;
+  font-family: $font-family-heading;
+  font-size: 1.5rem;
+  font-weight: normal;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 // CookieConsent
