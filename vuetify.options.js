@@ -26,6 +26,12 @@ export default {
         'cq-grey': '#3D3B3C',
         'cq-grey-light': '#9E9696',
         'cq-beige': '#F5F0EA',
+        background: '#FFFFFF',
+      },
+      dark: {
+        primary: '#8DE3CE',
+        secondary: '#EFE407',
+        background: '#3D3B3C',
       },
     },
   },

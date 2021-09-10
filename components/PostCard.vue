@@ -7,17 +7,13 @@
       :width="large ? '150' : '100'"
       contain
       aspect-ratio="1"
-      class="flex-grow-0 rounded"
+      class="flex-grow-0 rounded-lg"
     ></WpMediaNew>
 
     <v-card-text class="pa-0 px-2 flex-grow-1 overflow-hidden">
-      <v-card-title class="pa-0">
-        <h2 class="text-h6 text-break black--text" style="line-height: 1.5rem">{{ post.title }}</h2>
-        <v-card-subtitle class="pa-0">
-          <p class="text-uppercase ma-0">{{ getCategoryById(post.categoryId).name }}</p>
-          <p class="ma-0">Le {{ post.date | fromISO }} par {{ post.authorName }}</p>
-        </v-card-subtitle>
-      </v-card-title>
+      <p class="secondary--text text-lowercase mb-1">{{ getCategoryById(post.categoryId).name }}</p>
+      <h3 class="text-h3 text-break">{{ post.title }}</h3>
+      <p v-if="large" class="ma-0">Le {{ post.date | fromISO }} par {{ post.authorName }}</p>
     </v-card-text>
   </v-card>
 </template>

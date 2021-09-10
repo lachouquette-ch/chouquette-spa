@@ -9,6 +9,7 @@ export const postCard = gql`
     date
     authorName
     title
+    isTop
     image {
       ...MediaFragments
     }

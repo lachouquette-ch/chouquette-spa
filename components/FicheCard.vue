@@ -1,15 +1,15 @@
 <template>
   <v-card hover ripple :to="`/fiche/${fiche.slug}`" nuxt>
     <WpMediaNew :media="fiche.image" size="medium_large" aspect-ratio="1" width="60vw">
-      <v-chip v-if="fiche.isChouquettise" color="primary" text-color="black" small class="ma-2" style="opacity: 0.9">
+      <v-chip v-if="fiche.isChouquettise" color="cq-yellow" text-color="black" small class="ma-2" style="position: absolute; top: 0px; left: 0px;">
         Testé et Chouquettisé
         <v-icon right>mdi-check</v-icon>
       </v-chip>
     </WpMediaNew>
     <v-card-title
-      ><h2 class="text-h6 text-break black--text" style="line-height: 1.5rem">{{ fiche.title }}</h2></v-card-title
+      ><h3 class="text-h3 text-break primary--text">{{ fiche.title }}</h3></v-card-title
     >
-    <v-card-subtitle class="text-uppercase">
+    <v-card-subtitle class="text-uppercase text-left">
       <span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} / </span>
       {{ getCategoryById(fiche.principalCategoryId).name }}
     </v-card-subtitle>

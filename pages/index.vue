@@ -11,7 +11,9 @@
           <v-container>
             <v-row>
               <v-col>
-                <h2 class="text-h4 white--text font-weight-bold">trouve les meilleures adresses écoresponsables et locales</h2>
+                <h1 class="text-h1 white--text font-weight-bold text-break">
+                  les meilleures adresses locales et éco-responsables
+                </h1>
               </v-col>
             </v-row>
             <v-row>
@@ -21,7 +23,6 @@
                   label="Où veux-tu aller ?"
                   hide-details
                   solo
-                  dense
                   rounded
                   color="black"
                   item-color="black"
@@ -42,6 +43,7 @@
                   elevation="3"
                   color="cq-yellow"
                   class="black--text"
+                  x-large
                   @click="goToLocation(selectedLocation)"
                   >Rechercher</v-btn
                 >
@@ -52,33 +54,32 @@
       </v-img>
     </v-card>
     <v-sheet>
-      <h3 class="font-heading text-center py-5">ARTICLES À LA UNE</h3>
+      <h2 class="text-center">ARTICLES À LA UNE</h2>
       <v-container>
         <v-row>
           <v-col cols="12" md="6" class="py-0">
             <v-skeleton-loader
               v-if="$fetchState.pending"
               class="mx-auto mb-3"
-              elevation="1"
-              max-width="350"
+              elevation="3"
               type="card"
             ></v-skeleton-loader>
-            <v-card v-else class="mx-auto mb-3" max-width="350" :to="`/${highlightedPost.slug}`" nuxt flat hover ripple>
+            <v-card v-else class="mx-auto mb-5" :to="`/${highlightedPost.slug}`" nuxt ripple elevation="3">
               <WpMediaNew
                 v-if="highlightedPost.image"
                 :media="highlightedPost.image"
                 size="medium_large"
                 aspect-ratio="1"
+                height="200"
                 width="100%"
-                class="rounded"
-              ></WpMediaNew>
-              <v-card-text class="pa-0 mt-1">
+              >
+                <v-chip color="white" small class="ma-2" style="position: absolute; top: 0; left: 0">
+                  {{ getCategoryById(highlightedPost.categoryId).name }}
+                </v-chip>
+              </WpMediaNew>
+              <v-card-text>
                 <v-card-title class="pa-0">
-                  <h2 class="text-h6 text-break black--text">{{ highlightedPost.title }}</h2>
-                  <v-card-subtitle class="pa-0">
-                    <p class="text-uppercase ma-0">{{ getCategoryById(highlightedPost.categoryId).name }}</p>
-                    <p class="ma-0">Le {{ highlightedPost.date | fromISO }} par {{ highlightedPost.authorName }}</p>
-                  </v-card-subtitle>
+                  <h3 class="text-h3 text-break">{{ highlightedPost.title }}</h3>
                 </v-card-title>
               </v-card-text>
             </v-card>
@@ -94,74 +95,97 @@
               ></v-skeleton-loader>
             </template>
             <template v-else>
-              <PostCard v-for="post in otherPosts" :key="post.id" :post="post" class="mb-3"></PostCard>
+              <PostCard
+                v-for="(post, i) in otherPosts"
+                :key="post.id"
+                :post="post"
+                :class="{ 'mb-4': i < otherPosts.length - 1 }"
+              ></PostCard>
             </template>
           </v-col>
         </v-row>
       </v-container>
       <div class="text-center mb-3">
-        <nuxt-link to="/articles" class="text-button">Tous nos articles</nuxt-link>
+        <v-btn text nuxt to="/articles" class="text-decoration-underline">tous nos articles</v-btn>
       </div>
     </v-sheet>
 
-    <v-sheet class="green-chouquette lighten-1 py-5">
-      <h3 class="font-heading text-center">Les valeurs de La Chouquette</h3>
-      <v-carousel class="valeurs-carousel" height="250" show-arrows-on-hover hide-delimiter-background interval="3000">
-        <v-carousel-item v-for="value in values" :key="value.id">
-          <v-card color="transparent" class="text-center" height="250" flat tile>
-            <WpMediaNew
-              :media="value.image"
-              size="thumbnail"
-              width="100"
-              height="100"
-              contain
-              class="mx-auto"
-              flat
-            ></WpMediaNew>
-            <v-card-title class="justify-center">{{ value.name }}</v-card-title>
-            <v-card-subtitle>{{ value.description }}</v-card-subtitle>
-          </v-card>
-        </v-carousel-item>
-      </v-carousel>
+    <v-sheet class="cq-yellow">
+      <v-container>
+        <h2 class="text-h1 text-center font-weight-bold text-lowercase my-5">les 5 valeurs de La Chouquette</h2>
+        <v-carousel
+          class="valeurs-carousel"
+          height="400"
+          show-arrows-on-hover
+          hide-delimiter-background
+          interval="3000"
+        >
+          <v-carousel-item v-for="value in values" :key="value.id">
+            <v-card color="white" class="text-center mx-auto py-5" width="250">
+              <v-card-title class="justify-center text-uppercase mb-5">
+                <h3 class="valeur-title">{{ value.name }}</h3>
+              </v-card-title>
+              <WpMediaNew
+                :media="value.image"
+                size="thumbnail"
+                width="100"
+                height="100"
+                contain
+                class="mx-auto"
+                flat
+              ></WpMediaNew>
+              <v-card-text class="text-body-1">{{ value.description }}</v-card-text>
+              <v-card-actions class="justify-center">
+                <v-btn text nuxt to="/articles" class="text-decoration-underline">en savoir plus</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-carousel-item>
+        </v-carousel>
+      </v-container>
     </v-sheet>
 
-    <v-sheet class="pt-5">
-      <h3 class="font-heading text-center">Nos Chouquettisés</h3>
-      <p class="text-center text-subtitle-2 px-4">
-        Ce sont les adresses testées et approuvées par la Chouquette. Ils sont membres de notre label : Chouquettisés et
-        partagent ainsi les mêmes valeurs que les nôtres.
-      </p>
+    <v-sheet>
+      <h2 class="text-center">Nos derniers tops</h2>
       <div class="cq-scroll-x-container px-3">
-        <FicheCard v-for="fiche in latestChouquettises" :key="fiche.id" :fiche="fiche"></FicheCard>
-      </div>
-      <div class="text-center">
-        <nuxt-link to="/tops" class="text-button">Tous nos Chouquettisés</nuxt-link>
-      </div>
-    </v-sheet>
-
-    <v-sheet class="py-3">
-      <h3 class="text-center headline pb-3">Nos derniers tops</h3>
-      <div class="cq-scroll-x-container px-3">
-        <v-card v-for="post in topPosts" :key="post.id" :to="`/${post.slug}`" nuxt flat hover ripple>
-          <WpMediaNew
-            :media="post.image"
-            size="medium_large"
-            class="rounded white--text align-center text-center"
-            gradient="to bottom, rgba(0,0,0,.3), rgba(0,0,0,.6)"
-            aspect-ratio="1"
-            width="60vw"
-          >
-            <v-chip color="white" small class="ma-2" style="opacity: 0.9; position: absolute; top: 0; left: 0">
+        <v-card v-for="post in topPosts" :key="post.id" :to="`/${post.slug}`" nuxt hover flat ripple>
+          <WpMediaNew :media="post.image" size="medium_large" class="rounded-lg" aspect-ratio="1" width="60vw">
+            <v-chip color="white" small class="ma-2" style="position: absolute; top: 0; left: 0">
               Top
+              <v-icon right>mdi-trophy-award</v-icon>
             </v-chip>
-            <v-card-title class="justify-center text-break">{{ post.title }}</v-card-title>
           </WpMediaNew>
+          <v-card-title class="px-0 py-2">
+            <h4 class="text-h4 text-break">{{ post.title }}</h4>
+          </v-card-title>
         </v-card>
       </div>
-      <div class="text-center">
-        <nuxt-link to="/tops" class="text-button">Tous les tops</nuxt-link>
+      <div class="text-center my-3">
+        <v-btn text nuxt to="/tops" class="text-decoration-underline">tous nos tops</v-btn>
       </div>
     </v-sheet>
+
+    <v-container class="cq-beige py-3 text-center" style="position: relative">
+      <img
+        src="/lachouquette_logo_simple_white.png"
+        alt="Logo La Chouquette"
+        height="120"
+        style="position: absolute; left: 20px; top: -20px; transform: matrix(0.96, -0.29, 0.29, 0.96, 0, 0)"
+      />
+      <div style="position: relative">
+        <h2>Nos Chouquettisés</h2>
+        <p class="text-h5">tous ont été testé et approuvé selon nos valeurs écoresponsables</p>
+        <div class="cq-scroll-x-container px-3 my-5">
+          <FicheCard v-for="fiche in latestChouquettises" :key="fiche.id" :fiche="fiche"></FicheCard>
+        </div>
+        <div class="text-center">
+          <v-btn text nuxt to="/tops" class="text-decoration-underline">tous nos Chouquettisés</v-btn>
+        </div>
+        <v-divider class="my-5"></v-divider>
+        <p class="text-h3 font-weight-bold">notre label t'intéresse ?</p>
+        <p class="text-h5">tu partages nos valeurs et souhaite en savoir comment obtenir ce label ?</p>
+        <v-btn block elevation="3" color="cq-yellow" class="black--text my-5" large>Nous contacter</v-btn>
+      </div>
+    </v-container>
   </div>
 </template>
 
@@ -303,5 +327,23 @@ button.v-btn.cq-yellow {
     background-color: var(--v-cq-red-base) !important;
     color: white !important;
   }
+}
+
+.valeur-title {
+  display: inline-block;
+  font-family: $font-family-heading;
+  font-weight: normal;
+  border: 2px solid var(--v-primary-base);
+  padding: 5px 12px;
+  font-size: 1.5rem;
+  letter-spacing: 3px;
+}
+
+h2 {
+  font-family: $font-family-heading;
+  letter-spacing: 3px !important;
+  font-weight: 400 !important;
+  text-transform: uppercase;
+  margin: 2rem 0;
 }
 </style>

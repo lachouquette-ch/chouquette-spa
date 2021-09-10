@@ -7,15 +7,6 @@
 @import "marker-clusterer";
 @import "google-map";
 
-// Helper classes
-.font-heading {
-  font-family: $font-family-heading;
-  font-size: 1.5rem;
-  font-weight: normal;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-}
-
 // CookieConsent
 $cookieconstent-background: map-get($chouquette-colors, "grey");
 @import "~vue-cookieconsent-component/src/scss/cookie-consent";
