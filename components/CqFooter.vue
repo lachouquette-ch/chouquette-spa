@@ -38,7 +38,7 @@
       </v-col>
     </v-row>
     <hr class="my-4" />
-    <p class="text-center">
+    <p class="text-center text-caption">
       Copyright 2014-{{ currentYear }} - Tous droits réservés à La Chouquette. Toutes les images et le contenu sont la
       propriété du site.
     </p>

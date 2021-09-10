@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <FicheShare :fiche="fiche" class="share" fab dark></FicheShare>
+    <FicheShare :fiche="fiche" class="share" fab color="primary"></FicheShare>
 
     <Fiche :fiche="fiche"></Fiche>
   </v-container>

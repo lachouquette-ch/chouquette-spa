@@ -20,8 +20,11 @@
         :style="`height: ${mapFooterHeight}`"
       >
         <div class="pa-3">
-          <v-divider class="mx-auto grey" style="width: 40px; border: 2px solid; border-radius: 5px"></v-divider>
-          <div class="align-center mt-2 grey--text text--darken-3 d-flex">
+          <v-divider
+            class="mx-auto cq-grey-light"
+            style="width: 40px; border: 2px solid; border-radius: 5px"
+          ></v-divider>
+          <div class="align-center mt-2 d-flex">
             <span>{{ ficheCountWithPoi }} adresses affichées</span>&nbsp;
             <v-tooltip max-width="90vw" top>
               <template #activator="{ on, attrs }">
@@ -33,7 +36,7 @@
               >
             </v-tooltip>
             <v-spacer></v-spacer>
-            <v-btn style="opacity: 0.9" dark rounded small @click="mapDialog = false">
+            <v-btn style="opacity: 0.9" color="cq-grey" class="white--text" rounded small @click="mapDialog = false">
               <v-icon left>mdi-format-list-text</v-icon>
               Liste
             </v-btn>
@@ -45,7 +48,7 @@
     <v-dialog v-model="filtersDialog" fullscreen scrollable transition="dialog-bottom-transition">
       <v-card tile>
         <v-card-title>
-          Filtrer
+          <span class="text-h3">Filtrer</span>
           <v-spacer></v-spacer>
           <v-btn icon @click="filtersDialog = false">
             <v-icon>mdi-close</v-icon>
@@ -54,17 +57,17 @@
         <v-divider></v-divider>
         <v-card-text class="pa-2 pb-0">
           <v-list>
-            <v-subheader class="text-h6 black--text">Adresse Chouquettisée</v-subheader>
+            <v-subheader class="text-h3">Adresse Chouquettisée</v-subheader>
             <v-list-item three-line>
               <v-list-item-content class="pt-0">
-                <div class="d-inline-flex align-center mt-1">
-                  <p class="body-2 secondary--text text--lighten-2 ma-0">
+                <div class="d-inline-flex align-center">
+                  <p class="ma-0 text-caption">
                     Sélectionner que les adresses testées et approuvées par l'équipe. tesa fadsf
                     kldasjféladsjféalsdfkjasdélf jasdf
                   </p>
                   <v-switch
                     v-model="chouquettiseOnly"
-                    color="primary ml-auto"
+                    color="cq-yellow ml-auto"
                     inset
                     :ripple="false"
                     @change="updateFilterCounter"
@@ -98,7 +101,7 @@
         </v-card-text>
         <v-card-actions>
           <v-btn outlined class="flex-grow-2 mx-1" @click.prevent="clearCriteria">Tout effacer</v-btn>
-          <v-btn dark class="flex-grow-1 mx-1" @click.prevent="searchByFilters">Appliquer</v-btn>
+          <v-btn color="primary" class="flex-grow-1 mx-1" @click.prevent="searchByFilters">Appliquer</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -113,9 +116,7 @@
     >
       <v-card tile>
         <v-card-title>
-          <FicheShare v-if="selectedFiche" :fiche="selectedFiche" small outlined color="white--text grey darken-3"
-            >Partager</FicheShare
-          >
+          <FicheShare v-if="selectedFiche" :fiche="selectedFiche" small color="primary">Partager</FicheShare>
           <v-spacer></v-spacer>
           <v-btn icon @click="clearFicheSelection">
             <v-icon>mdi-arrow-right</v-icon>
@@ -129,7 +130,7 @@
     </v-dialog>
 
     <v-container>
-      <h1 class="text-h5 text-center mt-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
+      <h1 class="text-h1 text-center mt-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
       <div id="categoryContainer" class="cq-scroll-x-container mt-4 justify-start">
         <CategoryButton
           v-for="topCategory in topCategories"
@@ -147,7 +148,6 @@
             v-for="subCategory in subCategories"
             :key="subCategory.id"
             :dark="subCategory === selectedSubCategory"
-            :class="{ 'grey lighten-4': subCategory !== selectedSubCategory }"
             :disabled="$fetchState.pending"
             class="mr-2"
             label
@@ -162,7 +162,6 @@
           outlined
           label="Rechercher dans la categorie"
           prepend-inner-icon="mdi-magnify"
-          color="grey darken-3"
           class="mr-2"
           clearable
           hide-details
@@ -170,7 +169,7 @@
           @change="searchByText"
           @click:clear.capture="clearSearch"
         ></v-text-field>
-        <v-badge bordered color="secondary" :content="filterCount" :value="filterCount" overlap>
+        <v-badge bordered color="primary" :content="filterCount" :value="filterCount" overlap>
           <v-btn outlined height="100%" @click="filtersDialog = true">
             <v-icon left>mdi-tune</v-icon>
             Filtrer
@@ -178,7 +177,7 @@
         </v-badge>
       </div>
       <template v-if="fiches.length">
-        <v-subheader class="px-0 text-body-2">{{ fichesTotal }} résultats</v-subheader>
+        <v-subheader class="px-0">{{ fichesTotal }} résultats</v-subheader>
         <v-card
           v-for="fiche in fiches"
           :key="fiche.id"
@@ -190,26 +189,28 @@
           @click="selectFiche(fiche)"
         >
           <WpMediaNew :media="fiche.image" size="medium_large" height="200" contains>
-            <v-card-subtitle v-if="fiche.isChouquettise">
-              <v-chip color="primary" text-color="black" small>
+            <v-card-subtitle v-if="fiche.isChouquettise" class="pa-2">
+              <v-chip color="cq-yellow" text-color="black" small>
                 Testé et Chouquettisé
                 <v-icon right>mdi-check</v-icon>
               </v-chip>
             </v-card-subtitle>
           </WpMediaNew>
-          <v-card-title class="text-h5 d-block text-break">{{ fiche.title }}</v-card-title>
-          <v-card-subtitle class="text-uppercase">{{
-            getCategoryById(fiche.principalCategoryId).name
-          }}</v-card-subtitle>
+          <v-card-title class="d-block text-break">
+            <h3 class="text-h3">{{ fiche.title }}</h3>
+            <v-card-subtitle class="pa-0 mt-1 secondary--text">{{
+              getCategoryById(fiche.principalCategoryId).name
+            }}</v-card-subtitle>
+          </v-card-title>
           <v-card-text class="black--text">
-            <div class="fiche-content" v-html="fiche.content"></div>
-            <a href="" @click.prevent="">Voir Plus</a>
+            <div class="fiche-content mb-1" v-html="fiche.content"></div>
+            <a href="" @click.prevent="">Voir plus</a>
             <v-chip-group v-if="fiche.valueIds.length" class="mt-3" column>
               <v-chip
                 v-for="valueId in fiche.valueIds"
                 :key="valueId"
-                color="primary lighten-4"
-                text-color="grey darken-3"
+                color="cq-blue-light"
+                text-color="cq-secondary"
                 label
                 small
               >
@@ -244,7 +245,7 @@
       <v-alert
         v-else-if="!hasMoreFiches"
         border="bottom"
-        color="secondary lighten-3"
+        color="secondary"
         class="mt-3 mb-0 text-center"
         elevation="2"
         colored-border
@@ -257,8 +258,8 @@
         <v-btn
           v-if="!mapDialog"
           style="opacity: 0.9; bottom: 65px; left: 50%; transform: translateX(-50%)"
-          dark
-          rounded
+          color="cq-grey"
+          class="white--text"
           small
           fixed
           @click="mapDialog = true"
@@ -651,16 +652,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.top-category-btn {
-  width: 200px;
-  border: 1px solid grey;
-
-  &:disabled,
-  &button[disabled] {
-    opacity: 0.6;
-  }
-}
-
 .fiche-content {
   display: -webkit-box;
   -webkit-box-orient: vertical;

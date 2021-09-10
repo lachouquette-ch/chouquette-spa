@@ -73,9 +73,11 @@
                 height="200"
                 width="100%"
               >
-                <v-chip color="white" small class="ma-2" style="position: absolute; top: 0; left: 0">
-                  {{ getCategoryById(highlightedPost.categoryId).name }}
-                </v-chip>
+                <v-card-subtitle class="pa-2">
+                  <v-chip color="white" small>
+                    {{ getCategoryById(highlightedPost.categoryId).name }}
+                  </v-chip>
+                </v-card-subtitle>
               </WpMediaNew>
               <v-card-text>
                 <v-card-title class="pa-0">
@@ -149,10 +151,12 @@
       <div class="cq-scroll-x-container px-3">
         <v-card v-for="post in topPosts" :key="post.id" :to="`/${post.slug}`" nuxt hover flat ripple>
           <WpMediaNew :media="post.image" size="medium_large" class="rounded-lg" aspect-ratio="1" width="60vw">
-            <v-chip color="white" small class="ma-2" style="position: absolute; top: 0; left: 0">
-              Top
-              <v-icon right>mdi-trophy-award</v-icon>
-            </v-chip>
+            <v-card-subtitle class="pa-2">
+              <v-chip color="white" small>
+                Top
+                <v-icon right>mdi-trophy-award</v-icon>
+              </v-chip>
+            </v-card-subtitle>
           </WpMediaNew>
           <v-card-title class="px-0 py-2">
             <h4 class="text-h4 text-break">{{ post.title }}</h4>
@@ -164,7 +168,7 @@
       </div>
     </v-sheet>
 
-    <v-container class="cq-beige py-3 text-center" style="position: relative">
+    <v-container class="cq-beige py-3" style="position: relative">
       <img
         src="/lachouquette_logo_simple_white.png"
         alt="Logo La Chouquette"
@@ -172,18 +176,22 @@
         style="position: absolute; left: 20px; top: -20px; transform: matrix(0.96, -0.29, 0.29, 0.96, 0, 0)"
       />
       <div style="position: relative">
-        <h2>Nos Chouquettisés</h2>
-        <p class="text-h5">tous ont été testé et approuvé selon nos valeurs écoresponsables</p>
-        <div class="cq-scroll-x-container px-3 my-5">
+        <div class="text-center">
+          <h2>Nos Chouquettisés</h2>
+          <p class="text-h5">tous ont été testé et approuvé selon nos valeurs écoresponsables</p>
+        </div>
+        <div class="cq-scroll-x-container my-5">
           <FicheCard v-for="fiche in latestChouquettises" :key="fiche.id" :fiche="fiche"></FicheCard>
         </div>
         <div class="text-center">
           <v-btn text nuxt to="/tops" class="text-decoration-underline">tous nos Chouquettisés</v-btn>
         </div>
         <v-divider class="my-5"></v-divider>
-        <p class="text-h3 font-weight-bold">notre label t'intéresse ?</p>
-        <p class="text-h5">tu partages nos valeurs et souhaite en savoir comment obtenir ce label ?</p>
-        <v-btn block elevation="3" color="cq-yellow" class="black--text my-5" large>Nous contacter</v-btn>
+        <div class="text-center">
+          <p class="text-h3 font-weight-bold">notre label t'intéresse ?</p>
+          <p class="text-h5">tu partages nos valeurs et souhaite en savoir comment obtenir ce label ?</p>
+          <v-btn block elevation="3" color="cq-yellow" class="black--text my-5" large>Nous contacter</v-btn>
+        </div>
       </div>
     </v-container>
   </div>
@@ -341,8 +349,8 @@ button.v-btn.cq-yellow {
 
 h2 {
   font-family: $font-family-heading;
-  letter-spacing: 3px !important;
-  font-weight: 400 !important;
+  letter-spacing: 2.5px !important;
+  font-weight: 300 !important;
   text-transform: uppercase;
   margin: 2rem 0;
 }

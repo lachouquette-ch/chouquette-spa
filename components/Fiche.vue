@@ -1,33 +1,33 @@
 <template>
   <div>
     <v-card flat>
-      <WpMediaNew :media="fiche.image" size="medium_large" height="250" class="rounded">
-        <v-chip v-if="fiche.isChouquettise" color="primary" text-color="black" small class="ma-2" style="opacity: 0.9">
+      <WpMediaNew :media="fiche.image" size="medium_large" height="250" class="rounded-lg">
+        <v-chip v-if="fiche.isChouquettise" color="cq-yellow" text-color="black" small class="ma-2">
           Testé et Chouquettisé
           <v-icon right>mdi-check</v-icon>
         </v-chip>
       </WpMediaNew>
       <v-card-title class="mt-2 px-0 pt-0 flex-nowrap align-baseline">
-        <h1 class="text-h4 text-break">{{ fiche.title }}</h1>
+        <h1 class="text-h1 text-break">{{ fiche.title }}</h1>
         <v-spacer></v-spacer>
         <div class="d-flex">
           <v-btn fab icon small><v-icon color="#4267b2">mdi-facebook</v-icon></v-btn>
           <v-btn fab icon small><v-icon color="#E1306C">mdi-instagram</v-icon></v-btn>
         </div>
       </v-card-title>
-      <v-card-subtitle class="px-0">
-        <span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} / </span>{{ categories }}
+      <v-card-subtitle class="px-0 secondary--text">
+        <span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} - </span>{{ categories }}
       </v-card-subtitle>
       <p v-html="fiche.content"></p>
 
       <v-divider class="my-3"></v-divider>
 
       <div v-if="values.length" class="mt-2">
-        <h2 class="text-h5">Valeurs</h2>
+        <h2 class="text-h2 mb-2">Valeurs</h2>
         <v-chip-group>
           <v-tooltip v-for="value in values" :key="value.id" max-width="90vw" top>
             <template #activator="{ on, attrs }">
-              <v-chip v-bind="attrs" color="primary lighten-4" text-color="grey darken-3" label small v-on="on">
+              <v-chip v-bind="attrs" color="cq-blue-light" text-color="cq-secondary" label small v-on="on">
                 {{ value.name }}
               </v-chip>
             </template>
@@ -36,10 +36,10 @@
         </v-chip-group>
       </div>
 
-      <h2 class="text-h5 mt-2">Informations</h2>
-      <v-tabs v-model="tab" class="mt-3" color="secondary" background-color="grey lighten-5" grow>
-        <v-tab key="contact"> Contact </v-tab>
-        <v-tab key="infos"> Plus d'infos </v-tab>
+      <h2 class="text-h2 mt-2">Informations</h2>
+      <v-tabs v-model="tab" class="mt-3" color="primary" background-color="white" grow>
+        <v-tab key="contact">Contact</v-tab>
+        <v-tab key="infos">Plus d'infos</v-tab>
       </v-tabs>
 
       <v-tabs-items v-model="tab" class="py-3" :touchless="tabTouchless">
@@ -69,22 +69,22 @@
             >
               <v-list-item-avatar size="30"><v-icon>mdi-message</v-icon></v-list-item-avatar>
               <v-list-item-title>
-                Envoyer un message à l'adresse
-                <v-list-item-subtitle>Depuis La Chouquette</v-list-item-subtitle>
+                <span class="text-decoration-underline">Envoyer un message à l'adresse</span>
+                <v-list-item-subtitle class="text-caption">Depuis La Chouquette</v-list-item-subtitle>
               </v-list-item-title>
             </v-list-item>
             <v-list-item v-if="fiche.info.telephone" :href="`tel: ${fiche.info.telephone}`">
               <v-list-item-avatar size="30"><v-icon>mdi-phone</v-icon></v-list-item-avatar>
               <v-list-item-title>
-                {{ fiche.info.telephone }}
-                <v-list-item-subtitle>Appeler l'adresse</v-list-item-subtitle>
+                <span class="text-decoration-underline">{{ fiche.info.telephone }}</span>
+                <v-list-item-subtitle class="text-caption">Appeler l'adresse</v-list-item-subtitle>
               </v-list-item-title>
             </v-list-item>
             <v-list-item v-if="fiche.info.website" :href="fiche.info.website" target="_blank">
               <v-list-item-avatar size="30"><v-icon>mdi-web</v-icon></v-list-item-avatar>
               <v-list-item-title>
-                {{ fiche.info.website | prettyURL }}
-                <v-list-item-subtitle>Accéder au site Web</v-list-item-subtitle>
+                <span class="text-decoration-underline">{{ fiche.info.website | prettyURL }}</span>
+                <v-list-item-subtitle class="text-caption">Accéder au site Web</v-list-item-subtitle>
               </v-list-item-title>
             </v-list-item>
             <v-list-item
@@ -93,8 +93,8 @@
             >
               <v-list-item-avatar size="30"><v-icon>mdi-at</v-icon></v-list-item-avatar>
               <v-list-item-title>
-                {{ fiche.info.mail }}
-                <v-list-item-subtitle>Envoyer un email</v-list-item-subtitle>
+                <span class="text-decoration-underline">{{ fiche.info.mail }}</span>
+                <v-list-item-subtitle class="text-caption">Envoyer un email</v-list-item-subtitle>
               </v-list-item-title>
             </v-list-item>
           </v-list>
@@ -111,9 +111,9 @@
             >
               <v-list-item-avatar size="30"><v-icon>mdi-cash</v-icon></v-list-item-avatar>
               <v-list-item-title>
-                <span>{{ fichePrice[0] }}</span
-                ><span class="grey--text text-lighten-3">{{ fichePrice[1] }}</span>
-                <v-list-item-subtitle>Budget estimé</v-list-item-subtitle>
+                <span class="primary--text">{{ fichePrice[0] }}</span
+                ><span class="cq-grey-light--text text--lighten-2">{{ fichePrice[1] }}</span>
+                <v-list-item-subtitle class="text-caption">Budget estimé</v-list-item-subtitle>
               </v-list-item-title>
             </v-list-item>
           </v-list>
@@ -123,7 +123,7 @@
                 <v-list-item-avatar size="30"><v-icon>mdi-clock</v-icon></v-list-item-avatar>
                 <v-list-item-title>
                   Aujourd'hui : {{ getOpeningValue() }}
-                  <v-list-item-subtitle>Voir les autres jours</v-list-item-subtitle>
+                  <v-list-item-subtitle class="text-decoration-underline text-caption">Voir les autres jours</v-list-item-subtitle>
                 </v-list-item-title>
               </v-list-item>
             </template>
@@ -152,8 +152,8 @@
                   <v-chip
                     v-for="criteriaValue in criteriaValues"
                     :key="criteriaValue.id"
-                    color="primary lighten-4"
-                    text-color="grey darken-3"
+                    color="cq-beige"
+                    text-color="primary darken-2"
                     label
                     small
                   >
@@ -166,7 +166,7 @@
         </v-tab-item>
       </v-tabs-items>
       <v-btn
-        color="secondary"
+        color="cq-red"
         block
         outlined
         @click.prevent="
@@ -178,16 +178,16 @@
 
       <div v-if="fiche.postCards">
         <v-divider class="my-3"></v-divider>
-        <h2 class="text-h5">Articles sur l'adresse</h2>
-        <div class="my-3">
+        <h2 class="text-h2 mb-3">Articles sur l'adresse</h2>
+        <div class="mb-5">
           <PostCard v-for="post in fiche.postCards" :key="post.id" :post="post" class="mb-3" large></PostCard>
         </div>
       </div>
 
       <div v-if="fiche.similarFiches">
         <v-divider class="my-3"></v-divider>
-        <h2 class="text-h5">Adresses similaires</h2>
-        <div class="cq-scroll-x-container my-3">
+        <h2 class="text-h2">Adresses similaires</h2>
+        <div class="cq-scroll-x-container mt-3">
           <FicheCard v-for="fiche in fiche.similarFiches" :key="fiche.id" class="mb-3" :fiche="fiche"></FicheCard>
         </div>
       </div>

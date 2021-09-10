@@ -58,7 +58,7 @@
       </v-container>
     </v-main>
 
-    <v-bottom-navigation v-model="selectedNav" fixed app>
+    <v-bottom-navigation v-model="selectedNav" fixed app color="cq-red">
       <v-btn nuxt to="/">
         <span>Accueil</span>
         <v-icon>mdi-home</v-icon>

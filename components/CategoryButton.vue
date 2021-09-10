@@ -1,8 +1,8 @@
 <template>
   <button
     v-ripple
-    class="top-category-btn rounded"
-    :class="{ 'grey darken-3': selected }"
+    class="top-category-btn rounded border-1"
+    :class="{ primary: selected }"
     :disabled="disabled"
     @click.prevent="$emit('click', topCategory)"
   >
@@ -13,8 +13,12 @@
       </v-list-item-avatar>
 
       <v-list-item-content>
-        <v-list-item-title :class="{ 'yellow--text': selected }">{{ topCategory.name }}</v-list-item-title>
-        <v-list-item-subtitle :class="{ 'white--text': selected }">{{ topCategory.description }}</v-list-item-subtitle>
+        <v-list-item-title :class="[selected ? 'cq-yellow--text' : 'black--text']">{{
+          topCategory.name
+        }}</v-list-item-title>
+        <v-list-item-subtitle :class="[selected ? 'white--text' : 'black--text']">{{
+          topCategory.description
+        }}</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
   </button>
@@ -33,4 +37,14 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.top-category-btn {
+  width: 200px;
+  border: 1px solid grey;
+
+  &:disabled,
+  &button[disabled] {
+    opacity: 0.6;
+  }
+}
+</style>
