@@ -1,6 +1,6 @@
 <template>
   <v-fade-transition>
-    <v-btn v-if="show" class="btn-top primary--text" fab small dark @click="scrollTop">
+    <v-btn v-if="show" class="btn-top primary white--text" fab small @click="scrollTop">
       <v-icon>mdi-chevron-up</v-icon>
     </v-btn>
   </v-fade-transition>

@@ -185,7 +185,8 @@
           outlined
           bench="2"
           active-class=" "
-          :loading="selectedFiche === fiche"
+          :loading="selectedFicheCard === fiche ? 'white' : false"
+          loader-height="5"
           @click="selectFiche(fiche)"
         >
           <WpMediaNew :media="fiche.image" size="medium_large" height="200" contains>
@@ -202,7 +203,7 @@
               getCategoryById(fiche.principalCategoryId).name
             }}</v-card-subtitle>
           </v-card-title>
-          <v-card-text class="black--text">
+          <v-card-text>
             <div class="fiche-content mb-1" v-html="fiche.content"></div>
             <a href="" @click.prevent="">Voir plus</a>
             <v-chip-group v-if="fiche.valueIds.length" class="mt-3" column>
@@ -655,7 +656,7 @@ export default {
 .fiche-content {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   overflow: hidden;
 }
 </style>
