@@ -349,8 +349,8 @@ button.v-btn.cq-yellow {
 
 h2 {
   font-family: $font-family-heading;
-  letter-spacing: 2.5px !important;
-  font-weight: 300 !important;
+  letter-spacing: 1.5px !important;
+  font-weight: 200 !important;
   text-transform: uppercase;
   margin: 2rem 0;
 }

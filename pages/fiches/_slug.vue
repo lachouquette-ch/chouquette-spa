@@ -77,13 +77,13 @@
             </v-list-item>
           </v-list>
           <v-divider></v-divider>
-          <template v-if="criteriaFilters.length">
-            <div v-for="criteriaFilter in criteriaFilters" :key="criteriaFilter.id">
+          <template v-if="categoryFilters.length">
+            <div v-for="categoryFilter in categoryFilters" :key="categoryFilter.id">
               <FilterExpansion
-                ref="criteriaFilters"
-                v-model="criteriaFilter.selectedSlugs"
-                :title="criteriaFilter.name"
-                :items="criteriaFilter.values"
+                ref="categoryFilter"
+                v-model="categoryFilter.selectedSlugs"
+                :title="categoryFilter.name"
+                :items="categoryFilter.values"
                 @updateCount="updateFilterCounter"
               ></FilterExpansion>
             </div>
@@ -313,8 +313,6 @@ export default {
   },
   data() {
     return {
-      currentURL: null,
-
       fichesNextPage: 1,
       fiches: [],
       fichesTotal: null,
@@ -331,8 +329,8 @@ export default {
 
       filterCount: 0,
       filtersDialog: false,
-      criteriaFilters: [],
-      criteriaLoading: false,
+      categoryFilters: [],
+      filtersLoading: false,
 
       mapDialog: false,
       mapFooterHeight: 64,
@@ -352,7 +350,7 @@ export default {
             $location: String
             $search: String
             $chouquettiseOnly: Boolean
-            $criteria: [CriteriaSearch!]
+            $categoryFilters: [TaxonomyFilter!]
             $page: Int!
             $pageSize: Int!
           ) {
@@ -361,7 +359,7 @@ export default {
               location: $location
               search: $search
               chouquettiseOnly: $chouquettiseOnly
-              criteria: $criteria
+              categoryFilters: $categoryFilters
               page: $page
               pageSize: $pageSize
             ) {
@@ -380,7 +378,7 @@ export default {
           location: this.location ? this.location.slug : null,
           search: this.search,
           chouquettiseOnly: this.chouquettiseOnly,
-          criteria: this.criteriaFilters.map(({ taxonomy, selectedSlugs }) => {
+          categoryFilters: this.categoryFilters.map(({ taxonomy, selectedSlugs }) => {
             return { taxonomy, values: selectedSlugs }
           }),
           page: this.fichesNextPage++,
@@ -415,14 +413,14 @@ export default {
         this.selectedTopCategory = this.category
       }
       this.subCategories = await this.getCategoriesByParentId(this.selectedTopCategory.id)
-      await this.fetchCriteria(this.category)
+      await this.fetchCategoryFilters(this.category)
 
-      // update criteriaFilter
+      // update categoryFilter
       Object.entries(this.$route.query)
         .filter(([key]) => key.startsWith('cq_'))
         .forEach(([key, value]) => {
-          const criteriaFilter = this.criteriaFilters.find(({ taxonomy }) => taxonomy === key)
-          if (criteriaFilter) criteriaFilter.selectedSlugs = value.split(',')
+          const categoryFilter = this.categoryFilters.find(({ taxonomy }) => taxonomy === key)
+          if (categoryFilter) categoryFilter.selectedSlugs = value.split(',')
         })
       this.updateFilterCounter()
 
@@ -457,7 +455,7 @@ export default {
       this.hasMoreFiches = true
       this.fiches = []
 
-      const query = this.criteriaFilters.reduce((acc, { taxonomy, selectedSlugs }) => {
+      const query = this.categoryFilters.reduce((acc, { taxonomy, selectedSlugs }) => {
         if (selectedSlugs.length) acc[taxonomy] = selectedSlugs.join(',')
         return acc
       }, {})
@@ -474,14 +472,14 @@ export default {
       this.selectedSubCategory = null
       this.subCategories = await this.getCategoriesByParentId(this.category.id)
 
-      await this.fetchCriteria(this.category)
+      await this.fetchCategoryFilters(this.category)
       return this.fetchWithFilters()
     },
     async selectSubCategory(category) {
       this.category = category
       this.selectedSubCategory = this.category
 
-      await this.fetchCriteria(this.category)
+      await this.fetchCategoryFilters(this.category)
       return this.fetchWithFilters()
     },
     searchByText() {
@@ -497,18 +495,18 @@ export default {
     },
     clearCriteria() {
       this.chouquettiseOnly = false
-      this.$refs.criteriaFilters.forEach((f) => f.clear())
+      this.$refs.categoryFilter.forEach((f) => f.clear())
     },
     sampleCriteriaValues(fiche) {
-      return fiche.criteria.flatMap(({ values }) => values).slice(0, 3)
+      return fiche.categoryFilters.flatMap(({ values }) => values).slice(0, 3)
     },
-    async fetchCriteria(category) {
+    async fetchCategoryFilters(category) {
       try {
-        this.criteriaLoading = true
+        this.filtersLoading = true
         const { data } = await this.$apollo.query({
           query: gql`
             query ($id: Int!) {
-              criteriaByCategory(id: $id) {
+              filtersByCategory(id: $id) {
                 id
                 name
                 taxonomy
@@ -526,18 +524,18 @@ export default {
           },
         })
 
-        // try to map with previous criteria
-        data.criteriaByCategory.forEach((criteriaFilter) => {
-          const previousFilter = this.criteriaFilters.find(({ taxonomy }) => taxonomy === criteriaFilter.taxonomy)
-          if (previousFilter) criteriaFilter.selectedSlugs = previousFilter.selectedSlugs
-          else criteriaFilter.selectedSlugs = []
+        // try to map with previous filters
+        data.filtersByCategory.forEach((categoryFilter) => {
+          const previousFilter = this.categoryFilters.find(({ taxonomy }) => taxonomy === categoryFilter.taxonomy)
+          if (previousFilter) categoryFilter.selectedSlugs = previousFilter.selectedSlugs
+          else categoryFilter.selectedSlugs = []
         })
-        this.criteriaFilters = data.criteriaByCategory
+        this.categoryFilters = data.filtersByCategory
       } catch (e) {
         this.$sentry.captureException(e)
         this.handleGQLError(e, 'Impossible de charger les critères :')
       } finally {
-        this.criteriaLoading = false
+        this.filtersLoading = false
       }
     },
     async selectFiche(ficheCard) {
@@ -579,7 +577,7 @@ export default {
       this.ficheDialog = false
     },
     updateFilterCounter() {
-      this.filterCount = this.criteriaFilters.reduce((acc, criteria) => (acc += criteria.selectedSlugs.length), 0)
+      this.filterCount = this.categoryFilters.reduce((acc, filter) => (acc += filter.selectedSlugs.length), 0)
       if (this.chouquettiseOnly) this.filterCount++
     },
   },
