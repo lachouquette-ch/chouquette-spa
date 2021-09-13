@@ -25,21 +25,19 @@
 
     <v-container>
       <h1 class="text-h5 text-center mt-3">Tous les articles</h1>
-      <div id="categoryContainer" class="cq-scroll-x-container mt-4">
-        <div class="d-inline-flex">
-          <CategoryButton
-            v-for="topCategory in topCategories"
-            :id="topCategory.slug"
-            :key="topCategory.id"
-            :top-category="topCategory"
-            :selected="topCategory === category"
-            :disabled="$fetchState.pending"
-            @click="
-              category = topCategory
-              fetchWithFilters()
-            "
-          ></CategoryButton>
-        </div>
+      <div id="categoryContainer" class="cq-scroll-x-container mt-4 justfiy-start">
+        <CategoryButton
+          v-for="topCategory in topCategories"
+          :id="topCategory.slug"
+          :key="topCategory.id"
+          :top-category="topCategory"
+          :selected="topCategory === category"
+          :disabled="$fetchState.pending"
+          @click="
+            category = topCategory
+            fetchWithFilters()
+          "
+        ></CategoryButton>
       </div>
       <div class="mt-1 d-inline-flex align-stretch" style="width: 100%">
         <v-text-field
@@ -139,7 +137,7 @@ export default {
   components: { CategoryButton, PostCard, ScrollTop },
   mixins: [seo, graphql],
   asyncData({ store, params, query }) {
-    const category = params.slug ? store.getters['categories/getBySlug'](params.slug) : null
+    const category = query.category ? store.getters['categories/getBySlug'](query.category) : null
 
     return {
       category,
@@ -217,15 +215,12 @@ export default {
       this.hasMorePosts = true
       this.posts = []
 
-      const path = this.category ? `/blog/${this.category.slug}` : null
       const query = {}
+      if (this.category) query.category = this.category.slug
       if (this.search) query.search = this.search
       if (this.sortAsc) query.sort = 'asc'
 
-      this.$router.replace({
-        path,
-        query,
-      })
+      this.$router.replace({ query })
       return this.$fetch()
     },
     searchByText() {
