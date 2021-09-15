@@ -133,6 +133,27 @@ export const getters = {
   getBySlug: (state) => (searchSlug) => state.flat.find(({ slug }) => slug === searchSlug),
 
   getById: (state) => (id) => state.all[id],
+
+  getMustAndCriteria: (state) => (valueSlug, categorySlug) => {
+    const mustAndCriteria = state.criteria[valueSlug].filter(({ moscow, type, category }) => {
+      return moscow === 'must' && type === 'and' && (category === null || category === categorySlug)
+    })
+    return mustAndCriteria.flatMap(({ criteria }) => criteria)
+  },
+
+  getMustOrCriteria: (state) => (valueSlug, categorySlug) => {
+    const mustOrCriteria = state.criteria[valueSlug].filter(({ moscow, type, category }) => {
+      return moscow === 'must' && type === 'or' && (category === null || category === categorySlug)
+    })
+    return mustOrCriteria.flatMap(({ criteria }) => criteria)
+  },
+
+  getCouldCriteria: (state) => (valueSlug, categorySlug) => {
+    const couldCriteria = state.criteria[valueSlug].filter(({ moscow, category }) => {
+      return moscow === 'could' && (category === null || category === categorySlug)
+    })
+    return couldCriteria.flatMap(({ criteria }) => criteria)
+  },
 }
 
 export const mutations = {

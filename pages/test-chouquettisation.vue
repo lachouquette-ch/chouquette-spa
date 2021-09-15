@@ -129,6 +129,7 @@ export default {
     }),
     ...mapState('values', { criteriaValue: 'criteria' }),
     ...mapGetters('values', { getValueBySlug: 'getBySlug' }),
+    ...mapGetters('values', ['getMustAndCriteria', 'getMustOrCriteria', 'getCouldCriteria']),
     categorySlugs() {
       return this.categories.map(({ slug }) => slug)
     },
@@ -193,31 +194,13 @@ export default {
     changeCategory(categorySlug) {
       // compute criteria
       Object.keys(this.form).forEach((value) => {
-        this.form[value].mustAndCriteria = this.getMustAndCriteria(this.criteriaValue[value], categorySlug)
+        this.form[value].mustAndCriteria = this.getMustAndCriteria(value, categorySlug)
         this.form[value].mustAndSelection = []
-        this.form[value].mustOrCriteria = this.getMustOrCriteria(this.criteriaValue[value], categorySlug)
+        this.form[value].mustOrCriteria = this.getMustOrCriteria(value, categorySlug)
         this.form[value].mustOrSelection = []
-        this.form[value].couldCriteria = this.getCouldCriteria(this.criteriaValue[value], categorySlug)
+        this.form[value].couldCriteria = this.getCouldCriteria(value, categorySlug)
         this.form[value].couldSelection = []
       })
-    },
-    getMustAndCriteria(data, categorySlug) {
-      const mustAndCriteria = data.filter(({ moscow, type, category }) => {
-        return moscow === 'must' && type === 'and' && (category === null || category === categorySlug)
-      })
-      return mustAndCriteria.flatMap(({ criteria }) => criteria)
-    },
-    getMustOrCriteria(data, categorySlug) {
-      const mustOrCriteria = data.filter(({ moscow, type, category }) => {
-        return moscow === 'must' && type === 'or' && (category === null || category === categorySlug)
-      })
-      return mustOrCriteria.flatMap(({ criteria }) => criteria)
-    },
-    getCouldCriteria(data, categorySlug) {
-      const couldCriteria = data.filter(({ moscow, category }) => {
-        return moscow === 'could' && (category === null || category === categorySlug)
-      })
-      return couldCriteria.flatMap(({ criteria }) => criteria)
     },
     validateValue(valueSlug) {
       if (
@@ -230,26 +213,11 @@ export default {
     },
     computeValidatedValues() {
       this.validatedValues = []
-      // local
-      if (this.validateValue('local')) {
-        this.validatedValues.push(this.getValueBySlug('local'))
-      }
-      // ecology
-      if (this.validateValue('ecologie')) {
-        this.validatedValues.push(this.getValueBySlug('ecologie'))
-      }
-      // fair
-      if (this.validateValue('equitable')) {
-        this.validatedValues.push(this.getValueBySlug('equitable'))
-      }
-      // expertise
-      if (this.validateValue('expertise')) {
-        this.validatedValues.push(this.getValueBySlug('expertise'))
-      }
-      // solidarity
-      if (this.validateValue('solidaire')) {
-        this.validatedValues.push(this.getValueBySlug('solidaire'))
-      }
+      Object.keys(this.form).forEach((value) => {
+        if (this.validateValue(value)) {
+          this.validatedValues.push(this.getValueBySlug(value))
+        }
+      })
     },
   },
   head() {
