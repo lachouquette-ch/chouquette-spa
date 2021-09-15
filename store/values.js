@@ -119,6 +119,43 @@ export const state = () => ({
       },
     ],
   },
+  criteriaCategory: {
+    'bar-et-restaurant': {
+      local: 'must',
+      ecologie: 'should',
+      equitable: 'should',
+      expertise: 'should',
+      solidaire: 'should',
+    },
+    loisirs: {
+      local: 'wont',
+      ecologie: 'must',
+      equitable: 'should',
+      expertise: 'must',
+      solidaire: 'should',
+    },
+    culture: {
+      local: 'wont',
+      ecologie: 'wont',
+      equitable: 'should',
+      expertise: 'must',
+      solidaire: 'should',
+    },
+    shopping: {
+      local: 'should',
+      ecologie: 'should',
+      equitable: 'should',
+      expertise: 'should',
+      solidaire: 'should',
+    },
+    services: {
+      local: 'wont',
+      ecologie: 'should',
+      equitable: 'should',
+      expertise: 'should',
+      solidaire: 'should',
+    },
+  },
 })
 
 export const actions = {
@@ -126,6 +163,14 @@ export const actions = {
     commit('SET_VALUES', values)
 
     return values
+  },
+
+  isDisabledForCategory({ state }, { valueSlug, categorySlug }) {
+    return state.criteriaCategory[categorySlug][valueSlug] === 'wont'
+  },
+
+  isOptionalForCategory({ state }, { valueSlug, categorySlug }) {
+    return state.criteriaCategory[categorySlug][valueSlug] !== 'must'
   },
 }
 

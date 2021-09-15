@@ -38,54 +38,54 @@
         </v-stepper-content>
 
         <template v-for="(value, index) in Object.keys(form)">
-          <v-stepper-step :key="`step_${index}`" :complete="stepper > index + 2" :step="index + 2" editable>{{
-            form[value].name
-          }}</v-stepper-step>
+          <v-stepper-step :key="`step_${index}`" :complete="stepper > index + 2" :step="index + 2" editable>
+            {{ form[value].name }}
+            <small v-if="form[value].optional === false">Valeur essentielle pour ta Chouquettisation</small>
+          </v-stepper-step>
           <v-stepper-content :key="`content_${index}`" :step="index + 2">
             <v-card flat>
-              <template v-if="form[value].mustAndCriteria.length">
-                Critères :
-                <v-checkbox
-                  v-for="(criteria, indexValue) in form[value].mustAndCriteria"
-                  :key="`mustAndCriteria_${indexValue}`"
-                  v-model="form[value].mustAndSelection"
-                  :label="criteria"
-                  :value="indexValue"
-                >
-                </v-checkbox>
-              </template>
-              <template v-if="form[value].mustOrCriteria.length">
-                Au moins l'un d'eux :
-                <v-checkbox
-                  v-for="(criteria, indexValue) in form[value].mustOrCriteria"
-                  :key="`mustOrCriteria_${indexValue}`"
-                  v-model="form[value].mustOrSelection"
-                  :label="criteria"
-                  :value="indexValue"
-                >
-                </v-checkbox>
-              </template>
-              <template v-if="form[value].couldCriteria.length">
-                Encore mieux si :
-                <v-checkbox
-                  v-for="(criteria, indexValue) in form[value].couldCriteria"
-                  :key="`couldCriteria_${indexValue}`"
-                  v-model="form[value].couldSelection"
-                  :label="criteria"
-                  :value="indexValue"
-                >
-                </v-checkbox>
-              </template>
-              <v-card-actions>
-                <v-btn
-                  color="primary"
-                  @click="
-                    stepper = index + 3
-                    computeValidatedValues()
-                  "
-                  >Continuer</v-btn
-                >
-                <v-btn text>Supprimer</v-btn>
+              <v-card-text v-if="form[value].disabled" class="pa-0">
+                Cette valeur n'est pas prise en compte pour cette categérie
+              </v-card-text>
+              <v-card-text v-else class="pa-0">
+                <template v-if="form[value].mustAndCriteria.length">
+                  Les intransigibles :
+                  <v-checkbox
+                    v-for="(criteria, indexValue) in form[value].mustAndCriteria"
+                    :key="`mustAndCriteria_${indexValue}`"
+                    v-model="form[value].mustAndSelection"
+                    :label="criteria"
+                    :value="indexValue"
+                  >
+                  </v-checkbox>
+                </template>
+                <template v-if="form[value].mustOrCriteria.length">
+                  Au moins l'un d'eux :
+                  <v-checkbox
+                    v-for="(criteria, indexValue) in form[value].mustOrCriteria"
+                    :key="`mustOrCriteria_${indexValue}`"
+                    v-model="form[value].mustOrSelection"
+                    :label="criteria"
+                    :value="indexValue"
+                  >
+                  </v-checkbox>
+                </template>
+                <template v-if="form[value].couldCriteria.length">
+                  Encore mieux si :
+                  <v-checkbox
+                    v-for="(criteria, indexValue) in form[value].couldCriteria"
+                    :key="`couldCriteria_${indexValue}`"
+                    v-model="form[value].couldSelection"
+                    :label="criteria"
+                    :value="indexValue"
+                  >
+                  </v-checkbox>
+                </template>
+              </v-card-text>
+              <v-card-actions class="flex-wrap">
+                <v-btn color="primary" class="mt-2" @click="stepper = index + 3">Voir la suite</v-btn>
+                <v-btn color="secondary" class="mt-2" @click="stepper = 7">Vers le résultats</v-btn>
+                <v-btn v-if="!form[value].disabled" text class="mt-2" @click="clearFormValue(value)">Supprimer</v-btn>
               </v-card-actions>
             </v-card>
           </v-stepper-content>
@@ -93,18 +93,53 @@
 
         <v-stepper-step step="7">Ton résultat</v-stepper-step>
         <v-stepper-content step="7">
-          <v-chip-group>
-            <v-chip
-              v-for="value in validatedValues"
-              :key="value.id"
-              color="cq-blue-light"
-              text-color="cq-secondary"
-              label
-              small
-            >
-              {{ value.name }}
-            </v-chip>
-          </v-chip-group>
+          <v-card v-if="unvalidatedValues.length === 0" flat class="pb-2">
+            <p class="text-h3">Bravo, tu y est arrivé !</p>
+            <p>
+              <span>Les valeurs validées : </span>
+              <v-chip
+                v-for="value in validatedValues"
+                :key="value.id"
+                color="cq-blue-light"
+                text-color="cq-secondary"
+                label
+                small
+              >
+                {{ value.name }}
+              </v-chip>
+            </p>
+            <p class="my-2">Tu souhaites aller plus loin avec La Chouquette ?</p>
+            <v-btn color="cq-yellow" block>Contacte-nous</v-btn>
+          </v-card>
+          <v-card v-else flat class="pb-2">
+            <p class="text-h3">Malheureusement tu ne remplis pas tous les critères pour une Chouquettisation</p>
+            <p>
+              <span>Les valeurs validées : </span>
+              <v-chip
+                v-for="value in validatedValues"
+                :key="value.id"
+                color="cq-blue-light"
+                text-color="cq-secondary"
+                label
+                small
+              >
+                {{ value.name }}
+              </v-chip>
+            </p>
+            <p>
+              <span>Les valeurs manquantes : </span>
+              <v-chip
+                v-for="value in unvalidatedValues"
+                :key="value.id"
+                color="cq-secondary"
+                text-color="cq-primary"
+                label
+                small
+              >
+                {{ value.name }}
+              </v-chip>
+            </p>
+          </v-card>
         </v-stepper-content>
       </v-stepper>
 
@@ -118,7 +153,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import seo from '~/mixins/seo'
 
 export default {
@@ -137,13 +172,17 @@ export default {
   data() {
     return {
       stepper: 1,
+      stepperFinished: false,
 
       category: null,
       validatedValues: [],
+      unvalidatedValues: [],
 
       form: {
         local: {
           name: 'Local',
+          disabled: null,
+          optional: null,
           mustAndCriteria: [],
           mustAndSelection: [],
           mustOrCriteria: [],
@@ -153,6 +192,8 @@ export default {
         },
         ecologie: {
           name: 'Écologie',
+          disabled: null,
+          optional: null,
           mustAndCriteria: [],
           mustAndSelection: [],
           mustOrCriteria: [],
@@ -162,6 +203,8 @@ export default {
         },
         equitable: {
           name: 'Équitable',
+          disabled: null,
+          optional: null,
           mustAndCriteria: [],
           mustAndSelection: [],
           mustOrCriteria: [],
@@ -171,6 +214,8 @@ export default {
         },
         expertise: {
           name: 'Expertise',
+          disabled: null,
+          optional: null,
           mustAndCriteria: [],
           mustAndSelection: [],
           mustOrCriteria: [],
@@ -180,6 +225,8 @@ export default {
         },
         solidaire: {
           name: 'Solidaire',
+          disabled: null,
+          optional: null,
           mustAndCriteria: [],
           mustAndSelection: [],
           mustOrCriteria: [],
@@ -190,16 +237,28 @@ export default {
       },
     }
   },
+  watch: {
+    stepper() {
+      this.computeValueScore()
+      if (this.stepper === 7) {
+        this.stepperFinished = true
+      }
+    },
+  },
   methods: {
+    ...mapActions('values', ['isDisabledForCategory', 'isOptionalForCategory']),
     changeCategory(categorySlug) {
       // compute criteria
-      Object.keys(this.form).forEach((value) => {
-        this.form[value].mustAndCriteria = this.getMustAndCriteria(value, categorySlug)
-        this.form[value].mustAndSelection = []
-        this.form[value].mustOrCriteria = this.getMustOrCriteria(value, categorySlug)
-        this.form[value].mustOrSelection = []
-        this.form[value].couldCriteria = this.getCouldCriteria(value, categorySlug)
-        this.form[value].couldSelection = []
+      Object.keys(this.form).forEach(async (valueSlug) => {
+        this.form[valueSlug].mustAndCriteria = this.getMustAndCriteria(valueSlug, categorySlug)
+        this.form[valueSlug].mustAndSelection = []
+        this.form[valueSlug].mustOrCriteria = this.getMustOrCriteria(valueSlug, categorySlug)
+        this.form[valueSlug].mustOrSelection = []
+        this.form[valueSlug].couldCriteria = this.getCouldCriteria(valueSlug, categorySlug)
+        this.form[valueSlug].couldSelection = []
+
+        this.form[valueSlug].disabled = await this.isDisabledForCategory({ valueSlug, categorySlug })
+        this.form[valueSlug].optional = await this.isOptionalForCategory({ valueSlug, categorySlug })
       })
     },
     validateValue(valueSlug) {
@@ -211,11 +270,19 @@ export default {
       if (this.form[valueSlug].mustOrCriteria.length && !this.form[valueSlug].mustOrSelection.length) return false
       return true
     },
-    computeValidatedValues() {
+    clearFormValue(valueSlug) {
+      this.form[valueSlug].mustAndSelection = []
+      this.form[valueSlug].mustOrSelection = []
+      this.form[valueSlug].couldSelection = []
+    },
+    computeValueScore() {
       this.validatedValues = []
-      Object.keys(this.form).forEach((value) => {
-        if (this.validateValue(value)) {
-          this.validatedValues.push(this.getValueBySlug(value))
+      this.unvalidatedValues = []
+      Object.keys(this.form).forEach(async (valueSlug) => {
+        if (this.validateValue(valueSlug)) {
+          this.validatedValues.push(this.getValueBySlug(valueSlug))
+        } else if (!(await this.isOptionalForCategory({ valueSlug, categorySlug: this.category }))) {
+          this.unvalidatedValues.push(this.getValueBySlug(valueSlug))
         }
       })
     },
