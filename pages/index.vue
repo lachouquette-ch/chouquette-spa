@@ -147,19 +147,7 @@
     <v-sheet>
       <h2 class="text-center">Nos derniers tops</h2>
       <div class="cq-scroll-x-container px-3">
-        <v-card v-for="post in topPosts" :key="post.id" :to="`/${post.slug}`" nuxt hover flat ripple>
-          <WpMediaNew :media="post.image" size="medium_large" class="rounded-lg" aspect-ratio="1" width="60vw">
-            <v-card-subtitle class="pa-2">
-              <v-chip color="white" small>
-                Top
-                <v-icon right>mdi-trophy-award</v-icon>
-              </v-chip>
-            </v-card-subtitle>
-          </WpMediaNew>
-          <v-card-title class="px-0 py-2">
-            <h4>{{ post.title }}</h4>
-          </v-card-title>
-        </v-card>
+        <PostCard v-for="post in topPosts" :key="post.id" :post="post" vertical></PostCard>
       </div>
       <div class="text-center my-3">
         <v-btn text nuxt to="/tops" class="text-decoration-underline">tous nos tops</v-btn>

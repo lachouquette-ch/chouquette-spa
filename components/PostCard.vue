@@ -17,8 +17,8 @@
       :media="post.image"
       :size="large ? 'medium_large' : 'thumbnail'"
       class="rounded-xl flex-shrink-0 flex-grow-0"
-      :width="large ? 300 : 150"
-      :height="large ? 300 : 150"
+      :width="large ? 300 : 200"
+      :height="large ? 300 : 200"
     >
       <v-card-subtitle v-if="vertical" class="pa-2">
         <v-chip color="white" small>
@@ -56,7 +56,7 @@ export default {
     }),
     componentWidth() {
       if (!this.vertical) return '100%'
-      return this.large ? 300 : 150
+      return this.large ? 300 : 200
     },
   },
 }
