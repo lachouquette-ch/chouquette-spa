@@ -180,7 +180,7 @@
         <v-divider class="my-3"></v-divider>
         <h2 class="mb-3">Articles sur l'adresse</h2>
         <div class="mb-5">
-          <PostCard v-for="post in fiche.postCards" :key="post.id" :post="post" class="mb-3" large></PostCard>
+          <PostCard v-for="post in fiche.postCards" :key="post.id" :post="post" class="mb-3"></PostCard>
         </div>
       </div>
 
@@ -259,10 +259,10 @@
 
 <script>
 import gql from 'graphql-tag'
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 import moment from 'moment'
 import _ from 'lodash'
-import { email, minLength, maxLength, required } from 'vuelidate/lib/validators'
+import {email, maxLength, minLength, required} from 'vuelidate/lib/validators'
 import WpMediaNew from '~/components/WpMediaNew'
 import FichesMap from '~/components/FichesMap'
 import PostCard from '~/components/PostCard'

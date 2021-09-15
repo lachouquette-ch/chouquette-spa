@@ -176,7 +176,7 @@
       <div style="position: relative">
         <div class="text-center">
           <h2>Nos Chouquettisés</h2>
-          <p class="text-h5">tous ont été testé et approuvé selon nos valeurs écoresponsables</p>
+          <p class="text-h5">Tous ont été testé et approuvé selon nos valeurs écoresponsables</p>
         </div>
         <div class="cq-scroll-x-container my-5">
           <FicheCard v-for="fiche in latestChouquettises" :key="fiche.id" :fiche="fiche"></FicheCard>
@@ -197,11 +197,11 @@
 
 <script>
 import gql from 'graphql-tag'
-import { mapState, mapGetters } from 'vuex'
+import {mapGetters, mapState} from 'vuex'
 
-import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
-import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
-import { seo as SeoFragments } from '@/apollo/fragments/seo'
+import {postCard as PostCardFragments} from '@/apollo/fragments/postCard'
+import {fiche as FicheFragments} from '@/apollo/fragments/fiche'
+import {seo as SeoFragments} from '@/apollo/fragments/seo'
 
 import seo from '~/mixins/seo'
 import graphql from '~/mixins/graphql'

@@ -36,10 +36,10 @@
 
       <section v-if="comments" class="comments">
         <v-divider class="my-3"></v-divider>
-        <h2 v-if="comments.length">{{ comments.length }} commentaire(s)</h2>
-        <p v-else>Aucun commentaire pour le moment. Donne-nous ton avis</p>
-        <div v-if="comments">
-          <ol class="comment-list p-0">
+        <h2>{{ comments.length }} commentaire(s)</h2>
+        <p v-if="!comments.length" class="mt-2">Aucun commentaire pour le moment. N'hésite pas à donner ton avis !</p>
+        <div v-else>
+          <ol class="p-0">
             <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
               <PostComment :post="post.id" :comment="comment" :comments="comments" :no-reply="!extendComments" />
             </li>
@@ -47,12 +47,18 @@
           <div class="text-decoration-underline">
             <v-btn v-if="!extendComments" text @click="extendComments = true">Voir tous les commentaires</v-btn>
           </div>
-          <template>
-            <v-btn color="cq-blue" outlined block class="my-3" @click="showReply = !showReply">
-              Un nouveau commentaire ?
-            </v-btn>
-            <PostCommentReply v-if="showReply" :post="post.id" />
-          </template>
+        </div>
+        <div>
+          <v-btn outlined block class="my-3" @click="showReply = !showReply"> Un nouveau commentaire ? </v-btn>
+          <PostCommentReply v-if="showReply" :post="post.id" />
+        </div>
+      </section>
+
+      <section v-if="similarPosts">
+        <v-divider class="my-3"></v-divider>
+        <h2>Articles similaires</h2>
+        <div class="cq-scroll-x-container mt-3">
+          <PostCard v-for="post in similarPosts" :key="post.id" :post="post" class="flex-shrink-0" vertical></PostCard>
         </div>
       </section>
     </v-card-text>
@@ -73,9 +79,11 @@ import WpMediaNew from '~/components/WpMediaNew'
 import FicheCard from '~/components/FicheCard'
 import PostComment from '~/components/PostComment'
 import PostCommentReply from '~/components/PostCommentReply'
+import PostCard from '~/components/PostCard'
 
 export default {
   components: {
+    PostCard,
     FicheCard,
     WpMediaNew,
     PostComment,
