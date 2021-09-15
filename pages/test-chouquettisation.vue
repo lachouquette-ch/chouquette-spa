@@ -84,7 +84,9 @@
               </v-card-text>
               <v-card-actions class="flex-wrap">
                 <v-btn color="primary" class="mt-2" @click="stepper = index + 3">Voir la suite</v-btn>
-                <v-btn color="secondary" class="mt-2" @click="stepper = 7">Vers le résultats</v-btn>
+                <v-btn v-if="stepperFinished" color="secondary" class="mt-2" @click="stepper = 7">
+                  Vers le résultats
+                </v-btn>
                 <v-btn v-if="!form[value].disabled" text class="mt-2" @click="clearFormValue(value)">Supprimer</v-btn>
               </v-card-actions>
             </v-card>
