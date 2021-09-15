@@ -8,7 +8,7 @@
         </v-chip>
       </WpMediaNew>
       <v-card-title class="mt-2 px-0 pt-0 flex-nowrap align-baseline">
-        <h1 class="text-h1 text-break">{{ fiche.title }}</h1>
+        <h1 class="text-h1">{{ fiche.title }}</h1>
         <v-spacer></v-spacer>
         <div class="d-flex">
           <v-btn fab icon small><v-icon color="#4267b2">mdi-facebook</v-icon></v-btn>

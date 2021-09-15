@@ -11,7 +11,7 @@
           <v-container>
             <v-row>
               <v-col>
-                <h1 class="text-h1 white--text font-weight-bold text-break">
+                <h1 class="text-h1 white--text font-weight-bold">
                   les meilleures adresses locales et éco-responsables
                 </h1>
               </v-col>
@@ -81,7 +81,7 @@
               </WpMediaNew>
               <v-card-text>
                 <v-card-title class="pa-0">
-                  <h3 class="text-h3 text-break">{{ highlightedPost.title }}</h3>
+                  <h3 class="text-h3">{{ highlightedPost.title }}</h3>
                 </v-card-title>
               </v-card-text>
             </v-card>
@@ -159,7 +159,7 @@
             </v-card-subtitle>
           </WpMediaNew>
           <v-card-title class="px-0 py-2">
-            <h4 class="text-h4 text-break">{{ post.title }}</h4>
+            <h4 class="text-h4">{{ post.title }}</h4>
           </v-card-title>
         </v-card>
       </div>

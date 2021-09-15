@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-card flat>
-      <v-card-title class="text-break">
+      <v-card-title>
         <h1 class="text-h1">Es-tu apte à la Chouquettisation ?</h1>
       </v-card-title>
       <v-card-subtitle>
