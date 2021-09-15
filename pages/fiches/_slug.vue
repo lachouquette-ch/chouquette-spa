@@ -496,7 +496,8 @@ export default {
     },
     clearCriteria() {
       this.chouquettiseOnly = false
-      this.$refs.categoryFilter.forEach((f) => f.clear())
+      if (this.$refs.categoryFilter) this.$refs.categoryFilter.forEach((f) => f.clear())
+      this.updateFilterCounter()
     },
     sampleCriteriaValues(fiche) {
       return fiche.categoryFilters.flatMap(({ values }) => values).slice(0, 3)
