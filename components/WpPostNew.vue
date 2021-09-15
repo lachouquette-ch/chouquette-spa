@@ -1,23 +1,39 @@
 <template>
-  <v-card>
-    <WpMediaNew :media="post.image" />
-    <v-card-title>{{ post.title }}</v-card-title>
-    <v-card-text v-html="post.content"></v-card-text>
+  <v-card flat tile>
+    <div style="position: relative; margin-bottom: 35px">
+      <WpMediaNew :media="post.image" gradient="180deg, transparent 70%, black" />
+      <v-img
+        :src="mainAuthor.avatar"
+        :alt="mainAuthor.name"
+        height="75"
+        width="75"
+        class="rounded-circle header-author"
+      ></v-img>
+      <div class="header-meta">par {{ mainAuthor.name }} le {{ postDate | fromISO }}</div>
+    </div>
+    <v-card-title>
+      <h1>{{ post.title }}</h1>
+    </v-card-title>
+    <v-card-text
+      class="gutenberg-content"
+      :class="{ 'post-folded': !extendPostContent }"
+      v-html="post.content"
+    ></v-card-text>
+    <div v-if="!extendPostContent" class="text-center">
+      <v-btn color="primary" class="mb-5 text-center" @click="extendPostContent = true">Lire la suite</v-btn>
+    </div>
   </v-card>
 </template>
 
 <script>
-import moment from 'moment'
-
 import gql from 'graphql-tag'
 import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
 import { comment as CommentFragments } from '@/apollo/fragments/comment'
 import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
-import { mapState } from 'vuex'
+import isbot from 'isbot'
 import seo from '~/mixins/seo'
 import gutenberg from '~/mixins/gutenberg'
 
-import { DEFAULT, RESPONSIVE, HASH } from '~/constants/swiper'
 import graphql from '~/mixins/graphql'
 import WpMediaNew from '~/components/WpMediaNew'
 
@@ -35,6 +51,7 @@ export default {
   },
   data() {
     return {
+      extendPostContent: false,
       fiches: [],
 
       comments: null,
@@ -81,25 +98,6 @@ export default {
     }
   },
   fetchOnServer: false,
-  computed: {
-    postCreatedDate() {
-      return moment(this.post.date).format('DD/MM/YY')
-    },
-    postModifiedDate() {
-      return moment(this.post.modified).format('DD/MM/YY')
-    },
-    hasSingleFiche() {
-      return this.fiches && this.fiches.length === 1
-    },
-    rootLevelComments() {
-      return this.comments.filter(({ parentId }) => parentId === 0)
-    },
-    isTops() {
-      return !!this.post.tags.find(({ slug }) => {
-        return slug === 'tops'
-      })
-    },
-  },
   head() {
     if (this.preview) return { meta: [{ name: 'robots', content: 'none' }] }
 
@@ -121,7 +119,7 @@ export default {
           headline: this.post.title,
           image: this.post.image,
           description: this.seoGetDescription(JSON.parse(this.post.seo.metadata)),
-          author: this.post.author.name,
+          author: this.mainAuthor.name,
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
@@ -134,7 +132,58 @@ export default {
       ],
     }
   },
+  computed: {
+    mainAuthor() {
+      return this.post.authors[0]
+    },
+    postDate() {
+      return this.post.modified ? this.post.modified : this.post.date
+    },
+    hasSingleFiche() {
+      return this.fiches && this.fiches.length === 1
+    },
+    rootLevelComments() {
+      return this.comments.filter(({ parentId }) => parentId === 0)
+    },
+  },
+  mounted() {
+    this.extendPostContent = isbot(navigator.userAgent)
+  },
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.header-author {
+  position: absolute;
+  bottom: 0;
+  left: 15px;
+  transform: translateY(50%);
+  z-index: 1;
+  border: 5px solid $white;
+}
+
+.header-meta {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding-left: 15px + 75px + 15px;
+  color: white;
+}
+
+.post-folded {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+
+  &:after {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    content: '';
+    background: linear-gradient(180deg, transparent 60%, white);
+    pointer-events: none;
+  }
+}
+</style>

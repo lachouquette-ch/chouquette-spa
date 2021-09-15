@@ -97,6 +97,6 @@ export default {
 }
 
 .card-title {
-  font-family: $font-family-heading;
+  font-family: $heading-font-family;
 }
 </style>

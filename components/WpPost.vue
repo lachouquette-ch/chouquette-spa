@@ -527,7 +527,7 @@ export default {
   }
 
   h5 {
-    font-family: $font-family-heading;
+    //font-family: $font-family-heading;
     //font-size: $h3-font-size;
   }
 
@@ -548,14 +548,14 @@ export default {
 
 .post-similar {
   h3 {
-    font-family: $font-family-heading;
+    //font-family: $font-family-heading;
     //font-size: $h1-font-size;
   }
 }
 
 .post-comments {
   h3 {
-    font-family: $font-family-heading;
+    //font-family: $font-family-heading;
     //font-size: $h1-font-size;
   }
 

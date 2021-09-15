@@ -2,7 +2,7 @@
   <v-container>
     <v-card flat>
       <v-card-title>
-        <h1 class="text-h1">Es-tu apte à la Chouquettisation ?</h1>
+        <h1>Es-tu apte à la Chouquettisation ?</h1>
       </v-card-title>
       <v-card-subtitle>
         Evalue ton entreprise/concept afin de savoir s'il matche aux valeurs de la Chouquette
@@ -316,6 +316,6 @@ export default {
 
 <style lang="scss" scoped>
 h1 {
-  font-family: $font-family-heading;
+  font-family: $heading-font-family;
 }
 </style>

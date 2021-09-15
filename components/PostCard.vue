@@ -12,7 +12,7 @@
 
     <v-card-text class="pa-0 px-2 flex-grow-1 overflow-hidden">
       <p class="secondary--text text-lowercase mb-1">{{ getCategoryById(post.categoryId).name }}</p>
-      <h3 class="text-h3">{{ post.title }}</h3>
+      <h3>{{ post.title }}</h3>
       <p v-if="large" class="ma-0">Le {{ post.date | fromISO }} par {{ post.authorName }}</p>
     </v-card-text>
   </v-card>

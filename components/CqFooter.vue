@@ -3,21 +3,21 @@
     <!-- Stack the columns on mobile by making one full-width and the other half-width -->
     <v-row class="text-center">
       <v-col cols="6" md="4">
-        <h5 class="text-h5 cq-yellow--text mb-3">A propos de nous</h5>
+        <h5 class="cq-yellow--text mb-3">A propos de nous</h5>
         <ul>
           <li>Qui sommes-nous ?</li>
           <li>Nos valeurs</li>
         </ul>
       </v-col>
       <v-col cols="6" md="4">
-        <h5 class="text-h5 cq-yellow--text mb-3">Aides</h5>
+        <h5 class="cq-yellow--text mb-3">Aides</h5>
         <ul>
           <li>Foire aux questions</li>
           <li>Contact</li>
         </ul>
       </v-col>
       <v-col cols="6" md="4">
-        <h5 class="text-h5 cq-yellow--text mb-3">Nous contacter</h5>
+        <h5 class="cq-yellow--text mb-3">Nous contacter</h5>
         <ul>
           <li>Recrutement</li>
           <li>Contact</li>

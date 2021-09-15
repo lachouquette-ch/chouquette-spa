@@ -52,7 +52,7 @@ export default {
   max-width: 100%;
 
   h2 {
-    font-family: $font-family-heading;
+    font-family: $heading-font-family;
   }
 }
 

@@ -86,7 +86,7 @@ export default {
   }
 
   h3 {
-    font-family: $font-family-heading;
+    font-family: $heading-font-family;
     line-height: 2.5rem;
   }
 }

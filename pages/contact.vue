@@ -240,7 +240,7 @@ export default {
 <style lang="scss" scoped>
 .contact-page {
   h1 {
-    font-family: $font-family-heading;
+    font-family: $heading-font-family;
   }
 }
 </style>

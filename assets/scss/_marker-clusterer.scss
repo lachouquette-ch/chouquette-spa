@@ -6,8 +6,8 @@
   align-items: center;
 
   border-radius: 100%;
-  border: 1px solid map-get($chouquette-colors, "grey");
-  box-shadow: $shadow-key-umbra-opacity;
+  border: 1px solid var(--v-cq-grey-base);
+  // FIXME box-shadow: $shadow-key-umbra-opacity;
 }
 
 .clustericon {
@@ -21,7 +21,7 @@
 
 .clustericon-chouquettise {
   @include clustericon;
-  background-color: #ffe800;
+  background-color: var(--v-cq-yellow-base);
 
   // enforce size due to border size
   width: 42px !important;

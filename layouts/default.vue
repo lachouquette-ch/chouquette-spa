@@ -203,9 +203,7 @@ svg {
 }
 
 svg {
-  &:hover,
-  &:focus,
-  &:active {
+  @include hover-focus-active {
     fill: var(--v-cq-yellow-base);
   }
 }

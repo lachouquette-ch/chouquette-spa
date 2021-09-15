@@ -2,7 +2,7 @@
   <v-list>
     <v-list-item>
       <v-list-item-content>
-        <v-list-item-title class="text-h3">{{ title }}</v-list-item-title>
+        <v-list-item-title><h3>{{ title }}</h3></v-list-item-title>
         <v-list-item-subtitle v-if="selectedIndexes.length" class="mt-1"
           >{{ selectedIndexes.length }} sélectionné(s) -
           <a href="" @click.prevent="clear">Effacer</a></v-list-item-subtitle

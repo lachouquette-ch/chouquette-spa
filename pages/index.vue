@@ -11,9 +11,7 @@
           <v-container>
             <v-row>
               <v-col>
-                <h1 class="text-h1 white--text font-weight-bold">
-                  les meilleures adresses locales et éco-responsables
-                </h1>
+                <h1 class="white--text font-weight-bold">les meilleures adresses locales et éco-responsables</h1>
               </v-col>
             </v-row>
             <v-row>
@@ -81,7 +79,7 @@
               </WpMediaNew>
               <v-card-text>
                 <v-card-title class="pa-0">
-                  <h3 class="text-h3">{{ highlightedPost.title }}</h3>
+                  <h3>{{ highlightedPost.title }}</h3>
                 </v-card-title>
               </v-card-text>
             </v-card>
@@ -114,7 +112,7 @@
 
     <v-sheet class="cq-yellow">
       <v-container>
-        <h2 class="text-h1 text-center font-weight-bold text-lowercase my-5">les 5 valeurs de La Chouquette</h2>
+        <h2 class="text-center font-weight-bold text-lowercase my-5">les 5 valeurs de La Chouquette</h2>
         <v-carousel
           class="valeurs-carousel"
           height="400"
@@ -159,7 +157,7 @@
             </v-card-subtitle>
           </WpMediaNew>
           <v-card-title class="px-0 py-2">
-            <h4 class="text-h4">{{ post.title }}</h4>
+            <h4>{{ post.title }}</h4>
           </v-card-title>
         </v-card>
       </div>
@@ -329,9 +327,7 @@ export default {
 
 <style lang="scss" scoped>
 button.v-btn.cq-yellow {
-  &:hover,
-  &:focus,
-  &:active {
+  @include hover-focus-active {
     background-color: var(--v-cq-red-base) !important;
     color: white !important;
   }
@@ -339,7 +335,7 @@ button.v-btn.cq-yellow {
 
 .valeur-title {
   display: inline-block;
-  font-family: $font-family-heading;
+  font-family: $heading-font-family;
   font-weight: normal;
   border: 2px solid var(--v-primary-base);
   padding: 5px 12px;
@@ -348,7 +344,7 @@ button.v-btn.cq-yellow {
 }
 
 h2 {
-  font-family: $font-family-heading;
+  font-family: $heading-font-family;
   letter-spacing: 1.5px !important;
   font-weight: 200 !important;
   text-transform: uppercase;

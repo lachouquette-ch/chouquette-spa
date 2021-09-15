@@ -49,7 +49,7 @@ export default {
 <style lang="scss" scoped>
 .error {
   h1 {
-    font-family: $font-family-heading;
+    font-family: $heading-font-family;
   }
 }
 </style>

@@ -8,7 +8,7 @@
         </v-chip>
       </WpMediaNew>
       <v-card-title class="mt-2 px-0 pt-0 flex-nowrap align-baseline">
-        <h1 class="text-h1">{{ fiche.title }}</h1>
+        <h1>{{ fiche.title }}</h1>
         <v-spacer></v-spacer>
         <div class="d-flex">
           <v-btn fab icon small><v-icon color="#4267b2">mdi-facebook</v-icon></v-btn>
@@ -23,7 +23,7 @@
       <v-divider class="my-3"></v-divider>
 
       <div v-if="values.length" class="mt-2">
-        <h2 class="text-h2 mb-2">Valeurs</h2>
+        <h2 class="mb-2">Valeurs</h2>
         <v-chip-group>
           <v-tooltip v-for="value in values" :key="value.id" max-width="90vw" top>
             <template #activator="{ on, attrs }">
@@ -36,7 +36,7 @@
         </v-chip-group>
       </div>
 
-      <h2 class="text-h2 mt-2">Informations</h2>
+      <h2 class="mt-2">Informations</h2>
       <v-tabs v-model="tab" class="mt-3" color="primary" background-color="white" grow>
         <v-tab key="contact">Contact</v-tab>
         <v-tab key="infos">Plus d'infos</v-tab>
@@ -178,7 +178,7 @@
 
       <div v-if="fiche.postCards">
         <v-divider class="my-3"></v-divider>
-        <h2 class="text-h2 mb-3">Articles sur l'adresse</h2>
+        <h2 class="mb-3">Articles sur l'adresse</h2>
         <div class="mb-5">
           <PostCard v-for="post in fiche.postCards" :key="post.id" :post="post" class="mb-3" large></PostCard>
         </div>
@@ -186,7 +186,7 @@
 
       <div v-if="fiche.similarFiches">
         <v-divider class="my-3"></v-divider>
-        <h2 class="text-h2">Adresses similaires</h2>
+        <h2>Adresses similaires</h2>
         <div class="cq-scroll-x-container mt-3">
           <FicheCard v-for="fiche in fiche.similarFiches" :key="fiche.id" class="mb-3" :fiche="fiche"></FicheCard>
         </div>

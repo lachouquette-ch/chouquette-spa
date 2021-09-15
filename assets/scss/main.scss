@@ -2,12 +2,14 @@
 @import '../css/wordpress';
 
 // Imports
+
+@import "overall";
 @import "helper";
 @import "transitions";
 @import "marker-clusterer";
 @import "google-map";
 
 // CookieConsent
-$cookieconstent-background: map-get($chouquette-colors, "grey");
+$cookieconstent-background: '#3D3B3C';
 @import "~vue-cookieconsent-component/src/scss/cookie-consent";
 @import "~vue-cookieconsent-component/src/scss/cookie-consent-bottom";

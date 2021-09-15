@@ -48,7 +48,7 @@
     <v-dialog v-model="filtersDialog" fullscreen scrollable transition="dialog-bottom-transition">
       <v-card tile>
         <v-card-title>
-          <span class="text-h3">Filtrer</span>
+          <span><h3>Filtrer</h3></span>
           <v-spacer></v-spacer>
           <v-btn icon @click="filtersDialog = false">
             <v-icon>mdi-close</v-icon>
@@ -57,7 +57,7 @@
         <v-divider></v-divider>
         <v-card-text class="pa-2 pb-0">
           <v-list>
-            <v-subheader class="text-h3">Adresse Chouquettisée</v-subheader>
+            <v-subheader><h3>Adresse Chouquettisée</h3></v-subheader>
             <v-list-item three-line>
               <v-list-item-content class="pt-0">
                 <div class="d-inline-flex align-center">
@@ -130,7 +130,7 @@
     </v-dialog>
 
     <v-container>
-      <h1 class="text-h1 text-center mt-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
+      <h1 class="text-center mt-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
       <div id="categoryContainer" class="cq-scroll-x-container mt-4 justify-start">
         <CategoryButton
           v-for="topCategory in topCategories"
@@ -198,7 +198,7 @@
             </v-card-subtitle>
           </WpMediaNew>
           <v-card-title class="d-block">
-            <h3 class="text-h3">{{ fiche.title }}</h3>
+            <h3>{{ fiche.title }}</h3>
             <v-card-subtitle class="pa-0 mt-1 secondary--text">{{
               getCategoryById(fiche.principalCategoryId).name
             }}</v-card-subtitle>
