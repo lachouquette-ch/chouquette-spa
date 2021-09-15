@@ -15,7 +15,7 @@
     <WpMediaNew
       v-if="post.image"
       :media="post.image"
-      :size="large ? 'medium_large' : 'thumbnail'"
+      :size="large ? 'medium_large' : 'medium'"
       class="rounded-xl flex-shrink-0 flex-grow-0"
       :width="large ? 300 : 200"
       :height="large ? 300 : 200"

@@ -80,7 +80,6 @@
           :loading="selectedPostCard === post"
           :post="post"
           class="mb-3"
-          large
           @click="selectPost(post)"
         ></PostCard>
         <v-btn
@@ -123,15 +122,15 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import {mapGetters, mapState} from 'vuex'
 import gql from 'graphql-tag'
 import seo from '~/mixins/seo'
-import { PER_PAGE_NUMBER } from '~/constants/default'
+import {PER_PAGE_NUMBER} from '~/constants/default'
 import PostCard from '~/components/PostCard'
 import graphql from '~/mixins/graphql'
 import CategoryButton from '~/components/CategoryButton'
 import ScrollTop from '~/components/ScrollTop'
-import { postCard as PostCardFragments } from '~/apollo/fragments/postCard'
+import {postCard as PostCardFragments} from '~/apollo/fragments/postCard'
 
 export default {
   components: { CategoryButton, PostCard, ScrollTop },
