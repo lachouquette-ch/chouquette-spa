@@ -14,32 +14,72 @@
     <v-card-title>
       <h1>{{ post.title }}</h1>
     </v-card-title>
-    <v-card-text
-      class="gutenberg-content"
-      :class="{ 'post-folded': !extendPostContent }"
-      v-html="post.content"
-    ></v-card-text>
-    <div v-if="!extendPostContent" class="text-center">
-      <v-btn color="primary" class="mb-5 text-center" @click="extendPostContent = true">Lire la suite</v-btn>
-    </div>
+    <v-card-text>
+      <section class="gutenberg-content" :class="{ 'post-folded': !extendPostContent }" v-html="post.content"></section>
+      <div v-if="!extendPostContent" class="text-center">
+        <v-btn color="primary" class="text-center" @click="extendPostContent = true">Lire la suite</v-btn>
+      </div>
+
+      <section v-if="ficheCards">
+        <v-divider class="my-3"></v-divider>
+        <h2>Adresses associées</h2>
+        <div class="cq-scroll-x-container mt-3">
+          <FicheCard
+            v-for="ficheCard in ficheCards"
+            :key="ficheCard.id"
+            :fiche="ficheCard"
+            width="250"
+            max-width="60vw"
+          ></FicheCard>
+        </div>
+      </section>
+
+      <section v-if="comments" class="comments">
+        <v-divider class="my-3"></v-divider>
+        <h2 v-if="comments.length">{{ comments.length }} commentaire(s)</h2>
+        <p v-else>Aucun commentaire pour le moment. Donne-nous ton avis</p>
+        <div v-if="comments">
+          <ol class="comment-list p-0">
+            <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
+              <PostComment :post="post.id" :comment="comment" :comments="comments" :no-reply="!extendComments" />
+            </li>
+          </ol>
+          <div class="text-decoration-underline">
+            <v-btn v-if="!extendComments" text @click="extendComments = true">Voir tous les commentaires</v-btn>
+          </div>
+          <template>
+            <v-btn color="cq-blue" outlined block class="my-3" @click="showReply = !showReply">
+              Un nouveau commentaire ?
+            </v-btn>
+            <PostCommentReply v-if="showReply" :post="post.id" />
+          </template>
+        </div>
+      </section>
+    </v-card-text>
   </v-card>
 </template>
 
 <script>
 import gql from 'graphql-tag'
-import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
-import { comment as CommentFragments } from '@/apollo/fragments/comment'
-import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
+import {ficheCard as FicheCardFragments} from '@/apollo/fragments/ficheCard'
+import {comment as CommentFragments} from '@/apollo/fragments/comment'
+import {postCard as PostCardFragments} from '@/apollo/fragments/postCard'
 import isbot from 'isbot'
 import seo from '~/mixins/seo'
 import gutenberg from '~/mixins/gutenberg'
 
 import graphql from '~/mixins/graphql'
 import WpMediaNew from '~/components/WpMediaNew'
+import FicheCard from '~/components/FicheCard'
+import PostComment from '~/components/PostComment'
+import PostCommentReply from '~/components/PostCommentReply'
 
 export default {
   components: {
+    FicheCard,
     WpMediaNew,
+    PostComment,
+    PostCommentReply,
   },
   mixins: [gutenberg, seo, graphql],
   props: {
@@ -52,8 +92,10 @@ export default {
   data() {
     return {
       extendPostContent: false,
-      fiches: [],
+      ficheCards: [],
 
+      extendComments: false,
+      showReply: false,
       comments: null,
       similarPosts: null,
     }
@@ -65,8 +107,8 @@ export default {
           query ($slug: String!) {
             postBySlug(slug: $slug) {
               id
-              fiches {
-                ...FicheFragments
+              ficheCards {
+                ...FicheCardFragments
               }
               comments {
                 ...CommentFragments
@@ -76,7 +118,7 @@ export default {
               }
             }
           }
-          ${FicheFragments}
+          ${FicheCardFragments}
           ${CommentFragments}
           ${PostCardFragments}
         `,
@@ -84,11 +126,9 @@ export default {
       })
 
       const { postBySlug } = data
-      this.fiches = postBySlug.fiches || []
+      this.ficheCards = postBySlug.ficheCards || []
       this.comments = postBySlug.comments
       this.similarPosts = postBySlug.similarPosts
-
-      this.initModal()
     } catch (e) {
       this.$sentry.captureException(e)
       this.$store.dispatch('alerts/addAction', {
@@ -140,14 +180,16 @@ export default {
       return this.post.modified ? this.post.modified : this.post.date
     },
     hasSingleFiche() {
-      return this.fiches && this.fiches.length === 1
+      return this.ficheCards && this.ficheCards.length === 1
     },
     rootLevelComments() {
-      return this.comments.filter(({ parentId }) => parentId === 0)
+      const rootComments = this.comments.filter(({ parentId }) => parentId === 0)
+      return this.extendComments ? rootComments : rootComments.slice(0, 1)
     },
   },
   mounted() {
     this.extendPostContent = isbot(navigator.userAgent)
+    this.extendComments = isbot(navigator.userAgent)
   },
 }
 </script>
@@ -184,6 +226,18 @@ export default {
     content: '';
     background: linear-gradient(180deg, transparent 60%, white);
     pointer-events: none;
+  }
+}
+
+.comments {
+  ol {
+    padding-left: 0;
+  }
+
+  // no list bullets
+  ol,
+  ul {
+    list-style-type: none;
   }
 }
 </style>

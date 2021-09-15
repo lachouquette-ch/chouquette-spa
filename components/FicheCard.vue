@@ -1,6 +1,6 @@
 <template>
-  <v-card hover ripple :to="`/fiche/${fiche.slug}`" nuxt>
-    <WpMediaNew :media="fiche.image" size="medium_large" aspect-ratio="1" width="60vw">
+  <v-card hover ripple :to="`/fiche/${fiche.slug}`" nuxt width="200" max-width="60vw" v-bind="{ ...$props, ...$attrs }">
+    <WpMediaNew :media="fiche.image" size="medium_large" height="150">
       <v-card-subtitle v-if="fiche.isChouquettise" class="pa-2">
         <v-chip color="cq-yellow" text-color="black" small>
           Testé et Chouquettisé
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import {mapGetters} from 'vuex'
 import WpMediaNew from '~/components/WpMediaNew'
 
 export default {

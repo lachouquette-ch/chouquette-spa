@@ -3,13 +3,14 @@
     <header>
       <div>
         <img
+          v-if="comment.authorAvatar"
           :alt="comment.authorName"
           :src="comment.authorAvatar"
           class="rounded-circle"
           height="32"
           width="32"
         />
-        <b class="ml-2">{{ comment.authorName }}</b> <span class="says">dit&nbsp;:</span>
+        <b class="mx-2">{{ comment.authorName }}</b> <span class="says">dit&nbsp;:</span>
       </div>
       <div class="comment-metadata">
         <time :datetime="comment.date">Le {{ commentDate }}</time>
@@ -17,8 +18,8 @@
     </header>
     <!-- eslint-disable-next-line vue/no-v-html -->
     <section class="comment-content" v-html="comment.content" />
-    <section>
-      <a href="" class="text-chouquette-grey" @click.prevent="toggleReplyToComment">{{ replyLinkText }}</a>
+    <section v-if="!noReply">
+      <v-btn text class="text-decoration-underline" @click.prevent="toggleReplyToComment">{{ replyLinkText }}</v-btn>
       <PostCommentReply
         v-show="replyToComment"
         :post="post"
@@ -55,6 +56,7 @@ export default {
       type: Array,
       required: true,
     },
+    noReply: Boolean,
   },
   data() {
     return {
@@ -82,12 +84,16 @@ export default {
 
 <style lang="scss" scoped>
 .comment-metadata {
-  color: $chouquette-grey;
+  color: var(--v-cq-grey-base);
   font-style: italic;
 }
 
 .comment-children {
-  border-left: 2px solid $chouquette-darker-grey;
+  border-left: 2px solid var(--v-cq-grey-light-base);
+}
+
+ul {
+  padding-left: 10px;
 }
 
 ::v-deep .comment-content {
