@@ -106,6 +106,7 @@
                 text-color="cq-secondary"
                 label
                 small
+                class="mr-2"
               >
                 {{ value.name }}
               </v-chip>
@@ -124,6 +125,7 @@
                 text-color="cq-secondary"
                 label
                 small
+                class="mr-2"
               >
                 {{ value.name }}
               </v-chip>
@@ -137,6 +139,7 @@
                 text-color="cq-primary"
                 label
                 small
+                class="mr-2"
               >
                 {{ value.name }}
               </v-chip>
