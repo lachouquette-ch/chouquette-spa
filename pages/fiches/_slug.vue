@@ -156,7 +156,7 @@
           >
         </div>
       </div>
-      <div class="mt-1 d-inline-flex align-stretch">
+      <div class="mt-1 d-flex align-stretch">
         <v-text-field
           v-model="search"
           outlined
@@ -321,6 +321,7 @@ export default {
       selectedFicheCard: null,
       selectedFiche: null,
       ficheDialog: false,
+      previousURL: null,
 
       subCategories: [],
 
@@ -564,6 +565,7 @@ export default {
         })
 
         this.selectedFiche = data.ficheBySlug
+        this.previousURL = location.href
         history.replaceState(null, null, `/fiche/${ficheCard.slug}`)
         this.ficheDialog = true
       } catch (e) {
@@ -573,7 +575,7 @@ export default {
     },
     clearFicheSelection() {
       this.selectedFicheCard = null
-      history.replaceState(null, null, this.currentURL)
+      history.replaceState(null, null, this.previousURL)
       this.ficheDialog = false
     },
     updateFilterCounter() {
