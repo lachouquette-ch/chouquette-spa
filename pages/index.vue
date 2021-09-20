@@ -100,6 +100,8 @@
                 :key="post.id"
                 :post="post"
                 :class="{ 'mb-4': i < otherPosts.length - 1 }"
+                large
+                hide-meta
               ></PostCard>
             </template>
           </v-col>
@@ -147,7 +149,7 @@
     <v-sheet>
       <h2 class="text-center">Nos derniers tops</h2>
       <div class="cq-scroll-x-container px-3">
-        <PostCard v-for="post in topPosts" :key="post.id" :post="post" vertical></PostCard>
+        <PostCard v-for="post in topPosts" :key="post.id" :post="post" vertical large hide-meta></PostCard>
       </div>
       <div class="text-center my-3">
         <v-btn text nuxt to="/tops" class="text-decoration-underline">tous nos tops</v-btn>
