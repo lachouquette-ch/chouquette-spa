@@ -23,7 +23,31 @@
         <v-divider class="my-3"></v-divider>
         <h2>Adresses associées</h2>
         <div class="mt-3">
-          <FicheCard v-for="ficheCard in ficheCards" :key="ficheCard.id" :fiche="ficheCard"></FicheCard>
+          <v-list>
+            <CqContentFolding btn-content="Toutes les adresses">
+              <v-list-item v-for="fiche in ficheCards" :key="fiche.id" two-line>
+                <v-list-item-avatar size="60" horizontal>
+                  <WpMediaNew :media="fiche.image" size="thumbnail"></WpMediaNew>
+                </v-list-item-avatar>
+
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ fiche.title }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle v-if="fiche.isChouquettise" class="my-1">
+                    <v-chip color="cq-yellow" text-color="primary" x-small outlined>
+                      Testé et Chouquettisé
+                      <v-icon color="cq-yellow" right>mdi-check</v-icon>
+                    </v-chip></v-list-item-subtitle
+                  >
+                  <v-list-item-subtitle
+                    ><span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} / </span>
+                    {{ getCategoryById(fiche.principalCategoryId).name }}</v-list-item-subtitle
+                  >
+                </v-list-item-content>
+              </v-list-item>
+            </CqContentFolding>
+          </v-list>
         </div>
       </section>
 
@@ -64,6 +88,7 @@ import {ficheCard as FicheCardFragments} from '@/apollo/fragments/ficheCard'
 import {comment as CommentFragments} from '@/apollo/fragments/comment'
 import {postCard as PostCardFragments} from '@/apollo/fragments/postCard'
 import isbot from 'isbot'
+import {mapGetters} from 'vuex'
 import seo from '~/mixins/seo'
 import gutenberg from '~/mixins/gutenberg'
 
@@ -188,6 +213,12 @@ export default {
       const rootComments = this.comments.filter(({ parentId }) => parentId === 0)
       return this.extendComments ? rootComments : rootComments.slice(0, 1)
     },
+    ...mapGetters('categories', {
+      getCategoryById: 'getById',
+    }),
+    ...mapGetters('locations', {
+      getLocationById: 'getById',
+    }),
   },
   mounted() {
     this.extendPostContent = isbot(navigator.userAgent)
