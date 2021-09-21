@@ -106,28 +106,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog
-      ref="ficheDialog"
-      v-model="ficheDialog"
-      color="white"
-      fullscreen
-      scrollable
-      transition="slide-x-reverse-transition"
-    >
-      <v-card tile>
-        <v-card-title>
-          <FicheShare v-if="selectedFiche" :fiche="selectedFiche" small color="primary">Partager</FicheShare>
-          <v-spacer></v-spacer>
-          <v-btn icon @click="clearFicheSelection">
-            <v-icon>mdi-arrow-right</v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-divider></v-divider>
-        <v-card-text class="pa-2 pb-0">
-          <Fiche :fiche="selectedFiche"></Fiche>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+    <FicheDialog v-model="ficheDialog" :fiche="selectedFiche" @close="clearFicheSelection"></FicheDialog>
 
     <v-container>
       <h1 class="text-center mt-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
@@ -291,6 +270,7 @@ import {postCard as PostCardFragments} from '~/apollo/fragments/postCard'
 import {ficheCard as FicheCardFragments} from '~/apollo/fragments/ficheCard'
 import FicheShare from '~/components/FicheShare'
 import CategoryButton from '~/components/CategoryButton'
+import FicheDialog from '~/components/FicheDialog'
 
 const MapStates = Object.freeze({
   HIDDEN: Symbol('hidden'),
@@ -299,7 +279,7 @@ const MapStates = Object.freeze({
 })
 
 export default {
-  components: { CategoryButton, FicheShare, Fiche, FilterExpansion, WpMediaNew, ScrollTop, FichesMap },
+  components: { FicheDialog, CategoryButton, FicheShare, Fiche, FilterExpansion, WpMediaNew, ScrollTop, FichesMap },
   mixins: [seo, graphql],
   asyncData({ store, params, query }) {
     const location = params.slug ? store.getters['locations/getBySlug'](params.slug) : null
