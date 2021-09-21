@@ -15,22 +15,15 @@
       <h1>{{ post.title }}</h1>
     </v-card-title>
     <v-card-text>
-      <section class="gutenberg-content" :class="{ 'post-folded': !extendPostContent }" v-html="post.content"></section>
-      <div v-if="!extendPostContent" class="text-center">
-        <v-btn color="primary" class="text-center" @click="extendPostContent = true">Lire la suite</v-btn>
-      </div>
+      <CqContentFolding>
+        <section class="gutenberg-content" v-html="post.content"></section>
+      </CqContentFolding>
 
       <section v-if="ficheCards">
         <v-divider class="my-3"></v-divider>
         <h2>Adresses associées</h2>
-        <div class="cq-scroll-x-container mt-3">
-          <FicheCard
-            v-for="ficheCard in ficheCards"
-            :key="ficheCard.id"
-            :fiche="ficheCard"
-            width="250"
-            max-width="60vw"
-          ></FicheCard>
+        <div class="mt-3">
+          <FicheCard v-for="ficheCard in ficheCards" :key="ficheCard.id" :fiche="ficheCard"></FicheCard>
         </div>
       </section>
 
@@ -80,9 +73,11 @@ import FicheCard from '~/components/FicheCard'
 import PostComment from '~/components/PostComment'
 import PostCommentReply from '~/components/PostCommentReply'
 import PostCard from '~/components/PostCard'
+import CqContentFolding from '~/components/CqContentFolding'
 
 export default {
   components: {
+    CqContentFolding,
     PostCard,
     FicheCard,
     WpMediaNew,
@@ -99,7 +94,6 @@ export default {
   },
   data() {
     return {
-      extendPostContent: false,
       ficheCards: [],
 
       extendComments: false,
@@ -219,22 +213,6 @@ export default {
   left: 0;
   padding-left: 15px + 75px + 15px;
   color: white;
-}
-
-.post-folded {
-  position: relative;
-  height: 300px;
-  overflow: hidden;
-
-  &:after {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    width: 100%;
-    content: '';
-    background: linear-gradient(180deg, transparent 60%, white);
-    pointer-events: none;
-  }
 }
 
 .comments {
