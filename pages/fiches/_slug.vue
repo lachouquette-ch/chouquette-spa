@@ -199,9 +199,10 @@
           </WpMediaNew>
           <v-card-title class="d-block">
             <h3>{{ fiche.title }}</h3>
-            <v-card-subtitle class="pa-0 mt-1 secondary--text">{{
-              getCategoryById(fiche.principalCategoryId).name
-            }}</v-card-subtitle>
+            <v-card-subtitle class="pa-0 mt-1 secondary--text">
+              <span v-if="!location && fiche.locationId">{{ getLocationById(fiche.locationId).name }} - </span>
+              {{ getCategoryById(fiche.principalCategoryId).name }}
+            </v-card-subtitle>
           </v-card-title>
           <v-card-text>
             <div class="fiche-content mb-1" v-html="fiche.content"></div>
@@ -275,19 +276,19 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import {mapGetters, mapState} from 'vuex'
 import gql from 'graphql-tag'
 import seo from '~/mixins/seo'
-import { fiche as FicheFragments } from '~/apollo/fragments/fiche'
-import { PER_PAGE_NUMBER } from '~/constants/default'
+import {fiche as FicheFragments} from '~/apollo/fragments/fiche'
+import {PER_PAGE_NUMBER} from '~/constants/default'
 import WpMediaNew from '~/components/WpMediaNew'
 import graphql from '~/mixins/graphql'
 import FilterExpansion from '~/components/FilterExpansion'
 import ScrollTop from '~/components/ScrollTop'
 import FichesMap from '~/components/FichesMap'
 import Fiche from '~/components/Fiche'
-import { postCard as PostCardFragments } from '~/apollo/fragments/postCard'
-import { ficheCard as FicheCardFragments } from '~/apollo/fragments/ficheCard'
+import {postCard as PostCardFragments} from '~/apollo/fragments/postCard'
+import {ficheCard as FicheCardFragments} from '~/apollo/fragments/ficheCard'
 import FicheShare from '~/components/FicheShare'
 import CategoryButton from '~/components/CategoryButton'
 
@@ -590,6 +591,9 @@ export default {
     ...mapGetters('categories', {
       getCategoryById: 'getById',
       getCategoriesByParentId: 'getChildrenForId',
+    }),
+    ...mapGetters('locations', {
+      getLocationById: 'getById',
     }),
     ...mapGetters('values', {
       getValueById: 'getById',

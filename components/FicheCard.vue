@@ -11,7 +11,7 @@
     <v-card-title class="d-block">
       <h3>{{ fiche.title }}</h3>
       <v-card-subtitle class="pa-0 mt-1 secondary--text">
-        <span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} / </span>
+        <span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} - </span>
         {{ getCategoryById(fiche.principalCategoryId).name }}
       </v-card-subtitle>
     </v-card-title>

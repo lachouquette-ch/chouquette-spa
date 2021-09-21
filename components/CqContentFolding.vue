@@ -10,6 +10,8 @@
 </template>
 
 <script>
+import isbot from 'isbot'
+
 export default {
   props: {
     btnContent: {
@@ -21,6 +23,9 @@ export default {
     return {
       folded: true,
     }
+  },
+  mounted() {
+    this.folded = !isbot(navigator.userAgent)
   },
 }
 </script>
