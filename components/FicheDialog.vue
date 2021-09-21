@@ -9,7 +9,7 @@
         </v-btn>
       </v-card-title>
       <v-divider></v-divider>
-      <v-card-text class="pa-2 pb-0">
+      <v-card-text ref="content" class="pa-2 pb-0">
         <Fiche :fiche="fiche"></Fiche>
       </v-card-text>
     </v-card>
@@ -17,27 +17,34 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
 import FicheShare from '~/components/FicheShare'
 import Fiche from '~/components/Fiche'
+import {fiche as FicheFragments} from '~/apollo/fragments/fiche'
+import {postCard as PostCardFragments} from '~/apollo/fragments/postCard'
+import {ficheCard as FicheCardFragments} from '~/apollo/fragments/ficheCard'
+import graphql from '~/mixins/graphql'
 
 export default {
   components: { Fiche, FicheShare },
+  mixins: [graphql],
   props: {
-    fiche: {
-      required: true,
-      type: Object,
-    },
-    value: Boolean,
+    value: Object,
   },
   data() {
     return {
       dialog: false,
+      previousURL: null,
+      fiche: null,
     }
   },
   watch: {
     value: {
       handler(val) {
-        this.dialog = val
+        if (val) {
+          if (!val.slug) throw new Error('FicheDialog requires an object (fiche) with slug property')
+          this.fetchFicheBySlug(val.slug)
+        }
       },
       immediate: true,
     },
@@ -45,8 +52,45 @@ export default {
   methods: {
     close() {
       this.dialog = false
+      history.replaceState(null, null, this.previousURL)
       this.$emit('input', false)
       this.$emit('close')
+    },
+    async fetchFicheBySlug(slug) {
+      try {
+        const { data } = await this.$apollo.query({
+          query: gql`
+            query ($slug: String!) {
+              ficheBySlug(slug: $slug) {
+                ...FicheFragments
+
+                postCards {
+                  ...PostCardFragments
+                }
+
+                similarFiches {
+                  ...FicheCardFragments
+                }
+              }
+            }
+            ${FicheFragments}
+            ${PostCardFragments}
+            ${FicheCardFragments}
+          `,
+          variables: { slug },
+        })
+
+        this.fiche = data.ficheBySlug
+        this.previousURL = location.href
+        history.replaceState(null, null, `/fiche/${slug}`)
+        this.dialog = true
+        this.$nextTick(() => {
+          this.$refs.content.scrollTop = 0
+        })
+      } catch (e) {
+        this.$sentry.captureException(e)
+        this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(e) })
+      }
     },
   },
 }

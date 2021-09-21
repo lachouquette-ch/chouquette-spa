@@ -106,7 +106,7 @@
       </v-card>
     </v-dialog>
 
-    <FicheDialog v-model="ficheDialog" :fiche="selectedFiche" @close="clearFicheSelection"></FicheDialog>
+    <FicheDialog v-model="selectedFicheCard" @close="selectedFicheCard = null"></FicheDialog>
 
     <v-container>
       <h1 class="text-center mt-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
@@ -258,17 +258,13 @@
 import {mapGetters, mapState} from 'vuex'
 import gql from 'graphql-tag'
 import seo from '~/mixins/seo'
-import {fiche as FicheFragments} from '~/apollo/fragments/fiche'
 import {PER_PAGE_NUMBER} from '~/constants/default'
 import WpMediaNew from '~/components/WpMediaNew'
 import graphql from '~/mixins/graphql'
 import FilterExpansion from '~/components/FilterExpansion'
 import ScrollTop from '~/components/ScrollTop'
 import FichesMap from '~/components/FichesMap'
-import Fiche from '~/components/Fiche'
-import {postCard as PostCardFragments} from '~/apollo/fragments/postCard'
 import {ficheCard as FicheCardFragments} from '~/apollo/fragments/ficheCard'
-import FicheShare from '~/components/FicheShare'
 import CategoryButton from '~/components/CategoryButton'
 import FicheDialog from '~/components/FicheDialog'
 
@@ -279,7 +275,7 @@ const MapStates = Object.freeze({
 })
 
 export default {
-  components: { FicheDialog, CategoryButton, FicheShare, Fiche, FilterExpansion, WpMediaNew, ScrollTop, FichesMap },
+  components: { FicheDialog, CategoryButton, FilterExpansion, WpMediaNew, ScrollTop, FichesMap },
   mixins: [seo, graphql],
   asyncData({ store, params, query }) {
     const location = params.slug ? store.getters['locations/getBySlug'](params.slug) : null
@@ -300,8 +296,6 @@ export default {
       fichesPages: null,
       hasMoreFiches: true,
       selectedFicheCard: null,
-      selectedFiche: null,
-      ficheDialog: false,
       previousURL: null,
 
       subCategories: [],
@@ -521,44 +515,8 @@ export default {
         this.filtersLoading = false
       }
     },
-    async selectFiche(ficheCard) {
-      try {
-        this.selectedFicheCard = ficheCard
-        const { data } = await this.$apollo.query({
-          query: gql`
-            query ($slug: String!) {
-              ficheBySlug(slug: $slug) {
-                ...FicheFragments
-
-                postCards {
-                  ...PostCardFragments
-                }
-
-                similarFiches {
-                  ...FicheCardFragments
-                }
-              }
-            }
-            ${FicheFragments}
-            ${PostCardFragments}
-            ${FicheCardFragments}
-          `,
-          variables: { slug: ficheCard.slug },
-        })
-
-        this.selectedFiche = data.ficheBySlug
-        this.previousURL = location.href
-        history.replaceState(null, null, `/fiche/${ficheCard.slug}`)
-        this.ficheDialog = true
-      } catch (e) {
-        this.$sentry.captureException(e)
-        this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(e) })
-      }
-    },
-    clearFicheSelection() {
-      this.selectedFicheCard = null
-      history.replaceState(null, null, this.previousURL)
-      this.ficheDialog = false
+    selectFiche(ficheCard) {
+      this.selectedFicheCard = ficheCard
     },
     updateFilterCounter() {
       this.filterCount = this.categoryFilters.reduce((acc, filter) => (acc += filter.selectedSlugs.length), 0)

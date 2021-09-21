@@ -1,85 +1,95 @@
 <template>
-  <v-card flat tile>
-    <div style="position: relative; margin-bottom: 35px">
-      <WpMediaNew :media="post.image" gradient="180deg, transparent 70%, black" />
-      <v-img
-        :src="mainAuthor.avatar"
-        :alt="mainAuthor.name"
-        height="75"
-        width="75"
-        class="rounded-circle header-author"
-      ></v-img>
-      <div class="header-meta">par {{ mainAuthor.name }} le {{ postDate | fromISO }}</div>
-    </div>
-    <v-card-title>
-      <h1>{{ post.title }}</h1>
-    </v-card-title>
-    <v-card-text>
-      <CqContentFolding>
-        <section class="gutenberg-content" v-html="post.content"></section>
-      </CqContentFolding>
+  <div>
+    <FicheDialog v-model="ficheDialog" ficheCard="selectedFiche" @close="clearFicheSelection"></FicheDialog>
 
-      <section v-if="ficheCards">
-        <v-divider class="my-3"></v-divider>
-        <h2>Adresses associées</h2>
-        <div class="mt-3">
-          <v-list>
-            <CqContentFolding btn-content="Toutes les adresses">
-              <v-list-item v-for="fiche in ficheCards" :key="fiche.id" two-line>
-                <v-list-item-avatar size="60" horizontal>
-                  <WpMediaNew :media="fiche.image" size="thumbnail"></WpMediaNew>
-                </v-list-item-avatar>
+    <v-card flat tile>
+      <div style="position: relative; margin-bottom: 35px">
+        <WpMediaNew :media="post.image" gradient="180deg, transparent 70%, black" />
+        <v-img
+          :src="mainAuthor.avatar"
+          :alt="mainAuthor.name"
+          height="75"
+          width="75"
+          class="rounded-circle header-author"
+        ></v-img>
+        <div class="header-meta">par {{ mainAuthor.name }} le {{ postDate | fromISO }}</div>
+      </div>
+      <v-card-title>
+        <h1>{{ post.title }}</h1>
+      </v-card-title>
+      <v-card-text>
+        <CqContentFolding>
+          <section class="gutenberg-content" v-html="post.content"></section>
+        </CqContentFolding>
 
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ fiche.title }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle v-if="fiche.isChouquettise" class="my-1">
-                    <v-chip color="cq-yellow" text-color="primary" x-small outlined>
-                      Testé et Chouquettisé
-                      <v-icon color="cq-yellow" right>mdi-check</v-icon>
-                    </v-chip></v-list-item-subtitle
-                  >
-                  <v-list-item-subtitle
-                    ><span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} / </span>
-                    {{ getCategoryById(fiche.principalCategoryId).name }}</v-list-item-subtitle
-                  >
-                </v-list-item-content>
-              </v-list-item>
-            </CqContentFolding>
-          </v-list>
-        </div>
-      </section>
+        <section v-if="ficheCards">
+          <v-divider class="my-3"></v-divider>
+          <h2>Adresses associées</h2>
+          <div class="mt-3">
+            <v-list>
+              <CqContentFolding btn-content="Toutes les adresses">
+                <v-list-item v-for="fiche in ficheCards" :key="fiche.id" two-line>
+                  <v-list-item-avatar size="60" horizontal>
+                    <WpMediaNew :media="fiche.image" size="thumbnail"></WpMediaNew>
+                  </v-list-item-avatar>
 
-      <section v-if="comments" class="comments">
-        <v-divider class="my-3"></v-divider>
-        <h2>{{ comments.length }} commentaire(s)</h2>
-        <p v-if="!comments.length" class="mt-2">Aucun commentaire pour le moment. N'hésite pas à donner ton avis !</p>
-        <div v-else>
-          <ol class="p-0">
-            <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
-              <PostComment :post="post.id" :comment="comment" :comments="comments" :no-reply="!extendComments" />
-            </li>
-          </ol>
-          <div class="text-decoration-underline">
-            <v-btn v-if="!extendComments" text @click="extendComments = true">Voir tous les commentaires</v-btn>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{ fiche.title }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle v-if="fiche.isChouquettise" class="my-1">
+                      <v-chip color="cq-yellow" text-color="primary" x-small outlined>
+                        Testé et Chouquettisé
+                        <v-icon color="cq-yellow" right>mdi-check</v-icon>
+                      </v-chip></v-list-item-subtitle
+                    >
+                    <v-list-item-subtitle
+                      ><span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} / </span>
+                      {{ getCategoryById(fiche.principalCategoryId).name }}</v-list-item-subtitle
+                    >
+                  </v-list-item-content>
+                </v-list-item>
+              </CqContentFolding>
+            </v-list>
           </div>
-        </div>
-        <div>
-          <v-btn outlined block class="my-3" @click="showReply = !showReply"> Un nouveau commentaire ? </v-btn>
-          <PostCommentReply v-if="showReply" :post="post.id" />
-        </div>
-      </section>
+        </section>
 
-      <section v-if="similarPosts">
-        <v-divider class="my-3"></v-divider>
-        <h2>Articles similaires</h2>
-        <div class="cq-scroll-x-container mt-3">
-          <PostCard v-for="post in similarPosts" :key="post.id" :post="post" class="flex-shrink-0" vertical></PostCard>
-        </div>
-      </section>
-    </v-card-text>
-  </v-card>
+        <section v-if="comments" class="comments">
+          <v-divider class="my-3"></v-divider>
+          <h2>{{ comments.length }} commentaire(s)</h2>
+          <p v-if="!comments.length" class="mt-2">Aucun commentaire pour le moment. N'hésite pas à donner ton avis !</p>
+          <div v-else>
+            <ol class="p-0">
+              <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
+                <PostComment :post="post.id" :comment="comment" :comments="comments" :no-reply="!extendComments" />
+              </li>
+            </ol>
+            <div class="text-decoration-underline">
+              <v-btn v-if="!extendComments" text @click="extendComments = true">Voir tous les commentaires</v-btn>
+            </div>
+          </div>
+          <div>
+            <v-btn outlined block class="my-3" @click="showReply = !showReply"> Un nouveau commentaire ? </v-btn>
+            <PostCommentReply v-if="showReply" :post="post.id" />
+          </div>
+        </section>
+
+        <section v-if="similarPosts">
+          <v-divider class="my-3"></v-divider>
+          <h2>Articles similaires</h2>
+          <div class="cq-scroll-x-container mt-3">
+            <PostCard
+              v-for="post in similarPosts"
+              :key="post.id"
+              :post="post"
+              class="flex-shrink-0"
+              vertical
+            ></PostCard>
+          </div>
+        </section>
+      </v-card-text>
+    </v-card>
+  </div>
 </template>
 
 <script>
@@ -94,17 +104,17 @@ import gutenberg from '~/mixins/gutenberg'
 
 import graphql from '~/mixins/graphql'
 import WpMediaNew from '~/components/WpMediaNew'
-import FicheCard from '~/components/FicheCard'
 import PostComment from '~/components/PostComment'
 import PostCommentReply from '~/components/PostCommentReply'
 import PostCard from '~/components/PostCard'
 import CqContentFolding from '~/components/CqContentFolding'
+import FicheDialog from '~/components/FicheDialog'
 
 export default {
   components: {
+    FicheDialog,
     CqContentFolding,
     PostCard,
-    FicheCard,
     WpMediaNew,
     PostComment,
     PostCommentReply,
@@ -120,6 +130,7 @@ export default {
   data() {
     return {
       ficheCards: [],
+      ficheDialog: false,
 
       extendComments: false,
       showReply: false,
