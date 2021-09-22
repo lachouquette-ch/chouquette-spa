@@ -7,14 +7,55 @@
     >
 
     <v-navigation-drawer v-model="toggleMenu" temporary app right>
-      <v-list-item>
+      <v-list-item three-line>
         <v-list-item-content>
-          <v-list-item-title
-            ><h1 class="text-h6">{{ name }}</h1></v-list-item-title
-          >
+          <v-list-item-title>
+            <h1 class="text-h6">{{ name }}</h1>
+          </v-list-item-title>
           <v-list-item-subtitle>{{ description }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
+
+      <v-divider></v-divider>
+
+      <v-list dense nav>
+        <v-subheader class="text-h4">Les intérêts</v-subheader>
+        <v-list-item v-for="item in categoryMenu.items" :key="item.id" :to="`/fiches?category=${item.slug}`" nuxt>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+
+      <v-divider></v-divider>
+
+      <v-list dense nav>
+        <v-subheader class="text-h4">{{ aboutMenu.name }}</v-subheader>
+        <v-list-item v-for="item in aboutMenu.items" :key="item.id" :to="`/${item.slug}`" nuxt>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+
+      <v-divider></v-divider>
+
+      <v-list dense nav>
+        <v-subheader class="text-h4">{{ contactMenu.name }}</v-subheader>
+        <v-list-item v-for="item in contactMenu.items" :key="item.id" :to="`/${item.slug}`" nuxt>
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <div class="d-flex justify-center">
+        <v-btn icon small target="_blank" href="https://www.facebook.com/lachouquette" class="mx-3">
+          <v-icon color="#4267b2">mdi-facebook</v-icon>
+        </v-btn>
+        <v-btn icon small target="_blank" href="https://www.instagram.com/lachouquette.ch" class="mx-3">
+          <v-icon color="#E1306C">mdi-instagram</v-icon>
+        </v-btn>
+      </div>
     </v-navigation-drawer>
 
     <v-app-bar fixed app>
@@ -149,7 +190,7 @@
 <script>
 import CookieConsent from 'vue-cookieconsent-component'
 import isbot from 'isbot'
-import { mapState } from 'vuex'
+import {mapGetters, mapState} from 'vuex'
 import CqFooter from '~/components/CqFooter'
 import LayoutAlert from '~/components/LayoutAlert'
 
@@ -170,6 +211,11 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('menus', {
+      aboutMenu: 'getAboutMenu',
+      categoryMenu: 'getCategoryMenu',
+      contactMenu: 'getContactMenu',
+    }),
     displayDrawer() {
       return this.$vuetify.breakpoint.mobile && this.drawer
     },
@@ -196,6 +242,10 @@ export default {
 .v-app-bar-title__content {
   display: flex;
   align-content: center;
+}
+
+.v-list-item--link {
+  background-color: transparent !important;
 }
 
 svg {
