@@ -1,24 +1,18 @@
 <template>
-  <b-overlay :show="!page" spinner-variant="yellow">
-    <div class="wp-page container layout-content my-4">
-      <div v-if="preview" class="alert alert-warning text-center" role="alert">
-        Mode prévisualisation : toutes les données ne seront pas affichées
-      </div>
-      <div v-if="page" class="row">
-        <div class="col gutenberg-content">
-          <h1 class="text-center mb-4">{{ page.title }}</h1>
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <div v-html="page.content" />
-        </div>
-      </div>
-      <div v-if="$slots.footer" class="row">
-        <div class="col">
-          <slot name="footer" />
-        </div>
-      </div>
+  <v-card min-height="100vh">
+    <v-alert v-if="preview" border="right" colored-border type="warning" elevation="2">
+      Mode prévisualisation : toutes les données ne seront pas affichées
+    </v-alert>
+    <v-card-title class="justify-center">
+      <h1>{{ page.title }}</h1>
+    </v-card-title>
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <v-card-text class="gutenberg-content" v-html="page.content"></v-card-text>
+    <div v-if="$slots.footer">
+      <slot name="footer" />
     </div>
     <Newsletter />
-  </b-overlay>
+  </v-card>
 </template>
 
 <script>
@@ -70,9 +64,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.wp-page {
-  min-height: 100vh;
-}
-</style>
