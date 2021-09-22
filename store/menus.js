@@ -1,45 +1,21 @@
-const HEADER_SLUG = 'chouquette'
-const FOOTER_SLUG = 'chouquette-footer'
+const CATEGORIES_SLUG = 'categories'
+const ABOUT_SLUG = 'a-propos'
+const CONTACT_SLUG = 'nous-contacter'
 
 export const state = () => ({
-  header: null,
-  headerCategories: [],
-  selectedCategory: null,
-
-  footer: null,
-  footerPages: [],
+  all: {},
 })
 
 export const actions = {
   async init({ state, commit }, menus) {
     /* Process header menu */
-    // get menu and add to store
-    const headerMenu = menus.find((menu) => menu.slug === HEADER_SLUG)
-    commit('SET_HEADER', headerMenu)
-    // filter categories, get and store
-    const categories = await Promise.all(
-      headerMenu.items
-        .filter(({ type }) => {
-          return type === 'category'
-        })
-        .map(({ id }) => {
-          return this.getters['categories/getById'](parseInt(id))
-        })
-    )
-    commit('SET_HEADER_CATEGORIES', categories)
+    const result = menus.map((menu) => {
+      const filteredItems = menu.items.filter((item) => ['page', 'category'].includes(item.type))
+      return { name: menu.name, slug: menu.slug, items: filteredItems }
+    })
+    await commit('SET_MENUS', result)
 
-    const footerMenu = menus.find((menu) => menu.slug === FOOTER_SLUG)
-    commit('SET_FOOTER', footerMenu)
-
-    return [headerMenu, footerMenu]
-  },
-
-  setSelectedCategory({ commit }, category) {
-    commit('SET_SELECTED_CATEGORY', category)
-  },
-
-  clearSelectedCategory({ commit }) {
-    commit('UNSET_SELECTED_CATEGORY')
+    return result
   },
 
   /**
@@ -50,27 +26,16 @@ export const actions = {
   },
 }
 
+export const getters = {
+  getCategoryMenu: (state) => state.all[CATEGORIES_SLUG],
+  getAboutMenu: (state) => state.all[ABOUT_SLUG],
+  getContactMenu: (state) => state.all[CONTACT_SLUG],
+}
+
 export const mutations = {
-  SET_HEADER(state, menu) {
-    state.header = menu
-  },
-  SET_HEADER_CATEGORIES(state, categories) {
-    state.headerCategories = categories
-  },
-  SET_FOOTER(state, menu) {
-    state.footer = menu
-    state.footerPages = menu.items.filter(({ type }) => {
-      return type === 'page'
+  SET_MENUS(state, menus) {
+    menus.forEach((menu) => {
+      state.all[menu.slug] = menu
     })
-  },
-  SET_SELECTED_CATEGORY(state, category) {
-    const selectedCategory = state.headerCategories.find((headerCategory) => headerCategory.id === category.id)
-    if (!selectedCategory) {
-      throw new Error(`Couldn't find ${category.name} in header`)
-    }
-    state.selectedCategory = selectedCategory
-  },
-  UNSET_SELECTED_CATEGORY(state) {
-    state.selectedCategory = null
   },
 }

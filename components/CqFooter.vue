@@ -3,27 +3,24 @@
     <!-- Stack the columns on mobile by making one full-width and the other half-width -->
     <v-row class="text-center">
       <v-col cols="6" md="4">
-        <h5 class="cq-yellow--text mb-3">A propos de nous</h5>
+        <h5 class="cq-yellow--text mb-3">{{ aboutMenu.name }}</h5>
         <ul>
-          <li>Qui sommes-nous ?</li>
-          <li>Nos valeurs</li>
+          <li v-for="item in aboutMenu.items" :key="item.id">
+            <nuxt-link class="primary--text text--lighten-5 text-decoration-none" :to="`/${item.slug}`">{{ item.title }}</nuxt-link>
+          </li>
         </ul>
       </v-col>
       <v-col cols="6" md="4">
-        <h5 class="cq-yellow--text mb-3">Aides</h5>
+        <h5 class="cq-yellow--text mb-3">{{ contactMenu.name }}</h5>
         <ul>
-          <li>Foire aux questions</li>
-          <li>Contact</li>
+          <li v-for="item in contactMenu.items" :key="item.id">
+            <nuxt-link class="primary--text text--lighten-5 text-decoration-none" :to="`/${item.slug}`">{{ item.title }}</nuxt-link>
+          </li>
         </ul>
+        <v-btn fab icon small target="_blank" to="https://www.facebook.com/lachouquettelausanne"><v-icon color="#4267b2">mdi-facebook</v-icon></v-btn>
+        <v-btn fab icon small target="_blank" to="https://www.instagram.com/lachouquette.ch"><v-icon color="#E1306C">mdi-instagram</v-icon></v-btn>
       </v-col>
-      <v-col cols="6" md="4">
-        <h5 class="cq-yellow--text mb-3">Nous contacter</h5>
-        <ul>
-          <li>Recrutement</li>
-          <li>Contact</li>
-        </ul>
-      </v-col>
-      <v-col cols="6" md="12" class="p5">
+      <v-col cols="12" md="4" class="text-center">
         <v-img
           :aspect-ratio="1 / 1"
           :lazy-src="`${wordpressUrl}/wp-content/uploads/2019/03/logo_white-150x150.png`"
@@ -31,8 +28,7 @@
           transition="false"
           alt="Logo Chouquette"
           contain
-          width="75%"
-          max-width="300px"
+          width="200"
           class="mx-auto"
         ></v-img>
       </v-col>
@@ -46,13 +42,18 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import {mapGetters, mapState} from 'vuex'
 import moment from 'moment'
 
 export default {
   computed: {
+    ...mapGetters('menus', {
+      aboutMenu: 'getAboutMenu',
+      categoryMenu: 'getCategoryMenu',
+      contactMenu: 'getContactMenu',
+    }),
     ...mapState('menus', {
-      pages: 'footerPages',
+      menus: 'all',
     }),
     ...mapState(['wordpressUrl']),
     currentYear() {

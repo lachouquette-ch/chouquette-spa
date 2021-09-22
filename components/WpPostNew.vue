@@ -18,7 +18,7 @@
           <FichesMap
             :fiches="ficheCards"
             style="position: absolute"
-            :ficheLoading="!!selectedFicheCard"
+            :fiche-loading="!!selectedFicheCard"
             @mapSelectFiche="
               (fiche) => {
                 selectedFicheCard = fiche
