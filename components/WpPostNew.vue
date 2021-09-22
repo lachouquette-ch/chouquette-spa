@@ -1,6 +1,10 @@
 <template>
   <div>
-    <FicheDialog v-model="ficheDialog" ficheCard="selectedFiche" @close="clearFicheSelection"></FicheDialog>
+    <v-overlay :value="selectedFicheCard">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
+
+    <FicheDialog v-model="selectedFicheCard" @close="selectedFicheCard = null"></FicheDialog>
 
     <v-card flat tile>
       <div style="position: relative; margin-bottom: 35px">
@@ -27,29 +31,27 @@
           <h2>Adresses associées</h2>
           <div class="mt-3">
             <v-list>
-              <CqContentFolding btn-content="Toutes les adresses">
-                <v-list-item v-for="fiche in ficheCards" :key="fiche.id" two-line>
-                  <v-list-item-avatar size="60" horizontal>
-                    <WpMediaNew :media="fiche.image" size="thumbnail"></WpMediaNew>
-                  </v-list-item-avatar>
+              <v-list-item v-for="fiche in ficheCards" :key="fiche.id" two-line @click="selectedFicheCard = fiche">
+                <v-list-item-avatar size="60" horizontal>
+                  <WpMediaNew :media="fiche.image" size="thumbnail"></WpMediaNew>
+                </v-list-item-avatar>
 
-                  <v-list-item-content>
-                    <v-list-item-title>
-                      {{ fiche.title }}
-                    </v-list-item-title>
-                    <v-list-item-subtitle v-if="fiche.isChouquettise" class="my-1">
-                      <v-chip color="cq-yellow" text-color="primary" x-small outlined>
-                        Testé et Chouquettisé
-                        <v-icon color="cq-yellow" right>mdi-check</v-icon>
-                      </v-chip></v-list-item-subtitle
-                    >
-                    <v-list-item-subtitle
-                      ><span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} / </span>
-                      {{ getCategoryById(fiche.principalCategoryId).name }}</v-list-item-subtitle
-                    >
-                  </v-list-item-content>
-                </v-list-item>
-              </CqContentFolding>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ fiche.title }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle v-if="fiche.isChouquettise" class="my-1">
+                    <v-chip color="cq-yellow" text-color="primary" x-small>
+                      Testé et Chouquettisé
+                      <v-icon right>mdi-check</v-icon>
+                    </v-chip></v-list-item-subtitle
+                  >
+                  <v-list-item-subtitle
+                    ><span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} / </span>
+                    {{ getCategoryById(fiche.principalCategoryId).name }}</v-list-item-subtitle
+                  >
+                </v-list-item-content>
+              </v-list-item>
             </v-list>
           </div>
         </section>
@@ -130,7 +132,7 @@ export default {
   data() {
     return {
       ficheCards: [],
-      ficheDialog: false,
+      selectedFicheCard: null,
 
       extendComments: false,
       showReply: false,
