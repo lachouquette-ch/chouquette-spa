@@ -4,6 +4,31 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
 
+    <v-dialog v-model="mapDialog" fullscreen hide-overlay transition="dialog-top-transition">
+      <v-card tile class="d-flex flex-column align-stretch">
+        <v-card-title>
+          Les adresses de l'article
+          <v-spacer></v-spacer>
+          <v-btn icon @click="mapDialog = false">
+            <v-icon>mdi-arrow-right</v-icon>
+          </v-btn>
+        </v-card-title>
+        <v-divider></v-divider>
+        <div class="flex-grow-1">
+          <FichesMap
+            :fiches="ficheCards"
+            style="position: absolute"
+            :ficheLoading="!!selectedFicheCard"
+            @mapSelectFiche="
+              (fiche) => {
+                selectedFicheCard = fiche
+              }
+            "
+          ></FichesMap>
+        </div>
+      </v-card>
+    </v-dialog>
+
     <FicheDialog v-model="selectedFicheCard" @close="selectedFicheCard = null"></FicheDialog>
 
     <v-card flat tile>
@@ -29,31 +54,30 @@
         <section v-if="ficheCards">
           <v-divider class="my-3"></v-divider>
           <h2>Adresses associées</h2>
-          <div class="mt-3">
-            <v-list>
-              <v-list-item v-for="fiche in ficheCards" :key="fiche.id" two-line @click="selectedFicheCard = fiche">
-                <v-list-item-avatar size="60" horizontal>
-                  <WpMediaNew :media="fiche.image" size="thumbnail"></WpMediaNew>
-                </v-list-item-avatar>
+          <v-list>
+            <v-list-item v-for="fiche in ficheCards" :key="fiche.id" two-line @click="selectedFicheCard = fiche">
+              <v-list-item-avatar size="60" horizontal>
+                <WpMediaNew :media="fiche.image" size="thumbnail"></WpMediaNew>
+              </v-list-item-avatar>
 
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ fiche.title }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle v-if="fiche.isChouquettise" class="my-1">
-                    <v-chip color="cq-yellow" text-color="primary" x-small>
-                      Testé et Chouquettisé
-                      <v-icon right>mdi-check</v-icon>
-                    </v-chip></v-list-item-subtitle
-                  >
-                  <v-list-item-subtitle
-                    ><span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} / </span>
-                    {{ getCategoryById(fiche.principalCategoryId).name }}</v-list-item-subtitle
-                  >
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </div>
+              <v-list-item-content>
+                <v-list-item-title>
+                  {{ fiche.title }}
+                </v-list-item-title>
+                <v-list-item-subtitle v-if="fiche.isChouquettise" class="my-1">
+                  <v-chip color="cq-yellow" text-color="primary" x-small>
+                    Testé et Chouquettisé
+                    <v-icon right>mdi-check</v-icon>
+                  </v-chip></v-list-item-subtitle
+                >
+                <v-list-item-subtitle
+                  ><span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} / </span>
+                  {{ getCategoryById(fiche.principalCategoryId).name }}</v-list-item-subtitle
+                >
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+          <v-btn block outlined @click="mapDialog = true">Afficher la carte</v-btn>
         </section>
 
         <section v-if="comments" class="comments">
@@ -111,9 +135,11 @@ import PostCommentReply from '~/components/PostCommentReply'
 import PostCard from '~/components/PostCard'
 import CqContentFolding from '~/components/CqContentFolding'
 import FicheDialog from '~/components/FicheDialog'
+import FichesMap from '~/components/FichesMap'
 
 export default {
   components: {
+    FichesMap,
     FicheDialog,
     CqContentFolding,
     PostCard,
@@ -133,6 +159,8 @@ export default {
     return {
       ficheCards: [],
       selectedFicheCard: null,
+
+      mapDialog: false,
 
       extendComments: false,
       showReply: false,

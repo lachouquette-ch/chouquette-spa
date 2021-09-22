@@ -20,7 +20,7 @@
 import Vue from 'vue'
 import MarkerClusterer from '@googlemaps/markerclustererplus'
 
-import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, LAUSANNE_LAT_LNG } from '~/constants/mapSettings'
+import {CLUSTER_STYLES, LAUSANNE_LAT_LNG, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS} from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
 
 // create classes from components to use it in code
@@ -38,7 +38,7 @@ export default {
     },
     hasMoreFiches: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     ficheLoading: {
       type: Boolean,

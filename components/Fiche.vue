@@ -123,7 +123,9 @@
                 <v-list-item-avatar size="30"><v-icon>mdi-clock</v-icon></v-list-item-avatar>
                 <v-list-item-title>
                   Aujourd'hui : {{ getOpeningValue() }}
-                  <v-list-item-subtitle class="text-decoration-underline text-caption">Voir les autres jours</v-list-item-subtitle>
+                  <v-list-item-subtitle class="text-decoration-underline text-caption"
+                    >Voir les autres jours</v-list-item-subtitle
+                  >
                 </v-list-item-title>
               </v-list-item>
             </template>
