@@ -7,7 +7,7 @@ export default {
   },
   methods: {
     onMailchimpSubscriptionError(errorMessage) {
-      this.$store.dispatch('alerts/addAction', { type: 'danger', message: errorMessage })
+      this.$store.dispatch('alerts/addAction', { type: 'error', message: errorMessage })
       this.$bvModal.hide('mailchimp-subscribe')
     },
     onMailchimpSubscriptionSuccess() {
