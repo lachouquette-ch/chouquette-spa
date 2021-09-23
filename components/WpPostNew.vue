@@ -51,66 +51,90 @@
           <section class="gutenberg-content" v-html="post.content"></section>
         </CqContentFolding>
 
-        <section v-if="ficheCards">
+        <section>
           <v-divider class="my-3"></v-divider>
           <h2>Adresses associées</h2>
-          <v-list>
-            <v-list-item v-for="fiche in ficheCards" :key="fiche.id" two-line @click="selectedFicheCard = fiche">
-              <v-list-item-avatar size="60" horizontal>
-                <WpMediaNew :media="fiche.image" size="thumbnail"></WpMediaNew>
-              </v-list-item-avatar>
+          <template v-if="$fetchState.pending">
+            <v-skeleton-loader v-for="i in 2" :key="i" type="list-item-avatar" class="my-3"></v-skeleton-loader>
+          </template>
+          <template v-else>
+            <v-list>
+              <v-list-item v-for="fiche in ficheCards" :key="fiche.id" two-line @click="selectedFicheCard = fiche">
+                <v-list-item-avatar size="60" horizontal>
+                  <WpMediaNew :media="fiche.image" size="thumbnail"></WpMediaNew>
+                </v-list-item-avatar>
 
-              <v-list-item-content>
-                <v-list-item-title>
-                  {{ fiche.title }}
-                </v-list-item-title>
-                <v-list-item-subtitle v-if="fiche.isChouquettise" class="my-1">
-                  <v-chip color="cq-yellow" text-color="primary" x-small>
-                    Testé et Chouquettisé
-                    <v-icon right>mdi-check</v-icon>
-                  </v-chip></v-list-item-subtitle
-                >
-                <v-list-item-subtitle
-                  ><span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} / </span>
-                  {{ getCategoryById(fiche.principalCategoryId).name }}</v-list-item-subtitle
-                >
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-          <v-btn block outlined @click="mapDialog = true">Afficher la carte</v-btn>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ fiche.title }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle v-if="fiche.isChouquettise" class="my-1">
+                    <v-chip color="cq-yellow" text-color="primary" x-small>
+                      Testé et Chouquettisé
+                      <v-icon right>mdi-check</v-icon>
+                    </v-chip></v-list-item-subtitle
+                  >
+                  <v-list-item-subtitle
+                    ><span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} / </span>
+                    {{ getCategoryById(fiche.principalCategoryId).name }}</v-list-item-subtitle
+                  >
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+            <v-btn block outlined @click="mapDialog = true">Afficher la carte</v-btn>
+          </template>
         </section>
 
-        <section v-if="comments" class="comments">
+        <section class="comments">
           <v-divider class="my-3"></v-divider>
-          <h2>{{ comments.length }} commentaire(s)</h2>
-          <p v-if="!comments.length" class="mt-2">Aucun commentaire pour le moment. N'hésite pas à donner ton avis !</p>
-          <div v-else>
-            <ol class="p-0">
-              <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
-                <PostComment :post="post.id" :comment="comment" :comments="comments" :no-reply="!extendComments" />
-              </li>
-            </ol>
-            <div class="text-decoration-underline">
-              <v-btn v-if="!extendComments" text @click="extendComments = true">Voir tous les commentaires</v-btn>
+          <template v-if="$fetchState.pending">
+            <h2>Commentaires</h2>
+            <v-skeleton-loader type="article"></v-skeleton-loader>
+          </template>
+          <template v-else>
+            <h2>{{ comments.length }} commentaire(s)</h2>
+            <p v-if="!comments.length" class="mt-2">
+              Aucun commentaire pour le moment. N'hésite pas à donner ton avis !
+            </p>
+            <div v-else>
+              <ol class="p-0">
+                <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
+                  <PostComment :post="post.id" :comment="comment" :comments="comments" :no-reply="!extendComments" />
+                </li>
+              </ol>
+              <div class="text-decoration-underline">
+                <v-btn v-if="!extendComments" text @click="extendComments = true">Voir tous les commentaires</v-btn>
+              </div>
             </div>
-          </div>
-          <div>
-            <v-btn outlined block class="my-3" @click="showReply = !showReply"> Un nouveau commentaire ? </v-btn>
-            <PostCommentReply v-if="showReply" :post="post.id" />
-          </div>
+            <div>
+              <v-btn outlined block class="my-3" @click="showReply = !showReply"> Un nouveau commentaire ? </v-btn>
+              <PostCommentReply v-if="showReply" :post="post.id" />
+            </div>
+          </template>
         </section>
 
-        <section v-if="similarPosts">
+        <section>
           <v-divider class="my-3"></v-divider>
           <h2>Articles similaires</h2>
           <div class="cq-scroll-x-container mt-3">
-            <PostCard
-              v-for="post in similarPosts"
-              :key="post.id"
-              :post="post"
-              class="flex-shrink-0"
-              vertical
-            ></PostCard>
+            <template v-if="$fetchState.pending">
+              <v-skeleton-loader
+                v-for="i in 3"
+                :key="i"
+                type="card"
+                class="flex-shrink-0"
+                width="150"
+              ></v-skeleton-loader>
+            </template>
+            <template v-else>
+              <PostCard
+                v-for="post in similarPosts"
+                :key="post.id"
+                :post="post"
+                class="flex-shrink-0"
+                vertical
+              ></PostCard>
+            </template>
           </div>
         </section>
       </v-card-text>
@@ -164,8 +188,8 @@ export default {
 
       extendComments: false,
       showReply: false,
-      comments: null,
-      similarPosts: null,
+      comments: [],
+      similarPosts: [],
     }
   },
   async fetch() {
