@@ -175,8 +175,8 @@ export default {
       this.currentMarker = this.markers.values().next().value
       this.currentInfoWindow = this.infoWindows.values().next().value
 
-      if (this.preview) setTimeout(() => this.map.setZoom(ZOOM_LEVELS.default), 1000)
-      else if (this.markers.size === 1) this.currentInfoWindow.open(this.map, this.currentMarker)
+      if (this.markers.size === 1) this.currentInfoWindow.open(this.map, this.currentMarker)
+      if (this.preview || this.markers.size === 1) setTimeout(() => this.map.setZoom(ZOOM_LEVELS.default), 1000)
     },
     loadFichesOnMap() {
       this.clear()

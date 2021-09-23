@@ -48,7 +48,7 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-      <div class="d-flex justify-center">
+      <div class="d-flex justify-center mb-3">
         <v-btn icon small target="_blank" href="https://www.facebook.com/lachouquette" class="mx-3">
           <v-icon color="#4267b2">mdi-facebook</v-icon>
         </v-btn>
