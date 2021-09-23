@@ -182,6 +182,8 @@
         </div>
       </div>
     </v-container>
+
+    <Newsletter></Newsletter>
   </div>
 </template>
 
@@ -198,9 +200,10 @@ import graphql from '~/mixins/graphql'
 import WpMediaNew from '~/components/WpMediaNew'
 import PostCard from '~/components/PostCard'
 import FicheCard from '~/components/FicheCard'
+import Newsletter from '~/components/Newsletter'
 
 export default {
-  components: { FicheCard, PostCard, WpMediaNew },
+  components: { Newsletter, FicheCard, PostCard, WpMediaNew },
   mixins: [seo, graphql],
   async asyncData({ store, app }) {
     // store initialization
