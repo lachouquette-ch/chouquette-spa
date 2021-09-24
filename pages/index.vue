@@ -163,7 +163,7 @@
         ></PostCard>
       </div>
       <div class="text-center my-3">
-        <v-btn text nuxt to="/tops" class="text-decoration-underline">tous nos tops</v-btn>
+        <v-btn text nuxt to="/articles?topOnly=true" class="text-decoration-underline">tous nos tops</v-btn>
       </div>
     </v-sheet>
 
