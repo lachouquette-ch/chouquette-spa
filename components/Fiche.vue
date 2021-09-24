@@ -182,7 +182,14 @@
         <v-divider class="my-3"></v-divider>
         <h2 class="mb-3">Articles sur l'adresse</h2>
         <div class="mb-5">
-          <PostCard v-for="post in fiche.postCards" :key="post.id" :post="post" class="mb-3"></PostCard>
+          <PostCard
+            v-for="post in fiche.postCards"
+            :key="post.id"
+            :post="post"
+            class="mb-3"
+            :to="`/${post.slug}`"
+            nuxt
+          ></PostCard>
         </div>
       </div>
 
@@ -190,7 +197,14 @@
         <v-divider class="my-3"></v-divider>
         <h2>Adresses similaires</h2>
         <div class="cq-scroll-x-container mt-3">
-          <FicheCard v-for="fiche in fiche.similarFiches" :key="fiche.id" class="mb-3" :fiche="fiche"></FicheCard>
+          <FicheCard
+            v-for="fiche in fiche.similarFiches"
+            :key="fiche.id"
+            class="mb-3"
+            :fiche="fiche"
+            :to="`/fiche/${fiche.slug}`"
+            nuxt
+          ></FicheCard>
         </div>
       </div>
     </v-card>

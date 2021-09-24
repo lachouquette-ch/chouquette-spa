@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" color="white" fullscreen scrollable transition="slide-x-reverse-transition">
     <v-card tile>
       <v-card-title>
-        <FicheShare v-if="fiche" :fiche="fiche" small color="primary">Partager</FicheShare>
+        <PostShare :post="post" small color="primary">Partager</PostShare>
         <v-spacer></v-spacer>
         <v-btn icon @click="close">
           <v-icon>mdi-arrow-right</v-icon>
@@ -10,7 +10,7 @@
       </v-card-title>
       <v-divider></v-divider>
       <v-card-text ref="content" class="pa-2 pb-0">
-        <Fiche :fiche="fiche"></Fiche>
+        <WpPostNew :post="post"></WpPostNew>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -18,15 +18,13 @@
 
 <script>
 import gql from 'graphql-tag'
-import FicheShare from '~/components/FicheShare'
-import Fiche from '~/components/Fiche'
-import {fiche as FicheFragments} from '~/apollo/fragments/fiche'
-import {postCard as PostCardFragments} from '~/apollo/fragments/postCard'
-import {ficheCard as FicheCardFragments} from '~/apollo/fragments/ficheCard'
+import {post as PostFragments} from '~/apollo/fragments/post'
 import graphql from '~/mixins/graphql'
+import WpPostNew from '~/components/WpPostNew'
+import PostShare from '~/components/PostShare'
 
 export default {
-  components: { Fiche, FicheShare },
+  components: { WpPostNew, PostShare },
   mixins: [graphql],
   props: {
     value: Object,
@@ -35,15 +33,15 @@ export default {
     return {
       dialog: false,
       previousURL: null,
-      fiche: null,
+      post: null,
     }
   },
   watch: {
     value: {
       handler(val) {
         if (val) {
-          if (!val.slug) throw new Error('FicheDialog requires an object (fiche) with slug property')
-          this.fetchFicheBySlug(val.slug)
+          if (!val.slug) throw new Error('PostDialog requires an object (post) with slug property')
+          this.fetchPostBySlug(val.slug)
         }
       },
       immediate: true,
@@ -56,33 +54,25 @@ export default {
       this.$emit('input', false)
       this.$emit('close')
     },
-    async fetchFicheBySlug(slug) {
+    async fetchPostBySlug(slug) {
       try {
         const { data } = await this.$apollo.query({
           query: gql`
             query ($slug: String!) {
-              ficheBySlug(slug: $slug) {
-                ...FicheFragments
-
-                postCards {
-                  ...PostCardFragments
-                }
-
-                similarFiches {
-                  ...FicheCardFragments
-                }
+              postBySlug(slug: $slug) {
+                ...PostFragments
               }
             }
-            ${FicheFragments}
-            ${PostCardFragments}
-            ${FicheCardFragments}
+            ${PostFragments}
           `,
-          variables: { slug },
+          variables: {
+            slug,
+          },
         })
 
-        this.fiche = data.ficheBySlug
+        this.post = data.postBySlug
         this.previousURL = location.href
-        history.replaceState(null, null, `/fiche/${slug}`)
+        history.replaceState(null, null, `/${slug}`)
         this.dialog = true
         this.$nextTick(() => {
           this.$refs.content.scrollTop = 0
@@ -91,7 +81,7 @@ export default {
         this.$sentry.captureException(e)
         this.$store.dispatch('alerts/addAction', {
           type: 'warning',
-          message: `Problème lors du chargement de l'adresse' : ${this.parseGQLError(e)}`,
+          message: `Problème lors du chargement de l'article : ${this.parseGQLError(e)}`,
         })
       }
     },

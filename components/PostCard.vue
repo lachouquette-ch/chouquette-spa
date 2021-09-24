@@ -7,9 +7,8 @@
     tile
     hover
     ripple
-    :to="`/${post.slug}`"
-    nuxt
     v-bind="{ ...$props, ...$attrs }"
+    @click.prevent="$emit('click')"
   >
     <WpMediaNew
       v-if="post.image"

@@ -3,7 +3,7 @@
     <template v-if="shareApiAvailable">
       <v-btn
         v-bind="{ ...$props, ...$attrs }"
-        @click.prevent="shareWith('Fiche sur La Chouquette', fiche.title, ficheURL)"
+        @click.prevent="shareWith('Addresse sur LaChouquette.ch', fiche.title, ficheURL)"
       >
         <v-icon :left="!!$slots.default">mdi-share-variant</v-icon>
         <slot></slot>
@@ -27,7 +27,7 @@
           </v-list-item>
           <v-list-item
             target="_blank"
-            :to="`mailto:?subject=${fiche.title}&amp;body=Je te partage cet article ${ficheURL}`"
+            :to="`mailto:?subject=${fiche.title}&amp;body=Je te partage cette adresse ${ficheURL}`"
           >
             <v-list-item-title><v-icon color="#b7b7b7" class="mr-2">mdi-at</v-icon> Email</v-list-item-title>
           </v-list-item>

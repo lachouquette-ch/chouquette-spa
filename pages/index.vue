@@ -100,6 +100,8 @@
                 :key="post.id"
                 :post="post"
                 :class="{ 'mb-4': i < otherPosts.length - 1 }"
+                :to="post.slug"
+                nuxt
                 large
                 hide-meta
               ></PostCard>
@@ -149,7 +151,16 @@
     <v-sheet>
       <h2 class="text-center">Nos derniers tops</h2>
       <div class="cq-scroll-x-container px-3">
-        <PostCard v-for="post in topPosts" :key="post.id" :post="post" vertical large hide-meta></PostCard>
+        <PostCard
+          v-for="post in topPosts"
+          :key="post.id"
+          :post="post"
+          :to="post.slug"
+          nuxt
+          vertical
+          large
+          hide-meta
+        ></PostCard>
       </div>
       <div class="text-center my-3">
         <v-btn text nuxt to="/tops" class="text-decoration-underline">tous nos tops</v-btn>
@@ -169,7 +180,13 @@
           <p class="text-h5">Tous ont été testé et approuvé selon nos valeurs écoresponsables</p>
         </div>
         <div class="cq-scroll-x-container my-5">
-          <FicheCard v-for="fiche in latestChouquettises" :key="fiche.id" :fiche="fiche"></FicheCard>
+          <FicheCard
+            v-for="fiche in latestChouquettises"
+            :key="fiche.id"
+            :fiche="fiche"
+            :to="`/fiche/${fiche.slug}`"
+            nuxt
+          ></FicheCard>
         </div>
         <div class="text-center">
           <v-btn text nuxt to="/tops" class="text-decoration-underline">tous nos Chouquettisés</v-btn>

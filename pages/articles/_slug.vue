@@ -1,27 +1,6 @@
 <template>
   <div>
-    <v-dialog
-      ref="postDialog"
-      v-model="postDialog"
-      color="white"
-      fullscreen
-      scrollable
-      transition="slide-x-reverse-transition"
-    >
-      <v-card tile>
-        <v-card-title>
-          <FicheShare :fiche="selectedPost" small outlined color="white--text grey darken-3">Partager</FicheShare>
-          <v-spacer></v-spacer>
-          <v-btn icon @click="clearFicheSelection">
-            <v-icon>mdi-arrow-right</v-icon>
-          </v-btn>
-        </v-card-title>
-        <v-divider></v-divider>
-        <v-card-text class="pa-2 pb-0">
-          <Fiche v-if="selectedPost" :fiche="selectedPost"></Fiche>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+    <PostDialog v-model="selectedPostCard" @close="selectedPostCard = null"></PostDialog>
 
     <v-container>
       <h1 class="text-h5 text-center mt-3">Tous les articles</h1>
@@ -80,7 +59,7 @@
           :loading="selectedPostCard === post"
           :post="post"
           class="mb-3"
-          @click="selectPost(post)"
+          @click="selectedPostCard = post"
         ></PostCard>
         <v-btn
           v-if="!$fetchState.pending && hasMorePosts"
@@ -131,9 +110,10 @@ import graphql from '~/mixins/graphql'
 import CategoryButton from '~/components/CategoryButton'
 import ScrollTop from '~/components/ScrollTop'
 import {postCard as PostCardFragments} from '~/apollo/fragments/postCard'
+import PostDialog from '~/components/PostDialog'
 
 export default {
-  components: { CategoryButton, PostCard, ScrollTop },
+  components: { PostDialog, CategoryButton, PostCard, ScrollTop },
   mixins: [seo, graphql],
   asyncData({ store, params, query }) {
     const category = query.category ? store.getters['categories/getBySlug'](query.category) : null
@@ -152,8 +132,6 @@ export default {
       postsPages: null,
       hasMorePosts: true,
       selectedPostCard: null,
-      selectedPost: null,
-      postDialog: false,
     }
   },
   async fetch() {
@@ -228,37 +206,6 @@ export default {
     clearSearch() {
       this.search = null
       this.fetchWithFilters()
-    },
-    selectPost(ficheCard) {
-      // this.selectedPostCard = ficheCard
-      // this.selectedPost = await this.$apollo
-      //   .query({
-      //     query: gql`
-      //       query ($slug: String!) {
-      //         ficheBySlug(slug: $slug) {
-      //           ...FicheFragments
-      //
-      //           postCards {
-      //             ...PostCardFragments
-      //           }
-      //
-      //           similarFiches {
-      //             ...FicheCardFragments
-      //           }
-      //         }
-      //       }
-      //       ${FicheFragments}
-      //       ${PostCardFragments}
-      //       ${FicheCardFragments}
-      //     `,
-      //     variables: { slug: ficheCard.slug },
-      //   })
-      //   .then(({ data }) => data.ficheBySlug)
-      // this.postDialog = true
-    },
-    clearFicheSelection() {
-      this.selectedPostCard = null
-      this.postDialog = false
     },
   },
   computed: {

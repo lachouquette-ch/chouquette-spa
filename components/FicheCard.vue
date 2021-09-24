@@ -1,5 +1,5 @@
 <template>
-  <v-card hover ripple :to="`/fiche/${fiche.slug}`" nuxt width="200" max-width="60vw" v-bind="{ ...$props, ...$attrs }">
+  <v-card hover ripple width="200" max-width="60vw" v-bind="{ ...$props, ...$attrs }">
     <WpMediaNew :media="fiche.image" size="medium_large" height="200">
       <v-card-subtitle v-if="fiche.isChouquettise" class="pa-2">
         <v-chip color="cq-yellow" text-color="black" small>

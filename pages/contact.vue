@@ -3,8 +3,8 @@
     <v-container class="mb-3">
       <div class="text-center">
         <h1 class="mb-3">Contacter l'équipe Chouquette</h1>
-        <p>Un coucou, une suggestion ?, une envie de te Chouquettiser ?, …</p>
-        <p>Cool ! Alors écris-nous à. À très vite !</p>
+        <p>Un coucou, une suggestion ? L'envie de te Chouquettiser ?, …</p>
+        <p>N'hésites pas et écris-nous ! À très vite</p>
       </div>
 
       <v-row>
