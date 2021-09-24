@@ -67,7 +67,7 @@
                   </p>
                   <v-switch
                     v-model="chouquettiseOnly"
-                    color="cq-yellow ml-auto"
+                    color="cq-yellow"
                     inset
                     :ripple="false"
                     @change="updateFilterCounter"
@@ -398,7 +398,6 @@ export default {
           const categoryFilter = this.categoryFilters.find(({ taxonomy }) => taxonomy === key)
           if (categoryFilter) categoryFilter.selectedSlugs = value.split(',')
         })
-      this.updateFilterCounter()
 
       // move to selected category
       const categoryButton = document.getElementById(this.category.slug)
@@ -408,6 +407,7 @@ export default {
       const leftOffset = buttonLeftOffset > maxLeftOffset ? maxLeftOffset : buttonLeftOffset
       categoryContainer.scrollLeft = leftOffset
     }
+    this.updateFilterCounter()
   },
   methods: {
     mapOnPanEnd() {

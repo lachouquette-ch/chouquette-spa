@@ -189,7 +189,7 @@
           ></FicheCard>
         </div>
         <div class="text-center">
-          <v-btn text nuxt to="/tops" class="text-decoration-underline">tous nos Chouquettisés</v-btn>
+          <v-btn text nuxt to="/fiches?chouquettiseOnly=true" class="text-decoration-underline">tous nos Chouquettisés</v-btn>
         </div>
         <v-divider class="my-5"></v-divider>
         <div class="text-center">

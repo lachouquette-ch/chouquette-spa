@@ -53,6 +53,14 @@
             </v-container>
           </v-menu>
         </div>
+        <v-switch
+          v-model="topOnly"
+          label="Tops seuls"
+          hide-details
+          dense
+          class="mt-0 mb-1"
+          @change="fetchWithFilters"
+        ></v-switch>
         <PostCard
           v-for="post in posts"
           :key="post.id"
@@ -122,6 +130,7 @@ export default {
       category,
       search: query.search,
       sortAsc: query.sort === 'asc',
+      topOnly: Boolean(query.topOnly),
     }
   },
   data() {
@@ -143,8 +152,15 @@ export default {
     try {
       const { data } = await this.$apollo.query({
         query: gql`
-          query ($category: String, $search: String, $asc: Boolean, $page: Int!, $pageSize: Int!) {
-            postsByFilters(category: $category, search: $search, asc: $asc, page: $page, pageSize: $pageSize) {
+          query ($category: String, $search: String, $asc: Boolean, $topOnly: Boolean, $page: Int!, $pageSize: Int!) {
+            postsByFilters(
+              category: $category
+              search: $search
+              asc: $asc
+              topOnly: $topOnly
+              page: $page
+              pageSize: $pageSize
+            ) {
               hasMore
               total
               totalPages
@@ -159,6 +175,7 @@ export default {
           category: this.category ? this.category.slug : null,
           search: this.search,
           asc: this.sortAsc,
+          topOnly: this.topOnly,
           page: this.postsNextPage++,
           pageSize: PER_PAGE_NUMBER,
         },
@@ -196,6 +213,7 @@ export default {
       if (this.category) query.category = this.category.slug
       if (this.search) query.search = this.search
       if (this.sortAsc) query.sort = 'asc'
+      if (this.topOnly) query.topOnly = this.topOnly
 
       this.$router.replace({ query })
       return this.$fetch()
