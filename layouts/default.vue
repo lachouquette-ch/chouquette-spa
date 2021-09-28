@@ -60,6 +60,9 @@
             <v-btn icon small target="_blank" href="https://www.instagram.com/lachouquette.ch" class="mx-3">
               <v-icon large color="#E1306C">mdi-instagram</v-icon>
             </v-btn>
+            <v-btn icon small to="/contact" nuxt class="mx-3">
+              <v-icon large color="primary">mdi-email-outline</v-icon>
+            </v-btn>
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@
       >
         <v-card-text>
           <h1 class="white--text font-weight-bold mb-3 mb-md-5">les meilleures adresses locales et éco-responsables</h1>
-          <v-container style="max-width: 600px">
+          <v-container class="cq-sm-max-width">
             <v-row class="justify-center align-center" :no-gutters="$vuetify.breakpoint.mobile">
               <v-col cols="12" md="6">
                 <v-select
@@ -83,10 +83,12 @@
           <v-skeleton-loader
             v-for="i in 4"
             :key="i"
-            class="ma-2"
+            class="ma-2 pa-2"
             elevation="1"
-            type="list-item-avatar-three-line"
-            width="300"
+            type="list-item-avatar, list-item-three-line"
+            height="150"
+            width="400"
+            max-width="100%"
           ></v-skeleton-loader>
         </template>
         <template v-else>

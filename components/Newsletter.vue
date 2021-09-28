@@ -11,7 +11,7 @@
       @success="onMailchimpSubscriptionSuccess"
     >
       <template #default="{ subscribe, setEmail, loading }">
-        <v-container style="max-width: 600px">
+        <v-container class="cq-sm-max-width">
           <v-row class="justify-center align-center" :no-gutters="$vuetify.breakpoint.mobile">
             <v-col cols="12" md="6">
               <v-text-field

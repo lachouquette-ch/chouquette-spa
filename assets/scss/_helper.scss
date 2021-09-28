@@ -36,3 +36,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.cq-sm-max-width {
+  max-width: map-get($grid-breakpoints, 'sm') !important;
+}
