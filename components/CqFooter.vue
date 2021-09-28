@@ -36,7 +36,7 @@
           transition="false"
           alt="Logo Chouquette"
           contain
-          width="200"
+          width="150"
           class="mx-auto"
         ></v-img>
       </v-col>

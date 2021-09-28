@@ -75,6 +75,7 @@ export default {
 <style lang="scss" scoped>
 .horizontal {
   height: 100px;
+  max-width: 400px;
 
   &.large {
     height: 150px;

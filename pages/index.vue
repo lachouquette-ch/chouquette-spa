@@ -8,13 +8,9 @@
         height="300"
       >
         <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col>
-                <h1 class="white--text font-weight-bold">les meilleures adresses locales et éco-responsables</h1>
-              </v-col>
-            </v-row>
-            <v-row>
+          <h1 class="white--text font-weight-bold mb-3 mb-md-5">les meilleures adresses locales et éco-responsables</h1>
+          <v-container style="max-width: 600px">
+            <v-row class="justify-center align-center" :no-gutters="$vuetify.breakpoint.mobile">
               <v-col cols="12" md="6">
                 <v-select
                   v-model="selectedLocation"
@@ -35,12 +31,12 @@
                   </template>
                 </v-select>
               </v-col>
-              <v-col cols="12" md="6" class="pt-0">
+              <v-col cols="12" md="6">
                 <v-btn
                   block
                   elevation="3"
                   color="cq-yellow"
-                  class="black--text"
+                  class="black--text mt-2 mt-md-0"
                   x-large
                   @click="goToLocation(selectedLocation)"
                   >Rechercher</v-btn
@@ -53,61 +49,61 @@
     </v-card>
     <v-sheet>
       <h2 class="text-center">ARTICLES À LA UNE</h2>
-      <v-container>
-        <v-row>
-          <v-col cols="12" md="6" class="py-0">
-            <v-skeleton-loader
-              v-if="$fetchState.pending"
-              class="mx-auto mb-3"
-              elevation="3"
-              type="card"
-            ></v-skeleton-loader>
-            <v-card v-else class="mx-auto mb-5" :to="`/${highlightedPost.slug}`" nuxt ripple elevation="3">
-              <WpMediaNew
-                v-if="highlightedPost.image"
-                :media="highlightedPost.image"
-                size="medium_large"
-                aspect-ratio="1"
-                height="200"
-                width="100%"
-              >
-                <v-card-subtitle class="pa-2">
-                  <v-chip color="white" small>
-                    {{ getCategoryById(highlightedPost.categoryId).name }}
-                  </v-chip>
-                </v-card-subtitle>
-              </WpMediaNew>
-              <v-card-text>
-                <v-card-title class="pa-0">
-                  <h3>{{ highlightedPost.title }}</h3>
-                </v-card-title>
-              </v-card-text>
-            </v-card>
-          </v-col>
-          <v-col cols="12" md="6" class="py-0">
-            <template v-if="$fetchState.pending">
-              <v-skeleton-loader
-                v-for="i in 3"
-                :key="i"
-                class="mb-3"
-                elevation="1"
-                type="list-item-avatar-three-line"
-              ></v-skeleton-loader>
-            </template>
-            <template v-else>
-              <PostCard
-                v-for="(post, i) in otherPosts"
-                :key="post.id"
-                :post="post"
-                :class="{ 'mb-4': i < otherPosts.length - 1 }"
-                :to="post.slug"
-                nuxt
-                large
-                hide-meta
-              ></PostCard>
-            </template>
-          </v-col>
-        </v-row>
+      <v-container class="d-md-none">
+        <v-skeleton-loader
+          v-if="$fetchState.pending"
+          class="mx-auto mb-3"
+          elevation="3"
+          type="card"
+        ></v-skeleton-loader>
+        <v-card v-else class="mx-auto" :to="`/${highlightedPost.slug}`" nuxt ripple elevation="3" max-width="400">
+          <WpMediaNew
+            v-if="highlightedPost.image"
+            :media="highlightedPost.image"
+            size="medium_large"
+            aspect-ratio="1"
+            height="200"
+            width="100%"
+          >
+            <v-card-subtitle class="pa-2">
+              <v-chip color="white" small>
+                {{ getCategoryById(highlightedPost.categoryId).name }}
+              </v-chip>
+            </v-card-subtitle>
+          </WpMediaNew>
+          <v-card-text>
+            <v-card-title class="pa-0">
+              <h3>{{ highlightedPost.title }}</h3>
+            </v-card-title>
+          </v-card-text>
+        </v-card>
+      </v-container>
+      <v-container class="d-flex flex-wrap justify-center">
+        <template v-if="$fetchState.pending">
+          <v-skeleton-loader
+            v-for="i in 4"
+            :key="i"
+            class="ma-2"
+            elevation="1"
+            type="list-item-avatar-three-line"
+            width="300"
+          ></v-skeleton-loader>
+        </template>
+        <template v-else>
+          <div class="d-none d-md-block">
+            <PostCard :post="highlightedPost" class="my-1" :to="highlightedPost.slug" nuxt large hide-meta></PostCard>
+          </div>
+          <PostCard
+            v-for="post in otherPosts"
+            :key="post.id"
+            :post="post"
+            class="my-1"
+            :to="post.slug"
+            nuxt
+            large
+            hide-meta
+          ></PostCard>
+        </template>
       </v-container>
       <div class="text-center mb-3">
         <v-btn text nuxt to="/articles" class="text-decoration-underline">tous nos articles</v-btn>
@@ -167,7 +163,7 @@
       </div>
     </v-sheet>
 
-    <v-container class="cq-beige py-3" style="position: relative">
+    <v-container class="cq-beige py-3" style="position: relative" fluid>
       <img
         src="/lachouquette_logo_simple_white.png"
         alt="Logo La Chouquette"
@@ -189,13 +185,17 @@
           ></FicheCard>
         </div>
         <div class="text-center">
-          <v-btn text nuxt to="/fiches?chouquettiseOnly=true" class="text-decoration-underline">tous nos Chouquettisés</v-btn>
+          <v-btn text nuxt to="/fiches?chouquettiseOnly=true" class="text-decoration-underline"
+            >tous nos Chouquettisés</v-btn
+          >
         </div>
         <v-divider class="my-5"></v-divider>
         <div class="text-center">
           <p class="text-h3 font-weight-bold">notre label t'intéresse ?</p>
           <p class="text-h5">tu partages nos valeurs et souhaite en savoir comment obtenir ce label ?</p>
-          <v-btn block elevation="3" color="cq-yellow" class="black--text my-5" large>Nous contacter</v-btn>
+          <v-btn elevation="3" :block="$vuetify.breakpoint.mobile" color="cq-yellow" class="black--text mb-3" large
+            >Nous contacter</v-btn
+          >
         </div>
       </div>
     </v-container>
@@ -358,6 +358,7 @@ h2 {
   letter-spacing: 1.5px !important;
   font-weight: 200 !important;
   text-transform: uppercase;
-  margin: 2rem 0;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 </style>
