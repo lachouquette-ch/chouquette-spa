@@ -43,4 +43,6 @@
 
 .cq-md-max-width {
   max-width: map-get($grid-breakpoints, 'md') !important;
+  margin-left: auto;
+  margin-right: auto;
 }
