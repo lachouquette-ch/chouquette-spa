@@ -1,5 +1,11 @@
 <template>
-  <v-dialog v-model="dialog" color="white" fullscreen scrollable transition="slide-x-reverse-transition">
+  <v-dialog
+    v-model="dialog"
+    color="white"
+    scrollable
+    transition="slide-x-reverse-transition"
+    v-bind="{ ...$props, ...$attrs }"
+  >
     <v-card tile>
       <v-card-title>
         <FicheShare v-if="fiche" :fiche="fiche" small color="primary">Partager</FicheShare>

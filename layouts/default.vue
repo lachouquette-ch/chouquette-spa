@@ -10,7 +10,7 @@
       <div class="d-flex flex-column" style="min-height: 100vh">
         <div>
           <v-list-item three-line>
-            <v-list-item-content>
+            <v-list-item-content class="text-center">
               <v-list-item-title>
                 <h1 class="text-h6">{{ name }}</h1>
               </v-list-item-title>
@@ -20,9 +20,9 @@
 
           <v-divider></v-divider>
 
-          <v-list dense nav>
+          <v-list nav>
             <v-subheader class="text-h4">Les intérêts</v-subheader>
-            <v-list-item v-for="item in categoryMenu.items" :key="item.id" :to="`/fiches?category=${item.slug}`" nuxt>
+            <v-list-item v-for="item in categoryMenu.items" :key="item.id" :to="`/fiches?category=${item.slug}`" nuxt class="mb-0">
               <v-list-item-content>
                 <v-list-item-title>{{ item.title }}</v-list-item-title>
               </v-list-item-content>
@@ -31,9 +31,9 @@
 
           <v-divider></v-divider>
 
-          <v-list dense nav>
+          <v-list nav>
             <v-subheader class="text-h4">{{ aboutMenu.name }}</v-subheader>
-            <v-list-item v-for="item in aboutMenu.items" :key="item.id" :to="`/${item.slug}`" nuxt>
+            <v-list-item v-for="item in aboutMenu.items" :key="item.id" :to="`/${item.slug}`" nuxt class="mb-0">
               <v-list-item-content>
                 <v-list-item-title>{{ item.title }}</v-list-item-title>
               </v-list-item-content>
@@ -42,9 +42,9 @@
 
           <v-divider></v-divider>
 
-          <v-list dense nav>
+          <v-list nav>
             <v-subheader class="text-h4">{{ contactMenu.name }}</v-subheader>
-            <v-list-item v-for="item in contactMenu.items" :key="item.id" :to="`/${item.slug}`" nuxt>
+            <v-list-item v-for="item in contactMenu.items" :key="item.id" :to="`/${item.slug}`" nuxt class="mb-0">
               <v-list-item-content>
                 <v-list-item-title>{{ item.title }}</v-list-item-title>
               </v-list-item-content>
@@ -53,14 +53,14 @@
         </div>
         <v-spacer></v-spacer>
         <div>
-          <div class="d-flex justify-center mb-3">
-            <v-btn icon small target="_blank" href="https://www.facebook.com/lachouquette" class="mx-3">
+          <div class="d-flex justify-center mb-2">
+            <v-btn icon large target="_blank" href="https://www.facebook.com/lachouquette" class="mx-2">
               <v-icon large color="#4267b2">mdi-facebook</v-icon>
             </v-btn>
-            <v-btn icon small target="_blank" href="https://www.instagram.com/lachouquette.ch" class="mx-3">
+            <v-btn icon large target="_blank" href="https://www.instagram.com/lachouquette.ch" class="mx-2">
               <v-icon large color="#E1306C">mdi-instagram</v-icon>
             </v-btn>
-            <v-btn icon small to="/contact" nuxt class="mx-3">
+            <v-btn icon large to="/contact" nuxt class="mx-2">
               <v-icon large color="primary">mdi-email-outline</v-icon>
             </v-btn>
           </div>

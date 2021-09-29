@@ -12,11 +12,12 @@
     >
       <template #default="{ subscribe, setEmail, loading }">
         <v-container class="cq-sm-max-width">
-          <v-row class="justify-center align-center" :no-gutters="$vuetify.breakpoint.mobile">
+          <v-row class="justify-center align-center" no-gutters>
             <v-col cols="12" md="6">
               <v-text-field
                 v-model="email"
                 label="Ton email"
+                class="mr-md-3"
                 solo
                 rounded
                 hide-details

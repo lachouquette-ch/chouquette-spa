@@ -20,7 +20,7 @@
   @media #{map-get($display-breakpoints, 'sm-and-up')} {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
 
     > * {
@@ -39,4 +39,8 @@
 
 .cq-sm-max-width {
   max-width: map-get($grid-breakpoints, 'sm') !important;
+}
+
+.cq-md-max-width {
+  max-width: map-get($grid-breakpoints, 'md') !important;
 }

@@ -10,11 +10,12 @@
         <v-card-text>
           <h1 class="white--text font-weight-bold mb-3 mb-md-5">les meilleures adresses locales et éco-responsables</h1>
           <v-container class="cq-sm-max-width">
-            <v-row class="justify-center align-center" :no-gutters="$vuetify.breakpoint.mobile">
+            <v-row class="justify-center align-center" no-gutters>
               <v-col cols="12" md="6">
                 <v-select
                   v-model="selectedLocation"
                   label="Où veux-tu aller ?"
+                  class="mr-md-3"
                   hide-details
                   solo
                   rounded
@@ -146,9 +147,9 @@
       </v-container>
     </v-sheet>
 
-    <v-sheet>
+    <v-sheet class="px-3">
       <h2 class="text-center">Nos derniers tops</h2>
-      <div class="cq-scroll-x-container px-3">
+      <div class="cq-scroll-x-container">
         <PostCard
           v-for="post in topPosts"
           :key="post.id"

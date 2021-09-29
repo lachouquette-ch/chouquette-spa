@@ -8,7 +8,13 @@
       v-if="!preview && hasMoreFiches"
       style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%)"
     >
-      <v-btn :loading="fetchLoading" small rounded class="white" @click="$emit('moreFiches')">
+      <v-btn
+        :loading="fetchLoading"
+        :small="$vuetify.breakpoint.mobile"
+        rounded
+        class="white"
+        @click="$emit('moreFiches')"
+      >
         Plus de fiches
         <v-icon right>mdi-cloud-upload</v-icon>
       </v-btn>

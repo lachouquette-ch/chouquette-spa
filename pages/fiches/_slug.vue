@@ -36,16 +36,30 @@
               >
             </v-tooltip>
             <v-spacer></v-spacer>
-            <v-btn style="opacity: 0.9" color="cq-grey" class="white--text" rounded small @click="mapDialog = false">
+            <v-btn
+              style="opacity: 0.9"
+              color="cq-grey"
+              class="white--text"
+              rounded
+              :small="$vuetify.breakpoint.mobile"
+              @click="mapDialog = false"
+            >
               <v-icon left>mdi-format-list-text</v-icon>
-              Liste
+              <span v-if="$vuetify.breakpoint.mobile">Liste</span>
+              <span v-else>Retour à la liste</span>
             </v-btn>
           </div>
         </div>
       </v-container>
     </v-dialog>
 
-    <v-dialog v-model="filtersDialog" fullscreen scrollable transition="dialog-bottom-transition">
+    <v-dialog
+      v-model="filtersDialog"
+      :fullscreen="$vuetify.breakpoint.mobile"
+      max-width="500"
+      scrollable
+      transition="dialog-bottom-transition"
+    >
       <v-card tile>
         <v-card-title>
           <span><h3>Filtrer</h3></span>
@@ -61,10 +75,11 @@
             <v-list-item three-line>
               <v-list-item-content class="pt-0">
                 <div class="d-inline-flex align-center">
-                  <p class="ma-0 text-caption">
+                  <p class="mb-0 mr-3 text-caption">
                     Sélectionner que les adresses testées et approuvées par l'équipe. tesa fadsf
                     kldasjféladsjféalsdfkjasdélf jasdf
                   </p>
+                  <v-spacer></v-spacer>
                   <v-switch
                     v-model="chouquettiseOnly"
                     color="cq-yellow"
@@ -99,18 +114,26 @@
             Selectionner une catégorie pour obtenir plus de filtres
           </v-alert>
         </v-card-text>
-        <v-card-actions>
-          <v-btn outlined class="flex-grow-2 mx-1" @click.prevent="clearCriteria">Tout effacer</v-btn>
-          <v-btn color="primary" class="flex-grow-1 mx-1" @click.prevent="searchByFilters">Appliquer</v-btn>
+        <v-card-actions class="justify-end">
+          <v-btn outlined class="flex-grow-2 flex-md-grow-0 mx-1" @click.prevent="clearCriteria">Tout effacer</v-btn>
+          <v-btn color="primary" class="flex-grow-1 flex-md-grow-0 mx-1" @click.prevent="searchByFilters"
+            >Appliquer</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
 
-    <FicheDialog v-model="selectedFicheCard" @close="selectedFicheCard = null"></FicheDialog>
+    <FicheDialog
+      v-model="selectedFicheCard"
+      :fullscreen="$vuetify.breakpoint.mobile"
+      max-width="500"
+      @close="selectedFicheCard = null"
+      @click:outside="selectedFicheCard = null"
+    ></FicheDialog>
 
     <v-container>
-      <h1 class="text-center mt-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
-      <div id="categoryContainer" class="cq-scroll-x-container mt-4 justify-start">
+      <h1 class="text-center my-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
+      <div id="categoryContainer" class="cq-scroll-x-container">
         <CategoryButton
           v-for="topCategory in topCategories"
           :id="topCategory.slug"
@@ -121,8 +144,9 @@
           @click="selectTopCategory(topCategory)"
         ></CategoryButton>
       </div>
-      <div v-if="subCategories.length" class="cq-scroll-x-container mt-1">
-        <div class="d-inline-flex">
+      <div v-if="subCategories.length" class="cq-scroll-x-container">
+        <div class="d-inline-flex align-center">
+          <span class="d-none d-md-inline text-nowrap mr-2">Sous catégories</span>
           <v-chip
             v-for="subCategory in subCategories"
             :key="subCategory.id"
@@ -135,13 +159,14 @@
           >
         </div>
       </div>
-      <div class="mt-1 d-flex align-stretch">
+      <div class="mt-1 mt-sm-5 d-flex align-stretch justify-end">
         <v-text-field
           v-model="search"
           outlined
           label="Rechercher dans la categorie"
           prepend-inner-icon="mdi-magnify"
-          class="mr-2"
+          class="mr-2 ml-md-auto flex-sm-grow-0"
+          style="width: 300px"
           clearable
           hide-details
           dense
@@ -155,15 +180,17 @@
           </v-btn>
         </v-badge>
       </div>
-      <template v-if="fiches.length">
-        <v-subheader class="px-0">{{ fichesTotal }} résultats</v-subheader>
+      <v-subheader class="px-0">{{ fichesTotal }} résultats</v-subheader>
+      <div v-if="fiches.length" class="d-flex flex-wrap justify-center">
         <v-card
           v-for="fiche in fiches"
           :key="fiche.id"
-          class="mb-3"
+          class="ma-3 mt-0"
           outlined
           bench="2"
-          active-class=" "
+          active-class=""
+          width="400"
+          max-width="100%"
           :loading="selectedFicheCard === fiche ? 'white' : false"
           loader-height="5"
           @click="selectFiche(fiche)"
@@ -213,14 +240,16 @@
         >
           Plus d'adresses
         </v-btn>
-      </template>
-      <div v-if="$fetchState.pending" class="mt-3">
+      </div>
+      <div v-if="$fetchState.pending" class="mt-3 d-flex flex-wrap justify-center">
         <v-skeleton-loader
-          v-for="i in 3"
+          v-for="i in 4"
           :key="i"
-          class="mb-3"
+          class="ma-3 mt-0"
           elevation="1"
           type="image, article, actions"
+          width="400"
+          max-width="100%"
         ></v-skeleton-loader>
       </div>
       <v-alert
@@ -234,19 +263,19 @@
         <span v-if="fiches.length">Tu as tout vu !</span>
         <span v-else>Aucun résultat pour ta recherche</span>
       </v-alert>
-
       <v-fade-transition>
         <v-btn
           v-if="!mapDialog"
-          style="opacity: 0.9; bottom: 65px; left: 50%; transform: translateX(-50%)"
+          :style="mapBtnPosition"
           color="cq-grey"
           class="white--text"
-          small
+          :small="$vuetify.breakpoint.mobile"
           fixed
           @click="mapDialog = true"
         >
           <v-icon left>mdi-map</v-icon>
-          Carte
+          <span v-if="$vuetify.breakpoint.mobile">Carte</span>
+          <span v-else>Afficher la carte</span>
         </v-btn>
       </v-fade-transition>
       <ScrollTop></ScrollTop>
@@ -538,6 +567,20 @@ export default {
     }),
     ficheCountWithPoi() {
       return this.fiches.filter(({ poi }) => !!poi).length
+    },
+    mapBtnPosition() {
+      if (this.$vuetify.breakpoint.mobile)
+        return {
+          left: '50%',
+          transform: 'translateX(-50%)',
+          bottom: '64px',
+          opacity: '0.9',
+        }
+      else
+        return {
+          top: '110px',
+          right: '10px',
+        }
     },
   },
   head() {
