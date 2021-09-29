@@ -23,3 +23,19 @@ h5 {
 h6 {
   @extend .v-application, .title;
 }
+
+// scrollbar
+
+::-webkit-scrollbar{
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb{
+  background: var(--v-secondary-base);
+}
+::-webkit-scrollbar-thumb:hover{
+  background: var(--v-primary-base);
+}
+::-webkit-scrollbar-track{
+  background: var(--v-cq-beige-base);
+}
