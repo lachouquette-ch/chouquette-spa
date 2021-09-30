@@ -31,13 +31,13 @@
         </v-col>
         <v-col cols="12" md="4" class="text-center">
           <v-img
-            :aspect-ratio="1 / 1"
             :lazy-src="`${wordpressUrl}/wp-content/uploads/2019/03/logo_white-150x150.png`"
             :src="`${wordpressUrl}/wp-content/uploads/2019/03/logo_white-768x706.png`"
             transition="false"
             alt="Logo Chouquette"
             contain
             width="150"
+            height="150"
             class="mx-auto"
           ></v-img>
         </v-col>

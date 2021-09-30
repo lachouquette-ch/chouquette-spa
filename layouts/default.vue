@@ -165,9 +165,9 @@
     </v-app-bar>
 
     <!-- Sizes your content based upon application components -->
-    <v-main class="cq-md-max-width">
+    <v-main>
       <!-- Provides the application the proper gutter -->
-      <v-container fluid class="pa-0 min-vh-100 d-flex flex-column">
+      <v-container fluid class="pa-0 min-vh-100 d-flex flex-column cq-md-max-width">
         <nuxt></nuxt>
       </v-container>
     </v-main>

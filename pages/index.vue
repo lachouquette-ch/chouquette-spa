@@ -56,6 +56,7 @@
           class="mx-auto mb-3"
           elevation="3"
           type="card"
+          max-width="400"
         ></v-skeleton-loader>
         <v-card v-else class="mx-auto" :to="`/${highlightedPost.slug}`" nuxt ripple elevation="3" max-width="400">
           <WpMediaNew
@@ -79,34 +80,35 @@
           </v-card-text>
         </v-card>
       </v-container>
-      <v-container class="d-flex flex-wrap justify-center">
-        <template v-if="$fetchState.pending">
-          <v-skeleton-loader
-            v-for="i in 4"
-            :key="i"
-            class="ma-2 pa-2"
-            elevation="1"
-            type="list-item-avatar, list-item-three-line"
-            height="150"
-            width="400"
-            max-width="100%"
-          ></v-skeleton-loader>
-        </template>
-        <template v-else>
-          <div class="d-none d-md-block">
-            <PostCard :post="highlightedPost" class="my-1" :to="highlightedPost.slug" nuxt large hide-meta></PostCard>
-          </div>
-          <PostCard
-            v-for="post in otherPosts"
-            :key="post.id"
-            :post="post"
-            class="my-1"
-            :to="post.slug"
-            nuxt
-            large
-            hide-meta
-          ></PostCard>
-        </template>
+      <v-container>
+        <v-row>
+          <template v-if="$fetchState.pending">
+            <v-col v-for="i in 4" :key="i" cols="12" md="6">
+              <v-skeleton-loader
+                class="my-2 mx-auto pa-2"
+                elevation="1"
+                type="list-item-avatar, list-item-three-line"
+                height="150"
+                max-width="400"
+              ></v-skeleton-loader>
+            </v-col>
+          </template>
+          <template v-else>
+            <v-col cols="6" class="d-none d-md-block">
+              <PostCard
+                :post="highlightedPost"
+                class="my-2 mx-auto"
+                :to="highlightedPost.slug"
+                nuxt
+                large
+                hide-meta
+              ></PostCard>
+            </v-col>
+            <v-col v-for="post in otherPosts" :key="post.id" cols="12" md="6">
+              <PostCard :post="post" class="my-2 mx-auto" :to="post.slug" nuxt large hide-meta></PostCard>
+            </v-col>
+          </template>
+        </v-row>
       </v-container>
       <div class="text-center mb-3">
         <v-btn text nuxt to="/articles" class="text-decoration-underline">tous nos articles</v-btn>
@@ -149,7 +151,7 @@
 
     <v-sheet class="px-3">
       <h2 class="text-center">Nos derniers tops</h2>
-      <div class="cq-scroll-x-container">
+      <div v-if="$vuetify.breakpoint.mobile" class="cq-scroll-x-container">
         <PostCard
           v-for="post in topPosts"
           :key="post.id"
@@ -161,6 +163,13 @@
           hide-meta
         ></PostCard>
       </div>
+      <v-container v-else>
+        <v-row>
+          <v-col v-for="post in topPosts" :key="post.id" cols="4">
+            <PostCard :post="post" :to="post.slug" nuxt vertical large hide-meta></PostCard>
+          </v-col>
+        </v-row>
+      </v-container>
       <div class="text-center my-3">
         <v-btn text nuxt to="/articles?topOnly=true" class="text-decoration-underline">tous nos tops</v-btn>
       </div>
@@ -178,14 +187,23 @@
           <h2>Nos Chouquettisés</h2>
           <p class="text-h5">Tous ont été testé et approuvé selon nos valeurs écoresponsables</p>
         </div>
-        <div class="cq-scroll-x-container my-5">
-          <FicheCard
-            v-for="fiche in latestChouquettises"
-            :key="fiche.id"
-            :fiche="fiche"
-            :to="`/fiche/${fiche.slug}`"
-            nuxt
-          ></FicheCard>
+        <div class="my-5">
+          <div v-if="$vuetify.breakpoint.mobile" class="cq-scroll-x-container">
+            <FicheCard
+              v-for="fiche in latestChouquettises"
+              :key="fiche.id"
+              :fiche="fiche"
+              :to="`/fiche/${fiche.slug}`"
+              nuxt
+            ></FicheCard>
+          </div>
+          <v-container v-else>
+            <v-row>
+              <v-col v-for="fiche in latestChouquettises" :key="fiche.id" cols="6" md="4">
+                <FicheCard :fiche="fiche" :to="`/fiche/${fiche.slug}`" nuxt height="100%" class="mx-auto"></FicheCard>
+              </v-col>
+            </v-row>
+          </v-container>
         </div>
         <div class="text-center">
           <v-btn text nuxt to="/fiches?chouquettiseOnly=true" class="text-decoration-underline"
