@@ -2,13 +2,12 @@
   <div>
     <v-card flat>
       <v-img
-        src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-        gradient="to bottom, rgba(0,0,0,.6), rgba(0,0,0,.3)"
+        src="/banner.png"
         class="rounded-0 align-center text-center"
         height="300"
       >
         <v-card-text>
-          <h1 class="white--text font-weight-bold mb-3 mb-md-5">les meilleures adresses locales et éco-responsables</h1>
+          <h1 class="font-weight-bold mb-3 mb-md-5">les meilleures adresses locales et éco-responsables</h1>
           <v-container class="cq-sm-max-width">
             <v-row class="justify-center align-center" no-gutters>
               <v-col cols="12" md="6">
