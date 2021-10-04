@@ -169,7 +169,7 @@
       </v-tabs-items>
       <v-btn
         color="cq-red"
-        block
+        :block="$vuetify.breakpoint.mobile"
         outlined
         @click.prevent="
           isContactForm = false
@@ -196,16 +196,22 @@
       <div v-if="fiche.similarFiches">
         <v-divider class="my-3"></v-divider>
         <h2>Adresses similaires</h2>
-        <div class="cq-scroll-x-container mt-3">
+        <div v-if="$vuetify.breakpoint.mobile" class="cq-scroll-x-container my-3">
           <FicheCard
             v-for="fiche in fiche.similarFiches"
             :key="fiche.id"
-            class="mb-3"
             :fiche="fiche"
             :to="`/fiche/${fiche.slug}`"
             nuxt
           ></FicheCard>
         </div>
+        <v-container v-else>
+          <v-row>
+            <v-col v-for="fiche in fiche.similarFiches" :key="fiche.id" cols="4">
+              <FicheCard class="mx-auto" :fiche="fiche" :to="`/fiche/${fiche.slug}`" nuxt></FicheCard>
+            </v-col>
+          </v-row>
+        </v-container>
       </div>
     </v-card>
 
@@ -231,6 +237,7 @@
                     label="Ton message *"
                     counter="300"
                     required
+                    autofocus
                     @blur="$v.formFiche.message.$touch"
                   ></v-textarea>
                 </v-col>

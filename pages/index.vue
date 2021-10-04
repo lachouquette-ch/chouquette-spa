@@ -265,7 +265,7 @@ export default {
   },
   data() {
     return {
-      selectedLocation: null,
+      selectedLocation: '',
       latestPosts: [],
       latestChouquettises: [],
       topPosts: [],

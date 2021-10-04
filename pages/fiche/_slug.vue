@@ -8,9 +8,9 @@
 
 <script>
 import gql from 'graphql-tag'
-import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
-import { ficheCard as FicheCardFragments } from '@/apollo/fragments/ficheCard'
-import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
+import {fiche as FicheFragments} from '@/apollo/fragments/fiche'
+import {ficheCard as FicheCardFragments} from '@/apollo/fragments/ficheCard'
+import {postCard as PostCardFragments} from '@/apollo/fragments/postCard'
 import seo from '~/mixins/seo'
 import FicheShare from '~/components/FicheShare'
 import graphql from '~/mixins/graphql'
@@ -93,8 +93,16 @@ export default {
 <style lang="scss" scoped>
 .share {
   position: fixed;
-  right: 10px;
-  bottom: 70px;
   z-index: 1;
+
+  @media #{map-get($display-breakpoints, 'sm-and-down')} {
+    bottom: 56px;
+    right: 10px;
+  }
+
+  @media #{map-get($display-breakpoints, 'md-and-up')} {
+    bottom: 10px;
+    right: calc(50% - #{map-get($grid-breakpoints, 'md') / 2});
+  }
 }
 </style>

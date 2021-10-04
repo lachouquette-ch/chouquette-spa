@@ -63,7 +63,7 @@
       scrollable
       transition="dialog-bottom-transition"
     >
-      <v-card tile>
+      <v-card min-height="500" tile>
         <v-card-title>
           <span><h3>Filtrer</h3></span>
           <v-spacer></v-spacer>

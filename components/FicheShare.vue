@@ -3,7 +3,7 @@
     <template v-if="shareApiAvailable">
       <v-btn
         v-bind="{ ...$props, ...$attrs }"
-        @click.prevent="shareWith('Addresse sur LaChouquette.ch', fiche.title, ficheURL)"
+        @click.prevent="shareWith('Adresse sur LaChouquette.ch', fiche.title, ficheURL)"
       >
         <v-icon :left="!!$slots.default">mdi-share-variant</v-icon>
         <slot></slot>

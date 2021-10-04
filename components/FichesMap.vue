@@ -170,10 +170,10 @@ export default {
       this.currentMarker = this.markers.values().next().value
       this.currentInfoWindow = this.infoWindows.values().next().value
 
-      this.markerClusterer.fitMapToMarkers({ top: 5, right: 5, bottom: 64, left: 5 })
       if (this.markers.size === 1 && this.preview) {
-        this.currentInfoWindow.open(this.map, this.currentMarker)
-        setTimeout(() => this.map.setZoom(ZOOM_LEVELS.default), 10)
+        this.map.setCenter(this.currentMarker.getPosition())
+      } else {
+        this.markerClusterer.fitMapToMarkers({ top: 5, right: 5, bottom: 64, left: 5 })
       }
     },
     loadFichesOnMap() {
