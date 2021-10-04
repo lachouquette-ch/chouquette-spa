@@ -1,17 +1,27 @@
 @import '~vuetify/src/styles/settings/variables';
 
 .cq-scroll-x-container {
-  overflow-x: scroll;
-  scroll-snap-type: x mandatory;
-  scroll-padding-left: 30px;
-  display: flex;
-  padding-bottom: 1.25rem;
+  @media #{map-get($display-breakpoints, 'xs-only')} {
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 30px;
+    display: flex;
+    padding-bottom: 1.25rem;
 
-  > * {
-    scroll-snap-align: start;
+    > * {
+      scroll-snap-align: start;
 
-    &:not(:last-child) {
-      margin-right: 1rem;
+      &:not(:last-child) {
+        margin-right: 1rem;
+      }
+    }
+  }
+
+  @media #{map-get($display-breakpoints, 'sm-and-up')} {
+    display: block;
+
+    > * {
+      margin: 4px 6px;
     }
   }
 }

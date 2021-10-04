@@ -170,9 +170,9 @@
       <v-container fluid class="pa-0 min-vh-100 d-flex flex-column cq-md-max-width">
         <nuxt></nuxt>
       </v-container>
-    </v-main>
 
-    <Footer class="mt-auto"></Footer>
+      <Footer class="mt-auto"></Footer>
+    </v-main>
 
     <v-bottom-navigation v-if="$vuetify.breakpoint.mobile" v-model="selectedNav" fixed app color="cq-red">
       <v-btn nuxt to="/">
