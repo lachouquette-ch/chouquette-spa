@@ -231,7 +231,6 @@
                     label="Ton message *"
                     counter="300"
                     required
-                    autofocus
                     @blur="$v.formFiche.message.$touch"
                   ></v-textarea>
                 </v-col>

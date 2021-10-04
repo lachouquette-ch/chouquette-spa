@@ -6,7 +6,7 @@
       <span>En savoir plus + highlight titre</span>
     </v-system-bar>
 
-    <v-navigation-drawer v-model="toggleMenu" temporary app right>
+    <v-navigation-drawer v-model="toggleMenu" temporary app right width="500">
       <div class="d-flex flex-column" style="min-height: 100vh">
         <div>
           <v-list-item three-line>

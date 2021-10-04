@@ -26,7 +26,7 @@
 import Vue from 'vue'
 import MarkerClusterer from '@googlemaps/markerclustererplus'
 
-import {CLUSTER_STYLES, LAUSANNE_LAT_LNG, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS} from '~/constants/mapSettings'
+import {CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS} from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
 
 // create classes from components to use it in code
@@ -37,10 +37,6 @@ export default {
     fiches: {
       type: Array,
       required: true,
-    },
-    selectedFiche: {
-      type: Object,
-      default: null,
     },
     hasMoreFiches: {
       type: Boolean,
@@ -171,18 +167,14 @@ export default {
     resetMap() {
       this.resetMapObjects()
 
-      // need to fit map twice... (magic)
-      if (this.markers.size) {
-        this.$nextTick(() => this.markerClusterer.fitMapToMarkers({ top: 5, right: 5, bottom: 64, left: 5 }))
-      } else {
-        this.map.setCenter(LAUSANNE_LAT_LNG)
-      }
-
       this.currentMarker = this.markers.values().next().value
       this.currentInfoWindow = this.infoWindows.values().next().value
 
-      if (this.markers.size === 1) this.currentInfoWindow.open(this.map, this.currentMarker)
-      if (this.preview || this.markers.size === 1) setTimeout(() => this.map.setZoom(ZOOM_LEVELS.default), 1000)
+      this.markerClusterer.fitMapToMarkers({ top: 5, right: 5, bottom: 64, left: 5 })
+      if (this.markers.size === 1 && this.preview) {
+        this.currentInfoWindow.open(this.map, this.currentMarker)
+        setTimeout(() => this.map.setZoom(ZOOM_LEVELS.default), 10)
+      }
     },
     loadFichesOnMap() {
       this.clear()

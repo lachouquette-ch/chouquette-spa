@@ -1,11 +1,14 @@
 <template>
   <div>
+    <v-overlay :value="loading">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
+
     <v-dialog v-model="mapDialog" fullscreen hide-overlay transition="dialog-top-transition">
       <FichesMap
         :fiches="fiches"
-        :selected-fiche="selectedFicheCard"
         :has-more-fiches="hasMoreFiches"
-        :fiche-loading="!!selectedFicheCard"
+        :fiche-loading="loading"
         :fetch-loading="$fetchState.pending"
         @mapSelectFiche="selectFiche"
         @moreFiches="$fetch"
@@ -124,11 +127,11 @@
     </v-dialog>
 
     <FicheDialog
-      v-model="selectedFicheCard"
+      v-model="ficheDialog"
+      :fiche="selectedFiche"
       :fullscreen="$vuetify.breakpoint.mobile"
       max-width="500"
-      @close="selectedFicheCard = null"
-      @click:outside="selectedFicheCard = null"
+      replace-url
     ></FicheDialog>
 
     <v-container>
@@ -190,8 +193,6 @@
           active-class=""
           width="400"
           max-width="100%"
-          :loading="selectedFicheCard === fiche ? 'white' : false"
-          loader-height="5"
           @click="selectFiche(fiche)"
         >
           <WpMediaNew :media="fiche.image" size="medium_large" height="200" contains>
@@ -285,6 +286,7 @@
 import {mapGetters, mapState} from 'vuex'
 import gql from 'graphql-tag'
 import seo from '~/mixins/seo'
+import ficheFiche from '~/mixins/fetch-fiche'
 import {PER_PAGE_NUMBER} from '~/constants/default'
 import WpMediaNew from '~/components/WpMediaNew'
 import graphql from '~/mixins/graphql'
@@ -303,7 +305,7 @@ const MapStates = Object.freeze({
 
 export default {
   components: { FicheDialog, CategoryButton, FilterExpansion, WpMediaNew, ScrollTop, FichesMap },
-  mixins: [seo, graphql],
+  mixins: [seo, graphql, ficheFiche],
   asyncData({ store, params, query }) {
     const location = params.slug ? store.getters['locations/getBySlug'](params.slug) : null
     const category = query.category ? store.getters['categories/getBySlug'](query.category) : null
@@ -317,12 +319,14 @@ export default {
   },
   data() {
     return {
+      loading: false,
+
       fichesNextPage: 1,
       fiches: [],
       fichesTotal: null,
       fichesPages: null,
       hasMoreFiches: true,
-      selectedFicheCard: null,
+      selectedFiche: null,
       previousURL: null,
 
       subCategories: [],
@@ -334,6 +338,8 @@ export default {
       filtersDialog: false,
       categoryFilters: [],
       filtersLoading: false,
+
+      ficheDialog: false,
 
       mapDialog: false,
       mapFooterHeight: 64,
@@ -542,8 +548,14 @@ export default {
         this.filtersLoading = false
       }
     },
-    selectFiche(ficheCard) {
-      this.selectedFicheCard = ficheCard
+    async selectFiche(ficheCard) {
+      try {
+        this.loading = true
+        this.selectedFiche = await this.fetchFicheBySlug(ficheCard.slug)
+        this.ficheDialog = true
+      } finally {
+        this.loading = false
+      }
     },
     updateFilterCounter() {
       this.filterCount = this.categoryFilters.reduce((acc, filter) => (acc += filter.selectedSlugs.length), 0)
