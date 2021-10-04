@@ -144,9 +144,8 @@
           @click="selectTopCategory(topCategory)"
         ></CategoryButton>
       </div>
-      <div v-if="subCategories.length" class="cq-scroll-x-container">
+      <div v-if="subCategories.length" class="cq-scroll-x-container mt-2">
         <div class="d-inline-flex align-center">
-          <span class="d-none d-md-inline text-nowrap mr-2">Sous catégories</span>
           <v-chip
             v-for="subCategory in subCategories"
             :key="subCategory.id"
@@ -159,7 +158,7 @@
           >
         </div>
       </div>
-      <div class="mt-1 mt-sm-5 d-flex align-stretch justify-end">
+      <div class="mt-2 mt-sm-5 d-flex align-stretch justify-end">
         <v-text-field
           v-model="search"
           outlined
@@ -266,9 +265,8 @@
       <v-fade-transition>
         <v-btn
           v-if="!mapDialog"
-          :style="mapBtnPosition"
           color="cq-grey"
-          class="white--text"
+          class="map-button white--text"
           :small="$vuetify.breakpoint.mobile"
           fixed
           @click="mapDialog = true"
@@ -568,20 +566,6 @@ export default {
     ficheCountWithPoi() {
       return this.fiches.filter(({ poi }) => !!poi).length
     },
-    mapBtnPosition() {
-      if (this.$vuetify.breakpoint.mobile)
-        return {
-          left: '50%',
-          transform: 'translateX(-50%)',
-          bottom: '64px',
-          opacity: '0.9',
-        }
-      else
-        return {
-          top: '110px',
-          right: '10px',
-        }
-    },
   },
   head() {
     // TODO (Fiche) : finish migrating Fiche slug init. Need to remove fetching Fiche from any other component that Fiche or fiche/_slug
@@ -644,5 +628,19 @@ export default {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
+}
+
+.map-button {
+  @media #{map-get($display-breakpoints, 'sm-and-down')} {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 64px;
+    opacity: 0.9;
+  }
+
+  @media #{map-get($display-breakpoints, 'md-and-up')} {
+    top: 110px;
+    right: calc(50% - #{map-get($grid-breakpoints, 'md') / 2});
+  }
 }
 </style>

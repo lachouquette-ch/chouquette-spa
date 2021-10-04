@@ -42,6 +42,10 @@ export default {
   width: 200px;
   border: 1px solid grey;
 
+  @include hover-focus-active {
+    background-color: var(--v-primary-lighten5);
+  }
+
   &:disabled,
   &button[disabled] {
     opacity: 0.6;

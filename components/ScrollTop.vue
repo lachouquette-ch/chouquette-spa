@@ -41,9 +41,21 @@ export default {
 <style lang="scss" scoped>
 .btn-top {
   position: fixed;
-  bottom: 56px;
   margin-bottom: 10px;
-  right: 10px;
   opacity: 0.7;
+
+  @include hover-focus-active() {
+    opacity: 1;
+  }
+
+  @media #{map-get($display-breakpoints, 'sm-and-down')} {
+    bottom: 56px;
+    right: 10px;
+  }
+
+  @media #{map-get($display-breakpoints, 'md-and-up')} {
+    bottom: 0;
+    right: calc(50% - #{map-get($grid-breakpoints, 'md') / 2});
+  }
 }
 </style>
