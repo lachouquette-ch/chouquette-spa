@@ -136,39 +136,73 @@
 
     <v-container>
       <h1 class="text-center my-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
-      <div id="categoryContainer" class="cq-scroll-x-container">
-        <CategoryButton
-          v-for="topCategory in topCategories"
-          :id="topCategory.slug"
-          :key="topCategory.id"
-          :top-category="topCategory"
-          :selected="topCategory === selectedTopCategory"
-          :disabled="$fetchState.pending"
-          @click="selectTopCategory(topCategory)"
-        ></CategoryButton>
-      </div>
-      <div v-if="subCategories.length" class="cq-scroll-x-container mt-2">
-        <div class="d-inline-flex align-center">
-          <v-chip
-            v-for="subCategory in subCategories"
-            :key="subCategory.id"
-            :dark="subCategory === selectedSubCategory"
+      <template v-if="$vuetify.breakpoint.mobile">
+        <div id="topCategoryContainer" class="cq-scroll-x-container">
+          <CategoryButton
+            v-for="topCategory in topCategories"
+            :id="topCategory.slug"
+            :key="topCategory.id"
+            :top-category="topCategory"
+            :selected="topCategory === selectedTopCategory"
             :disabled="$fetchState.pending"
-            class="mr-2"
-            label
-            @click.prevent="selectSubCategory(subCategory)"
-            >{{ subCategory.name }}</v-chip
-          >
+            @click="selectTopCategory(topCategory)"
+          ></CategoryButton>
         </div>
-      </div>
-      <div class="mt-2 mt-sm-5 d-flex align-stretch justify-end">
+        <div v-if="subCategories.length" class="cq-scroll-x-container mt-2">
+          <div class="d-inline-flex align-center">
+            <v-chip
+              v-for="subCategory in subCategories"
+              :id="subCategory.slug"
+              :key="subCategory.id"
+              :dark="subCategory === selectedSubCategory"
+              :disabled="$fetchState.pending"
+              class="mr-2"
+              label
+              @click.prevent="selectSubCategory(subCategory)"
+              >{{ subCategory.name }}</v-chip
+            >
+          </div>
+        </div>
+      </template>
+      <div class="mt-2 mt-sm-5 d-flex align-stretch">
+        <template v-if="!$vuetify.breakpoint.mobile">
+          <v-select
+            v-model="selectedTopCategory"
+            :items="topCategories"
+            :disabled="$fetchState.pending"
+            outlined
+            dense
+            hide-details
+            item-text="name"
+            item-value="slug"
+            return-object
+            label="Catégorie"
+            class="flex-grow-0 mr-2"
+            @change="selectTopCategory(selectedTopCategory)"
+          ></v-select>
+          <v-select
+            v-if="selectedTopCategory && subCategories.length"
+            v-model="selectedSubCategory"
+            :disabled="$fetchState.pending"
+            :items="subCategories"
+            outlined
+            dense
+            hide-details
+            item-text="name"
+            item-value="slug"
+            return-object
+            label="Sous-catégorie"
+            class="flex-grow-0 mr-2"
+            @change="selectSubCategory(selectedSubCategory)"
+          ></v-select>
+        </template>
         <v-text-field
           v-model="search"
           outlined
           label="Rechercher dans la categorie"
           prepend-inner-icon="mdi-magnify"
           class="mr-2 ml-md-auto flex-sm-grow-0"
-          style="width: 300px"
+          style="width: 250px"
           clearable
           hide-details
           dense
@@ -183,86 +217,76 @@
         </v-badge>
       </div>
       <v-subheader class="px-0">{{ fichesTotal }} résultats</v-subheader>
-      <div v-if="fiches.length" class="d-flex flex-wrap justify-center">
-        <v-card
-          v-for="fiche in fiches"
-          :key="fiche.id"
-          class="ma-3 mt-0"
-          outlined
-          bench="2"
-          active-class=""
-          width="400"
-          max-width="100%"
-          @click="selectFiche(fiche)"
+      <v-container class="pa-0">
+        <v-row v-if="fiches.length">
+          <v-col v-for="fiche in fiches" :key="fiche.id" cols="12" sm="6">
+            <v-card outlined active-class="" height="100%" @click="selectFiche(fiche)">
+              <WpMediaNew :media="fiche.image" size="medium_large" height="200" contains>
+                <v-card-subtitle v-if="fiche.isChouquettise" class="pa-2">
+                  <v-chip color="cq-yellow" text-color="black" small>
+                    Testé et Chouquettisé
+                    <v-icon right>mdi-check</v-icon>
+                  </v-chip>
+                </v-card-subtitle>
+              </WpMediaNew>
+              <v-card-title class="d-block">
+                <h3>{{ fiche.title }}</h3>
+                <v-card-subtitle class="pa-0 mt-1 secondary--text">
+                  <span v-if="!location && fiche.locationId">{{ getLocationById(fiche.locationId).name }} - </span>
+                  {{ getCategoryById(fiche.principalCategoryId).name }}
+                </v-card-subtitle>
+              </v-card-title>
+              <v-card-text>
+                <div class="fiche-content mb-1" v-html="fiche.content"></div>
+                <a href="" @click.prevent="">Voir plus</a>
+                <v-chip-group v-if="fiche.valueIds.length" class="mt-3" column>
+                  <v-chip
+                    v-for="valueId in fiche.valueIds"
+                    :key="valueId"
+                    color="cq-blue-light"
+                    text-color="cq-secondary"
+                    label
+                    small
+                  >
+                    {{ getValueById(valueId).name }}</v-chip
+                  >
+                </v-chip-group>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12">
+            <v-btn
+              v-if="!$fetchState.pending && hasMoreFiches"
+              v-intersect.quiet="$fetch"
+              color="secondary"
+              :loading="$fetchState.pending"
+              block
+              tag="a"
+              rel="next"
+              outlined
+              @click="$fetch"
+            >
+              Plus d'adresses
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-row v-if="$fetchState.pending">
+          <v-col v-for="i in 4" :key="i" cols="12" sm="6">
+            <v-skeleton-loader elevation="1" type="image, article, actions" class="rounded-xl"></v-skeleton-loader>
+          </v-col>
+        </v-row>
+        <v-alert
+          v-else-if="!hasMoreFiches"
+          border="bottom"
+          color="primary"
+          class="text-center"
+          elevation="2"
+          colored-border
         >
-          <WpMediaNew :media="fiche.image" size="medium_large" height="200" contains>
-            <v-card-subtitle v-if="fiche.isChouquettise" class="pa-2">
-              <v-chip color="cq-yellow" text-color="black" small>
-                Testé et Chouquettisé
-                <v-icon right>mdi-check</v-icon>
-              </v-chip>
-            </v-card-subtitle>
-          </WpMediaNew>
-          <v-card-title class="d-block">
-            <h3>{{ fiche.title }}</h3>
-            <v-card-subtitle class="pa-0 mt-1 secondary--text">
-              <span v-if="!location && fiche.locationId">{{ getLocationById(fiche.locationId).name }} - </span>
-              {{ getCategoryById(fiche.principalCategoryId).name }}
-            </v-card-subtitle>
-          </v-card-title>
-          <v-card-text>
-            <div class="fiche-content mb-1" v-html="fiche.content"></div>
-            <a href="" @click.prevent="">Voir plus</a>
-            <v-chip-group v-if="fiche.valueIds.length" class="mt-3" column>
-              <v-chip
-                v-for="valueId in fiche.valueIds"
-                :key="valueId"
-                color="cq-blue-light"
-                text-color="cq-secondary"
-                label
-                small
-              >
-                {{ getValueById(valueId).name }}</v-chip
-              >
-            </v-chip-group>
-          </v-card-text>
-        </v-card>
-        <v-btn
-          v-if="!$fetchState.pending && hasMoreFiches"
-          v-intersect.quiet="$fetch"
-          color="secondary"
-          :loading="$fetchState.pending"
-          block
-          tag="a"
-          rel="next"
-          outlined
-          @click="$fetch"
-        >
-          Plus d'adresses
-        </v-btn>
-      </div>
-      <div v-if="$fetchState.pending" class="mt-3 d-flex flex-wrap justify-center">
-        <v-skeleton-loader
-          v-for="i in 4"
-          :key="i"
-          class="ma-3 mt-0"
-          elevation="1"
-          type="image, article, actions"
-          width="400"
-          max-width="100%"
-        ></v-skeleton-loader>
-      </div>
-      <v-alert
-        v-else-if="!hasMoreFiches"
-        border="bottom"
-        color="secondary"
-        class="mt-3 mb-0 text-center"
-        elevation="2"
-        colored-border
-      >
-        <span v-if="fiches.length">Tu as tout vu !</span>
-        <span v-else>Aucun résultat pour ta recherche</span>
-      </v-alert>
+          <span v-if="fiches.length">Tu as tout vu !</span>
+          <span v-else>Aucun résultat pour ta recherche</span>
+        </v-alert>
+      </v-container>
       <v-fade-transition>
         <v-btn
           v-if="!mapDialog"
@@ -432,13 +456,15 @@ export default {
           if (categoryFilter) categoryFilter.selectedSlugs = value.split(',')
         })
 
-      // move to selected category
-      const categoryButton = document.getElementById(this.category.slug)
-      const categoryContainer = document.getElementById('categoryContainer')
-      const buttonLeftOffset = categoryButton.offsetLeft
-      const maxLeftOffset = categoryContainer.scrollWidth - categoryContainer.clientWidth
-      const leftOffset = buttonLeftOffset > maxLeftOffset ? maxLeftOffset : buttonLeftOffset
-      categoryContainer.scrollLeft = leftOffset
+      // move to selected topCategory
+      const topCategoryButton = document.getElementById(this.selectedTopCategory.slug)
+      if (topCategoryButton) {
+        const categoryContainer = document.getElementById('topCategoryContainer')
+        const buttonLeftOffset = topCategoryButton.offsetLeft
+        const maxLeftOffset = categoryContainer.scrollWidth - categoryContainer.clientWidth
+        const leftOffset = buttonLeftOffset > maxLeftOffset ? maxLeftOffset : buttonLeftOffset
+        categoryContainer.scrollLeft = leftOffset
+      }
     }
     this.updateFilterCounter()
   },

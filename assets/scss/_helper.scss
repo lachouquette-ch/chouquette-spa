@@ -1,7 +1,6 @@
 @import '~vuetify/src/styles/settings/variables';
 
 .cq-scroll-x-container {
-  @media #{map-get($display-breakpoints, 'xs-only')} {
     overflow-x: scroll;
     scroll-snap-type: x mandatory;
     scroll-padding-left: 30px;
@@ -15,15 +14,6 @@
         margin-right: 1rem;
       }
     }
-  }
-
-  @media #{map-get($display-breakpoints, 'sm-and-up')} {
-    display: block;
-
-    > * {
-      margin: 4px 6px;
-    }
-  }
 }
 
 .cq-three-line {
