@@ -7,19 +7,17 @@
     </v-system-bar>
 
     <v-navigation-drawer v-model="toggleMenu" temporary app right width="500">
-      <div class="d-flex flex-column" style="min-height: 100vh">
-        <div>
-          <v-list-item three-line>
-            <v-list-item-content class="text-center">
-              <v-list-item-title>
-                <h1 class="text-h6">{{ name }}</h1>
-              </v-list-item-title>
-              <v-list-item-subtitle>{{ description }}</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-
-          <v-divider></v-divider>
-
+      <v-card min-height="100vh" tile>
+        <v-card-title>
+          <h1 class="text-h6">{{ name }}</h1>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="toggleMenu = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <p class="mt-2 mb-0 text-caption">{{ description }}</p>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text class="pa-0">
           <v-list nav>
             <v-subheader class="text-h4">Les intérêts</v-subheader>
             <v-list-item
@@ -56,9 +54,8 @@
               </v-list-item-content>
             </v-list-item>
           </v-list>
-        </div>
-        <v-spacer></v-spacer>
-        <div>
+        </v-card-text>
+        <v-card-actions class="justify-center">
           <div class="d-flex justify-center mb-2">
             <v-btn icon large target="_blank" href="https://www.facebook.com/lachouquette" class="mx-2">
               <v-icon large color="#4267b2">mdi-facebook</v-icon>
@@ -70,8 +67,8 @@
               <v-icon large color="primary">mdi-email-outline</v-icon>
             </v-btn>
           </div>
-        </div>
-      </div>
+        </v-card-actions>
+      </v-card>
     </v-navigation-drawer>
 
     <v-app-bar fixed app class="white">
