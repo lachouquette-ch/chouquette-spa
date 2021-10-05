@@ -87,7 +87,7 @@ export default {
       averageCenter: true,
       styles: CLUSTER_STYLES,
       calculator: (markers, clusterIconStylesCount) => {
-        const index = markers.find((marker) => marker.isChouquettise) ? 2 : 1
+        const index = markers.find((marker) => marker.chouquettise) ? 2 : 1
         return {
           index,
           text: markers.length,
