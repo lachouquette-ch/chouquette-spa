@@ -1,11 +1,7 @@
 <template>
   <div>
     <v-card flat>
-      <v-img
-        src="/banner.png"
-        class="rounded-0 align-center text-center"
-        height="300"
-      >
+      <v-img src="/banner.png" class="rounded-0 align-center text-center" height="300">
         <v-card-text>
           <h1 class="font-weight-bold mb-3 mb-md-5">les meilleures adresses locales et éco-responsables</h1>
           <v-container class="cq-sm-max-width">
@@ -49,7 +45,7 @@
     </v-card>
     <v-sheet>
       <h2 class="text-center">ARTICLES À LA UNE</h2>
-      <v-container class="d-md-none">
+      <v-container v-if="$vuetify.breakpoint.mobile">
         <v-skeleton-loader
           v-if="$fetchState.pending"
           class="mx-auto mb-3"
@@ -93,7 +89,7 @@
             </v-col>
           </template>
           <template v-else>
-            <v-col cols="6" class="d-none d-md-block">
+            <v-col v-if="!$vuetify.breakpoint.mobile" cols="6">
               <PostCard
                 :post="highlightedPost"
                 class="my-2 mx-auto"
@@ -150,25 +146,11 @@
 
     <v-sheet class="px-3">
       <h2 class="text-center">Nos derniers tops</h2>
-      <div v-if="$vuetify.breakpoint.mobile" class="cq-scroll-x-container">
-        <PostCard
-          v-for="post in topPosts"
-          :key="post.id"
-          :post="post"
-          :to="post.slug"
-          nuxt
-          vertical
-          large
-          hide-meta
-        ></PostCard>
-      </div>
-      <v-container v-else>
-        <v-row>
-          <v-col v-for="post in topPosts" :key="post.id" cols="4">
-            <PostCard :post="post" :to="post.slug" nuxt vertical large hide-meta></PostCard>
-          </v-col>
-        </v-row>
-      </v-container>
+      <ReponsiveScrollGrid :items="topPosts" md="4">
+        <template #default="{ item }">
+          <PostCard :post="item" :to="item.slug" class="mx-auto" nuxt vertical large hide-meta></PostCard>
+        </template>
+      </ReponsiveScrollGrid>
       <div class="text-center my-3">
         <v-btn text nuxt to="/articles?topOnly=true" class="text-decoration-underline">tous nos tops</v-btn>
       </div>
@@ -186,27 +168,15 @@
           <h2>Nos Chouquettisés</h2>
           <p class="text-h5">Tous ont été testé et approuvé selon nos valeurs écoresponsables</p>
         </div>
-        <div class="my-5">
-          <div v-if="$vuetify.breakpoint.mobile" class="cq-scroll-x-container">
-            <FicheCard
-              v-for="fiche in latestChouquettises"
-              :key="fiche.id"
-              :fiche="fiche"
-              :to="`/fiche/${fiche.slug}`"
-              nuxt
-            ></FicheCard>
-          </div>
-          <v-container v-else>
-            <v-row>
-              <v-col v-for="fiche in latestChouquettises" :key="fiche.id" cols="6" md="4">
-                <FicheCard :fiche="fiche" :to="`/fiche/${fiche.slug}`" nuxt height="100%" class="mx-auto"></FicheCard>
-              </v-col>
-            </v-row>
-          </v-container>
-        </div>
+        <ReponsiveScrollGrid :items="latestChouquettises" md="4">
+          <template #default="{ item }">
+            <FicheCard :fiche="item" :to="`/fiche/${item.slug}`" class="mx-auto" nuxt></FicheCard>
+          </template>
+        </ReponsiveScrollGrid>
         <div class="text-center">
           <v-btn text nuxt to="/fiches?chouquettiseOnly=true" class="text-decoration-underline"
-            >tous nos Chouquettisés</v-btn
+          >tous nos Chouquettisés
+          </v-btn
           >
         </div>
         <v-divider class="my-5"></v-divider>
@@ -238,9 +208,10 @@ import WpMedia from '~/components/WpMedia'
 import PostCard from '~/components/PostCard'
 import FicheCard from '~/components/FicheCard'
 import Newsletter from '~/components/Newsletter'
+import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
 
 export default {
-  components: {Newsletter, FicheCard, PostCard, WpMedia},
+  components: {ReponsiveScrollGrid, Newsletter, FicheCard, PostCard, WpMedia},
   mixins: [seo, graphql],
   async asyncData({store, app}) {
     // store initialization

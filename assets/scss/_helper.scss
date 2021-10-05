@@ -1,21 +1,5 @@
 @import '~vuetify/src/styles/settings/variables';
 
-.cq-scroll-x-container {
-    overflow-x: scroll;
-    scroll-snap-type: x mandatory;
-    scroll-padding-left: 30px;
-    display: flex;
-    padding-bottom: 0.75rem;
-
-    > * {
-      scroll-snap-align: start;
-
-      &:not(:last-child) {
-        margin-right: 1rem;
-      }
-    }
-}
-
 .cq-three-line {
   display: -webkit-box;
   -webkit-line-clamp: 3;
