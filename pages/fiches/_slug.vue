@@ -221,14 +221,14 @@
         <v-row v-if="fiches.length">
           <v-col v-for="fiche in fiches" :key="fiche.id" cols="12" sm="6">
             <v-card outlined active-class="" height="100%" @click="selectFiche(fiche)">
-              <WpMediaNew :media="fiche.image" size="medium_large" height="200" contains>
+              <WpMedia :media="fiche.image" size="medium_large" height="200" contains>
                 <v-card-subtitle v-if="fiche.isChouquettise" class="pa-2">
                   <v-chip color="cq-yellow" text-color="black" small>
                     Testé et Chouquettisé
                     <v-icon right>mdi-check</v-icon>
                   </v-chip>
                 </v-card-subtitle>
-              </WpMediaNew>
+              </WpMedia>
               <v-card-title class="d-block">
                 <h3>{{ fiche.title }}</h3>
                 <v-card-subtitle class="pa-0 mt-1 secondary--text">
@@ -312,7 +312,7 @@ import gql from 'graphql-tag'
 import seo from '~/mixins/seo'
 import ficheFiche from '~/mixins/fetch-fiche'
 import {PER_PAGE_NUMBER} from '~/constants/default'
-import WpMediaNew from '~/components/WpMediaNew'
+import WpMedia from '~/components/WpMedia'
 import graphql from '~/mixins/graphql'
 import FilterExpansion from '~/components/FilterExpansion'
 import ScrollTop from '~/components/ScrollTop'
@@ -328,9 +328,9 @@ const MapStates = Object.freeze({
 })
 
 export default {
-  components: { FicheDialog, CategoryButton, FilterExpansion, WpMediaNew, ScrollTop, FichesMap },
+  components: {FicheDialog, CategoryButton, FilterExpansion, WpMedia, ScrollTop, FichesMap},
   mixins: [seo, graphql, ficheFiche],
-  asyncData({ store, params, query }) {
+  asyncData({store, params, query}) {
     const location = params.slug ? store.getters['locations/getBySlug'](params.slug) : null
     const category = query.category ? store.getters['categories/getBySlug'](query.category) : null
 

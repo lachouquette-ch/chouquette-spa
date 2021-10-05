@@ -10,7 +10,7 @@
     v-bind="{ ...$props, ...$attrs }"
     @click.prevent="$emit('click')"
   >
-    <WpMediaNew
+    <WpMedia
       v-if="post.image"
       :media="post.image"
       :size="large ? 'medium_large' : 'medium'"
@@ -31,7 +31,7 @@
           <v-icon right>mdi-trophy-outline</v-icon>
         </v-chip>
       </v-card-subtitle>
-    </WpMediaNew>
+    </WpMedia>
 
     <v-card-text class="pa-0 px-2 flex-grow-1">
       <p v-if="!vertical" class="secondary--text text-lowercase mb-0">{{ getCategoryById(post.categoryId).name }}</p>
@@ -43,10 +43,10 @@
 
 <script>
 import {mapGetters} from 'vuex'
-import WpMediaNew from '~/components/WpMediaNew'
+import WpMedia from '~/components/WpMedia'
 
 export default {
-  components: { WpMediaNew },
+  components: {WpMedia},
   props: {
     post: {
       required: true,

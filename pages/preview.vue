@@ -11,7 +11,7 @@
 <script>
 import {mapState} from 'vuex'
 import WpPage from '~/components/WpPage'
-import WpPost from '~/components/WpPostNew'
+import WpPost from '~/components/WpPost'
 import Fiche from '~/components/Fiche'
 
 export default {

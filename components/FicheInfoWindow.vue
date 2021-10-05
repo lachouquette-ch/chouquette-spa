@@ -1,13 +1,13 @@
 <template>
   <v-card class="d-flex flex-row" height="75" width="250" flat tile ripple @click="btnAction">
-    <WpMediaNew
+    <WpMedia
       :media="fiche.image"
       size="thumbnail"
       width="75"
       contain
       aspect-ratio="1"
       class="flex-grow-0"
-    ></WpMediaNew>
+    ></WpMedia>
     <v-card-text class="pa-2 flex-grow-1 overflow-hidden">
       <p class="ma-0 text-body-1 text-truncate">{{ fiche.title }}</p>
       <p class="ma-0 text-body-2 font-italic">{{ categoryName }}</p>
@@ -17,10 +17,10 @@
 </template>
 
 <script>
-import WpMediaNew from '~/components/WpMediaNew'
+import WpMedia from '~/components/WpMedia'
 
 export default {
-  components: { WpMediaNew },
+  components: {WpMedia},
   props: {
     fiche: {
       type: Object,

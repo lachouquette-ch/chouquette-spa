@@ -10,7 +10,7 @@
       </v-card-title>
       <v-divider></v-divider>
       <v-card-text ref="content" class="pa-2 pb-0">
-        <WpPostNew :post="post"></WpPostNew>
+        <WpPost :post="post"></WpPost>
       </v-card-text>
     </v-card>
   </v-dialog>
@@ -20,11 +20,11 @@
 import gql from 'graphql-tag'
 import {post as PostFragments} from '~/apollo/fragments/post'
 import graphql from '~/mixins/graphql'
-import WpPostNew from '~/components/WpPostNew'
+import WpPost from '~/components/WpPost'
 import PostShare from '~/components/PostShare'
 
 export default {
-  components: { WpPostNew, PostShare },
+  components: {WpPost, PostShare},
   mixins: [graphql],
   props: {
     value: Object,

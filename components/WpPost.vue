@@ -33,7 +33,7 @@
 
     <v-card flat tile>
       <div style="position: relative; margin-bottom: 35px">
-        <WpMediaNew :media="post.image" gradient="180deg, transparent 70%, black" />
+        <WpMedia :media="post.image" gradient="180deg, transparent 70%, black"/>
         <v-img
           :src="mainAuthor.avatar"
           :alt="mainAuthor.name"
@@ -47,9 +47,9 @@
         <h1>{{ post.title }}</h1>
       </v-card-title>
       <v-card-text>
-        <CqContentFolding>
+        <ContentFolding>
           <section class="gutenberg-content" v-html="post.content"></section>
-        </CqContentFolding>
+        </ContentFolding>
 
         <section>
           <v-divider class="my-3"></v-divider>
@@ -61,7 +61,7 @@
             <v-list>
               <v-list-item v-for="fiche in ficheCards" :key="fiche.id" two-line @click="selectedFicheCard = fiche">
                 <v-list-item-avatar size="60" horizontal>
-                  <WpMediaNew :media="fiche.image" size="thumbnail"></WpMediaNew>
+                  <WpMedia :media="fiche.image" size="thumbnail"></WpMedia>
                 </v-list-item-avatar>
 
                 <v-list-item-content>
@@ -153,11 +153,11 @@ import seo from '~/mixins/seo'
 import gutenberg from '~/mixins/gutenberg'
 
 import graphql from '~/mixins/graphql'
-import WpMediaNew from '~/components/WpMediaNew'
+import WpMedia from '~/components/WpMedia'
 import PostComment from '~/components/PostComment'
 import PostCommentReply from '~/components/PostCommentReply'
 import PostCard from '~/components/PostCard'
-import CqContentFolding from '~/components/CqContentFolding'
+import ContentFolding from '~/components/ContentFolding'
 import FicheDialog from '~/components/FicheDialog'
 import FichesMap from '~/components/FichesMap'
 
@@ -165,9 +165,9 @@ export default {
   components: {
     FichesMap,
     FicheDialog,
-    CqContentFolding,
+    ContentFolding,
     PostCard,
-    WpMediaNew,
+    WpMedia,
     PostComment,
     PostCommentReply,
   },

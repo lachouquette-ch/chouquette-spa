@@ -1,12 +1,12 @@
 <template>
   <div>
     <v-card flat>
-      <WpMediaNew :media="fiche.image" size="medium_large" height="250" class="rounded-lg">
+      <WpMedia :media="fiche.image" size="medium_large" height="250" class="rounded-lg">
         <v-chip v-if="fiche.isChouquettise" color="cq-yellow" text-color="black" small class="ma-2">
           Testé et Chouquettisé
           <v-icon right>mdi-check</v-icon>
         </v-chip>
-      </WpMediaNew>
+      </WpMedia>
       <v-card-title class="mt-2 px-0 pt-0 flex-nowrap align-baseline">
         <h1>{{ fiche.title }}</h1>
         <v-spacer></v-spacer>
@@ -285,14 +285,14 @@ import {mapGetters} from 'vuex'
 import moment from 'moment'
 import _ from 'lodash'
 import {email, maxLength, minLength, required} from 'vuelidate/lib/validators'
-import WpMediaNew from '~/components/WpMediaNew'
+import WpMedia from '~/components/WpMedia'
 import FichesMap from '~/components/FichesMap'
 import PostCard from '~/components/PostCard'
 import FicheCard from '~/components/FicheCard'
 import seo from '~/mixins/seo'
 
 export default {
-  components: { FicheCard, PostCard, FichesMap, WpMediaNew },
+  components: {FicheCard, PostCard, FichesMap, WpMedia},
   mixins: [seo],
   props: {
     fiche: Object,
