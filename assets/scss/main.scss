@@ -1,13 +1,13 @@
 // Custom helper classes and mixins
-@import '../css/wordpress';
+@import "mixins";
 
 // Imports
-
 @import "overall";
 @import "helper";
 @import "transitions";
 @import "marker-clusterer";
 @import "google-map";
+@import 'wordpress';
 
 // CookieConsent
 $cookieconstent-background: '#3D3B3C';

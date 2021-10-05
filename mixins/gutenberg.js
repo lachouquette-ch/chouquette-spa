@@ -1,4 +1,4 @@
-import { mapState } from 'vuex'
+import {mapState} from 'vuex'
 
 export default {
   computed: {
@@ -6,8 +6,8 @@ export default {
   },
   mounted() {
     // execute anchor fixing
-    const linkAnchorFixedHeader = require('~/assets/scripts/link-anchor-fixed-header')
-    linkAnchorFixedHeader()
+    // const linkAnchorFixedHeader = require('~/assets/scripts/link-anchor-fixed-header')
+    // linkAnchorFixedHeader()
 
     // RUN WORDPRESS JAVASCRIPT
 

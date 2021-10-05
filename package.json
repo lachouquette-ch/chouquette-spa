@@ -13,7 +13,6 @@
     "lint": "yarn lint:js"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.13.1",
     "@googlemaps/js-api-loader": "^1.12.1",
     "@googlemaps/markerclustererplus": "^1.2.0",
     "@nuxtjs/apollo": "^4.0.1-rc.5",
@@ -24,20 +23,12 @@
     "@nuxtjs/sitemap": "^2.4.0",
     "@nuxtjs/style-resources": "^1.1.0",
     "axios": "^0.21.1",
-    "bootstrap": "^4.6.0",
-    "bootstrap-vue": "^2.21.2",
-    "core-js": "^3.9.1",
     "isbot": "^3.0.27",
     "jquery": "^3.6.0",
     "nuxt": "^2.15.3",
     "scriptjs": "^2.5.9",
-    "swiper": "5.2.0",
-    "vue-awesome-swiper": "^4.1.1",
-    "vue-content-placeholders": "^0.2.1",
     "vue-cookieconsent-component": "^1.2.0",
     "vue-mailchimp-subscribe": "^1.1.0",
-    "vue-observe-visibility": "^1.0.0",
-    "vue-scrollto": "^2.20.0",
     "vue2-hammer": "^2.1.2",
     "vuelidate": "^0.7.6"
   },

@@ -9,9 +9,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import {mapState} from 'vuex'
 import WpPage from '~/components/WpPage'
-import WpPost from '~/components/WpPost'
+import WpPost from '~/components/WpPostNew'
 import Fiche from '~/components/Fiche'
 
 export default {

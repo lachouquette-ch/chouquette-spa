@@ -299,7 +299,7 @@ export default {
   left: 15px;
   transform: translateY(50%);
   z-index: 1;
-  border: 5px solid $white;
+  border: 5px solid white;
 }
 
 .header-meta {

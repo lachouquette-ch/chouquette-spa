@@ -76,8 +76,8 @@ export default {
 @import '~vuetify/src/styles/styles';
 
 .footer {
-  background-color: $chouquette-dark-grey;
-  color: $chouquette-light-grey;
+  background-color: var(--v-cq-grey-base);
+  color: var(--v-cq-grey-light-base);
 
   h5 {
     font-size: 1.1rem;
@@ -93,7 +93,7 @@ export default {
   }
 
   hr {
-    color: $chouquette-light-grey;
+    color: var(--v-cq-grey-light-base);
   }
 }
 </style>

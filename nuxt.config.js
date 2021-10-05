@@ -75,16 +75,12 @@ export default {
    */
   plugins: [
     { src: '~/plugins/global-error-handler.js', mode: 'client' },
-    { src: '~/plugins/bootstrap.js', mode: 'client' },
     { src: '~/plugins/jquery.js', mode: 'client' },
     { src: '~/plugins/google-maps.js', mode: 'client' },
-    { src: '~/node_modules/vue-awesome-swiper', mode: 'client' },
     { src: '~/plugins/vuelidate.js' },
     { src: '~/plugins/html-entity-filter.js' },
     { src: '~/plugins/pretty-url-filter.js' },
     { src: '~/plugins/iso-date-filter.js' },
-    { src: '~/plugins/vue-content-placeholders.js' },
-    { src: '~/plugins/vue-observe-visibility.js' },
     { src: '~/plugins/vue2-hammer.js' },
   ],
   /*
@@ -103,8 +99,6 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/apollo',
     '@nuxtjs/style-resources',
-    'bootstrap-vue/nuxt',
-    ['vue-scrollto/nuxt', { offset: -1 * 80 - 15 }], // fix default offset (do not work for home page)
     '@nuxtjs/sentry',
     '@nuxtjs/sitemap',
     '@nuxtjs/recaptcha',
@@ -188,28 +182,7 @@ export default {
     ],
   },
   styleResources: {
-    scss: [
-      '~/assets/css/variables.scss',
-      '~/assets/css/_mixins.scss',
-      '~/node_modules/bootstrap/scss/_functions.scss',
-      '~/node_modules/bootstrap/scss/variables.scss',
-      '~/node_modules/bootstrap/scss/_mixins.scss',
-    ],
-  },
-  bootstrapVue: {
-    bootstrapCSS: false,
-    bootstrapVueCSS: false,
-    componentPlugins: [
-      'AlertPlugin',
-      'ModalPlugin',
-      'OverlayPlugin',
-      'DropdownPlugin',
-      'CollapsePlugin',
-      'SpinnerPlugin',
-      'ButtonPlugin',
-      'ButtonGroupPlugin',
-    ],
-    directivePlugins: ['VBVisiblePlugin'],
+    scss: ['~/assets/scss/_mixins.scss'],
   },
   /*
    ** Build configuration
