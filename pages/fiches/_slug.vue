@@ -136,34 +136,35 @@
 
     <v-container>
       <h1 class="text-center my-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
-      <template v-if="$vuetify.breakpoint.mobile">
-        <div id="topCategoryContainer" class="cq-scroll-x-container">
+      <ReponsiveScrollGrid id="topCategoryContainer" :items="topCategories" mobile-only>
+        <template #default="{ item }">
           <CategoryButton
-            v-for="topCategory in topCategories"
-            :id="topCategory.slug"
-            :key="topCategory.id"
-            :top-category="topCategory"
-            :selected="topCategory === selectedTopCategory"
+            :id="item.slug"
+            :top-category="item"
+            :selected="item === selectedTopCategory"
             :disabled="$fetchState.pending"
-            @click="selectTopCategory(topCategory)"
+            @click="selectTopCategory(item)"
           ></CategoryButton>
-        </div>
-        <div v-if="subCategories.length" class="cq-scroll-x-container mt-2">
-          <div class="d-inline-flex align-center">
-            <v-chip
-              v-for="subCategory in subCategories"
-              :id="subCategory.slug"
-              :key="subCategory.id"
-              :dark="subCategory === selectedSubCategory"
-              :disabled="$fetchState.pending"
-              class="mr-2"
-              label
-              @click.prevent="selectSubCategory(subCategory)"
-              >{{ subCategory.name }}</v-chip
-            >
-          </div>
-        </div>
-      </template>
+        </template>
+      </ReponsiveScrollGrid>
+      <ReponsiveScrollGrid
+        v-if="subCategories.length"
+        id="subCategoryContainer"
+        :items="subCategories"
+        mobile-only
+        class="mt-2"
+      >
+        <template #default="{ item }">
+          <v-chip
+            :id="item.slug"
+            :dark="item === selectedSubCategory"
+            :disabled="$fetchState.pending"
+            label
+            @click.prevent="selectSubCategory(item)"
+            >{{ item.name }}</v-chip
+          >
+        </template>
+      </ReponsiveScrollGrid>
       <div class="mt-2 mt-sm-5 d-flex align-stretch">
         <template v-if="!$vuetify.breakpoint.mobile">
           <v-select
@@ -202,6 +203,7 @@
           label="Rechercher dans la categorie"
           prepend-inner-icon="mdi-magnify"
           class="mr-2 ml-md-auto flex-sm-grow-0"
+          :disabled="$fetchState.pending"
           style="width: 250px"
           clearable
           hide-details
@@ -210,7 +212,7 @@
           @click:clear.capture="clearSearch"
         ></v-text-field>
         <v-badge bordered color="primary" :content="filterCount" :value="filterCount" overlap>
-          <v-btn outlined height="100%" @click="filtersDialog = true">
+          <v-btn outlined :disabled="$fetchState.pending" height="100%" @click="filtersDialog = true">
             <v-icon left>mdi-tune</v-icon>
             Filtrer
           </v-btn>
@@ -320,6 +322,7 @@ import FichesMap from '~/components/FichesMap'
 import {ficheCard as FicheCardFragments} from '~/apollo/fragments/ficheCard'
 import CategoryButton from '~/components/CategoryButton'
 import FicheDialog from '~/components/FicheDialog'
+import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
 
 const MapStates = Object.freeze({
   HIDDEN: Symbol('hidden'),
@@ -328,9 +331,9 @@ const MapStates = Object.freeze({
 })
 
 export default {
-  components: {FicheDialog, CategoryButton, FilterExpansion, WpMedia, ScrollTop, FichesMap},
+  components: { ReponsiveScrollGrid, FicheDialog, CategoryButton, FilterExpansion, WpMedia, ScrollTop, FichesMap },
   mixins: [seo, graphql, ficheFiche],
-  asyncData({store, params, query}) {
+  asyncData({ store, params, query }) {
     const location = params.slug ? store.getters['locations/getBySlug'](params.slug) : null
     const category = query.category ? store.getters['categories/getBySlug'](query.category) : null
 

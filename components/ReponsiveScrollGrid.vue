@@ -1,14 +1,13 @@
 <template>
   <div>
-    <div v-for="item in items" :key="item[id]"></div>
-    <div v-if="$vuetify.breakpoint.mobile" class="scroll-x-container">
-      <div v-for="item in items" :key="item[id]">
+    <div v-if="$vuetify.breakpoint.mobile" :id="id" class="scroll-x-container">
+      <div v-for="item in items" :key="item[itemId]">
         <slot :item="item"></slot>
       </div>
     </div>
-    <v-container v-else>
+    <v-container v-else-if="!mobileOnly" :id="id">
       <v-row>
-        <v-col v-for="item in items" :key="item[id]" :cols="cols" :md="md">
+        <v-col v-for="item in items" :key="item[itemId]" :cols="cols" :md="md">
           <slot :item="item"></slot>
         </v-col>
       </v-row>
@@ -20,9 +19,11 @@
 export default {
   props: {
     items: Array,
-    id: {type: String, default: 'id'},
-    cols: {type: Number, default: 12},
-    md: {type: Number, default: 6},
+    id: String,
+    itemId: { type: String, default: 'id' },
+    mobileOnly: Boolean,
+    cols: { type: [String, Number], default: 12 },
+    md: { type: [String, Number], default: 6 },
   },
   data() {
     return {
@@ -44,7 +45,7 @@ export default {
     scroll-snap-align: start;
 
     &:not(:last-child) {
-      margin-right: 1rem;
+      margin-right: 0.75rem;
     }
   }
 }
