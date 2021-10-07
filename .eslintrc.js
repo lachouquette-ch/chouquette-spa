@@ -4,9 +4,7 @@ module.exports = {
     browser: true,
     node: true,
   },
-  parserOptions: {
-    parser: 'babel-eslint',
-  },
+  parser: 'babel-eslint',
   extends: [
     '@nuxtjs',
     'prettier',
@@ -14,9 +12,7 @@ module.exports = {
     'plugin:prettier-vue/recommended',
     'plugin:nuxt/recommended',
   ],
-  plugins: [
-    "vue"
-  ],
+  plugins: ['vue'],
   // add your custom rules here
   rules: {
     indent: ['error', 2],
