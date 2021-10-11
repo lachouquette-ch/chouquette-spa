@@ -1,56 +1,71 @@
 <template>
-  <v-sheet rounded elevation="1" class="px-2 py-4">
-    <v-form @submit.prevent="postComment">
-      <v-textarea
-        :id="`comment${_uid}`"
-        v-model="formComment.comment"
-        label="Ton commentaire *"
-        rows="4"
-        :error-messages="commentErrors"
-        :counter="true"
-        required
-        class="pt-0"
-        @input="$v.formComment.comment.$touch"
-        @blur="$v.formComment.comment.$touch"
-      ></v-textarea>
-      <v-text-field
-        :id="`author${_uid}`"
-        v-model.trim="formComment.name"
-        label="Ton nom *"
-        autocomplete="name"
-        :error-messages="nameErrors"
-        required
-        @input="$v.formComment.name.$touch"
-        @blur="$v.formComment.name.$touch"
-      ></v-text-field>
-      <v-text-field
-        :id="`email${_uid}`"
-        v-model.trim="formComment.email"
-        label="Ton email *"
-        hint="Ton email ne sera pas publiée. Parole de Chouquette !"
-        autocomplete="email"
-        :error-messages="emailErrors"
-        required
-        @input="$v.formComment.email.$touch"
-        @blur="$v.formComment.email.$touch"
-      ></v-text-field>
-      <v-text-field
-        :id="`url${_uid}`"
-        v-model.trim="formComment.webSite"
-        label="Ton site web"
-        :error-messages="webSiteErrors"
-        required
-        @input="$v.formComment.webSite.$touch"
-        @blur="$v.formComment.webSite.$touch"
-      ></v-text-field>
-
-      <v-btn type="submit" :disabled="loading" :loading="loading" small>Envoyer ma réponse</v-btn>
-    </v-form>
-  </v-sheet>
+  <v-form @submit.prevent="postComment">
+    <v-card>
+      <v-card-text>
+        <v-row>
+          <v-col cols="12">
+            <v-textarea
+              :id="`comment${_uid}`"
+              v-model="formComment.comment"
+              label="Ton commentaire *"
+              rows="4"
+              :error-messages="commentErrors"
+              :counter="true"
+              required
+              class="pt-0"
+              @input="$v.formComment.comment.$touch"
+              @blur="$v.formComment.comment.$touch"
+            ></v-textarea>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              :id="`author${_uid}`"
+              v-model.trim="formComment.name"
+              label="Ton nom *"
+              autocomplete="name"
+              :error-messages="nameErrors"
+              required
+              @input="$v.formComment.name.$touch"
+              @blur="$v.formComment.name.$touch"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              :id="`email${_uid}`"
+              v-model.trim="formComment.email"
+              label="Ton email *"
+              hint="Ton email ne sera pas publiée. Parole de Chouquette !"
+              autocomplete="email"
+              :error-messages="emailErrors"
+              required
+              @input="$v.formComment.email.$touch"
+              @blur="$v.formComment.email.$touch"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              :id="`url${_uid}`"
+              v-model.trim="formComment.webSite"
+              label="Ton site web"
+              :error-messages="webSiteErrors"
+              required
+              @input="$v.formComment.webSite.$touch"
+              @blur="$v.formComment.webSite.$touch"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn text @click.prevent="clear">Fermer</v-btn>
+        <v-btn color="info" text :loading="loading" type="submit">Poster mon commentaire</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-form>
 </template>
 
 <script>
-import {email, minLength, required, url} from 'vuelidate/lib/validators'
+import { email, minLength, required, url } from 'vuelidate/lib/validators'
 
 export default {
   props: {

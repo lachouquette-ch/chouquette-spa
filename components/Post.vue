@@ -29,6 +29,10 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog v-model="commentDialog" max-width="500">
+      <PostCommentReply :post="post.id" />
+    </v-dialog>
+
     <FicheDialog v-model="selectedFicheCard" @close="selectedFicheCard = null"></FicheDialog>
 
     <v-card flat tile>
@@ -91,10 +95,9 @@
               </div>
             </div>
             <div>
-              <v-btn outlined :block="$vuetify.breakpoint.mobile" class="my-3" @click="showReply = !showReply">
+              <v-btn outlined :block="$vuetify.breakpoint.mobile" class="my-3" @click="commentDialog = true">
                 Un nouveau commentaire ?
               </v-btn>
-              <PostCommentReply v-if="showReply" :post="post.id" />
             </div>
           </template>
         </section>
@@ -164,8 +167,8 @@ export default {
 
       mapDialog: false,
 
+      commentDialog: false,
       extendComments: false,
-      showReply: false,
       comments: [],
       similarPosts: [],
     }

@@ -1,39 +1,38 @@
 <template>
-  <article class="my-3">
-    <header>
-      <div>
-        <img
-          v-if="comment.authorAvatar"
-          :alt="comment.authorName"
-          :src="comment.authorAvatar"
-          class="rounded-circle"
-          height="32"
-          width="32"
-        />
-        <b class="mx-2">{{ comment.authorName }}</b> <span class="says">dit&nbsp;:</span>
-      </div>
-      <div class="comment-metadata">
-        <time :datetime="comment.date">Le {{ commentDate }}</time>
-      </div>
-    </header>
-    <!-- eslint-disable-next-line vue/no-v-html -->
-    <section class="comment-content" v-html="comment.content" />
-    <section v-if="!noReply">
-      <v-btn text class="text-decoration-underline" @click.prevent="toggleReplyToComment">{{ replyLinkText }}</v-btn>
-      <PostCommentReply
-        v-show="replyToComment"
-        :post="post"
-        :parent="comment.id"
-        class="border border-chouquette-light rounded p-3 mt-2"
-        @done="toggleReplyToComment"
-      />
-    </section>
-    <section>
-      <ul v-if="children" class="comment-children">
-        <PostComment v-for="child in children" :key="child.id" :post="post" :comment="child" :comments="comments" />
-      </ul>
-    </section>
-  </article>
+  <div>
+    <v-dialog v-model="replyDialog" max-width="500">
+      <PostCommentReply :post="post" :parent="comment.id" @done="toggleReplyToComment" />
+    </v-dialog>
+
+    <article class="my-3">
+      <header>
+        <div>
+          <img
+            v-if="comment.authorAvatar"
+            :alt="comment.authorName"
+            :src="comment.authorAvatar"
+            class="rounded-circle"
+            height="32"
+            width="32"
+          />
+          <b class="mx-2">{{ comment.authorName }}</b> <span class="says">dit&nbsp;:</span>
+        </div>
+        <div class="comment-metadata">
+          <time :datetime="comment.date">Le {{ commentDate }}</time>
+        </div>
+      </header>
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <section class="comment-content" v-html="comment.content" />
+      <section v-if="!noReply">
+        <v-btn text class="text-decoration-underline" @click.prevent="replyDialog = true">{{ replyLinkText }}</v-btn>
+      </section>
+      <section>
+        <ul v-if="children" class="comment-children">
+          <PostComment v-for="child in children" :key="child.id" :post="post" :comment="child" :comments="comments" />
+        </ul>
+      </section>
+    </article>
+  </div>
 </template>
 
 <script>
@@ -60,7 +59,7 @@ export default {
   },
   data() {
     return {
-      replyToComment: false,
+      replyDialog: false,
     }
   },
   computed: {
