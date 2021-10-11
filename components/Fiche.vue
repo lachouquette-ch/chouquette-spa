@@ -196,22 +196,11 @@
       <div v-if="fiche.similarFiches">
         <v-divider class="my-3"></v-divider>
         <h2>Adresses similaires</h2>
-        <div v-if="$vuetify.breakpoint.mobile" class="cq-scroll-x-container my-3">
-          <FicheCard
-            v-for="fiche in fiche.similarFiches"
-            :key="fiche.id"
-            :fiche="fiche"
-            :to="`/fiche/${fiche.slug}`"
-            nuxt
-          ></FicheCard>
-        </div>
-        <v-container v-else>
-          <v-row>
-            <v-col v-for="fiche in fiche.similarFiches" :key="fiche.id" cols="4">
-              <FicheCard class="mx-auto" :fiche="fiche" :to="`/fiche/${fiche.slug}`" nuxt></FicheCard>
-            </v-col>
-          </v-row>
-        </v-container>
+        <ReponsiveScrollGrid :items="fiche.similarFiches" md="3" desktop-flex>
+          <template #default="{ item }">
+            <FicheCard :fiche="item" :to="`/fiche/${item.slug}`" height="100%" nuxt></FicheCard>
+          </template>
+        </ReponsiveScrollGrid>
       </div>
     </v-card>
 
@@ -281,18 +270,19 @@
 
 <script>
 import gql from 'graphql-tag'
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 import moment from 'moment'
 import _ from 'lodash'
-import {email, maxLength, minLength, required} from 'vuelidate/lib/validators'
+import { email, maxLength, minLength, required } from 'vuelidate/lib/validators'
 import WpMedia from '~/components/WpMedia'
 import FichesMap from '~/components/FichesMap'
 import PostCard from '~/components/PostCard'
 import FicheCard from '~/components/FicheCard'
 import seo from '~/mixins/seo'
+import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
 
 export default {
-  components: {FicheCard, PostCard, FichesMap, WpMedia},
+  components: { ReponsiveScrollGrid, FicheCard, PostCard, FichesMap, WpMedia },
   mixins: [seo],
   props: {
     fiche: Object,

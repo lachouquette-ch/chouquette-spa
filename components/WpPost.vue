@@ -6,8 +6,8 @@
 
     <v-dialog v-model="mapDialog" fullscreen hide-overlay transition="dialog-top-transition">
       <v-card tile class="d-flex flex-column align-stretch">
-        <v-card-title>
-          Les adresses de l'article
+        <v-card-title class="flex-nowrap">
+          <span>Les adresses de "{{ post.title }}"</span>
           <v-spacer></v-spacer>
           <v-btn icon @click="mapDialog = false">
             <v-icon>mdi-arrow-right</v-icon>
@@ -33,7 +33,7 @@
 
     <v-card flat tile>
       <div style="position: relative; margin-bottom: 35px">
-        <WpMedia :media="post.image" gradient="180deg, transparent 70%, black"/>
+        <WpMedia :media="post.image" gradient="180deg, transparent 70%, black" />
         <v-img
           :src="mainAuthor.avatar"
           :alt="mainAuthor.name"
@@ -55,33 +55,17 @@
           <v-divider class="my-3"></v-divider>
           <h2>Adresses associées</h2>
           <template v-if="$fetchState.pending">
-            <v-skeleton-loader v-for="i in 2" :key="i" type="list-item-avatar" class="my-3"></v-skeleton-loader>
+            <v-skeleton-loader v-for="i in 3" :key="i" type="list-item-avatar" class="my-3"></v-skeleton-loader>
           </template>
           <template v-else>
-            <v-list>
-              <v-list-item v-for="fiche in ficheCards" :key="fiche.id" two-line @click="selectedFicheCard = fiche">
-                <v-list-item-avatar size="60" horizontal>
-                  <WpMedia :media="fiche.image" size="thumbnail"></WpMedia>
-                </v-list-item-avatar>
-
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ fiche.title }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle v-if="fiche.isChouquettise" class="my-1">
-                    <v-chip color="cq-yellow" text-color="primary" x-small>
-                      Testé et Chouquettisé
-                      <v-icon right>mdi-check</v-icon>
-                    </v-chip></v-list-item-subtitle
-                  >
-                  <v-list-item-subtitle
-                    ><span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} / </span>
-                    {{ getCategoryById(fiche.principalCategoryId).name }}</v-list-item-subtitle
-                  >
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-            <v-btn block outlined @click="mapDialog = true">Afficher la carte</v-btn>
+            <ReponsiveScrollGrid :items="ficheCards" md="3" class="my-2">
+              <template #default="{ item }">
+                <FicheCard :fiche="item" height="100%"></FicheCard>
+              </template>
+            </ReponsiveScrollGrid>
+            <div class="text-center">
+              <v-btn :block="$vuetify.breakpoint.mobile" outlined @click="mapDialog = true">Afficher la carte</v-btn>
+            </div>
           </template>
         </section>
 
@@ -107,7 +91,9 @@
               </div>
             </div>
             <div>
-              <v-btn outlined block class="my-3" @click="showReply = !showReply"> Un nouveau commentaire ? </v-btn>
+              <v-btn outlined :block="$vuetify.breakpoint.mobile" class="my-3" @click="showReply = !showReply">
+                Un nouveau commentaire ?
+              </v-btn>
               <PostCommentReply v-if="showReply" :post="post.id" />
             </div>
           </template>
@@ -116,26 +102,14 @@
         <section>
           <v-divider class="my-3"></v-divider>
           <h2>Articles similaires</h2>
-          <div class="cq-scroll-x-container mt-3">
-            <template v-if="$fetchState.pending">
-              <v-skeleton-loader
-                v-for="i in 3"
-                :key="i"
-                type="card"
-                class="flex-shrink-0"
-                width="150"
-              ></v-skeleton-loader>
+          <ReponsiveScrollGrid v-if="$fetchState.pending" :items="[0, 1, 2, 3]" md="3">
+            <v-skeleton-loader type="card" width="150" class="mx-auto"></v-skeleton-loader>
+          </ReponsiveScrollGrid>
+          <ReponsiveScrollGrid v-else :items="similarPosts" md="3" class="my-2">
+            <template #default="{ item }">
+              <PostCard :post="item" vertical class="mx-auto"></PostCard>
             </template>
-            <template v-else>
-              <PostCard
-                v-for="post in similarPosts"
-                :key="post.id"
-                :post="post"
-                class="flex-shrink-0"
-                vertical
-              ></PostCard>
-            </template>
-          </div>
+          </ReponsiveScrollGrid>
         </section>
       </v-card-text>
     </v-card>
@@ -144,11 +118,11 @@
 
 <script>
 import gql from 'graphql-tag'
-import {ficheCard as FicheCardFragments} from '@/apollo/fragments/ficheCard'
-import {comment as CommentFragments} from '@/apollo/fragments/comment'
-import {postCard as PostCardFragments} from '@/apollo/fragments/postCard'
+import { ficheCard as FicheCardFragments } from '@/apollo/fragments/ficheCard'
+import { comment as CommentFragments } from '@/apollo/fragments/comment'
+import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
 import isbot from 'isbot'
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 import seo from '~/mixins/seo'
 import gutenberg from '~/mixins/gutenberg'
 
@@ -160,9 +134,13 @@ import PostCard from '~/components/PostCard'
 import ContentFolding from '~/components/ContentFolding'
 import FicheDialog from '~/components/FicheDialog'
 import FichesMap from '~/components/FichesMap'
+import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
+import FicheCard from '~/components/FicheCard'
 
 export default {
   components: {
+    FicheCard,
+    ReponsiveScrollGrid,
     FichesMap,
     FicheDialog,
     ContentFolding,

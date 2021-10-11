@@ -218,7 +218,9 @@
           </v-btn>
         </v-badge>
       </div>
-      <v-subheader class="px-0">{{ fichesTotal }} résultats</v-subheader>
+      <v-subheader class="px-0"
+        ><span v-if="fichesTotal && !$fetchState.pending">{{ fichesTotal }} résultats</span></v-subheader
+      >
       <v-container class="pa-0">
         <v-row v-if="fiches.length">
           <v-col v-for="fiche in fiches" :key="fiche.id" cols="12" sm="6">
@@ -286,7 +288,10 @@
           colored-border
         >
           <span v-if="fiches.length">Tu as tout vu !</span>
-          <span v-else>Aucun résultat pour ta recherche</span>
+          <template v-else>
+            <span>Aucun résultat pour ta recherche.</span>
+            <a v-if="filterCount" href="" @click.prevent="filtersDialog = true">Tu peux changer tes filtres</a>
+          </template>
         </v-alert>
       </v-container>
       <v-fade-transition>
@@ -309,17 +314,17 @@
 </template>
 
 <script>
-import {mapGetters, mapState} from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import gql from 'graphql-tag'
 import seo from '~/mixins/seo'
 import ficheFiche from '~/mixins/fetch-fiche'
-import {PER_PAGE_NUMBER} from '~/constants/default'
+import { PER_PAGE_NUMBER } from '~/constants/default'
 import WpMedia from '~/components/WpMedia'
 import graphql from '~/mixins/graphql'
 import FilterExpansion from '~/components/FilterExpansion'
 import ScrollTop from '~/components/ScrollTop'
 import FichesMap from '~/components/FichesMap'
-import {ficheCard as FicheCardFragments} from '~/apollo/fragments/ficheCard'
+import { ficheCard as FicheCardFragments } from '~/apollo/fragments/ficheCard'
 import CategoryButton from '~/components/CategoryButton'
 import FicheDialog from '~/components/FicheDialog'
 import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'

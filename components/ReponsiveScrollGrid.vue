@@ -5,13 +5,20 @@
         <slot :item="item"></slot>
       </div>
     </div>
-    <v-container v-else-if="!mobileOnly" :id="id">
-      <v-row>
-        <v-col v-for="item in items" :key="item[itemId]" :cols="cols" :md="md">
+    <div v-else-if="!mobileOnly" :id="id">
+      <div v-if="desktopFlex" class="d-flex flex-wrap">
+        <div v-for="item in items" :key="item[itemId]" :cols="cols" :md="md" class="ma-2">
           <slot :item="item"></slot>
-        </v-col>
-      </v-row>
-    </v-container>
+        </div>
+      </div>
+      <v-container v-else>
+        <v-row>
+          <v-col v-for="item in items" :key="item[itemId]" :cols="cols" :md="md">
+            <slot :item="item"></slot>
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
   </div>
 </template>
 
@@ -22,6 +29,7 @@ export default {
     id: String,
     itemId: { type: String, default: 'id' },
     mobileOnly: Boolean,
+    desktopFlex: Boolean,
     cols: { type: [String, Number], default: 12 },
     md: { type: [String, Number], default: 6 },
   },

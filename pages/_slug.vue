@@ -9,8 +9,8 @@
 import _ from 'lodash'
 import gql from 'graphql-tag'
 
-import {post as PostFragments} from '@/apollo/fragments/post'
-import {page as PageFragments} from '@/apollo/fragments/page'
+import { post as PostFragments } from '@/apollo/fragments/post'
+import { page as PageFragments } from '@/apollo/fragments/page'
 import WpPostNew from '~/components/WpPost'
 import WpPage from '~/components/WpPage'
 
@@ -20,7 +20,7 @@ export default {
     WpPostNew,
   },
   async asyncData(context) {
-    const {app, store, params, route, error} = context
+    const { app, store, params, route, error } = context
     const client = app.apolloProvider.defaultClient
 
     // store initialization

@@ -42,11 +42,11 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import { mapGetters } from 'vuex'
 import WpMedia from '~/components/WpMedia'
 
 export default {
-  components: {WpMedia},
+  components: { WpMedia },
   props: {
     post: {
       required: true,

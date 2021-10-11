@@ -170,14 +170,13 @@
         </div>
         <ReponsiveScrollGrid :items="latestChouquettises" md="4">
           <template #default="{ item }">
-            <FicheCard :fiche="item" :to="`/fiche/${item.slug}`" class="mx-auto" nuxt></FicheCard>
+            <FicheCard :fiche="item" :to="`/fiche/${item.slug}`" class="mx-auto" height="100%" nuxt></FicheCard>
           </template>
         </ReponsiveScrollGrid>
         <div class="text-center">
           <v-btn text nuxt to="/fiches?chouquettiseOnly=true" class="text-decoration-underline"
-          >tous nos Chouquettisés
-          </v-btn
-          >
+            >tous nos Chouquettisés
+          </v-btn>
         </div>
         <v-divider class="my-5"></v-divider>
         <div class="text-center">
@@ -196,11 +195,11 @@
 
 <script>
 import gql from 'graphql-tag'
-import {mapGetters, mapState} from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
-import {postCard as PostCardFragments} from '@/apollo/fragments/postCard'
-import {fiche as FicheFragments} from '@/apollo/fragments/fiche'
-import {seo as SeoFragments} from '@/apollo/fragments/seo'
+import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
+import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
+import { seo as SeoFragments } from '@/apollo/fragments/seo'
 
 import seo from '~/mixins/seo'
 import graphql from '~/mixins/graphql'
@@ -211,13 +210,13 @@ import Newsletter from '~/components/Newsletter'
 import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
 
 export default {
-  components: {ReponsiveScrollGrid, Newsletter, FicheCard, PostCard, WpMedia},
+  components: { ReponsiveScrollGrid, Newsletter, FicheCard, PostCard, WpMedia },
   mixins: [seo, graphql],
-  async asyncData({store, app}) {
+  async asyncData({ store, app }) {
     // store initialization
     await store.dispatch('nuxtServerInit')
 
-    const {data} = await app.apolloProvider.defaultClient.query({
+    const { data } = await app.apolloProvider.defaultClient.query({
       query: gql`
         query {
           home {
