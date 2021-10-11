@@ -1,12 +1,12 @@
 <template>
   <div>
     <v-card flat>
-      <WpMedia :media="fiche.image" size="medium_large" height="250" class="rounded-lg">
+      <Media :media="fiche.image" size="medium_large" height="250" class="rounded-lg">
         <v-chip v-if="fiche.isChouquettise" color="cq-yellow" text-color="black" small class="ma-2">
           Testé et Chouquettisé
           <v-icon right>mdi-check</v-icon>
         </v-chip>
-      </WpMedia>
+      </Media>
       <v-card-title class="mt-2 px-0 pt-0 flex-nowrap align-baseline">
         <h1>{{ fiche.title }}</h1>
         <v-spacer></v-spacer>
@@ -274,7 +274,7 @@ import { mapGetters } from 'vuex'
 import moment from 'moment'
 import _ from 'lodash'
 import { email, maxLength, minLength, required } from 'vuelidate/lib/validators'
-import WpMedia from '~/components/WpMedia'
+import Media from '~/components/Media'
 import FichesMap from '~/components/FichesMap'
 import PostCard from '~/components/PostCard'
 import FicheCard from '~/components/FicheCard'
@@ -282,7 +282,7 @@ import seo from '~/mixins/seo'
 import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
 
 export default {
-  components: { ReponsiveScrollGrid, FicheCard, PostCard, FichesMap, WpMedia },
+  components: { ReponsiveScrollGrid, FicheCard, PostCard, FichesMap, Media },
   mixins: [seo],
   props: {
     fiche: Object,

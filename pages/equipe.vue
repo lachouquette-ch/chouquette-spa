@@ -1,5 +1,5 @@
 <template>
-  <WpPage :page="page">
+  <Page :page="page">
     <template #footer>
       <h2 class="text-center">L'équipe</h2>
       <div class="d-flex flex-wrap justify-content-around mb-5">
@@ -20,7 +20,7 @@
         </v-card>
       </div>
     </template>
-  </WpPage>
+  </Page>
 </template>
 
 <script>
@@ -28,12 +28,12 @@ import gql from 'graphql-tag'
 import {page as PageFragments} from '@/apollo/fragments/page'
 import {author as AuthorParts} from '@/apollo/fragments/author'
 
-import WpPage from '~/components/WpPage'
+import Page from '~/components/Page'
 import seo from '~/mixins/seo'
 
 export default {
   components: {
-    WpPage,
+    Page,
   },
   mixins: [seo],
   async asyncData({ app }) {

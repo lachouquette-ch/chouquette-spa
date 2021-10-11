@@ -1,7 +1,7 @@
 <template>
   <div>
-    <WpPage v-if="pageType === 'page'" :page="page" />
-    <WpPostNew v-else-if="pageType === 'post'" :post="post" />
+    <Page v-if="pageType === 'page'" :page="page" />
+    <Post v-else-if="pageType === 'post'" :post="post" />
   </div>
 </template>
 
@@ -11,13 +11,13 @@ import gql from 'graphql-tag'
 
 import { post as PostFragments } from '@/apollo/fragments/post'
 import { page as PageFragments } from '@/apollo/fragments/page'
-import WpPostNew from '~/components/WpPost'
-import WpPage from '~/components/WpPage'
+import Post from '~/components/Post'
+import Page from '~/components/Page'
 
 export default {
   components: {
-    WpPage,
-    WpPostNew,
+    Page,
+    Post,
   },
   async asyncData(context) {
     const { app, store, params, route, error } = context

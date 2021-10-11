@@ -8,8 +8,8 @@
   >
     <v-list-item two-line>
       <v-list-item-avatar class="rounded-0">
-        <WpMedia v-if="selected" :media="topCategory.logoWhite" size="thumbnail"></WpMedia>
-        <WpMedia v-else :media="topCategory.logoBlack" size="thumbnail"></WpMedia>
+        <Media v-if="selected" :media="topCategory.logoWhite" size="thumbnail"></Media>
+        <Media v-else :media="topCategory.logoBlack" size="thumbnail"></Media>
       </v-list-item-avatar>
 
       <v-list-item-content>
@@ -25,10 +25,10 @@
 </template>
 
 <script>
-import WpMedia from '~/components/WpMedia'
+import Media from '~/components/Media'
 
 export default {
-  components: {WpMedia},
+  components: {Media},
   props: {
     topCategory: Object,
     selected: Boolean,

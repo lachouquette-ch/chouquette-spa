@@ -1,7 +1,7 @@
 <template>
   <div>
-    <WpPage v-if="pageType === 'page'" :page="page" preview />
-    <WpPost v-else-if="pageType === 'post'" :post="post" preview />
+    <Page v-if="pageType === 'page'" :page="page" preview />
+    <Post v-else-if="pageType === 'post'" :post="post" preview />
     <div v-else-if="pageType === 'fiche'" class="container layout-content mx-auto mt-5">
       <Fiche :fiche="fiche" preview />
     </div>
@@ -9,15 +9,15 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
-import WpPage from '~/components/WpPage'
-import WpPost from '~/components/WpPost'
+import { mapState } from 'vuex'
+import Page from '~/components/Page'
+import Post from '~/components/Post'
 import Fiche from '~/components/Fiche'
 
 export default {
   components: {
-    WpPage,
-    WpPost,
+    Page,
+    Post,
     Fiche,
   },
   data() {

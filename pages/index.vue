@@ -54,7 +54,7 @@
           max-width="400"
         ></v-skeleton-loader>
         <v-card v-else class="mx-auto" :to="`/${highlightedPost.slug}`" nuxt ripple elevation="3" max-width="400">
-          <WpMedia
+          <Media
             v-if="highlightedPost.image"
             :media="highlightedPost.image"
             size="medium_large"
@@ -67,7 +67,7 @@
                 {{ getCategoryById(highlightedPost.categoryId).name }}
               </v-chip>
             </v-card-subtitle>
-          </WpMedia>
+          </Media>
           <v-card-text>
             <v-card-title class="pa-0">
               <h3>{{ highlightedPost.title }}</h3>
@@ -125,7 +125,7 @@
               <v-card-title class="justify-center text-uppercase mb-5">
                 <h3 class="valeur-title">{{ value.name }}</h3>
               </v-card-title>
-              <WpMedia
+              <Media
                 :media="value.image"
                 size="thumbnail"
                 width="100"
@@ -133,7 +133,7 @@
                 contain
                 class="mx-auto"
                 flat
-              ></WpMedia>
+              ></Media>
               <v-card-text class="text-body-1">{{ value.description }}</v-card-text>
               <v-card-actions class="justify-center">
                 <v-btn text nuxt to="/articles" class="text-decoration-underline">en savoir plus</v-btn>
@@ -203,14 +203,14 @@ import { seo as SeoFragments } from '@/apollo/fragments/seo'
 
 import seo from '~/mixins/seo'
 import graphql from '~/mixins/graphql'
-import WpMedia from '~/components/WpMedia'
+import Media from '~/components/Media'
 import PostCard from '~/components/PostCard'
 import FicheCard from '~/components/FicheCard'
 import Newsletter from '~/components/Newsletter'
 import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
 
 export default {
-  components: { ReponsiveScrollGrid, Newsletter, FicheCard, PostCard, WpMedia },
+  components: { ReponsiveScrollGrid, Newsletter, FicheCard, PostCard, Media },
   mixins: [seo, graphql],
   async asyncData({ store, app }) {
     // store initialization

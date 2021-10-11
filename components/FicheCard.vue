@@ -1,13 +1,13 @@
 <template>
   <v-card hover ripple width="200" max-width="60vw" v-bind="{ ...$props, ...$attrs }">
-    <WpMedia :media="fiche.image" size="medium_large" height="200">
+    <Media :media="fiche.image" size="medium_large" height="200">
       <v-card-subtitle v-if="fiche.isChouquettise" class="pa-2">
         <v-chip color="cq-yellow" text-color="black" small>
           Testé et Chouquettisé
           <v-icon right>mdi-check</v-icon>
         </v-chip>
       </v-card-subtitle>
-    </WpMedia>
+    </Media>
     <v-card-title class="d-block">
       <h3>{{ fiche.title }}</h3>
       <v-card-subtitle class="pa-0 mt-1 secondary--text">
@@ -19,11 +19,11 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
-import WpMedia from '~/components/WpMedia'
+import { mapGetters } from 'vuex'
+import Media from '~/components/Media'
 
 export default {
-  components: {WpMedia},
+  components: { Media },
   props: {
     fiche: {
       required: true,

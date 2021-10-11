@@ -33,7 +33,7 @@
 
     <v-card flat tile>
       <div style="position: relative; margin-bottom: 35px">
-        <WpMedia :media="post.image" gradient="180deg, transparent 70%, black" />
+        <Media :media="post.image" gradient="180deg, transparent 70%, black" />
         <v-img
           :src="mainAuthor.avatar"
           :alt="mainAuthor.name"
@@ -127,7 +127,7 @@ import seo from '~/mixins/seo'
 import gutenberg from '~/mixins/gutenberg'
 
 import graphql from '~/mixins/graphql'
-import WpMedia from '~/components/WpMedia'
+import Media from '~/components/Media'
 import PostComment from '~/components/PostComment'
 import PostCommentReply from '~/components/PostCommentReply'
 import PostCard from '~/components/PostCard'
@@ -145,7 +145,7 @@ export default {
     FicheDialog,
     ContentFolding,
     PostCard,
-    WpMedia,
+    Media,
     PostComment,
     PostCommentReply,
   },
