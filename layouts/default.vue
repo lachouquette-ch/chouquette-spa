@@ -18,6 +18,32 @@
         <p class="ml-3 text-caption">{{ description }}</p>
         <v-divider></v-divider>
         <v-card-text class="pa-0">
+          <template v-if="!$vuetify.breakpoint.mobile">
+            <v-list nav>
+              <v-subheader class="text-h4 pl-1">Les racourcis</v-subheader>
+              <v-list-item to="/" nuxt>
+                <v-list-item-icon><v-icon>mdi-home</v-icon></v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title>Accueil</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item to="/fiches" nuxt>
+                <v-list-item-icon><v-icon>mdi-map-marker-multiple-outline</v-icon></v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title>Adresses</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item to="/articles" nuxt>
+                <v-list-item-icon><v-icon>mdi-newspaper-variant-multiple</v-icon></v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title>Articles</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+
+            <v-divider></v-divider>
+          </template>
+
           <v-list nav>
             <v-subheader class="text-h4 pl-1">Les intérêts</v-subheader>
             <v-list-item
@@ -206,7 +232,7 @@
 <script>
 import CookieConsent from 'vue-cookieconsent-component'
 import isbot from 'isbot'
-import {mapGetters, mapState} from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import Footer from '~/components/Footer'
 import LayoutAlert from '~/components/LayoutAlert'
 
