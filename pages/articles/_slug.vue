@@ -3,22 +3,38 @@
     <PostDialog v-model="selectedPostCard" @close="selectedPostCard = null"></PostDialog>
 
     <v-container>
-      <h1 class="text-h5 text-center mt-3">Tous les articles</h1>
-      <div id="categoryContainer" class="cq-scroll-x-container mt-4 justfiy-start">
-        <CategoryButton
-          v-for="topCategory in topCategories"
-          :id="topCategory.slug"
-          :key="topCategory.id"
-          :top-category="topCategory"
-          :selected="topCategory === category"
-          :disabled="$fetchState.pending"
-          @click="
-            category = topCategory
-            fetchWithFilters()
-          "
-        ></CategoryButton>
-      </div>
-      <div class="mt-1 d-inline-flex align-stretch" style="width: 100%">
+      <h1 class="text-center my-3">Tous les articles</h1>
+      <ReponsiveScrollGrid id="categoryContainer" :items="topCategories" mobile-only>
+        <template #default="{ item }">
+          <CategoryButton
+            :id="item.slug"
+            :top-category="item"
+            :selected="item === category"
+            :disabled="$fetchState.pending"
+            @click="
+              category = item
+              fetchWithFilters()
+            "
+          ></CategoryButton>
+        </template>
+      </ReponsiveScrollGrid>
+      <div class="mt-2 mt-sm-5 d-flex align-stretch">
+        <template v-if="!$vuetify.breakpoint.mobile">
+          <v-select
+            v-model="category"
+            :items="topCategories"
+            :disabled="$fetchState.pending"
+            outlined
+            dense
+            hide-details
+            item-text="name"
+            item-value="slug"
+            return-object
+            label="Catégorie"
+            class="flex-grow-0 mr-2"
+            @change="fetchWithFilters"
+          ></v-select>
+        </template>
         <v-text-field
           v-model="search"
           outlined
@@ -33,70 +49,72 @@
           @click:clear.capture="clearSearch"
         ></v-text-field>
       </div>
-      <template v-if="posts.length">
-        <div class="d-flex align-center">
-          <v-subheader class="px-0 text-body-2">{{ postsTotal }} résultats</v-subheader>
-          <v-spacer></v-spacer>
-          <v-menu offset-y>
-            <template #activator="{ on, attrs }">
-              <v-btn text v-bind="attrs" v-on="on">
-                Trier
-                <v-icon v-if="sortAsc" right>mdi-chevron-up</v-icon>
-                <v-icon v-else right>mdi-chevron-down</v-icon>
-              </v-btn>
-            </template>
-            <v-container class="white">
-              <v-radio-group v-model="sortAsc" class="mt-0" hide-details @change="fetchWithFilters">
-                <v-radio label="Les plus récents" :value="false" color="grey"></v-radio>
-                <v-radio label="Les plus anciens" :value="true" color="grey"></v-radio>
-              </v-radio-group>
-            </v-container>
-          </v-menu>
-        </div>
-        <v-switch
-          v-model="topOnly"
-          label="Tops seuls"
-          hide-details
-          dense
-          class="mt-0 mb-1"
-          @change="fetchWithFilters"
-        ></v-switch>
-        <PostCard
-          v-for="post in posts"
-          :key="post.id"
-          :loading="selectedPostCard === post"
-          :post="post"
-          class="mb-3"
-          @click="selectedPostCard = post"
-        ></PostCard>
-        <v-btn
-          v-if="!$fetchState.pending && hasMorePosts"
-          v-intersect.quiet="$fetch"
-          color="secondary"
-          :loading="$fetchState.pending"
-          block
-          tag="a"
-          rel="next"
-          outlined
-          @click="$fetch"
-        >
-          Plus d'adresses
-        </v-btn>
-      </template>
-      <div v-if="$fetchState.pending" class="mt-3">
-        <v-skeleton-loader
-          v-for="i in 5"
-          :key="i"
-          class="mb-3"
-          elevation="1"
-          type="list-item-avatar-three-line"
-        ></v-skeleton-loader>
+      <div class="d-flex align-center">
+        <v-subheader class="px-0 text-body-2">{{ postsTotal }} résultat(s)</v-subheader>
+        <v-spacer></v-spacer>
+        <v-menu offset-y>
+          <template #activator="{ on, attrs }">
+            <v-btn text v-bind="attrs" v-on="on">
+              Trier
+              <v-icon v-if="sortAsc" right>mdi-chevron-up</v-icon>
+              <v-icon v-else right>mdi-chevron-down</v-icon>
+            </v-btn>
+          </template>
+          <v-container class="white">
+            <v-radio-group v-model="sortAsc" class="mt-0" hide-details @change="fetchWithFilters">
+              <v-radio label="Les plus récents" :value="false" color="grey"></v-radio>
+              <v-radio label="Les plus anciens" :value="true" color="grey"></v-radio>
+            </v-radio-group>
+          </v-container>
+        </v-menu>
       </div>
+      <v-switch
+        v-model="topOnly"
+        label="Tops seuls"
+        hide-details
+        dense
+        class="mt-0 mb-1"
+        @change="fetchWithFilters"
+      ></v-switch>
+      <v-container v-if="posts.length" class="pa-0 mt-3">
+        <v-row>
+          <v-col v-for="post in posts" :key="post.id" cols="12" md="6">
+            <PostCard
+              :loading="selectedPostCard === post"
+              :post="post"
+              :large="!$vuetify.breakpoint.mobile"
+              @click="selectedPostCard = post"
+            ></PostCard>
+          </v-col>
+          <v-col cols="12">
+            <v-btn
+              v-if="!$fetchState.pending && hasMorePosts"
+              v-intersect.quiet="$fetch"
+              color="secondary"
+              :loading="$fetchState.pending"
+              block
+              tag="a"
+              rel="next"
+              outlined
+              @click="$fetch"
+            >
+              Plus d'adresses
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
+      <v-container v-if="$fetchState.pending" class="pa-0 mt-3">
+        <v-row>
+          <v-col v-for="i in 5" :key="i" cols="12" md="6">
+            <v-skeleton-loader class="mb-3" elevation="1" type="list-item-avatar-three-line"></v-skeleton-loader>
+          </v-col>
+        </v-row>
+      </v-container>
       <v-alert
         v-else-if="!hasMorePosts"
         border="bottom"
-        color="secondary lighten-3"
-        class="mt-3 mb-0 text-center"
+        color="primary"
+        class="text-center mt-3"
         elevation="2"
         colored-border
       >
@@ -109,19 +127,20 @@
 </template>
 
 <script>
-import {mapGetters, mapState} from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import gql from 'graphql-tag'
 import seo from '~/mixins/seo'
-import {PER_PAGE_NUMBER} from '~/constants/default'
+import { PER_PAGE_NUMBER } from '~/constants/default'
 import PostCard from '~/components/PostCard'
 import graphql from '~/mixins/graphql'
 import CategoryButton from '~/components/CategoryButton'
 import ScrollTop from '~/components/ScrollTop'
-import {postCard as PostCardFragments} from '~/apollo/fragments/postCard'
+import { postCard as PostCardFragments } from '~/apollo/fragments/postCard'
 import PostDialog from '~/components/PostDialog'
+import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
 
 export default {
-  components: { PostDialog, CategoryButton, PostCard, ScrollTop },
+  components: { PostDialog, CategoryButton, PostCard, ScrollTop, ReponsiveScrollGrid },
   mixins: [seo, graphql],
   asyncData({ store, params, query }) {
     const category = query.category ? store.getters['categories/getBySlug'](query.category) : null
@@ -196,11 +215,13 @@ export default {
     if (this.category) {
       // move to selected category
       const categoryButton = document.getElementById(this.category.slug)
-      const categoryContainer = document.getElementById('categoryContainer')
-      const buttonLeftOffset = categoryButton.offsetLeft
-      const maxLeftOffset = categoryContainer.scrollWidth - categoryContainer.clientWidth
-      const leftOffset = buttonLeftOffset > maxLeftOffset ? maxLeftOffset : buttonLeftOffset - 50 // need to view previous
-      categoryContainer.scrollLeft = leftOffset
+      if (categoryButton) {
+        const categoryContainer = document.getElementById('categoryContainer')
+        const buttonLeftOffset = categoryButton.offsetLeft
+        const maxLeftOffset = categoryContainer.scrollWidth - categoryContainer.clientWidth
+        const leftOffset = buttonLeftOffset > maxLeftOffset ? maxLeftOffset : buttonLeftOffset - 50 // need to view previous
+        categoryContainer.scrollLeft = leftOffset
+      }
     }
   },
   methods: {
