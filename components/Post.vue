@@ -1,5 +1,7 @@
 <template>
   <div>
+    <PostShare :post="post" class="cq-share-position" fab color="primary"></PostShare>
+
     <v-overlay :value="selectedFicheCard">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
@@ -139,9 +141,11 @@ import FicheDialog from '~/components/FicheDialog'
 import FichesMap from '~/components/FichesMap'
 import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
 import FicheCard from '~/components/FicheCard'
+import PostShare from '~/components/PostShare'
 
 export default {
   components: {
+    PostShare,
     FicheCard,
     ReponsiveScrollGrid,
     FichesMap,

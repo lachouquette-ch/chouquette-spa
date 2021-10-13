@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <FicheShare :fiche="fiche" class="share" fab color="primary"></FicheShare>
+    <FicheShare :fiche="fiche" class="cq-share-position" fab color="primary"></FicheShare>
 
     <Fiche :fiche="fiche"></Fiche>
   </v-container>
@@ -91,18 +91,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.share {
-  position: fixed;
-  z-index: 1;
-
-  @media #{map-get($display-breakpoints, 'sm-and-down')} {
-    bottom: 56px;
-    right: 10px;
-  }
-
-  @media #{map-get($display-breakpoints, 'md-and-up')} {
-    bottom: 10px;
-    right: calc(50% - #{map-get($grid-breakpoints, 'md') / 2});
-  }
-}
 </style>
