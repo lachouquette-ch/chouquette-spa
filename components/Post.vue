@@ -69,7 +69,7 @@
                 <FicheCard :fiche="item" height="100%"></FicheCard>
               </template>
             </ReponsiveScrollGrid>
-            <div class="text-center">
+            <div v-if="hasAnyLocation" class="text-center">
               <v-btn :block="$vuetify.breakpoint.mobile" outlined @click="mapDialog = true">Afficher la carte</v-btn>
             </div>
           </template>
@@ -122,6 +122,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import gql from 'graphql-tag'
 import { ficheCard as FicheCardFragments } from '@/apollo/fragments/ficheCard'
 import { comment as CommentFragments } from '@/apollo/fragments/comment'
@@ -262,6 +263,9 @@ export default {
     rootLevelComments() {
       const rootComments = this.comments.filter(({ parentId }) => parentId === 0)
       return this.extendComments ? rootComments : rootComments.slice(0, 1)
+    },
+    hasAnyLocation() {
+      return _.some(this.ficheCards, 'poi')
     },
     ...mapGetters('categories', {
       getCategoryById: 'getById',
