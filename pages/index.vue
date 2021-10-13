@@ -1,7 +1,12 @@
 <template>
   <div>
     <v-card flat>
-      <v-img src="/banner.png" class="rounded-0 align-center text-center" height="300">
+      <v-img
+        src="/banner-md.png"
+        height="300"
+        srcset="/banner-sm.png 600w, /banner-md.png 900w"
+        class="rounded-0 align-center text-center"
+      >
         <v-card-text>
           <h1 class="font-weight-bold mb-3 mb-md-5">les meilleures adresses locales et éco-responsables</h1>
           <v-container class="cq-sm-max-width">
@@ -108,25 +113,17 @@
         <h2 class="text-center font-weight-bold text-lowercase my-5">les 5 valeurs de La Chouquette</h2>
         <v-carousel
           class="valeurs-carousel"
-          height="400"
+          height="500"
           show-arrows-on-hover
           hide-delimiter-background
           interval="3000"
         >
           <v-carousel-item v-for="value in values" :key="value.id">
-            <v-card color="white" class="text-center mx-auto py-5" width="250">
-              <v-card-title class="justify-center text-uppercase mb-5">
+            <v-card color="white" class="text-center mx-auto py-5" width="300">
+              <v-card-title class="justify-center text-uppercase">
                 <h3 class="valeur-title">{{ value.name }}</h3>
               </v-card-title>
-              <Media
-                :media="value.image"
-                size="thumbnail"
-                width="100"
-                height="100"
-                contain
-                class="mx-auto"
-                flat
-              ></Media>
+              <Media :media="value.image" size="medium" height="200" contain class="mx-auto" flat></Media>
               <v-card-text class="text-body-1">{{ value.description }}</v-card-text>
               <v-card-actions class="justify-center">
                 <v-btn text nuxt to="/articles" class="text-decoration-underline">en savoir plus</v-btn>

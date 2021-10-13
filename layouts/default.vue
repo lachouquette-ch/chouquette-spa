@@ -268,7 +268,7 @@ export default {
       contactMenu: 'getContactMenu',
     }),
     displayDrawer() {
-      return this.$vuetify.breakpoint.mobile && this.drawer
+      return this.$vuetify.breakpoint.mobile && this.toggleMenu
     },
     isIndex() {
       return this.$route.name === 'index'
