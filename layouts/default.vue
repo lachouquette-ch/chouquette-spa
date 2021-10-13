@@ -169,7 +169,7 @@
         <transition name="fade">
           <v-text-field
             v-if="toggleSearch"
-            v-model="search"
+            v-model="searchText"
             placeholder="Je cherche..."
             solo
             autofocus
@@ -181,6 +181,7 @@
             hide-details
             flat
             class="w-100"
+            @change="search"
             @click:prepend="toggleSearch = false"
           ></v-text-field>
         </transition>
@@ -247,10 +248,18 @@ export default {
 
       toggleMenu: false,
       toggleSearch: false,
-      search: null,
+      searchText: null,
 
       selectedNav: undefined,
     }
+  },
+  methods: {
+    search() {
+      const searchText = this.searchText
+      this.toggleSearch = false
+      this.searchText = null
+      this.$router.push(`/search/${searchText}`)
+    },
   },
   computed: {
     ...mapGetters('menus', {

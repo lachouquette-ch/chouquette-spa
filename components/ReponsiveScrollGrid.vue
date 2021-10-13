@@ -4,6 +4,7 @@
       <div v-for="item in items" :key="item[itemId]">
         <slot :item="item"></slot>
       </div>
+      <slot name="after"></slot>
     </div>
     <div v-else-if="!mobileOnly" :id="id">
       <div v-if="desktopFlex" class="d-flex flex-wrap">
@@ -15,6 +16,9 @@
         <v-row>
           <v-col v-for="item in items" :key="item[itemId]" :cols="cols" :md="md">
             <slot :item="item"></slot>
+          </v-col>
+          <v-col :cols="cols" :md="md">
+            <slot name="after"></slot>
           </v-col>
         </v-row>
       </v-container>
