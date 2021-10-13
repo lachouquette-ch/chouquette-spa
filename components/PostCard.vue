@@ -8,6 +8,8 @@
     hover
     ripple
     v-bind="{ ...$props, ...$attrs }"
+    :to="postLink"
+    :nuxt="!disableLink"
     @click.prevent="$emit('click')"
   >
     <Media
@@ -55,6 +57,7 @@ export default {
     hideMeta: Boolean,
     vertical: Boolean,
     large: Boolean,
+    disableLink: Boolean,
   },
   computed: {
     ...mapGetters('categories', {
@@ -67,6 +70,9 @@ export default {
     imgWidth() {
       if (this.vertical) return '100%'
       else return this.large ? '200px' : '150px'
+    },
+    postLink() {
+      return this.disableLink ? false : `/${this.post.slug}`
     },
   },
 }

@@ -1,5 +1,13 @@
 <template>
-  <v-card hover ripple width="200" max-width="60vw" v-bind="{ ...$props, ...$attrs }">
+  <v-card
+    hover
+    ripple
+    width="200"
+    max-width="60vw"
+    v-bind="{ ...$props, ...$attrs }"
+    :to="ficheLink"
+    :nuxt="!disableLink"
+  >
     <Media :media="fiche.image" size="medium_large" height="200">
       <v-card-subtitle v-if="fiche.isChouquettise" class="pa-2">
         <v-chip color="cq-yellow" text-color="black" small>
@@ -29,6 +37,7 @@ export default {
       required: true,
       type: Object,
     },
+    disableLink: Boolean,
   },
   computed: {
     ...mapGetters('categories', {
@@ -37,6 +46,9 @@ export default {
     ...mapGetters('locations', {
       getLocationById: 'getById',
     }),
+    ficheLink() {
+      return this.disableLink ? false : `/fiche/${this.fiche.slug}`
+    },
   },
 }
 </script>

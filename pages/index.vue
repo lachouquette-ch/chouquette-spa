@@ -90,17 +90,10 @@
           </template>
           <template v-else>
             <v-col v-if="!$vuetify.breakpoint.mobile" cols="6">
-              <PostCard
-                :post="highlightedPost"
-                class="my-2 mx-auto"
-                :to="highlightedPost.slug"
-                nuxt
-                large
-                hide-meta
-              ></PostCard>
+              <PostCard :post="highlightedPost" class="my-2 mx-auto" large hide-meta></PostCard>
             </v-col>
             <v-col v-for="post in otherPosts" :key="post.id" cols="12" md="6">
-              <PostCard :post="post" class="my-2 mx-auto" :to="post.slug" nuxt large hide-meta></PostCard>
+              <PostCard :post="post" class="my-2 mx-auto" large hide-meta></PostCard>
             </v-col>
           </template>
         </v-row>
@@ -148,7 +141,7 @@
       <h2 class="text-center">Nos derniers tops</h2>
       <ReponsiveScrollGrid :items="topPosts" md="4">
         <template #default="{ item }">
-          <PostCard :post="item" :to="item.slug" class="mx-auto" nuxt vertical large hide-meta></PostCard>
+          <PostCard :post="item" class="mx-auto" vertical large hide-meta></PostCard>
         </template>
       </ReponsiveScrollGrid>
       <div class="text-center my-3">
@@ -170,7 +163,7 @@
         </div>
         <ReponsiveScrollGrid :items="latestChouquettises" md="4">
           <template #default="{ item }">
-            <FicheCard :fiche="item" :to="`/fiche/${item.slug}`" class="mx-auto" height="100%" nuxt></FicheCard>
+            <FicheCard :fiche="item" class="mx-auto" height="100%"></FicheCard>
           </template>
         </ReponsiveScrollGrid>
         <div class="text-center">

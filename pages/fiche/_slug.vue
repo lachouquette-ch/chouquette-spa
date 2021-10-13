@@ -8,9 +8,9 @@
 
 <script>
 import gql from 'graphql-tag'
-import {fiche as FicheFragments} from '@/apollo/fragments/fiche'
-import {ficheCard as FicheCardFragments} from '@/apollo/fragments/ficheCard'
-import {postCard as PostCardFragments} from '@/apollo/fragments/postCard'
+import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
+import { ficheCard as FicheCardFragments } from '@/apollo/fragments/ficheCard'
+import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
 import seo from '~/mixins/seo'
 import FicheShare from '~/components/FicheShare'
 import graphql from '~/mixins/graphql'
