@@ -223,7 +223,7 @@
           </span>
         </template>
         <template slot="button">
-          <v-btn class="my-2" color="white">J'accepte<v-icon right> mdi-thumb-up-outline </v-icon></v-btn>
+          <v-btn class="my-2" color="white">J'accepte<v-icon right>mdi-thumb-up-outline</v-icon></v-btn>
         </template>
       </cookie-consent>
     </client-only>
