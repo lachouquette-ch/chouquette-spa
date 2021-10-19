@@ -219,7 +219,7 @@
         <template slot="message">
           <span class="white--text mx-3">
             Ici, on aime les Cookies <v-icon color="white">mdi-cookie</v-icon>, mais pas plus qu'il n'en faut !
-            <nuxt-link to="/politique-de-confidentialite">En savoir plus</nuxt-link>
+            <nuxt-link to="/politique-de-confidentialite" class="white--text">En savoir plus</nuxt-link>
           </span>
         </template>
         <template slot="button">
