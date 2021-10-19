@@ -21,8 +21,7 @@ spec:
       containers:
         - name: chouquette-spa-uat
           image: docker.lachouquette.ch/chouquette-spa:latest
-          command: ["yarn"]
-          args: ["dev"]
+          command: ["/bin/bash", "-c", "yarn install @nuxtjs/vuetify", "yarn dev"]
           ports:
             - name: container-port
               containerPort: 3000
