@@ -2,7 +2,7 @@
   <v-app>
     <LayoutAlert></LayoutAlert>
 
-    <v-system-bar color="primary" class="cq-blue--text justify-center" app height="30">
+    <v-system-bar v-if="false" color="primary" class="cq-blue--text justify-center" app height="30">
       <span>En savoir plus + highlight titre</span>
     </v-system-bar>
 
