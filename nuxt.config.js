@@ -81,7 +81,7 @@ export default {
     { src: '~/plugins/html-entity-filter.js' },
     { src: '~/plugins/pretty-url-filter.js' },
     { src: '~/plugins/iso-date-filter.js' },
-    { src: '~/plugins/vue2-hammer.js' },
+    { src: '~/plugins/vue2-hammer.js', mode: 'client' },
   ],
   /*
    ** Nuxt.js dev-modules
