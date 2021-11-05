@@ -282,7 +282,7 @@ export default {
       return this.latestPosts.slice(1)
     },
     locationsPlusAll() {
-      return [...this.locations, { divider: true }, { slug: '', name: 'Partout' }]
+      return [{ slug: '', name: 'Partout' }, { divider: true }, ...this.locations]
     },
   },
   head() {
