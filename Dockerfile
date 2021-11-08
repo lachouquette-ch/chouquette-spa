@@ -32,6 +32,8 @@ RUN yarn build --standalone
 RUN rm -rf node_modules
 # install packages needed at runtime
 RUN yarn add "nuxt-start@${NUXT_VERSION}"
+# need vuetify for uat
+RUN yarn add @nuxtjs/vuetify
 RUN yarn cache clean
 
 EXPOSE $NUXT_PORT

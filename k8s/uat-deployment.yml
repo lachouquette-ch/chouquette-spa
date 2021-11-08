@@ -64,3 +64,7 @@ spec:
                 secretKeyRef:
                   name: chouquette-spa-uat
                   key: GOOGLE_MAPS_KEY
+            - name: GRAPHQL_URI
+              value: http://api-gateway-uat.default.svc.cluster.local:4000/graphql
+            - name: BROWSER_GRAPHQL_URI
+              value: https://api-gateway-uat.lachouquette.ch/graphql
