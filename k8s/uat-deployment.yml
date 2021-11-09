@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: chouquette-spa-uat
-          image: docker.lachouquette.ch/chouquette-spa:latest
+          image: docker.lachouquette.ch/chouquette-spa-uat:latest
           command: ["yarn"]
           args: ["dev"]
           ports:
