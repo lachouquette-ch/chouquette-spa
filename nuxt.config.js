@@ -55,7 +55,7 @@ export default {
 
       {
         rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Lato:wght@300;900&family=Oswald:wght@200;400;600&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Oswald:wght@300;400;700&display=swap',
       },
     ],
   },
@@ -182,7 +182,7 @@ export default {
     ],
   },
   styleResources: {
-    scss: ['~/assets/scss/_mixins.scss'],
+    scss: ['~/assets/scss/_mixins.scss', '~/assets/scss/_variables.scss'],
   },
   /*
    ** Build configuration

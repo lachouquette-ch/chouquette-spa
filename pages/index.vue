@@ -3,12 +3,12 @@
     <v-card flat>
       <v-img
         src="/banner-md.png"
-        height="300"
+        height="400"
         srcset="/banner-sm.png 600w, /banner-md.png 900w"
         class="rounded-0 align-center text-center"
       >
         <v-card-text>
-          <h1 class="font-weight-bold mb-3 mb-md-5">les meilleures adresses locales et éco-responsables</h1>
+          <h1 class="font-weight-black mb-3 mb-md-5">les meilleures adresses locales et éco-responsables</h1>
           <v-container class="cq-sm-max-width">
             <v-row class="justify-center align-center" no-gutters>
               <v-col cols="12" md="6">
@@ -40,7 +40,7 @@
                   class="black--text mt-2 mt-md-0"
                   x-large
                   @click="goToLocation(selectedLocation)"
-                  >Rechercher</v-btn
+                  >J'explore</v-btn
                 >
               </v-col>
             </v-row>
@@ -49,7 +49,7 @@
       </v-img>
     </v-card>
     <v-sheet>
-      <h2 class="text-center">ARTICLES À LA UNE</h2>
+      <h2 class="text-center my-5">ARTICLES À LA UNE</h2>
       <v-container v-if="$vuetify.breakpoint.mobile">
         <v-skeleton-loader
           v-if="$fetchState.pending"
@@ -104,13 +104,13 @@
         </v-row>
       </v-container>
       <div class="text-center mb-3">
-        <v-btn text nuxt to="/articles" class="text-decoration-underline">tous nos articles</v-btn>
+        <v-btn text x-large nuxt to="/articles" class="text-decoration-underline">tous nos articles</v-btn>
       </div>
     </v-sheet>
 
     <v-sheet class="cq-yellow">
       <v-container>
-        <h2 class="text-center font-weight-bold text-lowercase my-5">les 5 valeurs de La Chouquette</h2>
+        <h3 class="text-center font-weight-black text-h2 text-lowercase my-5">les 5 valeurs de La Chouquette</h3>
         <v-carousel
           class="valeurs-carousel"
           height="500"
@@ -135,14 +135,14 @@
     </v-sheet>
 
     <v-sheet class="px-3">
-      <h2 class="text-center">Nos derniers tops</h2>
+      <h2 class="text-center my-5">Nos derniers tops</h2>
       <ReponsiveScrollGrid :items="topPosts" md="4">
         <template #default="{ item }">
           <PostCard :post="item" class="mx-auto" vertical large hide-meta></PostCard>
         </template>
       </ReponsiveScrollGrid>
       <div class="text-center my-3">
-        <v-btn text nuxt to="/articles?topOnly=true" class="text-decoration-underline">tous nos tops</v-btn>
+        <v-btn text x-large nuxt to="/articles?topOnly=true" class="text-decoration-underline">tous nos tops</v-btn>
       </div>
     </v-sheet>
 
@@ -164,13 +164,13 @@
           </template>
         </ReponsiveScrollGrid>
         <div class="text-center">
-          <v-btn text nuxt to="/fiches?chouquettiseOnly=true" class="text-decoration-underline"
+          <v-btn text x-large nuxt to="/fiches?chouquettiseOnly=true" class="text-decoration-underline"
             >tous nos Chouquettisés
           </v-btn>
         </div>
         <v-divider class="my-5"></v-divider>
         <div class="text-center">
-          <p class="text-h3 font-weight-bold">notre label t'intéresse ?</p>
+          <p class="text-h2 font-weight-black">notre label t'intéresse ?</p>
           <p class="text-h5">tu partages nos valeurs et souhaite en savoir comment obtenir ce label ?</p>
           <v-btn elevation="3" :block="$vuetify.breakpoint.mobile" color="cq-yellow" class="black--text mb-3" large
             >Nous contacter</v-btn
@@ -334,9 +334,9 @@ button.v-btn.cq-yellow {
 }
 
 h2 {
-  font-family: $heading-font-family;
+  font-family: $secondary-font-family !important;
   letter-spacing: 1.5px !important;
-  font-weight: 200 !important;
+  font-weight: normal !important;
   text-transform: uppercase;
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;

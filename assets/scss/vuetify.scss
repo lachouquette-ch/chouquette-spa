@@ -2,8 +2,9 @@ $color-pack: false; // no color from vuetify
 
 // Globals
 $body-font-family: 'Lato', sans-serif;
-$heading-font-family: 'Oswalt', sans-serif;
+$heading-font-family: $body-font-family;
 $font-size-root: 16px;
+$btn-font-weight: bold;
 $btn-border-radius: 25px;
 $btn-text-transform: none;
 $card-border-radius: 16px;
@@ -13,7 +14,6 @@ $headings: (
   'h1': (
     'size': 1.75rem,
     'line-height': 2.5rem,
-    'font-family': $heading-font-family,
   ),
   'h2': (
     'size': 1.5rem,

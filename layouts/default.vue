@@ -6,7 +6,7 @@
       <span>En savoir plus + highlight titre</span>
     </v-system-bar>
 
-    <v-navigation-drawer v-model="toggleMenu" temporary app right width="500">
+    <v-navigation-drawer v-model="toggleMenu" temporary app right touchless width="500">
       <v-card min-height="100vh" tile>
         <v-card-title>
           <h1 class="text-h6">{{ name }}</h1>
