@@ -32,7 +32,7 @@ export default {
         name: 'description',
         content: process.env.npm_package_description || '',
       },
-      { name: 'theme-color', content: '#f2e808' },
+      { name: 'theme-color', content: '#EFE407' },
     ],
     link: [
       // favicons
@@ -50,7 +50,7 @@ export default {
       { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicons/favicon-32x32.png' },
       { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/favicons/favicon-96x96.png' },
       { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicons/favicon-16x16.png' },
-      { name: 'msapplication-TileColor', content: '#f2e808' },
+      { name: 'msapplication-TileColor', content: '#EFE407' },
       { name: 'msapplication-TileImage', content: '/favicons/ms-icon-144x144.png' },
 
       {
@@ -65,7 +65,7 @@ export default {
   /*
    ** Customize the progress-bar color
    */
-  loading: { height: '5px', color: '#f2e808' },
+  loading: { height: '5px', color: '#EFE407' },
   /*
    ** Global CSS
    */
