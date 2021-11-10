@@ -64,8 +64,11 @@ export default {
 
     // redirect if not a post neither
     if (_.isEmpty(page)) {
-      await store.dispatch('yoast/redirect', { path: route.path, context })
-      error({ statusCode: '404', message: `'${params.slug}' n'existe pas` })
+      await store.dispatch('yoast/redirect', {
+        path: route.path,
+        context,
+        fallback: { statusCode: 404, message: `'${params.slug}' n'existe pas` },
+      })
     }
 
     return {

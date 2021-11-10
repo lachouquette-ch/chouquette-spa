@@ -48,8 +48,11 @@ export default {
       })
       .then(({ data }) => data.ficheBySlug)
     if (!fiche) {
-      await store.dispatch('yoast/redirect', { path: route.path, context })
-      error({ statusCode: '404', message: `'${params.slug}' n'existe pas` })
+      await store.dispatch('yoast/redirect', {
+        path: route.path,
+        context,
+        fallback: { statusCode: 404, message: `'${params.slug}' n'existe pas` },
+      })
     }
 
     return {
@@ -90,5 +93,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

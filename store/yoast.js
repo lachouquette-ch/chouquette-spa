@@ -9,7 +9,7 @@ export const actions = {
     return redirects
   },
 
-  redirect({ state }, { path, context }) {
+  redirect({ state }, { path, context, fallback }) {
     const redirection = state.redirects.find(({ from }) => path.startsWith(from))
     if (redirection) {
       /* eslint-disable indent */
@@ -30,8 +30,14 @@ export const actions = {
           })
       }
       /* eslint-enable indent */
+    } else if (fallback) {
+      context.error(fallback)
+    } else {
+      context.error({
+        statusCode: 500,
+        message: `Problème interne lors du chargement de la page '${path}'`,
+      })
     }
-    return null
   },
 
   async fetchHome({ state, commit }) {
