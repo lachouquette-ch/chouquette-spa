@@ -1,7 +1,10 @@
 <template>
   <div>
     <Page v-if="pageType === 'page'" :page="page" />
-    <Post v-else-if="pageType === 'post'" :post="post" />
+    <template v-else-if="pageType === 'post'">
+      <PostShare :post="post" class="cq-share-position" fab color="primary"></PostShare>
+      <Post :post="post" />
+    </template>
   </div>
 </template>
 
@@ -13,9 +16,11 @@ import { post as PostFragments } from '@/apollo/fragments/post'
 import { page as PageFragments } from '@/apollo/fragments/page'
 import Post from '~/components/Post'
 import Page from '~/components/Page'
+import PostShare from '~/components/PostShare'
 
 export default {
   components: {
+    PostShare,
     Page,
     Post,
   },

@@ -126,13 +126,13 @@
       </v-card>
     </v-dialog>
 
-    <FicheDialog
+    <FichePostDialog
       v-model="ficheDialog"
-      :fiche="selectedFiche"
+      :fiche-or-post="selectedFiche"
       :fullscreen="$vuetify.breakpoint.mobile"
       max-width="500"
       replace-url
-    ></FicheDialog>
+    ></FichePostDialog>
 
     <v-container>
       <h1 class="text-center my-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
@@ -317,7 +317,7 @@
 import { mapGetters, mapState } from 'vuex'
 import gql from 'graphql-tag'
 import seo from '~/mixins/seo'
-import ficheFiche from '~/mixins/fetch-fiche'
+import ficheFiche from '~/mixins/fetch-wp'
 import { PER_PAGE_NUMBER } from '~/constants/default'
 import WpMedia from '~/components/Media'
 import graphql from '~/mixins/graphql'
@@ -326,7 +326,7 @@ import ScrollTop from '~/components/ScrollTop'
 import FichesMap from '~/components/FichesMap'
 import { ficheCard as FicheCardFragments } from '~/apollo/fragments/ficheCard'
 import CategoryButton from '~/components/CategoryButton'
-import FicheDialog from '~/components/FicheDialog'
+import FichePostDialog from '~/components/FichePostDialog'
 import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
 
 const MapStates = Object.freeze({
@@ -336,7 +336,7 @@ const MapStates = Object.freeze({
 })
 
 export default {
-  components: { ReponsiveScrollGrid, FicheDialog, CategoryButton, FilterExpansion, WpMedia, ScrollTop, FichesMap },
+  components: { ReponsiveScrollGrid, FichePostDialog, CategoryButton, FilterExpansion, WpMedia, ScrollTop, FichesMap },
   mixins: [seo, graphql, ficheFiche],
   asyncData({ store, params, query }) {
     const location = params.slug ? store.getters['locations/getBySlug'](params.slug) : null
@@ -358,7 +358,6 @@ export default {
       fichesTotal: null,
       fichesPages: null,
       hasMoreFiches: true,
-      selectedFiche: null,
       previousURL: null,
 
       subCategories: [],
@@ -371,6 +370,7 @@ export default {
       categoryFilters: [],
       filtersLoading: false,
 
+      selectedFiche: null,
       ficheDialog: false,
 
       mapDialog: false,
@@ -379,7 +379,7 @@ export default {
   },
   async fetch() {
     if (!this.hasMoreFiches) {
-      console.info('Plus de fiches disponibles')
+      console.info('Plus de fiche à te proposer')
       return
     }
 

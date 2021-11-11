@@ -47,7 +47,7 @@ export default {
       getLocationById: 'getById',
     }),
     ficheLink() {
-      return this.disableLink ? false : `/fiche/${this.fiche.slug}`
+      return this.disableLink ? null : `/fiche/${this.fiche.slug}`
     },
   },
 }

@@ -1,8 +1,6 @@
 <template>
   <div>
-    <PostShare :post="post" class="cq-share-position" fab color="primary"></PostShare>
-
-    <v-overlay :value="selectedFicheCard">
+    <v-overlay :value="selectedFiche">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
 
@@ -20,10 +18,10 @@
           <FichesMap
             :fiches="ficheCards"
             style="position: absolute"
-            :fiche-loading="!!selectedFicheCard"
+            :fiche-loading="!!selectedFiche"
             @mapSelectFiche="
               (fiche) => {
-                selectedFicheCard = fiche
+                selectedFiche = fiche
               }
             "
           ></FichesMap>
@@ -34,8 +32,6 @@
     <v-dialog v-model="commentDialog" max-width="500">
       <PostCommentReply :post="post.id" />
     </v-dialog>
-
-    <FicheDialog v-model="selectedFicheCard" @close="selectedFicheCard = null"></FicheDialog>
 
     <v-card flat tile>
       <div style="position: relative; margin-bottom: 35px">
@@ -138,19 +134,16 @@ import PostComment from '~/components/PostComment'
 import PostCommentReply from '~/components/PostCommentReply'
 import PostCard from '~/components/PostCard'
 import ContentFolding from '~/components/ContentFolding'
-import FicheDialog from '~/components/FicheDialog'
 import FichesMap from '~/components/FichesMap'
 import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
 import FicheCard from '~/components/FicheCard'
-import PostShare from '~/components/PostShare'
 
 export default {
+  name: 'Post',
   components: {
-    PostShare,
     FicheCard,
     ReponsiveScrollGrid,
     FichesMap,
-    FicheDialog,
     ContentFolding,
     PostCard,
     Media,
@@ -168,7 +161,7 @@ export default {
   data() {
     return {
       ficheCards: [],
-      selectedFicheCard: null,
+      selectedFiche: null,
 
       mapDialog: false,
 

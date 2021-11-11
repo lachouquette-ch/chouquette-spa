@@ -1,6 +1,12 @@
 <template>
   <div>
-    <PostDialog v-model="selectedPostCard" @close="selectedPostCard = null"></PostDialog>
+    <FichePostDialog
+      v-model="postDialog"
+      :fiche-or-post="selectedPost"
+      fullscreen
+      replace-url
+      @close="selectedPostCard = null"
+    ></FichePostDialog>
 
     <v-container>
       <h1 class="text-center my-3">Tous les articles</h1>
@@ -83,7 +89,8 @@
               :loading="selectedPostCard === post"
               :post="post"
               :large="!$vuetify.breakpoint.mobile"
-              @click="selectedPostCard = post"
+              disable-link
+              @click="selectPost(post)"
             ></PostCard>
           </v-col>
           <v-col cols="12">
@@ -130,19 +137,20 @@
 import { mapGetters, mapState } from 'vuex'
 import gql from 'graphql-tag'
 import seo from '~/mixins/seo'
+import fetchWordpress from '~/mixins/fetch-wp'
 import { PER_PAGE_NUMBER } from '~/constants/default'
 import PostCard from '~/components/PostCard'
 import graphql from '~/mixins/graphql'
 import CategoryButton from '~/components/CategoryButton'
 import ScrollTop from '~/components/ScrollTop'
 import { postCard as PostCardFragments } from '~/apollo/fragments/postCard'
-import PostDialog from '~/components/PostDialog'
+import FichePostDialog from '~/components/FichePostDialog'
 import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
 
 export default {
-  components: { PostDialog, CategoryButton, PostCard, ScrollTop, ReponsiveScrollGrid },
-  mixins: [seo, graphql],
-  asyncData({ store, params, query }) {
+  components: { FichePostDialog, CategoryButton, PostCard, ScrollTop, ReponsiveScrollGrid },
+  mixins: [seo, graphql, fetchWordpress],
+  asyncData({ store, query }) {
     const category = query.category ? store.getters['categories/getBySlug'](query.category) : null
 
     return {
@@ -160,11 +168,14 @@ export default {
       postsPages: null,
       hasMorePosts: true,
       selectedPostCard: null,
+
+      selectedPost: null,
+      postDialog: false,
     }
   },
   async fetch() {
     if (!this.hasMorePosts) {
-      console.info("Plus d'articles disponibles")
+      console.info("Plus d'article à te proposer")
       return
     }
 
@@ -245,6 +256,11 @@ export default {
     clearSearch() {
       this.search = null
       this.fetchWithFilters()
+    },
+    async selectPost(postCard) {
+      this.selectedPostCard = postCard
+      this.selectedPost = await this.fetchPostBySlug(postCard.slug)
+      this.postDialog = true
     },
   },
   computed: {

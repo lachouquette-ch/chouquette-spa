@@ -72,7 +72,7 @@ export default {
       else return this.large ? '200px' : '150px'
     },
     postLink() {
-      return this.disableLink ? false : `/${this.post.slug}`
+      return this.disableLink ? null : `/${this.post.slug}`
     },
   },
 }
