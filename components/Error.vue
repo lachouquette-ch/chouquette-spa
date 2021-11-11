@@ -3,6 +3,7 @@
     <h1 class="text-center mb-5">
       Aïe, une erreur s'est produite... <v-icon large>mdi-emoticon-confused-outline</v-icon>
     </h1>
+    <p>Nous sommes déjà certainement sur le coup mais en attendant...</p>
     <h2>Tu veux vite sortir de là ? <i class="fas fa-running"></i></h2>
     <p>
       Alors reviens à la <a href="" @click.prevent="$router.go(-1)">page précédente</a> ou tente ta chance en
