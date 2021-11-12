@@ -191,7 +191,7 @@
     <!-- Sizes your content based upon application components -->
     <v-main>
       <!-- Provides the application the proper gutter -->
-      <v-container fluid class="pa-0 min-vh-100 d-flex flex-column cq-md-max-width">
+      <v-container fluid class="pa-0 min-vh-100 d-flex flex-column">
         <nuxt></nuxt>
       </v-container>
 
