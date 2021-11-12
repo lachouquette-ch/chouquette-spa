@@ -7,6 +7,7 @@
     v-bind="{ ...$props, ...$attrs }"
     :to="ficheLink"
     :nuxt="!disableLink"
+    @click.prevent="$emit('click')"
   >
     <Media :media="fiche.image" size="medium_large" height="200">
       <v-card-subtitle v-if="fiche.isChouquettise" class="pa-2">

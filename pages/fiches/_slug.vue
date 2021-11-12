@@ -336,7 +336,15 @@ const MapStates = Object.freeze({
 })
 
 export default {
-  components: { ReponsiveScrollGrid, FichePostDialog, CategoryButton, FilterExpansion, WpMedia, ScrollTop, FichesMap },
+  components: {
+    ReponsiveScrollGrid,
+    FichePostDialog,
+    CategoryButton,
+    FilterExpansion,
+    WpMedia,
+    ScrollTop,
+    FichesMap,
+  },
   mixins: [seo, graphql, ficheFiche],
   asyncData({ store, params, query }) {
     const location = params.slug ? store.getters['locations/getBySlug'](params.slug) : null

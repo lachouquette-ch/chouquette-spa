@@ -1,13 +1,5 @@
 <template>
   <div>
-    <FichePostDialog
-      v-model="postDialog"
-      :fiche-or-post="selectedPost"
-      fullscreen
-      replace-url
-      @close="selectedPostCard = null"
-    ></FichePostDialog>
-
     <v-container>
       <h1 class="text-center my-3">Tous les articles</h1>
       <ReponsiveScrollGrid id="categoryContainer" :items="topCategories" mobile-only>
@@ -85,13 +77,7 @@
       <v-container v-if="posts.length" class="pa-0 mt-3">
         <v-row>
           <v-col v-for="post in posts" :key="post.id" cols="12" md="6">
-            <PostCard
-              :loading="selectedPostCard === post"
-              :post="post"
-              :large="!$vuetify.breakpoint.mobile"
-              disable-link
-              @click="selectPost(post)"
-            ></PostCard>
+            <PostCard :post="post" :large="!$vuetify.breakpoint.mobile"></PostCard>
           </v-col>
           <v-col cols="12">
             <v-btn
@@ -144,11 +130,10 @@ import graphql from '~/mixins/graphql'
 import CategoryButton from '~/components/CategoryButton'
 import ScrollTop from '~/components/ScrollTop'
 import { postCard as PostCardFragments } from '~/apollo/fragments/postCard'
-import FichePostDialog from '~/components/FichePostDialog'
 import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
 
 export default {
-  components: { FichePostDialog, CategoryButton, PostCard, ScrollTop, ReponsiveScrollGrid },
+  components: { CategoryButton, PostCard, ScrollTop, ReponsiveScrollGrid },
   mixins: [seo, graphql, fetchWordpress],
   asyncData({ store, query }) {
     const category = query.category ? store.getters['categories/getBySlug'](query.category) : null
@@ -167,10 +152,6 @@ export default {
       postsTotal: null,
       postsPages: null,
       hasMorePosts: true,
-      selectedPostCard: null,
-
-      selectedPost: null,
-      postDialog: false,
     }
   },
   async fetch() {
@@ -256,11 +237,6 @@ export default {
     clearSearch() {
       this.search = null
       this.fetchWithFilters()
-    },
-    async selectPost(postCard) {
-      this.selectedPostCard = postCard
-      this.selectedPost = await this.fetchPostBySlug(postCard.slug)
-      this.postDialog = true
     },
   },
   computed: {

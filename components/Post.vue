@@ -1,8 +1,10 @@
 <template>
   <div>
-    <v-overlay :value="selectedFiche">
+    <v-overlay :value="loading">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
+
+    <FichePostDialog v-model="ficheDialog" :fiche-or-post="selectedFiche" fullscreen replace-url></FichePostDialog>
 
     <v-dialog v-model="mapDialog" fullscreen hide-overlay transition="dialog-top-transition">
       <v-card tile class="d-flex flex-column align-stretch">
@@ -10,7 +12,7 @@
           <span>Les adresses de "{{ post.title }}"</span>
           <v-spacer></v-spacer>
           <v-btn icon @click="mapDialog = false">
-            <v-icon>mdi-arrow-right</v-icon>
+            <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
         <v-divider></v-divider>
@@ -18,10 +20,10 @@
           <FichesMap
             :fiches="ficheCards"
             style="position: absolute"
-            :fiche-loading="!!selectedFiche"
+            :fiche-loading="loading"
             @mapSelectFiche="
-              (fiche) => {
-                selectedFiche = fiche
+              (ficheCard) => {
+                selectFiche(ficheCard)
               }
             "
           ></FichesMap>
@@ -62,7 +64,7 @@
           <template v-else>
             <ReponsiveScrollGrid :items="ficheCards" md="3" class="my-2">
               <template #default="{ item }">
-                <FicheCard :fiche="item" height="100%"></FicheCard>
+                <FicheCard :fiche="item" height="100%" disable-link @click="selectFiche(item)"></FicheCard>
               </template>
             </ReponsiveScrollGrid>
             <div v-if="hasAnyLocation" class="text-center">
@@ -127,7 +129,9 @@ import isbot from 'isbot'
 import { mapGetters } from 'vuex'
 import seo from '~/mixins/seo'
 import gutenberg from '~/mixins/gutenberg'
+import fetchWordpress from '~/mixins/fetch-wp'
 
+import FichePostDialog from '~/components/FichePostDialog'
 import graphql from '~/mixins/graphql'
 import Media from '~/components/Media'
 import PostComment from '~/components/PostComment'
@@ -139,9 +143,9 @@ import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
 import FicheCard from '~/components/FicheCard'
 
 export default {
-  name: 'Post',
   components: {
     FicheCard,
+    FichePostDialog,
     ReponsiveScrollGrid,
     FichesMap,
     ContentFolding,
@@ -150,7 +154,7 @@ export default {
     PostComment,
     PostCommentReply,
   },
-  mixins: [gutenberg, seo, graphql],
+  mixins: [gutenberg, seo, graphql, fetchWordpress],
   props: {
     post: {
       type: Object,
@@ -161,9 +165,12 @@ export default {
   data() {
     return {
       ficheCards: [],
-      selectedFiche: null,
 
       mapDialog: false,
+
+      loading: false,
+      selectedFiche: null,
+      ficheDialog: false,
 
       commentDialog: false,
       extendComments: false,
@@ -208,7 +215,6 @@ export default {
       })
     }
   },
-  fetchOnServer: false,
   head() {
     if (this.preview) return { meta: [{ name: 'robots', content: 'none' }] }
 
@@ -243,6 +249,23 @@ export default {
       ],
     }
   },
+  watch: {
+    post() {
+      this.$fetch()
+    },
+  },
+  methods: {
+    async selectFiche(ficheCard) {
+      try {
+        this.loading = true
+        this.selectedFiche = await this.fetchFicheBySlug(ficheCard.slug)
+        this.ficheDialog = true
+      } finally {
+        this.loading = false
+      }
+    },
+  },
+  fetchOnServer: false,
   computed: {
     mainAuthor() {
       return this.post.authors[0]

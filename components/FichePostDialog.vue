@@ -29,10 +29,10 @@
 <script>
 import _ from 'lodash'
 import FicheShare from '~/components/FicheShare'
-import Fiche from '~/components/Fiche'
-import graphql from '~/mixins/graphql'
 import PostShare from '~/components/PostShare'
 import Post from '~/components/Post'
+import Fiche from '~/components/Fiche'
+import graphql from '~/mixins/graphql'
 
 export default {
   name: 'FichePostDialog',
