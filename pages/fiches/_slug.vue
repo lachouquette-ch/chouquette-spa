@@ -222,7 +222,7 @@
         ><span v-if="fichesTotal && !$fetchState.pending">{{ fichesTotal }} résultats</span></v-subheader
       >
       <v-container class="pa-0">
-        <v-row v-if="fiches.length">
+        <v-row>
           <v-col v-for="fiche in fiches" :key="fiche.id" cols="12" sm="4">
             <v-card outlined active-class="" height="100%" @click="selectFiche(fiche)">
               <WpMedia :media="fiche.image" size="medium_large" height="200" contains>
@@ -280,14 +280,7 @@
             </v-btn>
           </v-col>
         </v-row>
-        <v-alert
-          v-else-if="!hasMoreFiches"
-          border="bottom"
-          color="primary"
-          class="text-center"
-          elevation="2"
-          colored-border
-        >
+        <v-alert v-if="!hasMoreFiches" border="bottom" color="primary" class="text-center" elevation="2" colored-border>
           <span v-if="fiches.length">Tu as tout vu !</span>
           <template v-else>
             <span>Aucun résultat pour ta recherche.</span>

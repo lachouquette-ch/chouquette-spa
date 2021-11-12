@@ -143,6 +143,7 @@ import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
 import FicheCard from '~/components/FicheCard'
 
 export default {
+  name: 'Post',
   components: {
     FicheCard,
     FichePostDialog,
