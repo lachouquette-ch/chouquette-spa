@@ -3,7 +3,9 @@
     <v-parallax src="/banner-md.png" height="400">
       <v-row align="center" justify="center">
         <v-col class="text-center" cols="12">
-          <h1 class="primary--text font-weight-black mb-3 mb-md-5">les meilleures adresses locales et éco-responsables</h1>
+          <h1 class="primary--text font-weight-black mb-3 mb-md-5">
+            les meilleures adresses locales et éco-responsables
+          </h1>
           <v-container class="cq-sm-max-width">
             <v-row class="justify-center align-center" no-gutters>
               <v-col cols="12" md="6">
@@ -108,6 +110,7 @@
       <v-container class="cq-md-max-width">
         <h3 class="text-center font-weight-black text-h2 text-lowercase my-5">les 5 valeurs de La Chouquette</h3>
         <v-carousel
+          v-if="$vuetify.breakpoint.mobile"
           class="valeurs-carousel"
           height="500"
           show-arrows-on-hover
@@ -115,18 +118,16 @@
           interval="3000"
         >
           <v-carousel-item v-for="value in values" :key="value.id">
-            <v-card color="white" class="text-center mx-auto py-5" width="300">
-              <v-card-title class="justify-center text-uppercase">
-                <h3 class="valeur-title">{{ value.name }}</h3>
-              </v-card-title>
-              <Media :media="value.image" size="medium" height="200" contain class="mx-auto" flat></Media>
-              <v-card-text class="text-body-1">{{ value.description }}</v-card-text>
-              <v-card-actions class="justify-center">
-                <v-btn text nuxt to="/articles" class="text-decoration-underline">en savoir plus</v-btn>
-              </v-card-actions>
-            </v-card>
+            <Value :value="value"></Value>
           </v-carousel-item>
         </v-carousel>
+        <v-container v-else>
+          <v-row align="center" justify="center">
+            <v-col v-for="value in values" :key="value.id" cols="4">
+              <Value :value="value"></Value>
+            </v-col>
+          </v-row>
+        </v-container>
       </v-container>
     </v-sheet>
 
@@ -196,9 +197,10 @@ import PostCard from '~/components/PostCard'
 import FicheCard from '~/components/FicheCard'
 import Newsletter from '~/components/Newsletter'
 import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
+import Value from '~/components/Value'
 
 export default {
-  components: { ReponsiveScrollGrid, Newsletter, FicheCard, PostCard, Media },
+  components: { Value, ReponsiveScrollGrid, Newsletter, FicheCard, PostCard, Media },
   mixins: [seo, graphql],
   async asyncData({ store, app }) {
     // store initialization

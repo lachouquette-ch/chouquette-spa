@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container class="mb-3">
+    <v-container class="mb-3 cq-md-max-width">
       <div class="text-center">
         <h1 class="mb-3">Contacter l'équipe Chouquette</h1>
         <p>Un coucou, une suggestion ? L'envie de te Chouquettiser ?, …</p>

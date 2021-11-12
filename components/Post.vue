@@ -108,9 +108,9 @@
           <ReponsiveScrollGrid v-if="$fetchState.pending" :items="[0, 1, 2, 3]" md="3">
             <v-skeleton-loader type="card" width="150" class="mx-auto"></v-skeleton-loader>
           </ReponsiveScrollGrid>
-          <ReponsiveScrollGrid v-else :items="similarPosts" md="3" class="my-2">
+          <ReponsiveScrollGrid v-else :items="similarPosts" md="4" class="my-2">
             <template #default="{ item }">
-              <PostCard :post="item" vertical class="mx-auto"></PostCard>
+              <PostCard :post="item" vertical large class="mx-auto"></PostCard>
             </template>
           </ReponsiveScrollGrid>
         </section>

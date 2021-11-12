@@ -196,7 +196,7 @@
       <div v-if="fiche.similarFiches">
         <v-divider class="my-3"></v-divider>
         <h2>Adresses similaires</h2>
-        <ReponsiveScrollGrid :items="fiche.similarFiches" md="3" desktop-flex>
+        <ReponsiveScrollGrid :items="fiche.similarFiches" md="3">
           <template #default="{ item }">
             <FicheCard :fiche="item" :to="`/fiche/${item.slug}`" height="100%" nuxt></FicheCard>
           </template>

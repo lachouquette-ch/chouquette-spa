@@ -1,5 +1,5 @@
 <template>
-  <v-card min-height="100vh">
+  <v-card elevation="0" min-height="100vh">
     <v-alert v-if="preview" border="right" colored-border type="warning" elevation="2">
       Mode prévisualisation : toutes les données ne seront pas affichées
     </v-alert>

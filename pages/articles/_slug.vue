@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container>
+    <v-container class="cq-md-max-width">
       <h1 class="text-center my-3">Tous les articles</h1>
       <ReponsiveScrollGrid id="categoryContainer" :items="topCategories" mobile-only>
         <template #default="{ item }">

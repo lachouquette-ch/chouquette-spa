@@ -7,17 +7,17 @@
       <slot name="after"></slot>
     </div>
     <div v-else-if="!mobileOnly" :id="id">
-      <div v-if="desktopFlex" class="d-flex flex-wrap">
+      <div v-if="desktopFlex" class="d-flex flex-wrap justify-center">
         <div v-for="item in items" :key="item[itemId]" :cols="cols" :md="md" class="ma-2">
           <slot :item="item"></slot>
         </div>
       </div>
       <v-container v-else>
-        <v-row>
+        <v-row align="center" justify="center">
           <v-col v-for="item in items" :key="item[itemId]" :cols="cols" :md="md">
             <slot :item="item"></slot>
           </v-col>
-          <v-col :cols="cols" :md="md">
+          <v-col v-if="$slots.after" :cols="cols" :md="md">
             <slot name="after"></slot>
           </v-col>
         </v-row>

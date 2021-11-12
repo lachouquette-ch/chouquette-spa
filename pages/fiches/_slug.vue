@@ -134,7 +134,7 @@
       replace-url
     ></FichePostDialog>
 
-    <v-container>
+    <v-container class="cq-md-max-width">
       <h1 class="text-center my-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
       <ReponsiveScrollGrid id="topCategoryContainer" :items="topCategories" mobile-only>
         <template #default="{ item }">
@@ -223,7 +223,7 @@
       >
       <v-container class="pa-0">
         <v-row v-if="fiches.length">
-          <v-col v-for="fiche in fiches" :key="fiche.id" cols="12" sm="6">
+          <v-col v-for="fiche in fiches" :key="fiche.id" cols="12" sm="4">
             <v-card outlined active-class="" height="100%" @click="selectFiche(fiche)">
               <WpMedia :media="fiche.image" size="medium_large" height="200" contains>
                 <v-card-subtitle v-if="fiche.isChouquettise" class="pa-2">
@@ -258,13 +258,19 @@
               </v-card-text>
             </v-card>
           </v-col>
-          <v-col cols="12">
+          <template v-if="$fetchState.pending">
+            <v-col v-for="i in 4" :key="i" cols="12" sm="4">
+              <v-skeleton-loader elevation="1" type="image, article, actions" class="rounded-xl"></v-skeleton-loader>
+            </v-col>
+          </template>
+          <v-col cols="12" sm="4">
             <v-btn
               v-if="!$fetchState.pending && hasMoreFiches"
               v-intersect.quiet="$fetch"
-              color="secondary"
               :loading="$fetchState.pending"
               block
+              class="secondary white--text"
+              height="100%"
               tag="a"
               rel="next"
               outlined
@@ -272,11 +278,6 @@
             >
               Plus d'adresses
             </v-btn>
-          </v-col>
-        </v-row>
-        <v-row v-if="$fetchState.pending">
-          <v-col v-for="i in 4" :key="i" cols="12" sm="6">
-            <v-skeleton-loader elevation="1" type="image, article, actions" class="rounded-xl"></v-skeleton-loader>
           </v-col>
         </v-row>
         <v-alert
@@ -693,7 +694,7 @@ export default {
   }
 
   @media #{map-get($display-breakpoints, 'md-and-up')} {
-    top: 110px;
+    top: 94px;
     right: calc(50% - #{map-get($grid-breakpoints, 'md') / 2});
   }
 }

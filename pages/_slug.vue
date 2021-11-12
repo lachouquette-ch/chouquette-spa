@@ -1,9 +1,9 @@
 <template>
   <div>
-    <Page v-if="pageType === 'page'" :page="page" />
+    <Page v-if="pageType === 'page'" :page="page" class="cq-md-max-width" />
     <template v-else-if="pageType === 'post'">
       <PostShare :post="post" class="cq-share-position" fab color="primary"></PostShare>
-      <Post :post="post" />
+      <Post :post="post" class="cq-md-max-width" />
     </template>
   </div>
 </template>

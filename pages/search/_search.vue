@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="cq-md-max-width">
     <div class="d-flex justify-center align-center my-4">
       <v-text-field
         v-if="toggleSearch"
@@ -56,8 +56,8 @@
       <v-tabs-items v-model="tab">
         <v-tab-item key="adresses">
           <v-container class="mt-3">
-            <v-row>
-              <v-col v-for="fiche in fiches" :key="fiche.id" cols="3">
+            <v-row justify="center">
+              <v-col v-for="fiche in fiches" :key="fiche.id" cols="4">
                 <FicheCard :fiche="fiche" height="100%"></FicheCard>
               </v-col>
               <v-col cols="12">

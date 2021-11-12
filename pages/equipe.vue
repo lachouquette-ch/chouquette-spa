@@ -1,5 +1,5 @@
 <template>
-  <Page :page="page">
+  <Page :page="page" class="cq-md-max-width">
     <template #footer>
       <h2 class="text-center">L'équipe</h2>
       <div class="d-flex flex-wrap justify-content-around mb-5">
