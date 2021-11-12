@@ -27,7 +27,13 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      selectedItem: null,
+    }
+  },
+}
 </script>
 
 <style scoped></style>

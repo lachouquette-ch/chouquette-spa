@@ -33,10 +33,7 @@ export const actions = {
     } else if (fallback) {
       context.error(fallback)
     } else {
-      context.error({
-        statusCode: 500,
-        message: `Problème interne lors du chargement de la page '${path}'`,
-      })
+      return null
     }
   },
 
