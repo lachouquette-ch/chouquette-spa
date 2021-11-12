@@ -2,7 +2,7 @@
   <v-container>
     <FicheShare :fiche="fiche" class="cq-share-position" fab color="primary"></FicheShare>
 
-    <Fiche :fiche="fiche"></Fiche>
+    <Fiche :fiche="fiche" class="cq-md-max-width"></Fiche>
   </v-container>
 </template>
 
