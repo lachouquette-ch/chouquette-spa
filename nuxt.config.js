@@ -15,8 +15,7 @@ export default {
       version: 3,
     },
   },
-  ssr: false,
-  // ssr: true,
+  ssr: true,
   /*
    ** Headers of the page
    */
