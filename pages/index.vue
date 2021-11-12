@@ -144,7 +144,7 @@
     </v-sheet>
 
     <div class="cq-beige">
-      <div class="cq-md-max-width py-3" style="position: relative">
+      <div class="cq-md-max-width pa-3" style="position: relative">
         <img
           src="/lachouquette_logo_simple_white.png"
           alt="Logo La Chouquette"
