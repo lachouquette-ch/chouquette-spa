@@ -4,7 +4,7 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
 
-    <FichePostDialog v-model="ficheDialog" :fiche-or-post="selectedFiche" fullscreen replace-url></FichePostDialog>
+    <FichePostDialog v-model="ficheDialog" :fiche-or-post="selectedFiche" :fullscreen="$vuetify.breakpoint.mobile" max-width="500" replace-url></FichePostDialog>
 
     <v-dialog v-model="mapDialog" fullscreen hide-overlay transition="dialog-top-transition">
       <v-card tile class="d-flex flex-column align-stretch">

@@ -196,7 +196,7 @@
       <div v-if="fiche.similarFiches">
         <v-divider class="my-3"></v-divider>
         <h2>Adresses similaires</h2>
-        <ReponsiveScrollGrid :items="fiche.similarFiches" md="3">
+        <ReponsiveScrollGrid :items="fiche.similarFiches" md="3" :desktop-flex="dialog">
           <template #default="{ item }">
             <FicheCard :fiche="item" :to="`/fiche/${item.slug}`" height="100%" nuxt></FicheCard>
           </template>
@@ -286,6 +286,7 @@ export default {
   mixins: [seo],
   props: {
     fiche: Object,
+    dialog: Boolean,
   },
   validations: {
     formFiche: {

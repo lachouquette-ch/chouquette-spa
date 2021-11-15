@@ -20,7 +20,7 @@
       <v-divider></v-divider>
       <v-card-text ref="content" class="pa-0">
         <Post v-if="isPost" :post="ficheOrPost"></Post>
-        <Fiche v-else-if="isFiche" :fiche="ficheOrPost" class="pa-2"></Fiche>
+        <Fiche v-else-if="isFiche" :fiche="ficheOrPost" class="pa-2" dialog></Fiche>
       </v-card-text>
     </v-card>
   </v-dialog>
