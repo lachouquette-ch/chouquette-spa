@@ -261,7 +261,7 @@ export default {
 
         { property: 'og:type', content: 'article' },
         { property: 'og:locale', content: 'fr_FR' },
-        { property: 'og:url', content: location.href },
+        { property: 'og:url', content: this.currentURL },
         {
           property: 'og:title',
           content: title,

@@ -227,7 +227,7 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: this.post.image,
+          content: this.post.image.source,
         },
       ],
       script: [
@@ -235,7 +235,7 @@ export default {
           '@context': 'https://schema.org',
           '@type': 'Article',
           headline: this.post.title,
-          image: this.post.image,
+          image: this.post.image.source,
           description: this.seoGetDescription(JSON.parse(this.post.seo.metadata)),
           author: this.mainAuthor.name,
           publisher: {

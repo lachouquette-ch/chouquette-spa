@@ -25,8 +25,8 @@
 
 <script>
 import gql from 'graphql-tag'
-import {page as PageFragments} from '@/apollo/fragments/page'
-import {author as AuthorParts} from '@/apollo/fragments/author'
+import { page as PageFragments } from '@/apollo/fragments/page'
+import { author as AuthorParts } from '@/apollo/fragments/author'
 
 import Page from '~/components/Page'
 import seo from '~/mixins/seo'
@@ -73,7 +73,7 @@ export default {
             name: 'La Chouquette',
             logo: `${this.$config.siteUrl}/logo.png`,
           },
-          url: location.href,
+          url: this.currentURL,
         }),
       ],
     }

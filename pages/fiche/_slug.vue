@@ -67,7 +67,7 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: this.fiche.featured_img,
+          content: this.fiche.image.source,
         },
       ],
       script: [
@@ -83,7 +83,7 @@ export default {
           telephone: this.fiche.telephone,
           photo: this.fiche.image.source,
 
-          url: location.href,
+          url: this.currentURL,
           datePublished: this.fiche.date,
           dateModified: this.fiche.modified,
         }),

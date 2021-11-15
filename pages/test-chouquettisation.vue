@@ -306,7 +306,7 @@ export default {
             name: 'La Chouquette',
             logo: `${this.$config.siteUrl}/logo.png`,
           },
-          url: location.href,
+          url: this.currentURL,
         }),
       ],
     }
