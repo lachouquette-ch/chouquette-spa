@@ -4,7 +4,7 @@
       <v-row align="center" justify="center">
         <v-col class="text-center" cols="12">
           <h1 class="primary--text font-weight-black mb-3 mb-md-5">
-            les meilleures adresses locales et éco-responsables
+            les meilleures adresses <span id="typed">locales et éco-responsables</span>
           </h1>
           <v-container class="cq-sm-max-width">
             <v-row class="justify-center align-center" no-gutters>
@@ -261,6 +261,20 @@ export default {
       this.$sentry.captureException(e)
       this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(e) })
     }
+  },
+  mounted() {
+    const Typed = require('typed.js')
+    // eslint-disable-next-line no-new
+    new Typed('#typed', {
+      strings: ['locales', 'éco-responsables'],
+      loop: true,
+      typeSpeed: 100,
+      backSpeed: 50,
+      showCursor: false,
+      onBegin(self) {
+        self.currentElContent = ''
+      },
+    })
   },
   methods: {
     goToLocation(location) {
