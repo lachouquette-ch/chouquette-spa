@@ -266,11 +266,12 @@ export default {
     const Typed = require('typed.js')
     // eslint-disable-next-line no-new
     new Typed('#typed', {
-      strings: ['locales', 'éco-responsables'],
+      strings: ['éco-responsables', 'culturelles', 'locales', 'insolites'],
       loop: true,
       typeSpeed: 100,
       backSpeed: 50,
       showCursor: false,
+      shuffle: true,
       onBegin(self) {
         self.currentElContent = ''
       },
