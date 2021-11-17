@@ -48,8 +48,23 @@ span.target {
   /* Component styling */
 
   // Summary
-  .wp-block-advgb-summary ul.advgb-toc {
-    width: fit-content;
+  .wp-block-advgb-summary {
+    .advgb-toc-header {
+      text-decoration: underline;
+    }
+
+    .advgb-toc-header:after {
+      text-decoration: none;
+      vertical-align: unset;
+    }
+
+    ul.advgb-toc {
+      width: fit-content;
+      list-style-type: disc;
+      text-align: left;
+      padding-left: 0;
+      text-decoration: underline;
+    }
   }
 
   // Image

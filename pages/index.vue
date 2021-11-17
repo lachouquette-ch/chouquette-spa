@@ -154,7 +154,10 @@
         <div style="position: relative">
           <div class="text-center">
             <h2>Nos Chouquettisés</h2>
-            <p class="text-h5">Tous ont été testé et approuvé selon nos valeurs écoresponsables</p>
+            <p class="text-h5">
+              Tous nos labellisés ont été testés et approuvés par La Chouquette. Ils répondent à nos valeurs et à nos
+              critères. Tu peux y aller les yeux fermés !
+            </p>
           </div>
           <ReponsiveScrollGrid :items="latestChouquettises" md="4">
             <template #default="{ item }">
@@ -163,15 +166,22 @@
           </ReponsiveScrollGrid>
           <div class="text-center">
             <v-btn text x-large nuxt to="/fiches?chouquettiseOnly=true" class="text-decoration-underline"
-              >tous nos Chouquettisés
+              >voir nos Chouquettisés
             </v-btn>
           </div>
           <v-divider class="my-5"></v-divider>
           <div class="text-center">
-            <p class="text-h2 font-weight-black">notre label t'intéresse ?</p>
-            <p class="text-h5">tu partages nos valeurs et souhaite en savoir comment obtenir ce label ?</p>
-            <v-btn elevation="3" :block="$vuetify.breakpoint.mobile" color="cq-yellow" class="black--text mb-3" large
-              >Nous contacter</v-btn
+            <p class="text-h2 font-weight-black">Notre label t'intéresse ?</p>
+            <p class="text-h5">Tu partages nos valeurs et tu souhaites savoir comment obtenir notre label ?</p>
+            <v-btn
+              elevation="3"
+              :block="$vuetify.breakpoint.mobile"
+              color="cq-yellow"
+              class="black--text mb-3"
+              large
+              to="/notre-charte-editoriale"
+              nuxt
+              >On te dit tout</v-btn
             >
           </div>
         </div>

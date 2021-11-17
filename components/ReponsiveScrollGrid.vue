@@ -13,7 +13,7 @@
         </div>
       </div>
       <v-container v-else>
-        <v-row align="center" justify="center">
+        <v-row align="top" justify="center">
           <v-col v-for="item in items" :key="item[itemId]" :cols="cols" :md="md">
             <slot :item="item"></slot>
           </v-col>

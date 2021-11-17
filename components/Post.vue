@@ -38,7 +38,7 @@
     </v-dialog>
 
     <v-dialog v-model="commentDialog" max-width="500">
-      <PostCommentReply :post="post.id" />
+      <PostCommentReply :post="post.id" @close="commentDialog = false" />
     </v-dialog>
 
     <v-card flat tile>
@@ -53,7 +53,7 @@
         ></v-img>
         <div class="header-meta">par {{ mainAuthor.name }} le {{ postDate | fromISO }}</div>
       </div>
-      <v-card-title>
+      <v-card-title class="justify-center">
         <h1>{{ post.title }}</h1>
       </v-card-title>
       <v-card-text>
@@ -61,9 +61,10 @@
           <section class="gutenberg-content" v-html="post.content"></section>
         </ContentFolding>
 
-        <section>
+        <section v-if="ficheCards.length">
           <v-divider class="my-3"></v-divider>
-          <h2>Adresses associées</h2>
+          <h2 v-if="ficheCards.length > 1">Adresses associées</h2>
+          <h2 v-else>Adresse associée</h2>
           <template v-if="$fetchState.pending">
             <v-skeleton-loader v-for="i in 3" :key="i" type="list-item-avatar" class="my-3"></v-skeleton-loader>
           </template>

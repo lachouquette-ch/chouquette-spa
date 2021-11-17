@@ -2,9 +2,10 @@
   <div>
     <v-container class="mb-3 cq-md-max-width">
       <div class="text-center">
-        <h1 class="mb-3">Contacter l'équipe Chouquette</h1>
+        <h1 class="mb-3">Nous contacter</h1>
         <p>Un coucou, une suggestion ? L'envie de te Chouquettiser ?, …</p>
-        <p>N'hésites pas et écris-nous ! À très vite</p>
+        <p>N'hésite pas et écris-nous !</p>
+        <p>À très vite</p>
       </div>
 
       <v-row>
@@ -14,7 +15,7 @@
             :error-messages="nameErrors"
             name="name"
             color="secondary"
-            label="Nom (et société) *"
+            label="Prénom, nom (et société) *"
             required
             @blur="$v.formContact.name.$touch"
           ></v-text-field>
@@ -83,7 +84,7 @@ import Newsletter from '~/components/Newsletter'
 import seo from '~/mixins/seo'
 import graphql from '~/mixins/graphql'
 
-const recipients = ['hello', 'communication', 'webmaster']
+const recipients = ['hello','webmaster']
 const mustMatchRecipients = (value) => {
   return !value || recipients.includes(value)
 }
@@ -104,7 +105,6 @@ export default {
 
       to: [
         { text: 'Général (infos, suggestions, partenariats, chouquettisation, ...)', value: 'hello' },
-        { text: 'Réseaux sociaux (Insta, Facebook)', value: 'communication' },
         { text: 'Webmaster (tout ce qui concerne le site)', value: 'webmaster' },
       ],
     }

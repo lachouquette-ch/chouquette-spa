@@ -91,7 +91,7 @@
               outlined
               @click="$fetch"
             >
-              Plus d'adresses
+              + d'adresses
             </v-btn>
           </v-col>
         </v-row>

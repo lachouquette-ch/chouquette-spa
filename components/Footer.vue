@@ -22,7 +22,7 @@
               }}</nuxt-link>
             </li>
           </ul>
-          <v-btn icon large target="_blank" href="https://www.facebook.com/lachouquette"
+          <v-btn icon large target="_blank" href="https://www.facebook.com/lachouquette.ch"
             ><v-icon large color="#4267b2">mdi-facebook</v-icon></v-btn
           >
           <v-btn icon large target="_blank" href="https://www.instagram.com/lachouquette.ch"
@@ -30,16 +30,18 @@
           >
         </v-col>
         <v-col cols="12" md="4" class="text-center">
-          <v-img
-            :lazy-src="`${wordpressUrl}/wp-content/uploads/2019/03/logo_white-150x150.png`"
-            :src="`${wordpressUrl}/wp-content/uploads/2019/03/logo_white-768x706.png`"
-            transition="false"
-            alt="Logo Chouquette"
-            contain
-            width="150"
-            height="150"
-            class="mx-auto"
-          ></v-img>
+          <nuxt-link to="/">
+            <v-img
+              :lazy-src="`${wordpressUrl}/wp-content/uploads/2019/03/logo_white-150x150.png`"
+              :src="`${wordpressUrl}/wp-content/uploads/2019/03/logo_white-768x706.png`"
+              transition="false"
+              alt="Logo Chouquette"
+              contain
+              width="150"
+              height="150"
+              class="mx-auto"
+            ></v-img>
+          </nuxt-link>
         </v-col>
       </v-row>
       <v-divider class="secondary my-4"></v-divider>
@@ -52,7 +54,7 @@
 </template>
 
 <script>
-import {mapGetters, mapState} from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import moment from 'moment'
 
 export default {

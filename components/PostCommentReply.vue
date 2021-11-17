@@ -57,7 +57,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn text @click.prevent="clear">Fermer</v-btn>
+        <v-btn text @click="clear">Fermer</v-btn>
         <v-btn color="info" text :loading="loading" type="submit">Poster mon commentaire</v-btn>
       </v-card-actions>
     </v-card>
@@ -90,6 +90,15 @@ export default {
     }
   },
   methods: {
+    clear() {
+      this.formComment.name = null
+      this.formComment.email = null
+      this.formComment.webSite = null
+      this.formComment.comment = null
+      this.$v.formComment.$reset()
+      throw new Error('test')
+      this.$emit('close')
+    },
     async postComment() {
       this.$v.formComment.$touch()
       if (!this.$v.formComment.$invalid) {

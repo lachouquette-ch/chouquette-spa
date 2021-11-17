@@ -35,7 +35,7 @@
               </template>
               <span class="text-wrap"
                 >Seules les adresses physiques sont affichées. Retourne sur la 'Liste' pour voir toutes les adresses ou
-                clique sur 'Plus de fiches' pour en voir d'avantage</span
+                clique sur '+ de fiches' pour en voir d'avantage</span
               >
             </v-tooltip>
             <v-spacer></v-spacer>
@@ -242,7 +242,7 @@
               </v-card-title>
               <v-card-text>
                 <div class="fiche-content mb-1" v-html="fiche.content"></div>
-                <a href="" @click.prevent="">Voir plus</a>
+                <a href="" @click.prevent="">Voir +</a>
                 <v-chip-group v-if="fiche.valueIds.length" class="mt-3" column>
                   <v-chip
                     v-for="valueId in fiche.valueIds"
@@ -276,7 +276,7 @@
               outlined
               @click="$fetch"
             >
-              Plus d'adresses
+              + d'adresses
             </v-btn>
           </v-col>
         </v-row>

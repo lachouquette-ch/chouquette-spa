@@ -11,8 +11,12 @@
         <h1>{{ fiche.title }}</h1>
         <v-spacer></v-spacer>
         <div class="d-flex">
-          <v-btn fab icon small><v-icon color="#4267b2">mdi-facebook</v-icon></v-btn>
-          <v-btn fab icon small><v-icon color="#E1306C">mdi-instagram</v-icon></v-btn>
+          <v-btn v-if="fiche.info.facebook" fab icon small :href="fiche.info.facebook" target="_blank"
+            ><v-icon color="#4267b2">mdi-facebook</v-icon></v-btn
+          >
+          <v-btn v-if="fiche.info.instagram" fab icon small :href="fiche.info.instagram" target="_blank"
+            ><v-icon color="#E1306C">mdi-instagram</v-icon></v-btn
+          >
         </div>
       </v-card-title>
       <v-card-subtitle class="px-0 secondary--text">
@@ -39,7 +43,7 @@
       <h2 class="mt-2">Informations</h2>
       <v-tabs v-model="tab" class="mt-3" color="primary" background-color="white" grow>
         <v-tab key="contact">Contact</v-tab>
-        <v-tab key="infos">Plus d'infos</v-tab>
+        <v-tab key="infos">+ d'infos</v-tab>
       </v-tabs>
 
       <v-tabs-items v-model="tab" class="py-3" :touchless="tabTouchless">
@@ -83,8 +87,8 @@
             <v-list-item v-if="fiche.info.website" :href="fiche.info.website" target="_blank">
               <v-list-item-avatar size="30"><v-icon>mdi-web</v-icon></v-list-item-avatar>
               <v-list-item-title>
-                <span class="text-decoration-underline">{{ fiche.info.website | prettyURL }}</span>
-                <v-list-item-subtitle class="text-caption">Accéder au site Web</v-list-item-subtitle>
+                <span class="text-decoration-underline">Accéder au site Web</span>
+                <v-list-item-subtitle class="text-caption">{{ fiche.info.website | prettyURL }}</v-list-item-subtitle>
               </v-list-item-title>
             </v-list-item>
             <v-list-item
@@ -93,8 +97,8 @@
             >
               <v-list-item-avatar size="30"><v-icon>mdi-at</v-icon></v-list-item-avatar>
               <v-list-item-title>
-                <span class="text-decoration-underline">{{ fiche.info.mail }}</span>
-                <v-list-item-subtitle class="text-caption">Envoyer un email</v-list-item-subtitle>
+                <span class="text-decoration-underline">Envoyer un email</span>
+                <v-list-item-subtitle class="text-caption">{{ fiche.info.mail }}</v-list-item-subtitle>
               </v-list-item-title>
             </v-list-item>
           </v-list>
@@ -180,7 +184,7 @@
 
       <div v-if="fiche.postCards">
         <v-divider class="my-3"></v-divider>
-        <h2 class="mb-3">Articles sur l'adresse</h2>
+        <h2 class="mb-3">Articles liés à l'adresse</h2>
         <div class="mb-5">
           <PostCard
             v-for="post in fiche.postCards"

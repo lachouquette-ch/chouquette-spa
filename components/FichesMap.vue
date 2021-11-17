@@ -15,7 +15,7 @@
         class="white"
         @click="$emit('moreFiches')"
       >
-        Plus de fiches
+        + de fiches
         <v-icon right>mdi-cloud-upload</v-icon>
       </v-btn>
     </span>

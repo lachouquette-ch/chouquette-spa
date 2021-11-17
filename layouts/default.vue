@@ -3,7 +3,7 @@
     <LayoutAlert></LayoutAlert>
 
     <v-system-bar v-if="false" color="primary" class="cq-blue--text justify-center" app height="30">
-      <span>En savoir plus + highlight titre</span>
+      <span>Mon text pour system bar</span>
     </v-system-bar>
 
     <v-navigation-drawer v-model="toggleMenu" temporary app right touchless width="500">
@@ -219,7 +219,7 @@
         <template slot="message">
           <span class="white--text mx-3">
             Ici, on aime les Cookies <v-icon color="white">mdi-cookie</v-icon>, mais pas plus qu'il n'en faut !
-            <nuxt-link to="/politique-de-confidentialite" class="white--text">En savoir plus</nuxt-link>
+            <nuxt-link to="/politique-de-confidentialite" class="white--text">En savoir +</nuxt-link>
           </span>
         </template>
         <template slot="button">
