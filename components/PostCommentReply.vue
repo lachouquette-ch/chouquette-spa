@@ -96,7 +96,6 @@ export default {
       this.formComment.webSite = null
       this.formComment.comment = null
       this.$v.formComment.$reset()
-      throw new Error('test')
       this.$emit('close')
     },
     async postComment() {
