@@ -1,26 +1,36 @@
 <template>
-  <Page :page="page" class="cq-md-max-width">
-    <template #footer>
-      <h2 class="text-center">L'équipe</h2>
-      <div class="d-flex flex-wrap justify-content-around mb-5">
-        <v-card v-for="member in team" :key="member.id" rounded="lg" width="300" max-width="80vw" class="mx-auto mt-5">
-          <v-img
-            :src="`${member.avatar}&s=150`"
-            :alt="member.name"
-            class="rounded-circle mx-auto mt-5"
-            height="150"
-            width="150"
-          ></v-img>
-          <v-card-title class="justify-center">
-            <h3>{{ member.name }}</h3>
-          </v-card-title>
-          <v-card-subtitle>{{ member.title }}</v-card-subtitle>
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <v-card-text class="text-center" v-html="member.description"></v-card-text>
-        </v-card>
-      </div>
-    </template>
-  </Page>
+  <div>
+    <Page :page="page" class="cq-md-max-width">
+      <template #footer>
+        <h2 class="text-center">L'équipe</h2>
+        <div class="d-flex flex-wrap justify-content-around mb-5">
+          <v-card
+            v-for="member in team"
+            :key="member.id"
+            rounded="lg"
+            width="300"
+            max-width="80vw"
+            class="mx-auto mt-5"
+          >
+            <v-img
+              :src="`${member.avatar}&s=150`"
+              :alt="member.name"
+              class="rounded-circle mx-auto mt-5"
+              height="150"
+              width="150"
+            ></v-img>
+            <v-card-title class="justify-center">
+              <h3>{{ member.name }}</h3>
+            </v-card-title>
+            <v-card-subtitle>{{ member.title }}</v-card-subtitle>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <v-card-text class="text-center" v-html="member.description"></v-card-text>
+          </v-card>
+        </div>
+      </template>
+    </Page>
+    <Newsletter></Newsletter>
+  </div>
 </template>
 
 <script>
@@ -30,9 +40,11 @@ import { author as AuthorParts } from '@/apollo/fragments/author'
 
 import Page from '~/components/Page'
 import seo from '~/mixins/seo'
+import Newsletter from '~/components/Newsletter'
 
 export default {
   components: {
+    Newsletter,
     Page,
   },
   mixins: [seo],

@@ -5,6 +5,7 @@
       <PostShare :post="post" class="cq-share-position" fab color="primary"></PostShare>
       <Post :post="post" class="cq-md-max-width" />
     </template>
+    <Newsletter></Newsletter>
   </div>
 </template>
 
@@ -17,9 +18,11 @@ import { page as PageFragments } from '@/apollo/fragments/page'
 import Post from '~/components/Post'
 import Page from '~/components/Page'
 import PostShare from '~/components/PostShare'
+import Newsletter from '~/components/Newsletter'
 
 export default {
   components: {
+    Newsletter,
     PostShare,
     Page,
     Post,

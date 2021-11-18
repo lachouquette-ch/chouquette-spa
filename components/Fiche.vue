@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card flat>
-      <Media :media="fiche.image" size="medium_large" height="250" class="rounded-lg">
+      <Media :media="fiche.image" size="medium_large" width="100%" :aspect-ratio="16 / 9" class="rounded-lg">
         <v-chip v-if="fiche.isChouquettise" color="cq-yellow" text-color="black" small class="ma-2">
           Testé et Chouquettisé
           <v-icon right>mdi-check</v-icon>
@@ -26,7 +26,7 @@
 
       <v-divider class="my-3"></v-divider>
 
-      <div v-if="values.length" class="mt-2">
+      <div v-if="fiche.isChouquettise && values.length" class="mt-2">
         <h2 class="mb-2">Valeurs</h2>
         <v-chip-group>
           <v-tooltip v-for="value in values" :key="value.id" max-width="90vw" top>
@@ -59,7 +59,7 @@
             <span
               :href="`https://www.google.com/maps?q=${fiche.address}`"
               target="_blank"
-              class="d-inline-block text-caption text-decoration-none mb-1"
+              class="d-inline-block text-body-2 text-decoration-none mb-1"
               >{{ fiche.address }} <span class="text-decoration-underline">(Ouvrir dans Maps)</span></span
             >
           </div>
@@ -73,7 +73,7 @@
             >
               <v-list-item-avatar size="30"><v-icon>mdi-message</v-icon></v-list-item-avatar>
               <v-list-item-title>
-                <span class="text-decoration-underline">Envoyer un message à l'adresse</span>
+                <span class="text-decoration-underline">Envoyer un message à cette adresse</span>
                 <v-list-item-subtitle class="text-caption">Depuis La Chouquette</v-list-item-subtitle>
               </v-list-item-title>
             </v-list-item>

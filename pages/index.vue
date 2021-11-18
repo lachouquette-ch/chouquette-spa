@@ -281,7 +281,6 @@ export default {
       typeSpeed: 100,
       backSpeed: 50,
       showCursor: false,
-      shuffle: true,
       onBegin(self) {
         self.currentElContent = ''
       },

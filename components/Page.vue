@@ -11,17 +11,14 @@
     <div v-if="$slots.footer">
       <slot name="footer" />
     </div>
-    <Newsletter />
   </v-card>
 </template>
 
 <script>
 import seo from '~/mixins/seo'
 import gutenberg from '~/mixins/gutenberg'
-import Newsletter from '~/components/Newsletter'
 
 export default {
-  components: { Newsletter },
   mixins: [seo, gutenberg],
   props: {
     page: {

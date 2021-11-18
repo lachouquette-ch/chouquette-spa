@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="cq-yellow text-center pa-5 rounded-0">
     <h3 class="text-h2 mb-3">Tu veux tout connaître du meilleur de chez toi ?</h3>
-    <p class="mb-0">Reçois une fois par semaine une sélection des meilleures adresses et bons plans de ta région</p>
+    <p class="mb-0">Reçois tous les jeudis une sélection des meilleures adresses et bons plans de ta région</p>
 
     <VueMailchimpSubscribe
       url="https://unechouquettealausanne.us8.list-manage.com/subscribe/post-json"
