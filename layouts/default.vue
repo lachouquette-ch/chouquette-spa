@@ -15,7 +15,7 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
-        <p class="ml-3 text-caption">{{ description }}</p>
+        <p class="ml-3 text-body-2">{{ description }}</p>
         <v-divider></v-divider>
         <v-card-text class="pa-0">
           <template v-if="!$vuetify.breakpoint.mobile">
@@ -45,7 +45,6 @@
           </template>
 
           <v-list nav>
-            <v-subheader class="text-h4 pl-1">Les intérêts</v-subheader>
             <v-list-item
               v-for="item in categoryMenu.items"
               :key="item.id"
@@ -62,18 +61,11 @@
           <v-divider></v-divider>
 
           <v-list nav>
-            <v-subheader class="text-h4 pl-1">{{ aboutMenu.name }}</v-subheader>
             <v-list-item v-for="item in aboutMenu.items" :key="item.id" :to="`/${item.slug}`" nuxt class="mb-0">
               <v-list-item-content>
                 <v-list-item-title>{{ item.title }}</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-          </v-list>
-
-          <v-divider></v-divider>
-
-          <v-list nav>
-            <v-subheader class="text-h4 pl-1">{{ contactMenu.name }}</v-subheader>
             <v-list-item v-for="item in contactMenu.items" :key="item.id" :to="`/${item.slug}`" nuxt class="mb-0">
               <v-list-item-content>
                 <v-list-item-title>{{ item.title }}</v-list-item-title>

@@ -106,7 +106,6 @@
 
         <v-tab-item key="infos">
           <v-list class="pa-0">
-            <v-subheader>Extra</v-subheader>
             <v-list-item
               v-if="fiche.info.cost"
               :to="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"

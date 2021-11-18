@@ -16,9 +16,6 @@
         <v-list-item-title :class="[selected ? 'cq-yellow--text' : 'black--text']">{{
           topCategory.name
         }}</v-list-item-title>
-        <v-list-item-subtitle :class="[selected ? 'white--text' : 'black--text']">{{
-          topCategory.description
-        }}</v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
   </button>
@@ -28,7 +25,7 @@
 import Media from '~/components/Media'
 
 export default {
-  components: {Media},
+  components: { Media },
   props: {
     topCategory: Object,
     selected: Boolean,
@@ -39,7 +36,7 @@ export default {
 
 <style lang="scss" scoped>
 .top-category-btn {
-  width: 200px;
+  width: 190px;
   border: 1px solid grey;
 
   @include hover-focus-active {
