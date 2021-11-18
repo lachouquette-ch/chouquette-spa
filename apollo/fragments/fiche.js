@@ -35,7 +35,7 @@ export const fiche = gql`
     image {
       ...MediaFragments
     }
-    criteria {
+    categoryFilters {
       name
       values {
         id

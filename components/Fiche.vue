@@ -138,9 +138,8 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <v-list v-if="fiche.criteria">
-            <v-subheader
-              >Critères&nbsp;
+          <v-list v-if="fiche.categoryFilters">
+            <v-subheader>Cette adresse te propose&nbsp;
               <v-tooltip max-width="90vw" top>
                 <template #activator="{ on, attrs }">
                   <v-icon v-bind="attrs" small v-on="on">mdi-help-circle-outline</v-icon>
@@ -155,14 +154,14 @@
               <v-list-item-content class="pa-0">
                 <v-chip-group column>
                   <v-chip
-                    v-for="criteriaValue in criteriaValues"
-                    :key="criteriaValue.id"
+                    v-for="categoryFilterValue in categoryFilterValues"
+                    :key="categoryFilterValue.id"
                     color="cq-beige"
                     text-color="primary darken-2"
                     label
                     small
                   >
-                    {{ criteriaValue.name }}</v-chip
+                    {{ categoryFilterValue.name }}</v-chip
                   >
                 </v-chip-group>
               </v-list-item-content>
@@ -332,9 +331,9 @@ export default {
     currentDayOfWeek() {
       return moment().locale('fr-CH').format('dddd')
     },
-    criteriaValues() {
+    categoryFilterValues() {
       return _.uniq(
-        this.fiche.criteria.flatMap((criteria) => criteria.values),
+        this.fiche.categoryFilters.flatMap((filter) => filter.values),
         'id'
       )
     },
