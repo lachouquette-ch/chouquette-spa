@@ -1,4 +1,9 @@
 // Buttons hover
+.v-btn {
+  @include hover-focus-active {
+    background-color: var(--v-cq-yellow-base) !important;
+  }
+}
 .v-btn.cq-yellow {
   @include hover-focus-active {
     background-color: var(--v-cq-blue-base) !important;

@@ -41,9 +41,9 @@
       <PostCommentReply :post="post.id" @close="commentDialog = false" />
     </v-dialog>
 
-    <v-card flat tile>
-      <div style="position: relative; margin-bottom: 35px">
-        <Media :media="post.image" gradient="180deg, transparent 70%, black" />
+    <v-card flat tile class="mt-5">
+      <div style="position: relative; margin-bottom: 35px" class="px-3 px-md-0 cq-md-max-width">
+        <Media :media="post.image" gradient="180deg, transparent 70%, black" class="rounded-xl" />
         <v-img
           :src="mainAuthor.avatar"
           :alt="mainAuthor.name"
@@ -54,73 +54,83 @@
         <div class="header-meta">par {{ mainAuthor.name }} le {{ postDate | fromISO }}</div>
       </div>
       <v-card-title class="justify-center">
-        <h1>{{ post.title }}</h1>
+        <h1 class="my-0">{{ post.title }}</h1>
       </v-card-title>
-      <v-card-text>
-        <ContentFolding>
+      <v-card-text class="pa-0">
+        <ContentFolding class="cq-md-max-width px-3 px-md-0 pb-5">
           <section class="gutenberg-content" v-html="post.content"></section>
         </ContentFolding>
 
-        <section v-if="ficheCards.length">
-          <v-divider class="my-3"></v-divider>
-          <h2 v-if="ficheCards.length > 1">Adresses associées</h2>
-          <h2 v-else>Adresse associée</h2>
-          <template v-if="$fetchState.pending">
-            <v-skeleton-loader v-for="i in 3" :key="i" type="list-item-avatar" class="my-3"></v-skeleton-loader>
-          </template>
-          <template v-else>
-            <ReponsiveScrollGrid :items="ficheCards" md="3" class="my-2">
-              <template #default="{ item }">
-                <FicheCard :fiche="item" height="100%" disable-link @click="selectFiche(item)"></FicheCard>
+        <div class="cq-beige">
+          <div class="cq-md-max-width px-3 px-md-0">
+            <section v-if="ficheCards.length" class="py-5 mt-3">
+              <h2 v-if="ficheCards.length > 1">Adresses associées</h2>
+              <h2 v-else>Adresse associée</h2>
+              <template v-if="$fetchState.pending">
+                <v-skeleton-loader v-for="i in 3" :key="i" type="list-item-avatar" class="my-3"></v-skeleton-loader>
               </template>
-            </ReponsiveScrollGrid>
-            <div v-if="hasAnyLocation" class="text-center">
-              <v-btn :block="$vuetify.breakpoint.mobile" outlined @click="mapDialog = true">Afficher la carte</v-btn>
-            </div>
-          </template>
-        </section>
+              <template v-else>
+                <ReponsiveScrollGrid :items="ficheCards" md="3" class="my-2">
+                  <template #default="{ item }">
+                    <FicheCard :fiche="item" height="100%" disable-link @click="selectFiche(item)"></FicheCard>
+                  </template>
+                </ReponsiveScrollGrid>
+                <div v-if="hasAnyLocation" class="text-center">
+                  <v-btn :block="$vuetify.breakpoint.mobile" color="cq-blue" @click="mapDialog = true"
+                    ><v-icon left>mdi-map</v-icon>Afficher la carte</v-btn
+                  >
+                </div>
+              </template>
+            </section>
 
-        <section class="comments">
-          <v-divider class="my-3"></v-divider>
-          <template v-if="$fetchState.pending">
-            <h2>Commentaires</h2>
-            <v-skeleton-loader type="article"></v-skeleton-loader>
-          </template>
-          <template v-else>
-            <h2>{{ comments.length }} commentaire(s)</h2>
-            <p v-if="!comments.length" class="mt-2">
-              Aucun commentaire pour le moment. N'hésite pas à donner ton avis !
-            </p>
-            <div v-else>
-              <ol class="p-0">
-                <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
-                  <PostComment :post="post.id" :comment="comment" :comments="comments" :no-reply="!extendComments" />
-                </li>
-              </ol>
-              <div class="text-decoration-underline">
-                <v-btn v-if="!extendComments" text @click="extendComments = true">Voir tous les commentaires</v-btn>
-              </div>
-            </div>
-            <div>
-              <v-btn outlined :block="$vuetify.breakpoint.mobile" class="my-3" @click="commentDialog = true">
-                Un nouveau commentaire ?
-              </v-btn>
-            </div>
-          </template>
-        </section>
+            <section class="comments">
+              <v-divider class="mb-3"></v-divider>
+              <template v-if="$fetchState.pending">
+                <h2>Commentaires</h2>
+                <v-skeleton-loader type="article"></v-skeleton-loader>
+              </template>
+              <template v-else>
+                <h2>{{ comments.length }} commentaire(s)</h2>
+                <p v-if="!comments.length" class="mt-2">
+                  Aucun commentaire pour le moment. N'hésite pas à donner ton avis !
+                </p>
+                <div v-else>
+                  <ol class="p-0">
+                    <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
+                      <PostComment
+                        :post="post.id"
+                        :comment="comment"
+                        :comments="comments"
+                        :no-reply="!extendComments"
+                      />
+                    </li>
+                  </ol>
+                  <div class="text-decoration-underline">
+                    <v-btn v-if="!extendComments" text @click="extendComments = true">Voir tous les commentaires</v-btn>
+                  </div>
+                </div>
+                <div>
+                  <v-btn color="cq-red" :block="$vuetify.breakpoint.mobile" class="my-3" @click="commentDialog = true">
+                    Un nouveau commentaire ?
+                  </v-btn>
+                </div>
+              </template>
+            </section>
 
-        <section>
-          <v-divider class="my-3"></v-divider>
-          <h2>Articles similaires</h2>
-          <ReponsiveScrollGrid v-if="$fetchState.pending" :items="[0, 1, 2, 3]" md="3">
-            <v-skeleton-loader type="card" width="150" class="mx-auto"></v-skeleton-loader>
-          </ReponsiveScrollGrid>
-          <ReponsiveScrollGrid v-else :items="similarPosts" md="4" class="my-2">
-            <template #default="{ item }">
-              <PostCard :post="item" vertical large class="mx-auto"></PostCard>
-            </template>
-          </ReponsiveScrollGrid>
-        </section>
+            <section class="py-5">
+              <v-divider class="mb-3"></v-divider>
+              <h2>Articles similaires</h2>
+              <ReponsiveScrollGrid v-if="$fetchState.pending" :items="[0, 1, 2, 3]" md="3">
+                <v-skeleton-loader type="card" width="150" class="mx-auto"></v-skeleton-loader>
+              </ReponsiveScrollGrid>
+              <ReponsiveScrollGrid v-else :items="similarPosts" md="4" class="my-2">
+                <template #default="{ item }">
+                  <PostCard :post="item" vertical large class="mx-auto"></PostCard>
+                </template>
+              </ReponsiveScrollGrid>
+            </section>
+          </div>
+        </div>
       </v-card-text>
     </v-card>
   </div>
@@ -334,5 +344,12 @@ export default {
   ul {
     list-style-type: none;
   }
+}
+
+h2 {
+  text-align: center;
+  margin: 1.5rem 0;
+  font-weight: 900;
+  font-family: $secondary-font-family !important;
 }
 </style>

@@ -4,7 +4,7 @@
       <slot></slot>
     </div>
     <div v-if="folded" class="text-center">
-      <v-btn color="primary" class="text-center" @click="folded = false">{{ btnContent }}</v-btn>
+      <v-btn color="cq-blue" class="text-center" @click="folded = false">{{ btnContent }}</v-btn>
     </div>
   </div>
 </template>

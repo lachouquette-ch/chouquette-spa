@@ -41,8 +41,7 @@
             <v-spacer></v-spacer>
             <v-btn
               style="opacity: 0.9"
-              color="cq-grey"
-              class="white--text"
+              color="cq-blue"
               rounded
               :small="$vuetify.breakpoint.mobile"
               @click="mapDialog = false"

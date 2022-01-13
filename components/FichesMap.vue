@@ -12,7 +12,7 @@
         :loading="fetchLoading"
         :small="$vuetify.breakpoint.mobile"
         rounded
-        class="white"
+        color="cq-red"
         @click="$emit('moreFiches')"
       >
         + de fiches
