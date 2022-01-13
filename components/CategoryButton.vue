@@ -37,7 +37,8 @@ export default {
 <style lang="scss" scoped>
 .top-category-btn {
   width: 190px;
-  border: 1px solid grey;
+  background-color: white;
+  box-shadow: map-get($shadow-key-umbra, 4) !important;
 
   @include hover-focus-active {
     background-color: var(--v-primary-lighten5);

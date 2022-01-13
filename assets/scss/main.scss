@@ -9,20 +9,9 @@
 @import "marker-clusterer";
 @import "google-map";
 @import 'wordpress';
+@import 'vuetify_customization';
 
 // CookieConsent
 $cookieconstent-background: #3D3B3C;
 @import "~vue-cookieconsent-component/src/scss/cookie-consent";
 @import "~vue-cookieconsent-component/src/scss/cookie-consent-bottom";
-
-// custom buttons
-.v-btn.cq-yellow {
-  @include hover-focus-active {
-    background-color: var(--v-cq-blue-base) !important;
-  }
-}
-.v-btn.cq-blue {
-  @include hover-focus-active {
-    background-color: var(--v-cq-red-base) !important;
-  }
-}

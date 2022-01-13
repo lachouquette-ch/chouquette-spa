@@ -1,0 +1,21 @@
+// Buttons hover
+.v-btn.cq-yellow {
+  @include hover-focus-active {
+    background-color: var(--v-cq-blue-base) !important;
+  }
+}
+.v-btn.cq-blue {
+  @include hover-focus-active {
+    background-color: var(--v-cq-red-base) !important;
+  }
+}
+.v-btn.cq-grey {
+  @include hover-focus-active {
+    background-color: var(--v-cq-red-base) !important;
+  }
+}
+
+.v-application h1 {
+  font-weight: 900;
+  margin: 1.5rem 0;
+}

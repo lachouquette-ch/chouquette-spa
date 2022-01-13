@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="cq-beige">
     <v-overlay :value="loading">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
@@ -135,7 +135,7 @@
     ></FichePostDialog>
 
     <v-container class="cq-md-max-width">
-      <h1 class="text-center my-3">{{ location ? location.name : 'Toutes les adresses' }}</h1>
+      <h1 class="text-center">{{ location ? location.name : 'Toutes les adresses' }}</h1>
       <ReponsiveScrollGrid id="topCategoryContainer" :items="topCategories" mobile-only>
         <template #default="{ item }">
           <CategoryButton
@@ -171,7 +171,8 @@
             v-model="selectedTopCategory"
             :items="topCategories"
             :disabled="$fetchState.pending"
-            outlined
+            solo
+            rounded="0"
             dense
             hide-details
             item-text="name"
@@ -186,7 +187,8 @@
             v-model="selectedSubCategory"
             :disabled="$fetchState.pending"
             :items="subCategories"
-            outlined
+            solo
+            rounded="0"
             dense
             hide-details
             item-text="name"
@@ -199,7 +201,8 @@
         </template>
         <v-text-field
           v-model="search"
-          outlined
+          solo
+          rounded="0"
           label="Rechercher dans la categorie"
           prepend-inner-icon="mdi-magnify"
           class="mr-2 ml-md-auto flex-sm-grow-0"
@@ -212,7 +215,7 @@
           @click:clear.capture="clearSearch"
         ></v-text-field>
         <v-badge bordered color="primary" :content="filterCount" :value="filterCount" overlap>
-          <v-btn outlined :disabled="$fetchState.pending" height="100%" @click="filtersDialog = true">
+          <v-btn color="white" :disabled="$fetchState.pending" height="100%" @click="filtersDialog = true">
             <v-icon left>mdi-tune</v-icon>
             Filtrer
           </v-btn>
@@ -291,8 +294,8 @@
       <v-fade-transition>
         <v-btn
           v-if="!mapDialog"
-          color="cq-grey"
-          class="map-button white--text"
+          color="cq-blue"
+          class="map-button"
           :small="$vuetify.breakpoint.mobile"
           fixed
           @click="mapDialog = true"
