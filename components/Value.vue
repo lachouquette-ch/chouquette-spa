@@ -22,4 +22,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+h3 {
+  font-family: $secondary-font-family !important;
+  letter-spacing: 1.5px !important;
+  border: 1px solid black;
+  padding: 5px 10px;
+}
+</style>

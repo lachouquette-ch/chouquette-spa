@@ -90,7 +90,7 @@
     </v-navigation-drawer>
 
     <v-app-bar fixed app class="white">
-      <div class="cq-md-max-width d-flex align-center" style="width: 100%">
+      <div class="d-flex align-center" style="width: 100%">
         <template v-if="!toggleSearch">
           <nuxt-link to="/" class="d-flex align-center">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176.41 41.2" height="40">
@@ -215,7 +215,7 @@
           </span>
         </template>
         <template slot="button">
-          <v-btn class="my-2" color="white">J'accepte<v-icon right>mdi-thumb-up-outline</v-icon></v-btn>
+          <v-btn class="my-2" color="cq-blue">J'accepte<v-icon right>mdi-thumb-up-outline</v-icon></v-btn>
         </template>
       </cookie-consent>
     </client-only>

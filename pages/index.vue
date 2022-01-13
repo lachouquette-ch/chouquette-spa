@@ -1,52 +1,56 @@
 <template>
   <div>
-    <v-parallax src="/banner-md.png" height="400">
-      <v-row align="center" justify="center">
-        <v-col class="text-center" cols="12">
-          <h1 class="primary--text font-weight-black mb-3 mb-md-5">
-            les meilleures adresses <span id="typed">locales et éco-responsables</span>
-          </h1>
-          <v-container class="cq-sm-max-width">
-            <v-row class="justify-center align-center" no-gutters>
-              <v-col cols="12" md="6">
-                <v-select
-                  v-model="selectedLocation"
-                  label="Où veux-tu aller ?"
-                  class="mr-md-3"
-                  hide-details
-                  solo
-                  rounded
-                  color="black"
-                  item-color="black"
-                  item-value="slug"
-                  item-text="name"
-                  :items="locationsPlusAll"
-                >
-                  <template #item="data">
-                    <span v-if="data.item.level === 0" class="font-weight-bold">{{ data.item.name }} (canton)</span>
-                    <span v-else-if="data.item.slug === ''" class="font-weight-bold">{{ data.item.name }}</span>
-                    <span v-else class="pl-2">{{ data.item.name }}</span>
-                  </template>
-                </v-select>
-              </v-col>
-              <v-col cols="12" md="6">
-                <v-btn
-                  block
-                  elevation="3"
-                  color="cq-yellow"
-                  class="black--text mt-2 mt-md-0"
-                  x-large
-                  @click="goToLocation(selectedLocation)"
-                  >J'explore</v-btn
-                >
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-col>
-      </v-row>
-    </v-parallax>
+    <v-card flat rounded="0">
+      <v-img src="/banner-lg.png" height="400" position="top center" max-width="1200" class="mx-auto">
+        <v-container fluid class="d-flex" style="height: 100%">
+          <v-row align="center" justify="center">
+            <v-col class="text-center" cols="12">
+              <h1 class="primary--text font-weight-black mb-3 mb-md-5">
+                les meilleures adresses <span id="typed">locales et éco-responsables</span>
+              </h1>
+              <v-container class="cq-sm-max-width">
+                <v-row class="justify-center align-center" no-gutters>
+                  <v-col cols="12" md="6">
+                    <v-select
+                      v-model="selectedLocation"
+                      label="Où veux-tu aller ?"
+                      class="mr-md-3"
+                      hide-details
+                      solo
+                      rounded
+                      color="black"
+                      item-color="black"
+                      item-value="slug"
+                      item-text="name"
+                      :items="locationsPlusAll"
+                    >
+                      <template #item="data">
+                        <span v-if="data.item.level === 0" class="font-weight-bold">{{ data.item.name }} (canton)</span>
+                        <span v-else-if="data.item.slug === ''" class="font-weight-bold">{{ data.item.name }}</span>
+                        <span v-else class="pl-2">{{ data.item.name }}</span>
+                      </template>
+                    </v-select>
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-btn
+                      block
+                      elevation="3"
+                      color="cq-yellow"
+                      class="black--text mt-2 mt-md-0"
+                      x-large
+                      @click="goToLocation(selectedLocation)"
+                      >J'explore</v-btn
+                    >
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-img>
+    </v-card>
 
-    <v-sheet class="cq-md-max-width">
+    <v-sheet class="cq-md-max-width py-5">
       <h2 class="text-center my-5">ARTICLES À LA UNE</h2>
       <v-container v-if="$vuetify.breakpoint.mobile">
         <v-skeleton-loader
@@ -106,9 +110,9 @@
       </div>
     </v-sheet>
 
-    <v-sheet class="cq-yellow">
-      <v-container class="cq-md-max-width">
-        <h3 class="text-center font-weight-black text-h2 text-lowercase my-5">les 5 valeurs de La Chouquette</h3>
+    <v-sheet class="cq-yellow py-5">
+      <v-container fluid>
+        <h3 class="text-center font-weight-black text-h1 text-lowercase my-5">les 5 valeurs de La Chouquette</h3>
         <v-carousel
           v-if="$vuetify.breakpoint.mobile"
           class="valeurs-carousel"
@@ -121,17 +125,15 @@
             <Value :value="value"></Value>
           </v-carousel-item>
         </v-carousel>
-        <v-container v-else>
-          <v-row align="center" justify="center">
-            <v-col v-for="value in values" :key="value.id" cols="4">
-              <Value :value="value"></Value>
-            </v-col>
-          </v-row>
-        </v-container>
+        <div v-else class="d-flex flex-wrap justify-center">
+          <div v-for="value in values" :key="value.id" class="mx-5">
+            <Value :value="value" class="ma-5"></Value>
+          </div>
+        </div>
       </v-container>
     </v-sheet>
 
-    <v-sheet class="cq-md-max-width px-3">
+    <v-sheet class="cq-md-max-width px-3 py-5">
       <h2 class="text-center my-5">Nos derniers tops</h2>
       <ReponsiveScrollGrid :items="topPosts" md="4">
         <template #default="{ item }">
@@ -151,7 +153,7 @@
           height="120"
           style="position: absolute; left: 20px; top: -20px; transform: matrix(0.96, -0.29, 0.29, 0.96, 0, 0)"
         />
-        <div style="position: relative">
+        <div style="position: relative" class="py-5">
           <div class="text-center">
             <h2>Nos Chouquettisés</h2>
             <p class="text-h5">
@@ -174,7 +176,6 @@
             <p class="text-h2 font-weight-black">Notre label t'intéresse ?</p>
             <p class="text-h5">Tu partages nos valeurs et tu souhaites savoir comment obtenir notre label ?</p>
             <v-btn
-              elevation="3"
               :block="$vuetify.breakpoint.mobile"
               color="cq-yellow"
               class="black--text mb-3"

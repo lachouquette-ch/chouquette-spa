@@ -36,7 +36,9 @@
     </Media>
 
     <v-card-text class="pa-0 px-2 flex-grow-1">
-      <p v-if="!vertical" class="secondary--text text-lowercase mb-0">{{ getCategoryById(post.categoryId).name }}</p>
+      <p v-if="!vertical" class="secondary--text font-weight-bold text-lowercase mb-0">
+        {{ getCategoryById(post.categoryId).name }}
+      </p>
       <h3 class="text-h4 mt-1" :class="{ 'cq-three-line': !vertical && !large }">{{ post.title }}</h3>
       <p v-if="large && !hideMeta" class="ma-0">Le {{ post.date | fromISO }} par {{ post.authorName }}</p>
     </v-card-text>

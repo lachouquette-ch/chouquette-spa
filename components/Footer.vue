@@ -1,10 +1,10 @@
 <template>
-  <v-container tag="footer" fluid class="footer">
+  <v-container tag="footer" fluid class="footer py-5">
     <!-- Stack the columns on mobile by making one full-width and the other half-width -->
     <div class="cq-md-max-width">
       <v-row class="text-center">
         <v-col cols="6" md="4">
-          <h5 class="cq-yellow--text mb-3">{{ aboutMenu.name }}</h5>
+          <h5 class="cq-blue--text mb-3">{{ aboutMenu.name }}</h5>
           <ul>
             <li v-for="item in aboutMenu.items" :key="item.id">
               <nuxt-link class="primary--text text--lighten-5 text-decoration-none" :to="`/${item.slug}`">{{
@@ -14,7 +14,7 @@
           </ul>
         </v-col>
         <v-col cols="6" md="4">
-          <h5 class="cq-yellow--text mb-3">{{ contactMenu.name }}</h5>
+          <h5 class="cq-blue--text mb-3">{{ contactMenu.name }}</h5>
           <ul>
             <li v-for="item in contactMenu.items" :key="item.id">
               <nuxt-link class="primary--text text--lighten-5 text-decoration-none" :to="`/${item.slug}`">{{
