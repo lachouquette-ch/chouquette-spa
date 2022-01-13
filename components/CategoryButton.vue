@@ -1,7 +1,7 @@
 <template>
   <button
     v-ripple
-    class="top-category-btn rounded-lg border-1"
+    class="top-category-btn rounded-lg"
     :class="{ primary: selected }"
     :disabled="disabled"
     @click.prevent="$emit('click', topCategory)"

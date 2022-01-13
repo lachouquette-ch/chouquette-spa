@@ -3,8 +3,6 @@
     class="d-flex"
     :class="{ vertical: vertical, horizontal: !vertical, large: large }"
     dense
-    flat
-    tile
     hover
     ripple
     v-bind="{ ...$props, ...$attrs }"
@@ -16,7 +14,7 @@
       v-if="post.image"
       :media="post.image"
       :size="large ? 'medium_large' : 'medium'"
-      class="rounded-lg flex-shrink-0 flex-grow-0"
+      class="rounded-lg rounded-r-0 flex-shrink-0 flex-grow-0"
       :aspect-ratio="imgAspectRatio"
       :width="imgWidth"
       :max-width="!vertical ? '50%' : 'auto'"
@@ -35,7 +33,7 @@
       </v-card-subtitle>
     </Media>
 
-    <v-card-text class="pa-0 px-2 flex-grow-1">
+    <v-card-text class="pa-2 flex-grow-1">
       <p v-if="!vertical" class="secondary--text font-weight-bold text-lowercase mb-0">
         {{ getCategoryById(post.categoryId).name }}
       </p>
@@ -82,8 +80,7 @@ export default {
 
 <style lang="scss" scoped>
 .horizontal {
-  height: 100px;
-  max-width: 400px;
+  height: 120px;
 
   &.large {
     height: 150px;

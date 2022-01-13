@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="cq-beige">
     <v-container class="cq-md-max-width">
       <h1 class="text-center">Tous les articles</h1>
       <ReponsiveScrollGrid id="categoryContainer" :items="topCategories" mobile-only>
@@ -22,7 +22,8 @@
             v-model="category"
             :items="topCategories"
             :disabled="$fetchState.pending"
-            outlined
+            solo
+            rounded="0"
             dense
             hide-details
             item-text="name"
@@ -35,7 +36,8 @@
         </template>
         <v-text-field
           v-model="search"
-          outlined
+          solo
+          rounded="0"
           label="Rechercher dans les articles"
           prepend-inner-icon="mdi-magnify"
           color="grey darken-3"
@@ -99,7 +101,11 @@
       <v-container v-if="$fetchState.pending" class="pa-0 mt-3">
         <v-row>
           <v-col v-for="i in 5" :key="i" cols="12" md="6">
-            <v-skeleton-loader class="mb-3" elevation="1" type="list-item-avatar-three-line"></v-skeleton-loader>
+            <v-skeleton-loader
+              class="mb-3 rounded-lg"
+              elevation="1"
+              type="list-item-avatar-three-line"
+            ></v-skeleton-loader>
           </v-col>
         </v-row>
       </v-container>
@@ -302,7 +308,6 @@ export default {
 <style scoped lang="scss">
 .top-category-btn {
   width: 200px;
-  border: 1px solid grey;
 
   &:disabled,
   &button[disabled] {
