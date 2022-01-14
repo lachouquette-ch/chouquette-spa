@@ -1,11 +1,11 @@
 <template>
   <div>
     <v-card flat rounded="0">
-      <v-img src="/banner-lg.png" height="400" position="top center" max-width="1200" class="mx-auto">
+      <v-img src="/banner-lg.png" height="400" position="top center" class="cq-md-max-width mx-auto">
         <v-container fluid class="d-flex" style="height: 100%">
-          <v-row align="center" justify="center">
+          <v-row align="top" justify="center">
             <v-col class="text-center" cols="12">
-              <h1 class="primary--text font-weight-black mb-3 mb-md-5">
+              <h1 class="primary--text font-weight-black">
                 les meilleures adresses <span id="typed">locales et éco-responsables</span>
               </h1>
               <v-container class="cq-sm-max-width">
@@ -56,11 +56,11 @@
         <v-skeleton-loader
           v-if="$fetchState.pending"
           class="mx-auto mb-3"
-          elevation="3"
+          elevation="0"
           type="card"
           max-width="400"
         ></v-skeleton-loader>
-        <v-card v-else class="mx-auto" :to="`/${highlightedPost.slug}`" nuxt ripple elevation="3" max-width="400">
+        <v-card v-else class="mx-auto" :to="`/${highlightedPost.slug}`" nuxt ripple elevation="1" max-width="400">
           <Media
             v-if="highlightedPost.image"
             :media="highlightedPost.image"
@@ -88,7 +88,7 @@
             <v-col v-for="i in 4" :key="i" cols="12" md="6">
               <v-skeleton-loader
                 class="my-2 mx-auto pa-2"
-                elevation="1"
+                elevation="0"
                 type="list-item-avatar, list-item-three-line"
                 height="150"
                 max-width="400"
@@ -97,10 +97,10 @@
           </template>
           <template v-else>
             <v-col v-if="!$vuetify.breakpoint.mobile" cols="6">
-              <PostCard :post="highlightedPost" class="my-2 mx-auto" large hide-meta></PostCard>
+              <PostCard :post="highlightedPost" class="my-2 mx-auto" large hide-meta transparent></PostCard>
             </v-col>
             <v-col v-for="post in otherPosts" :key="post.id" cols="12" md="6">
-              <PostCard :post="post" class="my-2 mx-auto" large hide-meta></PostCard>
+              <PostCard :post="post" class="my-2 mx-auto" large hide-meta transparent></PostCard>
             </v-col>
           </template>
         </v-row>
@@ -112,7 +112,7 @@
 
     <v-sheet class="cq-yellow py-5">
       <v-container fluid>
-        <h3 class="text-center font-weight-black text-h1 text-lowercase my-5">les 5 valeurs de La Chouquette</h3>
+        <h3 class="text-center font-weight-black text-h1 my-5">Les valeurs de La Chouquette</h3>
         <v-carousel
           v-if="$vuetify.breakpoint.mobile"
           class="valeurs-carousel"
@@ -137,7 +137,7 @@
       <h2 class="text-center my-5">Nos derniers tops</h2>
       <ReponsiveScrollGrid :items="topPosts" md="4">
         <template #default="{ item }">
-          <PostCard :post="item" class="mx-auto" vertical large hide-meta></PostCard>
+          <PostCard :post="item" class="mx-auto" vertical large hide-meta transparent></PostCard>
         </template>
       </ReponsiveScrollGrid>
       <div class="text-center my-3">
@@ -341,6 +341,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+h1 {
+  margin-top: 50px;
+  margin-bottom: 100px;
+  height: 2rem;
+}
+
 button.v-btn.cq-yellow {
   @include hover-focus-active {
     background-color: var(--v-cq-red-base) !important;

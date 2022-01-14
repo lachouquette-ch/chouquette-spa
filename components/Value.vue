@@ -6,7 +6,7 @@
     <Media :media="value.image" size="medium" height="200" contain class="mx-auto" flat></Media>
     <v-card-text class="text-body-1">{{ value.description }}</v-card-text>
     <v-card-actions class="justify-center">
-      <v-btn text nuxt to="/articles" class="text-decoration-underline">en savoir plus</v-btn>
+      <v-btn text nuxt to="/articles" class="text-decoration-underline">en savoir +</v-btn>
     </v-card-actions>
   </v-card>
 </template>

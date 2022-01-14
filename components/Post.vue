@@ -110,7 +110,13 @@
                   </div>
                 </div>
                 <div>
-                  <v-btn color="cq-red" :block="$vuetify.breakpoint.mobile" class="my-3" @click="commentDialog = true">
+                  <v-btn
+                    color="cq-red"
+                    :block="$vuetify.breakpoint.mobile"
+                    class="my-3"
+                    large
+                    @click="commentDialog = true"
+                  >
                     Un nouveau commentaire ?
                   </v-btn>
                 </div>
@@ -120,12 +126,12 @@
             <section class="py-5">
               <v-divider class="mb-3"></v-divider>
               <h2>Articles similaires</h2>
-              <ReponsiveScrollGrid v-if="$fetchState.pending" :items="[0, 1, 2, 3]" md="3">
+              <ReponsiveScrollGrid v-if="$fetchState.pending" :items="[0, 1, 2, 3]" cols="6" md="3">
                 <v-skeleton-loader type="card" width="150" class="mx-auto"></v-skeleton-loader>
               </ReponsiveScrollGrid>
-              <ReponsiveScrollGrid v-else :items="similarPosts" md="4" class="my-2">
+              <ReponsiveScrollGrid v-else :items="similarPosts" cols="6" md="4" class="my-2">
                 <template #default="{ item }">
-                  <PostCard :post="item" vertical large class="mx-auto"></PostCard>
+                  <PostCard :post="item" vertical large class="mx-auto" transparent></PostCard>
                 </template>
               </ReponsiveScrollGrid>
             </section>

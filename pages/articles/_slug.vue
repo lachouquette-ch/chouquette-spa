@@ -23,7 +23,7 @@
             :items="topCategories"
             :disabled="$fetchState.pending"
             solo
-            rounded="0"
+            rounded
             dense
             hide-details
             item-text="name"
@@ -37,14 +37,15 @@
         <v-text-field
           v-model="search"
           solo
-          rounded="0"
+          rounded
           label="Rechercher dans les articles"
           prepend-inner-icon="mdi-magnify"
           color="grey darken-3"
-          class="mr-2"
+          class="mr-2 ml-md-auto"
           clearable
           hide-details
           dense
+          style="max-width: 300px"
           @change="searchByText"
           @click:clear.capture="clearSearch"
         ></v-text-field>
@@ -102,8 +103,8 @@
         <v-row>
           <v-col v-for="i in 5" :key="i" cols="12" md="6">
             <v-skeleton-loader
-              class="mb-3 rounded-lg"
-              elevation="1"
+              class="mb-3 rounded-lg white"
+              height="150"
               type="list-item-avatar-three-line"
             ></v-skeleton-loader>
           </v-col>

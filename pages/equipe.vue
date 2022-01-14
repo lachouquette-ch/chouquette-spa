@@ -22,7 +22,7 @@
             <v-card-title class="justify-center">
               <h3>{{ member.name }}</h3>
             </v-card-title>
-            <v-card-subtitle>{{ member.title }}</v-card-subtitle>
+            <v-card-subtitle class="text-center">{{ member.title }}</v-card-subtitle>
             <!-- eslint-disable-next-line vue/no-v-html -->
             <v-card-text class="text-center" v-html="member.description"></v-card-text>
           </v-card>

@@ -171,7 +171,7 @@
             :items="topCategories"
             :disabled="$fetchState.pending"
             solo
-            rounded="0"
+            rounded
             dense
             hide-details
             item-text="name"
@@ -187,7 +187,7 @@
             :disabled="$fetchState.pending"
             :items="subCategories"
             solo
-            rounded="0"
+            rounded
             dense
             hide-details
             item-text="name"
@@ -201,12 +201,12 @@
         <v-text-field
           v-model="search"
           solo
-          rounded="0"
+          rounded
           label="Rechercher dans la categorie"
           prepend-inner-icon="mdi-magnify"
           class="mr-2 ml-md-auto flex-sm-grow-0"
           :disabled="$fetchState.pending"
-          style="width: 250px"
+          style="max-width: 300px"
           clearable
           hide-details
           dense
@@ -262,7 +262,11 @@
           </v-col>
           <template v-if="$fetchState.pending">
             <v-col v-for="i in 4" :key="i" cols="12" sm="4">
-              <v-skeleton-loader elevation="1" type="image, article, actions" class="rounded-xl"></v-skeleton-loader>
+              <v-skeleton-loader
+                elevation="1"
+                type="image, article, actions"
+                class="rounded-xl white"
+              ></v-skeleton-loader>
             </v-col>
           </template>
           <v-col cols="12" sm="4">
@@ -273,6 +277,7 @@
               block
               class="secondary white--text"
               height="100%"
+              min-height="200"
               tag="a"
               rel="next"
               outlined

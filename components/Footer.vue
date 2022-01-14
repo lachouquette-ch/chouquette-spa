@@ -23,10 +23,10 @@
             </li>
           </ul>
           <v-btn icon large target="_blank" href="https://www.facebook.com/lachouquette.ch"
-            ><v-icon large color="#4267b2">mdi-facebook</v-icon></v-btn
+            ><v-icon large color="cq-red">mdi-facebook</v-icon></v-btn
           >
           <v-btn icon large target="_blank" href="https://www.instagram.com/lachouquette.ch"
-            ><v-icon large color="#E1306C">mdi-instagram</v-icon></v-btn
+            ><v-icon large color="cq-red">mdi-instagram</v-icon></v-btn
           >
         </v-col>
         <v-col cols="12" md="4" class="text-center">

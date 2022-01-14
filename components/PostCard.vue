@@ -5,6 +5,8 @@
     dense
     hover
     ripple
+    flat
+    :color="transparent ? 'transparent' : 'white'"
     v-bind="{ ...$props, ...$attrs }"
     :to="postLink"
     :nuxt="!disableLink"
@@ -14,7 +16,8 @@
       v-if="post.image"
       :media="post.image"
       :size="large ? 'medium_large' : 'medium'"
-      class="rounded-lg rounded-r-0 flex-shrink-0 flex-grow-0"
+      class="rounded-lg flex-shrink-0 flex-grow-0"
+      :class="{ 'rounded-r-0': !transparent }"
       :aspect-ratio="imgAspectRatio"
       :width="imgWidth"
       :max-width="!vertical ? '50%' : 'auto'"
@@ -38,7 +41,7 @@
         {{ getCategoryById(post.categoryId).name }}
       </p>
       <h3 class="text-h4 mt-1" :class="{ 'cq-three-line': !vertical && !large }">{{ post.title }}</h3>
-      <p v-if="large && !hideMeta" class="ma-0">Le {{ post.date | fromISO }} par {{ post.authorName }}</p>
+      <p v-if="large && !hideMeta" class="mt-2 ma-0">le {{ post.date | fromISO }} par {{ post.authorName }}</p>
     </v-card-text>
   </v-card>
 </template>
@@ -58,6 +61,7 @@ export default {
     vertical: Boolean,
     large: Boolean,
     disableLink: Boolean,
+    transparent: Boolean,
   },
   computed: {
     ...mapGetters('categories', {
@@ -93,7 +97,7 @@ export default {
   flex-shrink: 0;
 
   &.large {
-    width: 200px;
+    width: 250px;
   }
 }
 </style>
