@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card flat rounded="0">
-      <v-img src="/banner-lg.png" height="400" position="top center" class="cq-md-max-width mx-auto">
+      <v-img src="/banner-md.png" height="400" position="top center" class="cq-md-max-width mx-auto">
         <v-container fluid class="d-flex" style="height: 100%">
           <v-row align="top" justify="center">
             <v-col class="text-center" cols="12">
