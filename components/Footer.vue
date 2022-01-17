@@ -32,8 +32,7 @@
         <v-col cols="12" md="4" class="text-center">
           <nuxt-link to="/">
             <v-img
-              :lazy-src="`${wordpressUrl}/wp-content/uploads/2019/03/logo_white-150x150.png`"
-              :src="`${wordpressUrl}/wp-content/uploads/2019/03/logo_white-768x706.png`"
+              src="/logo.png"
               transition="false"
               alt="Logo Chouquette"
               contain
