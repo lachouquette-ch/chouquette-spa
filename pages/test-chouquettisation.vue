@@ -1,10 +1,10 @@
 <template>
   <v-container>
     <v-card flat>
-      <v-card-title>
+      <v-card-title class="d-block text-center">
         <h1>Es-tu apte à la Chouquettisation ?</h1>
       </v-card-title>
-      <v-card-subtitle>
+      <v-card-subtitle class="text-center">
         Evalue ton entreprise/concept afin de savoir s'il matche aux valeurs de la Chouquette
       </v-card-subtitle>
 
@@ -25,7 +25,7 @@
             ></v-select>
             <v-card-actions>
               <v-btn
-                color="primary"
+                color="cq-blue"
                 :disabled="!category"
                 @click="
                   stepper = 2
@@ -83,7 +83,7 @@
                 </template>
               </v-card-text>
               <v-card-actions class="flex-wrap">
-                <v-btn color="primary" class="mt-2" @click="stepper = index + 3">Voir la suite</v-btn>
+                <v-btn color="cq-yellow" class="mt-2" @click="stepper = index + 3">Voir la suite</v-btn>
                 <v-btn v-if="stepperFinished" color="secondary" class="mt-2" @click="stepper = 7">
                   Vers le résultats
                 </v-btn>
@@ -99,24 +99,27 @@
             <p class="text-h3">Bravo, tu y est arrivé !</p>
             <p>
               <span>Les valeurs validées : </span>
-              <v-chip
-                v-for="value in validatedValues"
-                :key="value.id"
-                color="cq-blue-light"
-                text-color="cq-secondary"
-                label
-                small
-                class="mr-2"
-              >
-                {{ value.name }}
-              </v-chip>
+              <template v-if="validatedValues.length">
+                <v-chip
+                  v-for="value in validatedValues"
+                  :key="value.id"
+                  color="cq-blue-light"
+                  text-color="cq-secondary"
+                  label
+                  small
+                  class="mr-2"
+                >
+                  {{ value.name }}
+                </v-chip>
+              </template>
+              <span v-else>aucune</span>
             </p>
             <p class="my-2">Tu souhaites aller plus loin avec La Chouquette ?</p>
             <v-btn color="cq-yellow" block>Contacte-nous</v-btn>
           </v-card>
           <v-card v-else flat class="pb-2">
             <p class="text-h3">Malheureusement tu ne remplis pas tous les critères pour une Chouquettisation</p>
-            <p>
+            <p v-if="validatedValues.length">
               <span>Les valeurs validées : </span>
               <v-chip
                 v-for="value in validatedValues"
@@ -130,7 +133,7 @@
                 {{ value.name }}
               </v-chip>
             </p>
-            <p>
+            <p v-if="unvalidatedValues.length">
               <span>Les valeurs manquantes : </span>
               <v-chip
                 v-for="value in unvalidatedValues"
