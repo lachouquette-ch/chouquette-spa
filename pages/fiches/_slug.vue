@@ -287,7 +287,14 @@
             </v-btn>
           </v-col>
         </v-row>
-        <v-alert v-if="!hasMoreFiches" border="bottom" color="primary" class="text-center" elevation="2" colored-border>
+        <v-alert
+          v-if="!hasMoreFiches"
+          border="bottom"
+          color="primary"
+          class="text-center mt-5"
+          elevation="2"
+          colored-border
+        >
           <span v-if="fiches.length">Tu as tout vu !</span>
           <template v-else>
             <span>Aucun résultat pour ta recherche.</span>
