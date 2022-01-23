@@ -51,7 +51,7 @@ export default {
       this.pageType = 'page'
     } else if (this.$route.query.type === 'post') {
       const post = await this.$axios.$get(`${this.wordpressUrl}/wp-json/wp/v2/posts/${this.$route.query.id}`, {
-        params: { _embed: true },
+        params: { _embed: 1 },
         withCredentials: true,
         headers: { 'X-WP-Nonce': this.$route.query.nonce },
       })
@@ -63,7 +63,7 @@ export default {
       this.pageType = 'post'
     } else if (this.$route.query.type === 'fiche') {
       const fiche = await this.$axios.$get(`${this.wordpressUrl}/wp-json/wp/v2/fiches/${this.$route.query.id}`, {
-        params: { _embed: true },
+        params: { _embed: 1 },
         withCredentials: true,
         headers: { 'X-WP-Nonce': this.$route.query.nonce },
       })
