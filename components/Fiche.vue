@@ -206,7 +206,7 @@
       </div>
     </v-card>
 
-    <v-dialog v-model="showDialog" max-width="600px" @click:outside="clear">
+    <v-dialog ref="ficheModal" v-model="showDialog" max-width="600px" @click:outside="clear">
       <v-form @submit.prevent="submit(isContactForm)">
         <v-card :loading="dialogLoading">
           <v-card-title>Formulaire de contact </v-card-title>
@@ -284,10 +284,11 @@ import PostCard from '~/components/PostCard'
 import FicheCard from '~/components/FicheCard'
 import seo from '~/mixins/seo'
 import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
+import graphql from '~/mixins/graphql'
 
 export default {
   components: { ReponsiveScrollGrid, FicheCard, PostCard, FichesMap, Media },
-  mixins: [seo],
+  mixins: [seo, graphql],
   props: {
     fiche: Object,
     dialog: Boolean,
@@ -450,7 +451,7 @@ export default {
           }
 
           this.clear()
-          this.$refs.ficheModal.hide()
+          this.$refs.ficheModal.onClickOutside()
         } catch (e) {
           this.$sentry.captureException(e)
           this.handleGQLError(e, "L'envoi de ton message à échouer :")
