@@ -18,6 +18,7 @@
             label="Prénom, nom (et société) *"
             required
             @blur="$v.formContact.name.$touch"
+            autocomplete="name"
           ></v-text-field>
         </v-col>
         <v-col cols="12" md="6">
@@ -30,6 +31,7 @@
             label="Email *"
             required
             @blur="$v.formContact.email.$touch"
+            autocomplete="email"
           ></v-text-field>
         </v-col>
       </v-row>

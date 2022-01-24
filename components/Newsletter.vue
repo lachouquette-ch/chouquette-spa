@@ -25,6 +25,7 @@
                   name="email"
                   type="email"
                   @blur="setEmail($event.target.value)"
+                  autocomplete="email"
                 ></v-text-field>
               </v-col>
               <v-col cols="12" md="6">
