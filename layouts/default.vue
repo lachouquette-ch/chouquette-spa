@@ -191,17 +191,17 @@
     </v-main>
 
     <v-bottom-navigation v-if="$vuetify.breakpoint.mobile" v-model="selectedNav" fixed app color="cq-red">
-      <v-btn nuxt to="/">
+      <v-btn nuxt to="/" class="black--text" active-class="cq-yellow">
         <span>Accueil</span>
         <v-icon>mdi-home</v-icon>
       </v-btn>
 
-      <v-btn nuxt to="/fiches">
+      <v-btn nuxt to="/fiches" class="black--text" active-class="cq-yellow">
         <span>Adresses</span>
         <v-icon>mdi-map-marker-multiple-outline</v-icon>
       </v-btn>
 
-      <v-btn nuxt to="/articles">
+      <v-btn nuxt to="/articles" class="black--text" active-class="cq-yellow">
         <span>Articles</span>
         <v-icon>mdi-newspaper-variant-multiple</v-icon>
       </v-btn>
@@ -303,6 +303,16 @@ svg {
 svg {
   @include hover-focus-active {
     fill: var(--v-cq-yellow-base);
+  }
+}
+
+.v-btn {
+  @include hover-focus-active {
+    background-color: var(--v-cq-yellow-base) !important;
+  }
+
+  &::before {
+    opacity: 0 !important;
   }
 }
 </style>
