@@ -78,8 +78,7 @@
               <v-list-item-content class="pt-0">
                 <div class="d-inline-flex align-center">
                   <p class="mb-0 mr-3 text-caption">
-                    Sélectionner que les adresses testées et approuvées par l'équipe. tesa fadsf
-                    kldasjféladsjféalsdfkjasdélf jasdf
+                    Ne me montre que les adresses Chouquettisées : celles sélectionnées et approuvées par l'équipe
                   </p>
                   <v-spacer></v-spacer>
                   <v-switch
