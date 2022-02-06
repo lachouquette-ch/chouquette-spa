@@ -29,16 +29,9 @@ spec:
           startupProbe:
             tcpSocket:
               port: container-port
-            initialDelaySeconds: 10
-            failureThreshold: 2
+            initialDelaySeconds: 30
+            failureThreshold: 3
             periodSeconds: 10
-          readinessProbe:
-            httpGet:
-              path: /
-              port: container-port
-            timeoutSeconds: 5
-            failureThreshold: 8
-            periodSeconds: 15
           envFrom:
             - configMapRef:
                 name: chouquette-spa-uat
