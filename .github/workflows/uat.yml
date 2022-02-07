@@ -16,7 +16,7 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: docker.lachouquette.ch/chouquette-spa-uat:latest
+          tags: docker.lachouquette.ch/chouquette-spa-uat:${{ github.sha }},docker.lachouquette.ch/chouquette-spa-uat:latest
         env:
           NODE_ENV: development
           GRAPHQL_URI: http://api-gateway-uat.default.svc.cluster.local:4000/graphql
@@ -28,7 +28,7 @@ jobs:
         uses: nickgronow/kubectl@master
         with:
           config_data: ${{ secrets.KUBE_CONFIG_DATA }}
-          args: set image deployment/chouquette-spa-uat chouquette-spa-uat=docker.lachouquette.ch/chouquette-spa-uat:latest --record
+          args: set image deployment/chouquette-spa-uat chouquette-spa-uat=docker.lachouquette.ch/chouquette-spa-uat:${{ github.sha }} --record
       - name: Verify deployment
         uses: nickgronow/kubectl@master
         with:
