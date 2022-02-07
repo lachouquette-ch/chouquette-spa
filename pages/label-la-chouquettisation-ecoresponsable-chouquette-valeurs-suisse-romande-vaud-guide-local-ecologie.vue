@@ -36,7 +36,7 @@ export default {
         ${PageFragments}
       `,
       variables: {
-        slug: 'le-label-la-chouquettisation-chouquette-suisse-romande-guide-local-ecologie-expertise-solidaire-equitable-valeurs-fortes-adn-eco-responsable-acteurs-charte-criteres',
+        slug: 'label-la-chouquettisation-ecoresponsable-chouquette-valeurs-suisse-romande-vaud-guide-local-ecologie',
       },
     })
 
