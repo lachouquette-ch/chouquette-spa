@@ -44,6 +44,10 @@
         </v-col>
       </v-row>
       <v-divider class="secondary my-4"></v-divider>
+      <p class="text-center text-caption primary--text text--lighten-5">
+        <nuxt-link to="/mentions-legales" class="primary--text text--lighten-5">Mentions légales</nuxt-link> -
+        <nuxt-link to="/politique-de-confidentialite" class="primary--text text--lighten-5">Politique de confidentialité</nuxt-link>
+      </p>
       <p class="text-center text-caption">
         Copyright 2014-{{ currentYear }} - Tous droits réservés à La Chouquette. Toutes les images et le contenu sont la
         propriété du site.
