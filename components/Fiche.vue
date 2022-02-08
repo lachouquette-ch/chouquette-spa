@@ -48,59 +48,51 @@
 
       <v-tabs-items v-model="tab" class="py-3" :touchless="tabTouchless">
         <v-tab-item key="contact">
-          <div v-if="fiche.poi">
-            <FichesMap
-              :fiches="[fiche]"
-              style="height: 200px"
-              preview
-              @fullScreenOn="tabTouchless = true"
-              @fullScreenOff="tabTouchless = false"
-            ></FichesMap>
-            <span
-              :href="`https://www.google.com/maps?q=${fiche.address}`"
-              target="_blank"
-              class="d-inline-block text-body-2 text-decoration-none mb-1"
-              >{{ fiche.address }} <span class="text-decoration-underline">(Ouvrir dans Maps)</span></span
-            >
-          </div>
+          <v-list>
+            <template v-if="fiche.poi">
+              <v-list-item :href="`https://www.google.com/maps?q=${fiche.address}`" target="_blank">
+                <v-list-item-avatar size="30"><v-icon>mdi-map-marker</v-icon></v-list-item-avatar>
+                <v-list-item-title>
+                  <span>{{ fiche.address }}</span>
+                  <v-list-item-subtitle class="text-caption">Ouvrir dans Maps</v-list-item-subtitle>
+                </v-list-item-title>
+              </v-list-item>
+              <FichesMap
+                :fiches="[fiche]"
+                style="height: 200px"
+                class="px-5"
+                preview
+                @fullScreenOn="tabTouchless = true"
+                @fullScreenOff="tabTouchless = false"
+              ></FichesMap>
+            </template>
 
-          <v-list v-if="fiche.isChouquettise" class="">
-            <v-list-item
-              @click="
-                isContactForm = true
-                showDialog = true
-              "
-            >
-              <v-list-item-avatar size="30"><v-icon>mdi-message</v-icon></v-list-item-avatar>
-              <v-list-item-title>
-                <span class="text-decoration-underline">Envoyer un message à cette adresse</span>
-                <v-list-item-subtitle class="text-caption">Depuis La Chouquette</v-list-item-subtitle>
-              </v-list-item-title>
-            </v-list-item>
-            <v-list-item v-if="fiche.info.telephone" :href="`tel: ${fiche.info.telephone}`">
-              <v-list-item-avatar size="30"><v-icon>mdi-phone</v-icon></v-list-item-avatar>
-              <v-list-item-title>
-                <span class="text-decoration-underline">{{ fiche.info.telephone }}</span>
-                <v-list-item-subtitle class="text-caption">Appeler l'adresse</v-list-item-subtitle>
-              </v-list-item-title>
-            </v-list-item>
-            <v-list-item v-if="fiche.info.website" :href="fiche.info.website" target="_blank">
-              <v-list-item-avatar size="30"><v-icon>mdi-web</v-icon></v-list-item-avatar>
-              <v-list-item-title>
-                <span class="text-decoration-underline">Accéder au site Web</span>
-                <v-list-item-subtitle class="text-caption">{{ fiche.info.website | prettyURL }}</v-list-item-subtitle>
-              </v-list-item-title>
-            </v-list-item>
-            <v-list-item
-              v-if="fiche.info.mail"
-              :href="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
-            >
-              <v-list-item-avatar size="30"><v-icon>mdi-at</v-icon></v-list-item-avatar>
-              <v-list-item-title>
-                <span class="text-decoration-underline">Envoyer un email</span>
-                <v-list-item-subtitle class="text-caption">{{ fiche.info.mail }}</v-list-item-subtitle>
-              </v-list-item-title>
-            </v-list-item>
+            <template v-if="fiche.isChouquettise">
+              <v-list-item v-if="fiche.info.telephone" :href="`tel: ${fiche.info.telephone}`">
+                <v-list-item-avatar size="30"><v-icon>mdi-phone</v-icon></v-list-item-avatar>
+                <v-list-item-title>
+                  <span>{{ fiche.info.telephone }}</span>
+                  <v-list-item-subtitle class="text-caption">Appeler l'adresse</v-list-item-subtitle>
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item v-if="fiche.info.website" :href="fiche.info.website" target="_blank">
+                <v-list-item-avatar size="30"><v-icon>mdi-web</v-icon></v-list-item-avatar>
+                <v-list-item-title>
+                  <span>{{ fiche.info.website | prettyURL }}</span>
+                  <v-list-item-subtitle class="text-caption">Accéder au site Web</v-list-item-subtitle>
+                </v-list-item-title>
+              </v-list-item>
+              <v-list-item
+                v-if="fiche.info.mail"
+                :href="`mailto:${fiche.info.mail}?body=%0A---%0AEnvoy%C3%A9%20depuis%20${currentURL}`"
+              >
+                <v-list-item-avatar size="30"><v-icon>mdi-at</v-icon></v-list-item-avatar>
+                <v-list-item-title>
+                  <span>{{ fiche.info.mail }}</span>
+                  <v-list-item-subtitle class="text-caption">Envoyer un email</v-list-item-subtitle>
+                </v-list-item-title>
+              </v-list-item>
+            </template>
           </v-list>
         </v-tab-item>
 
@@ -126,9 +118,7 @@
                 <v-list-item-avatar size="30"><v-icon>mdi-clock</v-icon></v-list-item-avatar>
                 <v-list-item-title>
                   Aujourd'hui : {{ getOpeningValue() }}
-                  <v-list-item-subtitle class="text-decoration-underline text-caption"
-                    >Voir les autres jours</v-list-item-subtitle
-                  >
+                  <v-list-item-subtitle class="text-caption">Voir les autres jours</v-list-item-subtitle>
                 </v-list-item-title>
               </v-list-item>
             </template>
@@ -139,7 +129,8 @@
             </v-list>
           </v-menu>
           <v-list v-if="fiche.categoryFilters">
-            <v-subheader>Cette adresse te propose&nbsp;
+            <v-subheader
+              >Cette adresse te propose&nbsp;
               <v-tooltip max-width="90vw" top>
                 <template #activator="{ on, attrs }">
                   <v-icon v-bind="attrs" small v-on="on">mdi-help-circle-outline</v-icon>
@@ -240,8 +231,8 @@
                     color="secondary"
                     label="Ton nom / prénom *"
                     required
-                    @blur="$v.formFiche.name.$touch"
                     autocomplete="name"
+                    @blur="$v.formFiche.name.$touch"
                   ></v-text-field>
                 </v-col>
                 <v-col cols="12" md="6">
@@ -253,8 +244,8 @@
                     color="secondary"
                     label="Ton email *"
                     required
-                    @blur="$v.formFiche.email.$touch"
                     autocomplete="email"
+                    @blur="$v.formFiche.email.$touch"
                   ></v-text-field>
                 </v-col>
               </v-row>
