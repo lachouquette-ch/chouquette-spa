@@ -9,18 +9,13 @@
     <v-card-text class="text-body-1">{{ value.description }}</v-card-text>
     <v-spacer></v-spacer>
     <v-card-actions class="justify-center align-self-">
-      <v-btn
-        text
-        nuxt
-        :to="`/label-la-chouquettisation-ecoresponsable-chouquette-valeurs-suisse-romande-vaud-guide-local-ecologie#valeur-${value.slug}`"
-        class="text-decoration-underline"
-        >en savoir +</v-btn
-      >
+      <v-btn text nuxt :to="`/${labelPage}#valeur-${value.slug}`" class="text-decoration-underline">en savoir +</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Media from '~/components/Media'
 
 export default {
@@ -28,6 +23,10 @@ export default {
   props: {
     value: Object,
   },
+  computed: mapState({
+    // arrow functions can make the code very succinct!
+    labelPage: (state) => state.labelPage,
+  }),
 }
 </script>
 

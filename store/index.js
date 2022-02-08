@@ -6,6 +6,7 @@ export const state = () => ({
   description: null,
   wordpressUrl: null,
   loadingPromise: null,
+  labelPage: 'label-la-chouquettisation-ecoresponsable-chouquette-valeurs-suisse-romande-vaud-guide-local-ecologie',
 })
 
 export const actions = {

@@ -185,7 +185,7 @@
               color="cq-yellow"
               class="black--text mb-3"
               large
-              to="/notre-charte-editoriale"
+              :to="labelPage"
               nuxt
               >On te dit tout</v-btn
             >
@@ -298,7 +298,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(['name', 'description']),
+    ...mapState(['name', 'description', 'labelPage']),
     ...mapState({
       categories: (state) => state.menus.headerCategories,
       locations: (state) => state.locations.flatSorted,

@@ -25,7 +25,7 @@ export default {
     Page,
   },
   mixins: [seo],
-  async asyncData({ app }) {
+  async asyncData({ app, store }) {
     const { data } = await app.apolloProvider.defaultClient.query({
       query: gql`
         query ($slug: String!) {
@@ -36,7 +36,7 @@ export default {
         ${PageFragments}
       `,
       variables: {
-        slug: 'label-la-chouquettisation-ecoresponsable-chouquette-valeurs-suisse-romande-vaud-guide-local-ecologie',
+        slug: store.state.labelPage,
       },
     })
 
