@@ -2,7 +2,7 @@
   <div>
     <Page :page="page" class="cq-md-max-width">
       <template #footer>
-        <h2 class="text-center">L'équipe</h2>
+        <h2 class="text-center text-h1 mb-4">L'équipe</h2>
         <div class="d-flex flex-wrap justify-content-around mb-5">
           <v-card
             v-for="member in team"
