@@ -15,6 +15,13 @@
   }
 }
 
+.v-btn.v-btn--outlined.cq-red--text {
+  @include hover-focus-active {
+    background-color: var(--v-cq-red-base) !important;
+    color: white !important;
+  }
+}
+
 .v-application h1 {
   font-weight: 900;
   margin: 1.5rem 0;

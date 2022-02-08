@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="shareApiAvailable">
+    <template v-if="false">
       <v-btn
         v-bind="{ ...$props, ...$attrs }"
         @click.prevent="shareWith('Adresse sur LaChouquette.ch', fiche.title, ficheURL)"
@@ -19,15 +19,21 @@
         </template>
 
         <v-list>
-          <v-list-item target="_blank" :to="`https://www.facebook.com/sharer/sharer.php?u=${ficheURL}`">
+          <v-list-item target="_blank" :href="`https://www.facebook.com/sharer/sharer.php?u=${ficheURL}`">
             <v-list-item-title><v-icon color="#4267b2" class="mr-2">mdi-facebook</v-icon>Facebook</v-list-item-title>
           </v-list-item>
-          <v-list-item target="_blank" :to="`https://twitter.com/share?text=${fiche.title}&url=${encodeURI(ficheURL)}`">
+          <v-list-item target="_blank" :href="`https://twitter.com/share?text=${fiche.title}&url=${encodeURI(ficheURL)}`">
             <v-list-item-title><v-icon color="#38a1f3" class="mr-2">mdi-twitter</v-icon>Twitter</v-list-item-title>
           </v-list-item>
           <v-list-item
             target="_blank"
-            :to="`mailto:?subject=${fiche.title}&amp;body=Je te partage cette adresse ${ficheURL}`"
+            :href="`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURI(ficheURL)}&title=${fiche.title}`"
+          >
+            <v-list-item-title><v-icon color="#0A66C2" class="mr-2">mdi-linkedin</v-icon>LinkedIn</v-list-item-title>
+          </v-list-item>
+          <v-list-item
+            target="_blank"
+            :href="`mailto:?subject=${fiche.title}&amp;body=Je te partage cette adresse ${ficheURL}`"
           >
             <v-list-item-title><v-icon color="#b7b7b7" class="mr-2">mdi-at</v-icon> Email</v-list-item-title>
           </v-list-item>
