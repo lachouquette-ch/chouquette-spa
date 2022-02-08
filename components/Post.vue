@@ -64,8 +64,8 @@
         <div class="cq-beige">
           <div class="cq-md-max-width px-3 px-md-0">
             <section v-if="ficheCards.length" class="py-5 mt-3">
-              <h2 v-if="ficheCards.length > 1">Adresses associées</h2>
-              <h2 v-else>Adresse associée</h2>
+              <h2 v-if="ficheCards.length > 1" class="section-title">Adresses associées</h2>
+              <h2 v-else class="section-title">Adresse associée</h2>
               <template v-if="$fetchState.pending">
                 <v-skeleton-loader v-for="i in 3" :key="i" type="list-item-avatar" class="my-3"></v-skeleton-loader>
               </template>
@@ -86,11 +86,11 @@
             <section class="comments">
               <v-divider class="mb-3"></v-divider>
               <template v-if="$fetchState.pending">
-                <h2>Commentaires</h2>
+                <h2 class="section-title">Commentaires</h2>
                 <v-skeleton-loader type="article"></v-skeleton-loader>
               </template>
               <template v-else>
-                <h2>{{ comments.length }} commentaire(s)</h2>
+                <h2 class="section-title">{{ comments.length }} commentaire(s)</h2>
                 <p v-if="!comments.length" class="mt-2">
                   Aucun commentaire pour le moment. N'hésite pas à donner ton avis !
                 </p>
@@ -125,7 +125,7 @@
 
             <section class="py-5">
               <v-divider class="mb-3"></v-divider>
-              <h2>Articles similaires</h2>
+              <h2 class="section-title">Articles similaires</h2>
               <ReponsiveScrollGrid v-if="$fetchState.pending" :items="[0, 1, 2, 3]" cols="6" md="3">
                 <v-skeleton-loader type="card" width="150" class="mx-auto"></v-skeleton-loader>
               </ReponsiveScrollGrid>

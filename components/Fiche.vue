@@ -26,19 +26,23 @@
 
       <v-divider class="my-3"></v-divider>
 
-      <div v-if="fiche.isChouquettise && values.length" class="mt-2">
-        <h2 class="mb-2">Valeurs</h2>
-        <v-chip-group>
-          <v-tooltip v-for="value in values" :key="value.id" max-width="90vw" top>
-            <template #activator="{ on, attrs }">
-              <v-chip v-bind="attrs" color="cq-blue-light" text-color="cq-secondary" label small v-on="on">
-                {{ value.name }}
-              </v-chip>
-            </template>
-            {{ value.description }}
-          </v-tooltip>
-        </v-chip-group>
-      </div>
+      <template v-if="fiche.isChouquettise && values.length">
+        <div class="mt-2">
+          <h2 class="mb-2">Valeurs</h2>
+          <v-chip-group>
+            <v-tooltip v-for="value in values" :key="value.id" max-width="90vw" top>
+              <template #activator="{ on, attrs }">
+                <v-chip v-bind="attrs" color="cq-blue-light" text-color="cq-secondary" label small v-on="on">
+                  {{ value.name }}
+                </v-chip>
+              </template>
+              {{ value.description }}
+            </v-tooltip>
+          </v-chip-group>
+        </div>
+
+        <v-divider class="my-3"></v-divider>
+      </template>
 
       <h2 class="mt-2">Informations</h2>
       <v-tabs v-model="tab" class="mt-3" color="primary" background-color="white" grow>
@@ -188,7 +192,7 @@
 
       <div v-if="fiche.similarFiches">
         <v-divider class="my-3"></v-divider>
-        <h2>Adresses similaires</h2>
+        <h2 class="mb-3">Adresses similaires</h2>
         <ReponsiveScrollGrid :items="fiche.similarFiches" md="3" :desktop-flex="dialog">
           <template #default="{ item }">
             <FicheCard :fiche="item" :to="`/fiche/${item.slug}`" height="100%" nuxt></FicheCard>
