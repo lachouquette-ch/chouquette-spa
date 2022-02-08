@@ -9,13 +9,13 @@
     <v-navigation-drawer v-model="toggleMenu" temporary app right touchless width="500">
       <v-card min-height="100vh" tile>
         <v-card-title>
-          <h1 class="text-h6">{{ name }}</h1>
+          <h1 class="text-h3 my-0 section-title">{{ name }}</h1>
           <v-spacer></v-spacer>
           <v-btn icon @click="toggleMenu = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-card-title>
-        <p class="ml-3 text-body-2">{{ description }}</p>
+        <p class="ml-3 text-body-2 font-weight-bold">{{ description }}</p>
         <v-divider></v-divider>
         <v-card-text class="pa-0">
           <template v-if="!$vuetify.breakpoint.mobile">
@@ -45,6 +45,7 @@
           </template>
 
           <v-list nav>
+            <v-subheader class="text-h4 pl-1">Les catégories</v-subheader>
             <v-list-item
               v-for="item in categoryMenu.items"
               :key="item.id"
@@ -52,6 +53,9 @@
               nuxt
               class="mb-0"
             >
+              <v-list-item-avatar tile>
+                <Media :media="getCategoryById(item.id).logoBlack" size="thumbnail" height="30" contain></Media>
+              </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>{{ item.title }}</v-list-item-title>
               </v-list-item-content>
@@ -228,9 +232,10 @@ import isbot from 'isbot'
 import { mapGetters, mapState } from 'vuex'
 import Footer from '~/components/Footer'
 import LayoutAlert from '~/components/LayoutAlert'
+import Media from '~/components/Media'
 
 export default {
-  components: { LayoutAlert, Footer, CookieConsent },
+  components: { LayoutAlert, Footer, CookieConsent, Media },
   async middleware({ store }) {
     await store.dispatch('nuxtServerInit')
   },
@@ -238,7 +243,7 @@ export default {
     return {
       showCookieConsent: false,
 
-      toggleMenu: false,
+      toggleMenu: true,
       toggleSearch: false,
       searchText: null,
 
@@ -258,6 +263,9 @@ export default {
       aboutMenu: 'getAboutMenu',
       categoryMenu: 'getCategoryMenu',
       contactMenu: 'getContactMenu',
+    }),
+    ...mapGetters('categories', {
+      getCategoryById: 'getById',
     }),
     displayDrawer() {
       return this.$vuetify.breakpoint.mobile && this.toggleMenu
