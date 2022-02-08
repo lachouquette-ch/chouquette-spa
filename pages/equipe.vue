@@ -20,9 +20,9 @@
               width="150"
             ></v-img>
             <v-card-title class="justify-center">
-              <h3>{{ member.name }}</h3>
+              <h3 class="section-title">{{ member.name }}</h3>
             </v-card-title>
-            <v-card-subtitle class="text-center">{{ member.title }}</v-card-subtitle>
+            <v-card-subtitle class="text-center font-weight-bold">{{ member.title }}</v-card-subtitle>
             <!-- eslint-disable-next-line vue/no-v-html -->
             <v-card-text class="text-center" v-html="member.description"></v-card-text>
           </v-card>
