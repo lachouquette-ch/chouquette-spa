@@ -22,7 +22,10 @@
           <v-list-item target="_blank" :href="`https://www.facebook.com/sharer/sharer.php?u=${ficheURL}`">
             <v-list-item-title><v-icon color="#4267b2" class="mr-2">mdi-facebook</v-icon>Facebook</v-list-item-title>
           </v-list-item>
-          <v-list-item target="_blank" :href="`https://twitter.com/share?text=${fiche.title}&url=${encodeURI(ficheURL)}`">
+          <v-list-item
+            target="_blank"
+            :href="`https://twitter.com/share?text=${fiche.title}&url=${encodeURI(ficheURL)}`"
+          >
             <v-list-item-title><v-icon color="#38a1f3" class="mr-2">mdi-twitter</v-icon>Twitter</v-list-item-title>
           </v-list-item>
           <v-list-item

@@ -1,24 +1,25 @@
 // Buttons hover
-.v-btn.cq-yellow {
-  @include hover-focus-active {
-    background-color: var(--v-cq-blue-base) !important;
+.v-btn {
+  // COLORED
+  &.cq-yellow, &.cq-blue, &.cq-grey {
+    @include hover-focus-active {
+      background-color: var(--v-cq-red-base) !important;
+    }
   }
-}
-.v-btn.cq-blue {
-  @include hover-focus-active {
-    background-color: var(--v-cq-red-base) !important;
-  }
-}
-.v-btn.cq-grey {
-  @include hover-focus-active {
-    background-color: var(--v-cq-red-base) !important;
-  }
-}
 
-.v-btn.v-btn--outlined.cq-red--text {
-  @include hover-focus-active {
-    background-color: var(--v-cq-red-base) !important;
-    color: white !important;
+  // OUTLINED
+  &.v-btn--outlined.cq-red--text {
+    @include hover-focus-active {
+      background-color: var(--v-cq-red-base) !important;
+      color: white !important;
+    }
+  }
+
+  // CUSTOM
+  &.btn--hover-yellow {
+    @include hover-focus-active {
+      background-color: var(--v-cq-yellow-base) !important;
+    }
   }
 }
 
