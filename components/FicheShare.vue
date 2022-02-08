@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="false">
+    <template v-if="shareApiAvailable">
       <v-btn
         v-bind="{ ...$props, ...$attrs }"
         @click.prevent="shareWith('Adresse sur LaChouquette.ch', fiche.title, ficheURL)"
