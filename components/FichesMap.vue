@@ -6,13 +6,14 @@
     <div ref="map" style="height: 100%; width: 100%" />
     <span
       v-if="!preview && hasMoreFiches"
-      style="position: absolute; top: 10px; left: 50%; transform: translateX(-50%)"
+      :style="`position: absolute; bottom: ${moreButtonOffset}px; left: 50%; transform: translateX(-50%)`"
     >
       <v-btn
         :loading="fetchLoading"
         :small="$vuetify.breakpoint.mobile"
         rounded
-        color="cq-red"
+        color="cq-blue"
+        class="btn--hover-white"
         @click="$emit('moreFiches')"
       >
         + de fiches
@@ -38,22 +39,11 @@ export default {
       type: Array,
       required: true,
     },
-    hasMoreFiches: {
-      type: Boolean,
-      default: false,
-    },
-    ficheLoading: {
-      type: Boolean,
-      default: false,
-    },
-    fetchLoading: {
-      type: Boolean,
-      default: false,
-    },
-    preview: {
-      type: Boolean,
-      default: false,
-    },
+    hasMoreFiches: Boolean,
+    ficheLoading: Boolean,
+    fetchLoading: Boolean,
+    preview: Boolean,
+    footerOffet: Number,
   },
   data() {
     return {
@@ -66,6 +56,11 @@ export default {
       markerClusterer: null,
       isMapShown: null,
     }
+  },
+  computed: {
+    moreButtonOffset() {
+      return this.footerOffet + 10
+    },
   },
   watch: {
     fiches() {

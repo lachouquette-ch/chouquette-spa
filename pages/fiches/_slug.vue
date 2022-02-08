@@ -10,6 +10,7 @@
         :has-more-fiches="hasMoreFiches"
         :fiche-loading="loading"
         :fetch-loading="$fetchState.pending"
+        :footer-offet="mapFooterHeight"
         @mapSelectFiche="selectFiche"
         @moreFiches="$fetch"
       ></FichesMap>
@@ -28,7 +29,7 @@
             style="width: 40px; border: 2px solid; border-radius: 5px"
           ></v-divider>
           <div class="align-center mt-2 d-flex">
-            <span>{{ ficheCountWithPoi }} adresses affichées</span>&nbsp;
+            <span>{{ ficheCountWithPoi }} / {{ fichesTotal }} adresses affichées</span>&nbsp;
             <v-tooltip max-width="90vw" top>
               <template #activator="{ on, attrs }">
                 <v-icon v-bind="attrs" small v-on="on">mdi-help-circle-outline</v-icon>
@@ -41,7 +42,7 @@
             <v-spacer></v-spacer>
             <v-btn
               style="opacity: 0.9"
-              color="cq-blue"
+              color="primary"
               rounded
               :small="$vuetify.breakpoint.mobile"
               @click="mapDialog = false"

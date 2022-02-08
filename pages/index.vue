@@ -167,7 +167,12 @@
             </template>
           </ReponsiveScrollGrid>
           <div class="text-center">
-            <v-btn text x-large nuxt to="/fiches?chouquettiseOnly=true" class="text-decoration-underline"
+            <v-btn
+              text
+              x-large
+              nuxt
+              to="/fiches?chouquettiseOnly=true"
+              class="text-decoration-underline btn--hover-yellow"
               >voir nos Chouquettisés
             </v-btn>
           </div>

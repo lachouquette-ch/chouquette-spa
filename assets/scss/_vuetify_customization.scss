@@ -21,6 +21,11 @@
       background-color: var(--v-cq-yellow-base) !important;
     }
   }
+  &.btn--hover-white {
+    @include hover-focus-active {
+      background-color: white !important;
+    }
+  }
 }
 
 .v-application h1 {
