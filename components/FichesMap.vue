@@ -59,7 +59,7 @@ export default {
   },
   computed: {
     moreButtonOffset() {
-      return this.footerOffet + 10
+      return this.footerOffet + 15
     },
   },
   watch: {
