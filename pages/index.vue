@@ -116,7 +116,7 @@
         <v-carousel
           v-if="$vuetify.breakpoint.mobile"
           class="valeurs-carousel"
-          height="500"
+          height="575"
           show-arrows-on-hover
           hide-delimiter-background
           interval="3000"
