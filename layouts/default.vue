@@ -243,7 +243,7 @@ export default {
     return {
       showCookieConsent: false,
 
-      toggleMenu: true,
+      toggleMenu: false,
       toggleSearch: false,
       searchText: null,
 
