@@ -158,6 +158,7 @@
             :dark="item === selectedSubCategory"
             :disabled="$fetchState.pending"
             label
+            class="rounded-xl"
             @click.prevent="selectSubCategory(item)"
             >{{ item.name }}</v-chip
           >
@@ -245,16 +246,14 @@
                 <div class="fiche-content mb-1" v-html="fiche.content"></div>
                 <a href="" @click.prevent="">Voir +</a>
                 <v-chip-group v-if="fiche.valueIds.length" class="mt-3" column>
-                  <v-chip
-                    v-for="valueId in fiche.valueIds"
-                    :key="valueId"
-                    color="cq-blue-light"
-                    text-color="cq-secondary"
-                    label
-                    small
-                  >
-                    {{ getValueById(valueId).name }}</v-chip
-                  >
+                  <v-tooltip v-for="valueId in fiche.valueIds" :key="valueId" max-width="90vw" top>
+                    <template #activator="{ on, attrs }">
+                      <v-chip v-bind="attrs" color="cq-blue-light" text-color="cq-secondary" label small v-on="on">
+                        {{ getValueById(valueId).name }}</v-chip
+                      >
+                    </template>
+                    {{ getValueById(valueId).description }}
+                  </v-tooltip>
                 </v-chip-group>
               </v-card-text>
             </v-card>
@@ -304,7 +303,7 @@
       <v-fade-transition>
         <v-btn
           v-if="!mapDialog"
-          color="cq-blue"
+          color="primary"
           class="map-button"
           :small="$vuetify.breakpoint.mobile"
           fixed

@@ -1,7 +1,7 @@
 <template>
   <button
     v-ripple
-    class="top-category-btn rounded-lg"
+    class="top-category-btn rounded-xl"
     :class="{ primary: selected }"
     :disabled="disabled"
     @click.prevent="$emit('click', topCategory)"
@@ -13,7 +13,7 @@
       </v-list-item-avatar>
 
       <v-list-item-content>
-        <v-list-item-title :class="[selected ? 'cq-yellow--text' : 'black--text']">{{
+        <v-list-item-title :class="[selected ? 'white--text' : 'black--text']">{{
           topCategory.name
         }}</v-list-item-title>
       </v-list-item-content>

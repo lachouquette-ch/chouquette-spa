@@ -26,7 +26,7 @@
 import Vue from 'vue'
 import MarkerClusterer from '@googlemaps/markerclustererplus'
 
-import {CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS} from '~/constants/mapSettings'
+import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS } from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
 
 // create classes from components to use it in code
