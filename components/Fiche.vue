@@ -255,7 +255,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn text @click.prevent="clear">Fermer</v-btn>
-            <v-btn color="info" text :loading="dialogLoading" type="submit">Envoyer</v-btn>
+            <v-btn color="cq-blue" :loading="dialogLoading" type="submit">Envoyer</v-btn>
           </v-card-actions>
         </v-card>
       </v-form>

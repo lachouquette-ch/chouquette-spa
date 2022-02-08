@@ -58,7 +58,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn text @click="clear">Fermer</v-btn>
-        <v-btn color="info" text :loading="loading" type="submit">Poster mon commentaire</v-btn>
+        <v-btn color="cq-blue" :loading="loading" type="submit">Envoyer</v-btn>
       </v-card-actions>
     </v-card>
   </v-form>
