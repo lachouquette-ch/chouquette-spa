@@ -306,7 +306,7 @@ svg {
   }
 }
 
-.v-btn {
+.v-bottom-navigation > .v-btn {
   @include hover-focus-active {
     background-color: var(--v-cq-yellow-base) !important;
   }
