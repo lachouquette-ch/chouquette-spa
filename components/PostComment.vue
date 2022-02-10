@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-dialog v-model="replyDialog" max-width="500">
-      <PostCommentReply :post="post" :parent="comment.id" @done="toggleReplyToComment" />
+      <PostCommentReply :post="post" :parent="comment.id" @close="replyDialog = false" />
     </v-dialog>
 
     <article class="my-3">
@@ -24,7 +24,9 @@
       <!-- eslint-disable-next-line vue/no-v-html -->
       <section class="comment-content" v-html="comment.content" />
       <section v-if="!noReply">
-        <v-btn text class="text-decoration-underline" @click.prevent="replyDialog = true">{{ replyLinkText }}</v-btn>
+        <v-btn text class="text-decoration-underline" @click.prevent="replyDialog = true"
+          >Répondre à ce commentaire</v-btn
+        >
       </section>
       <section>
         <ul v-if="children" class="comment-children">
@@ -64,18 +66,10 @@ export default {
   },
   computed: {
     children() {
-      return this.comments.filter(({ parentId }) => parentId === parseInt(this.comment.id))
+      return this.comments.filter(({ parentId }) => parseInt(parentId) === parseInt(this.comment.id))
     },
     commentDate() {
       return moment(this.comment.date).locale('fr-CH').format('dddd DD MMMM YYYY à k:mm')
-    },
-    replyLinkText() {
-      return this.replyToComment ? 'Cacher ma réponse à ce commentaire' : 'Répondre à ce commentaire'
-    },
-  },
-  methods: {
-    toggleReplyToComment() {
-      this.replyToComment = !this.replyToComment
     },
   },
 }

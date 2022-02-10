@@ -34,7 +34,7 @@
               :id="`email${_uid}`"
               v-model.trim="formComment.email"
               label="Ton email *"
-              hint="Ton email ne sera pas publiée. Parole de Chouquette !"
+              hint="Ton email ne sera pas publié. Parole de Chouquette !"
               autocomplete="email"
               :error-messages="emailErrors"
               required
@@ -66,8 +66,11 @@
 
 <script>
 import { email, minLength, required, url } from 'vuelidate/lib/validators'
+import gql from 'graphql-tag'
+import graphql from '~/mixins/graphql'
 
 export default {
+  mixins: [graphql],
   props: {
     post: {
       type: String,
@@ -103,36 +106,60 @@ export default {
       if (!this.$v.formComment.$invalid) {
         this.loading = true
         // Get recaptcha token
-        await this.$recaptchaLoaded()
-        // Execute reCAPTCHA with action "login".
-        const token = await this.$recaptcha('comment')
+        await this.$recaptcha.init()
+        // Execute reCAPTCHA with action "comment".
+        const token = await this.$recaptcha.execute('comment')
 
-        this.$wpAPI.wp.comments
-          .postComment({
-            post: this.post,
-            parent: this.parent,
-            author_name: this.formComment.name,
-            author_email: this.formComment.email,
-            content: this.formComment.comment,
-            recaptcha: token,
+        const data = {
+          postId: parseInt(this.post),
+          parentId: parseInt(this.parent),
+          authorName: this.formComment.name,
+          authorEmail: this.formComment.email,
+          content: this.formComment.comment,
+          recaptcha: token,
+        }
+
+        try {
+          await this.$apollo.mutate({
+            mutation: gql`
+              mutation commentPost(
+                $postId: Int!
+                $parentId: Int
+                $authorName: String!
+                $authorEmail: String!
+                $content: String!
+                $recaptcha: String!
+              ) {
+                commentPost(
+                  postId: $postId
+                  parentId: $parentId
+                  authorName: $authorName
+                  authorEmail: $authorEmail
+                  content: $content
+                  recaptcha: $recaptcha
+                )
+              }
+            `,
+            variables: {
+              ...data,
+            },
           })
-          .then((result) => {
-            this.$store.dispatch('alerts/addAction', {
-              type: 'success',
-              message:
-                'Ton commentaire nous est bien parvenu : merci :-). Il sera visible dès validation de notre part.',
-            })
-
-            // clear form
-            this.formComment.comment = null
-            this.$v.formComment.$reset()
-
-            this.$emit('done')
+          this.$store.dispatch('alerts/addAction', {
+            type: 'success',
+            message: 'Ton commentaire nous est bien parvenu : merci :-). Il sera visible dès validation de notre part.',
           })
-          .catch((error) =>
-            this.$store.dispatch('alerts/addAction', { type: 'danger', message: error.response.data.message })
-          )
-          .finally(() => (this.loading = false))
+
+          // clear form
+          this.formComment.comment = null
+          this.$v.formComment.$reset()
+
+          this.$emit('close')
+        } catch (e) {
+          this.$sentry.captureException(e)
+          this.handleGQLError(e, "Ton commentaire n'a pas pu être envoyé")
+        } finally {
+          this.loading = false
+        }
       }
     },
   },

@@ -95,7 +95,7 @@
                   Aucun commentaire pour le moment. N'hésite pas à donner ton avis !
                 </p>
                 <div v-else>
-                  <ol class="p-0">
+                  <ol class="p-0 px-2 px-md-5">
                     <li v-for="comment in rootLevelComments" :key="comment.id" class="comment">
                       <PostComment
                         :post="post.id"
