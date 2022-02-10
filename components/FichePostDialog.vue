@@ -35,7 +35,6 @@ import Fiche from '~/components/Fiche'
 import graphql from '~/mixins/graphql'
 
 export default {
-  name: 'FichePostDialog',
   components: { Post, PostShare, Fiche, FicheShare },
   mixins: [graphql],
   props: {

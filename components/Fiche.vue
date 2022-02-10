@@ -132,9 +132,9 @@
               </v-list-item>
             </v-list>
           </v-menu>
-          <v-list v-if="fiche.categoryFilters">
+          <v-list v-if="fiche.categoryFilters" class="py-0">
             <v-subheader
-              >Cette adresse te propose&nbsp;
+              >Cette adresse te propose : &nbsp;
               <v-tooltip max-width="90vw" top>
                 <template #activator="{ on, attrs }">
                   <v-icon v-bind="attrs" small v-on="on">mdi-help-circle-outline</v-icon>
