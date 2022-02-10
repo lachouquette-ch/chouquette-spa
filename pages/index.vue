@@ -51,7 +51,7 @@
     </v-card>
 
     <v-sheet class="cq-md-max-width py-5">
-      <h2 class="text-center section-title my-5">ARTICLES À LA UNE</h2>
+      <h2 class="text-center text-header--secondary my-5">ARTICLES À LA UNE</h2>
       <v-container v-if="$vuetify.breakpoint.mobile">
         <v-skeleton-loader
           v-if="$fetchState.pending"
@@ -134,7 +134,7 @@
     </v-sheet>
 
     <v-sheet class="cq-md-max-width px-3 py-5">
-      <h2 class="text-center section-title my-5">Nos derniers tops</h2>
+      <h2 class="text-center text-header--secondary my-5">Nos derniers tops</h2>
       <ReponsiveScrollGrid :items="topPosts" md="4">
         <template #default="{ item }">
           <PostCard :post="item" class="mx-auto" vertical large hide-meta transparent></PostCard>
@@ -155,7 +155,7 @@
         />
         <div style="position: relative" class="py-5">
           <div class="text-center">
-            <h2 class="section-title">Nos Chouquettisés</h2>
+            <h2 class="text-header--secondary">Nos Chouquettisés</h2>
             <p class="text-h5">
               Tous nos labellisés ont été testés et approuvés par La Chouquette. Ils répondent à nos valeurs et à nos
               critères. Tu peux y aller les yeux fermés !

@@ -9,7 +9,7 @@
     <v-navigation-drawer v-model="toggleMenu" temporary app right touchless width="500">
       <v-card min-height="100vh" tile>
         <v-card-title>
-          <h1 class="text-h3 my-0 section-title">{{ name }}</h1>
+          <h1 class="my-0 text-header--secondary">{{ name }}</h1>
           <v-spacer></v-spacer>
           <v-btn icon @click="toggleMenu = false">
             <v-icon>mdi-close</v-icon>
@@ -22,19 +22,19 @@
             <v-list nav>
               <v-subheader class="text-h4 pl-1">Les racourcis</v-subheader>
               <v-list-item to="/" nuxt>
-                <v-list-item-icon><v-icon>mdi-home</v-icon></v-list-item-icon>
+                <v-list-item-icon><v-icon color="black">mdi-home</v-icon></v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title>Accueil</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item to="/fiches" nuxt>
-                <v-list-item-icon><v-icon>mdi-map-marker-multiple-outline</v-icon></v-list-item-icon>
+                <v-list-item-icon><v-icon color="black">mdi-map-marker-multiple-outline</v-icon></v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title>Adresses</v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
               <v-list-item to="/articles" nuxt>
-                <v-list-item-icon><v-icon>mdi-newspaper-variant-multiple</v-icon></v-list-item-icon>
+                <v-list-item-icon><v-icon color="black">mdi-newspaper-variant-multiple</v-icon></v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title>Articles</v-list-item-title>
                 </v-list-item-content>
