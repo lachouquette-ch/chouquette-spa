@@ -7,6 +7,7 @@ export const postCard = gql`
     id
     slug
     date
+    modified
     authorName
     title
     isTop

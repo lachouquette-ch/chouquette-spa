@@ -41,7 +41,7 @@
         {{ getCategoryById(post.categoryId).name }}
       </p>
       <h3 class="text-h4 mt-1" :class="{ 'cq-three-line': !vertical && !large }">{{ post.title }}</h3>
-      <p v-if="large && !hideMeta" class="mt-2 ma-0">le {{ post.date | fromISO }} par {{ post.authorName }}</p>
+      <p v-if="large && !hideMeta" class="mt-2 ma-0">le {{ postDate | fromISO }} par {{ post.authorName }}</p>
     </v-card-text>
   </v-card>
 </template>
@@ -77,6 +77,9 @@ export default {
     },
     postLink() {
       return this.disableLink ? null : `/${this.post.slug}`
+    },
+    postDate() {
+      return this.post.modified ? this.post.modified : this.post.date
     },
   },
 }
