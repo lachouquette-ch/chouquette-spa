@@ -20,7 +20,7 @@ export default {
   components: { Fiche, FicheShare },
   mixins: [seo, graphql],
   async asyncData(context) {
-    const { app, store, params, route, error } = context
+    const { app, store, params, route } = context
 
     const client = app.apolloProvider.defaultClient
 

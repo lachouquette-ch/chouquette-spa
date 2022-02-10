@@ -173,7 +173,7 @@
               nuxt
               to="/fiches?chouquettiseOnly=true"
               class="text-decoration-underline btn--hover-yellow"
-              >voir nos Chouquettisés
+              >voir tous nos Chouquettisés
             </v-btn>
           </div>
           <v-divider class="my-5"></v-divider>
