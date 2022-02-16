@@ -59,7 +59,15 @@
         </div>
         <Search class="home-header-filters" button-class="home-header-filters-button" />
         <div
-          class="d-md-none home-header-menu-next d-flex rounded-circle align-items-center justify-content-center text-center"
+          class="
+            d-md-none
+            home-header-menu-next
+            d-flex
+            rounded-circle
+            align-items-center
+            justify-content-center
+            text-center
+          "
         >
           <a href="#homeContent" class="text-yellow"> <i class="fas fa-chevron-down"></i><br /> </a>
         </div>
@@ -134,33 +142,6 @@ export default {
   components: { PostCard, WpMediaCategory, Search, Newsletter, PostCardPlaceholder },
   directives: { swiper: SwiperDirective },
   mixins: [seo, graphql],
-  async fetch() {
-    try {
-      const { data } = await this.$apollo.query({
-        query: gql`
-          query {
-            home {
-              latestPosts {
-                ...PostCardFragments
-              }
-              topPosts {
-                ...PostCardFragments
-              }
-            }
-          }
-          ${PostCardFragments}
-        `,
-      })
-
-      const { latestPosts, topPosts } = data.home
-      this.latestPosts = latestPosts
-      this.topPosts = topPosts
-    } catch (e) {
-      this.$sentry.captureException(e)
-      this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(e) })
-    }
-  },
-  fetchOnServer: false,
   async asyncData({ app }) {
     const yoast = await app.apolloProvider.defaultClient
       .query({
@@ -193,6 +174,33 @@ export default {
       },
     }
   },
+  async fetch() {
+    try {
+      const { data } = await this.$apollo.query({
+        query: gql`
+          query {
+            home {
+              latestPosts {
+                ...PostCardFragments
+              }
+              topPosts {
+                ...PostCardFragments
+              }
+            }
+          }
+          ${PostCardFragments}
+        `,
+      })
+
+      const { latestPosts, topPosts } = data.home
+      this.latestPosts = latestPosts
+      this.topPosts = topPosts
+    } catch (e) {
+      this.$sentry.captureException(e)
+      this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(e) })
+    }
+  },
+  fetchOnServer: false,
   computed: {
     ...mapState({
       categories: (state) => state.menus.headerCategories,
