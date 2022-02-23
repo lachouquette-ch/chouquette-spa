@@ -79,6 +79,18 @@
             </template>
 
             <template v-if="fiche.isChouquettise">
+              <v-list-item
+                @click="
+                  isContactForm = true
+                  showDialog = true
+                "
+              >
+                <v-list-item-avatar size="30"><v-icon>mdi-message</v-icon></v-list-item-avatar>
+                <v-list-item-title>
+                  <span class="">Envoyer un message à cette adresse</span>
+                  <v-list-item-subtitle class="text-caption">Via La Chouquette</v-list-item-subtitle>
+                </v-list-item-title>
+              </v-list-item>
               <v-list-item v-if="fiche.info.telephone" :href="`tel: ${fiche.info.telephone}`">
                 <v-list-item-avatar size="30"><v-icon>mdi-phone</v-icon></v-list-item-avatar>
                 <v-list-item-title>
