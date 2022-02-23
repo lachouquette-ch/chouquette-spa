@@ -1,5 +1,5 @@
 <template>
-  <div class="cq-md-max-width">
+  <v-container fluid class="pa-0 cq-md-max-width">
     <div class="d-flex justify-center align-center my-4">
       <v-text-field
         v-if="toggleSearch"
@@ -122,7 +122,7 @@
         <template v-else>Aucun article trouvé</template>
       </v-container>
     </template>
-  </div>
+  </v-container>
 </template>
 
 <script>
