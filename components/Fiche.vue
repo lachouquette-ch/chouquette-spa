@@ -1,7 +1,14 @@
 <template>
   <div>
     <v-card flat>
-      <Media :media="fiche.image" size="medium_large" width="100%" :aspect-ratio="16 / 9" class="rounded-lg">
+      <Media
+        v-if="fiche.image"
+        :media="fiche.image"
+        size="medium_large"
+        width="100%"
+        :aspect-ratio="16 / 9"
+        class="rounded-lg"
+      >
         <v-chip v-if="fiche.isChouquettise" color="cq-yellow" text-color="black" small class="ma-2">
           Testé et Chouquettisé
           <v-icon right>mdi-check</v-icon>

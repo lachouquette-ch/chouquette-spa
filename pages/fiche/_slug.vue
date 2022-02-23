@@ -67,7 +67,7 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: this.fiche.image.source,
+          content: this.fiche.image ? this.fiche.image.source : '',
         },
       ],
       script: [
@@ -76,12 +76,12 @@ export default {
           '@type': 'LocalBusiness',
           name: this.fiche.seo.title,
           description: this.seoGetDescription(JSON.parse(this.fiche.seo.metadata)),
-          image: this.fiche.image.source,
+          image: this.fiche.image ? this.fiche.image.source : '',
 
           address: this.fiche.info.address,
           email: this.fiche.info.mail,
           telephone: this.fiche.telephone,
-          photo: this.fiche.image.source,
+          photo: this.fiche.image ? this.fiche.image.source : '',
 
           url: this.currentURL,
           datePublished: this.fiche.date,

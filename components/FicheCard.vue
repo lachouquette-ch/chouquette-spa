@@ -9,7 +9,7 @@
     :nuxt="!disableLink"
     @click.prevent="$emit('click')"
   >
-    <Media :media="fiche.image" size="medium_large" height="200">
+    <Media v-if="fiche.image" :media="fiche.image" size="medium_large" height="200">
       <v-card-subtitle v-if="fiche.isChouquettise" class="pa-2">
         <v-chip color="cq-yellow" text-color="black" small>
           Testé et Chouquettisé
@@ -17,6 +17,7 @@
         </v-chip>
       </v-card-subtitle>
     </Media>
+    <v-img v-else height="200" style="background-color: var(--v-cq-beige-base)"></v-img>
     <v-card-title class="d-block">
       <h3>{{ fiche.title }}</h3>
       <v-card-subtitle class="pa-0 mt-1 secondary--text">
