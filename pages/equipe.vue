@@ -1,27 +1,36 @@
 <template>
-  <WpPage v-if="page" :page="page">
-    <template #footer>
-      <div class="my-3">
-        <div class="d-flex flex-wrap justify-content-around">
-          <div v-for="member in team" :key="member.id" class="card mr-3 mb-4">
-            <img
-              :alt="member.name"
+  <div>
+    <Page :page="page" class="cq-md-max-width">
+      <template #footer>
+        <h2 class="text-center text-h1 mb-4">L'équipe</h2>
+        <div class="d-flex flex-wrap justify-content-around mb-5">
+          <v-card
+            v-for="member in team"
+            :key="member.id"
+            rounded="lg"
+            width="300"
+            max-width="80vw"
+            class="mx-auto mt-5"
+          >
+            <v-img
               :src="`${member.avatar}&s=150`"
-              class="card-img-top mx-auto mt-3 rounded-circle"
+              :alt="member.name"
+              class="rounded-circle mx-auto mt-5"
               height="150"
               width="150"
-            />
-            <div class="card-body text-center">
-              <h3 class="card-title">{{ member.name }}</h3>
-              <p class="card-text small text-muted">{{ member.title }}</p>
-              <!-- eslint-disable-next-line vue/no-v-html -->
-              <p class="card-text" v-html="member.description" />
-            </div>
-          </div>
+            ></v-img>
+            <v-card-title class="justify-center">
+              <h3 class="text-header--secondary">{{ member.name }}</h3>
+            </v-card-title>
+            <v-card-subtitle class="text-center font-weight-bold">{{ member.title }}</v-card-subtitle>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <v-card-text class="text-center" v-html="member.description"></v-card-text>
+          </v-card>
         </div>
-      </div>
-    </template>
-  </WpPage>
+      </template>
+    </Page>
+    <Newsletter></Newsletter>
+  </div>
 </template>
 
 <script>
@@ -29,13 +38,14 @@ import gql from 'graphql-tag'
 import { page as PageFragments } from '@/apollo/fragments/page'
 import { author as AuthorParts } from '@/apollo/fragments/author'
 
-import { mapState } from 'vuex'
-import WpPage from '~/components/WpPage'
+import Page from '~/components/Page'
 import seo from '~/mixins/seo'
+import Newsletter from '~/components/Newsletter'
 
 export default {
   components: {
-    WpPage,
+    Newsletter,
+    Page,
   },
   mixins: [seo],
   async asyncData({ app }) {
@@ -61,9 +71,6 @@ export default {
       team: data.team.authors,
     }
   },
-  computed: {
-    ...mapState(['wordpressUrl']),
-  },
   head() {
     return {
       title: this.page.title,
@@ -76,7 +83,7 @@ export default {
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.wordpressUrl}/logo.png`,
+            logo: `${this.$config.siteUrl}/logo.png`,
           },
           url: this.currentURL,
         }),
@@ -85,21 +92,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss" scoped>
-.card {
-  max-width: 300px;
-
-  @include hover-focus {
-    box-shadow: $box-shadow !important;
-  }
-}
-
-.card-img-top {
-  width: fit-content;
-}
-
-.card-title {
-  font-family: $font-family-heading;
-}
-</style>

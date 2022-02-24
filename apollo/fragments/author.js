@@ -7,5 +7,6 @@ export const author = gql`
     name
     description
     avatar
+    title
   }
 `

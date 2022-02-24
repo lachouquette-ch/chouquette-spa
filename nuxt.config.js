@@ -32,7 +32,7 @@ export default {
         name: 'description',
         content: process.env.npm_package_description || '',
       },
-      { name: 'theme-color', content: '#f2e808' },
+      { name: 'theme-color', content: '#EFE407' },
     ],
     link: [
       // favicons
@@ -50,12 +50,12 @@ export default {
       { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicons/favicon-32x32.png' },
       { rel: 'icon', type: 'image/png', sizes: '96x96', href: '/favicons/favicon-96x96.png' },
       { rel: 'icon', type: 'image/png', sizes: '16x16', href: '/favicons/favicon-16x16.png' },
-      { name: 'msapplication-TileColor', content: '#f2e808' },
+      { name: 'msapplication-TileColor', content: '#EFE407' },
       { name: 'msapplication-TileImage', content: '/favicons/ms-icon-144x144.png' },
 
       {
         rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css?family=Lobster+Two|Shadows+Into+Light+Two|Lato&display=swap',
+        href: 'https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Oswald:wght@300;400;700&display=swap',
       },
     ],
   },
@@ -65,25 +65,23 @@ export default {
   /*
    ** Customize the progress-bar color
    */
-  loading: { height: '5px', color: '#f2e808' },
+  loading: { height: '5px', color: '#EFE407' },
   /*
    ** Global CSS
    */
-  css: ['~/assets/css/main.scss'],
+  css: ['~/assets/scss/main.scss'],
   /*
    ** Plugins to load before mounting the App
    */
   plugins: [
     { src: '~/plugins/global-error-handler.js', mode: 'client' },
-    { src: '~/plugins/bootstrap.js', mode: 'client' },
     { src: '~/plugins/jquery.js', mode: 'client' },
     { src: '~/plugins/google-maps.js', mode: 'client' },
-    { src: '~/node_modules/vue-awesome-swiper', mode: 'client' },
     { src: '~/plugins/vuelidate.js' },
     { src: '~/plugins/html-entity-filter.js' },
     { src: '~/plugins/pretty-url-filter.js' },
-    { src: '~/plugins/vue-content-placeholders.js' },
-    { src: '~/plugins/vue-observe-visibility.js' },
+    { src: '~/plugins/iso-date-filter.js' },
+    { src: '~/plugins/vue2-hammer.js', mode: 'client' },
   ],
   /*
    ** Nuxt.js dev-modules
@@ -92,6 +90,7 @@ export default {
     // Doc: https://github.com/nuxt-community/eslint-module
     // '@nuxtjs/eslint-module',
     ['@nuxtjs/google-analytics', { id: 'UA-47894326-1' }],
+    ['@nuxtjs/vuetify'],
   ],
   /*
    ** Nuxt.js modules
@@ -100,12 +99,15 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/apollo',
     '@nuxtjs/style-resources',
-    'bootstrap-vue/nuxt',
-    ['vue-scrollto/nuxt', { offset: -1 * 80 - 15 }], // fix default offset (do not work for home page)
     '@nuxtjs/sentry',
     '@nuxtjs/sitemap',
     '@nuxtjs/recaptcha',
   ],
+  vuetify: {
+    optionsPath: '~/vuetify.options.js',
+    customVariables: ['~/assets/scss/vuetify.scss'],
+    treeShake: true,
+  },
   apollo: {
     tokenName: 'chouquette', // specify token name
     cookieAttributes: {
@@ -180,28 +182,7 @@ export default {
     ],
   },
   styleResources: {
-    scss: [
-      '~/assets/css/_variables.scss',
-      '~/assets/css/_mixins.scss',
-      '~/node_modules/bootstrap/scss/_functions.scss',
-      '~/node_modules/bootstrap/scss/_variables.scss',
-      '~/node_modules/bootstrap/scss/_mixins.scss',
-    ],
-  },
-  bootstrapVue: {
-    bootstrapCSS: false,
-    bootstrapVueCSS: false,
-    componentPlugins: [
-      'AlertPlugin',
-      'ModalPlugin',
-      'OverlayPlugin',
-      'DropdownPlugin',
-      'CollapsePlugin',
-      'SpinnerPlugin',
-      'ButtonPlugin',
-      'ButtonGroupPlugin',
-    ],
-    directivePlugins: ['VBVisiblePlugin'],
+    scss: ['~/assets/scss/_mixins.scss', '~/assets/scss/_variables.scss'],
   },
   /*
    ** Build configuration

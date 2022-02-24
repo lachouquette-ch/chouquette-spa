@@ -30,12 +30,7 @@ export const MAP_OPTIONS = {
   zoom: ZOOM_LEVELS.default,
   clickableIcons: false,
   disableDefaultUI: true,
-  fullscreenControl: true,
   gestureHandling: 'greedy',
-  restriction: {
-    latLngBounds: SWITZERLAND_BOUNDS,
-    strictBounds: false,
-  },
   styles: MAP_STYLES,
   center: LAUSANNE_LAT_LNG,
   zoomControl: true,

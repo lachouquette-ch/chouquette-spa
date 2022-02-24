@@ -1,0 +1,55 @@
+$color-pack: false; // no color from vuetify
+
+// Globals
+$body-font-family: 'Lato', sans-serif;
+$heading-font-family: $body-font-family;
+$font-size-root: 16px;
+$btn-font-weight: bolder;
+$btn-letter-spacing: normal;
+$btn-border-radius: 25px;
+$btn-text-transform: none;
+$card-border-radius: 16px;
+$card-title-word-break: normal;
+
+$headings: (
+  'h1': (
+    'size': 1.75rem,
+    'line-height': 2.5rem,
+  ),
+  'h2': (
+    'size': 1.5rem,
+    'line-height': 2rem,
+  ),
+  'h3': (
+    'size': 1.25rem,
+    'line-height': 1.5rem,
+  ),
+  'h4': (
+    'size': 1rem,
+    'line-height': 1.5rem,
+  ),
+  'h5': (
+    'size': 1rem,
+    'line-height': 1.5rem,
+  ),
+  'h6': (
+    'size': 1rem,
+    'line-height': 1.25rem,
+  )
+);
+
+// Hack carousel btn
+.v-carousel__controls .v-btn.v-btn--icon {
+  color: var(--v-black-base) !important;
+}
+
+@import '~vuetify/src/styles/styles.sass';
+$material-light: map-merge($material-light, (
+  'text': (
+    'primary': var(--v-primary-base),
+    'secondary': var(--v-primary-base),
+  )
+));
+$material-dark: map-merge($material-dark, (
+  background: var(--v-background-base) !important,
+));

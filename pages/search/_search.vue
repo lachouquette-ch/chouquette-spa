@@ -1,189 +1,215 @@
 <template>
-  <div>
-    <b-modal
-      id="searchModal"
-      body-class="p-3"
-      centered
-      hide-footer
-      title="J'affine ma recherche"
-      title-class="mx-auto"
-      hide-header-close
-      @shown="initSearch"
-    >
-      <Search ref="searchBox" button-class="w-100" filter-col="col-12" />
-    </b-modal>
-    <div class="layout-content d-flex flex-column">
-      <div class="text-center mt-5 mb-2">
-        <template v-if="$fetchState.pending">
-          <h2>On cherche pour toi... <i class="fas fa-binoculars"></i></h2>
-        </template>
-        <template v-else-if="fiches || posts">
-          <h1>{{ totalResultCount }} résultat(s) pour "{{ search }}"</h1>
-          <div v-if="tooManyResultats">
-            C'est beaucoup ! <a v-b-modal.searchModal href="" @click.prevent>Affine ta recherche</a>
-          </div>
-        </template>
-        <template v-else>
-          <h2>On a rien trouvé, désolé...</h2>
-        </template>
-      </div>
-
-      <div class="search-results container-fluid">
-        <div class="my-md-4">
-          <div v-show="!postsShown">
-            <div class="d-flex flex-wrap justify-content-around">
-              <template v-if="!!fiches.length">
-                <Fiche
-                  v-for="(fiche, i) in fiches"
-                  :key="fiche.id"
-                  v-observe-visibility="i === fiches.length - 1 ? lazyLoadFiches : false"
-                  :fiche="fiche"
-                  class="m-3"
-                />
-              </template>
-              <template v-if="$fetchState.pending || fichesLoading">
-                <FichePlaceholder v-for="f in 4" :key="f" class="m-3" />
-              </template>
-            </div>
-          </div>
-          <div v-show="postsShown">
-            <div class="d-flex flex-wrap justify-content-around">
-              <template v-if="!!posts.length">
-                <nuxt-link
-                  v-for="(post, i) in posts"
-                  :key="post.id"
-                  v-observe-visibility="i === posts.length - 1 ? lazyLoadPosts : false"
-                  :to="{ path: `/${post.slug}` }"
-                  class="m-3"
-                >
-                  <PostCard :post="post" class="mx-auto" />
-                </nuxt-link>
-              </template>
-              <template v-if="$fetchState.pending || postsLoading">
-                <PostCardPlaceholder v-for="p in 4" :key="p" class="m-3" />
-              </template>
-            </div>
-          </div>
-
-          <b-button-group v-show="!$fetchState.pending" size="sm" class="toggle-content-btn">
-            <b-button variant="primary" :pressed="!postsShown" :disabled="!fiches.length" @click="postsShown = false">
-              <span class="mx-1"><i class="far fa-file-alt"></i></span>
-              Fiches<span v-if="fichesTotal" class="d-none d-md-inline"> ({{ fichesTotal }})</span>
-            </b-button>
-            <b-button variant="primary" :pressed="postsShown" :disabled="!posts.length" @click="postsShown = true">
-              <span class="mr-1"><i class="far fa-newspaper"></i></span>
-              Articles<span v-if="postsTotal" class="d-none d-md-inline"> ({{ postsTotal }})</span>
-            </b-button>
-          </b-button-group>
-
-          <ScrollTop />
-        </div>
-      </div>
-
-      <Newsletter />
+  <v-container fluid class="pa-0 cq-md-max-width">
+    <div class="d-flex justify-center align-center my-4">
+      <v-text-field
+        v-if="toggleSearch"
+        v-model="search"
+        placeholder="Je cherche..."
+        autofocus
+        prepend-icon="mdi-close"
+        append-outer-icon="mdi-send"
+        clear-icon="mdi-close-circle-outline"
+        outlined
+        clearable
+        hide-details
+        dense
+        style="max-width: 350px"
+        @change="update"
+        @click:prepend="toggleSearch = false"
+      ></v-text-field>
+      <template v-else>
+        <h1 class="text-center">
+          <span v-if="$fetchState.pending">En cours de recherche pour {{ search }}</span>
+          <span v-else>{{ totalResultCount }} résultats pour "{{ search }}"</span>
+        </h1>
+        <v-btn v-if="!$fetchState.pending" class="mx-2" icon small @click="toggleSearch = true">
+          <v-icon>mdi-pencil</v-icon>
+        </v-btn>
+      </template>
     </div>
-  </div>
+
+    <template v-if="$fetchState.pending">
+      <v-container style="height: 300px" class="d-flex justify-center align-center">
+        <v-progress-circular color="secondary" indeterminate size="64"></v-progress-circular>
+      </v-container>
+    </template>
+    <template v-else-if="totalResultCount === 0">
+      <div class="px-4">
+        <v-alert border="bottom" color="primary" class="text-center" elevation="2" colored-border width="100%">
+          Aucun résultat pour ta recherche.
+          <a href="" class="ml-1" @click.prevent="toggleSearch = true">Modifier ma recherche</a>
+        </v-alert>
+      </div>
+    </template>
+    <template v-else-if="!$vuetify.breakpoint.mobile">
+      <v-tabs v-model="tab" background-color="transparent" centered grow class="mt-3">
+        <v-tab key="adresses" :disabled="fichesTotal === 0">
+          <v-icon left>mdi-map-marker-multiple-outline</v-icon>
+          Adresses <span v-if="!fichesLoading" class="ml-1">({{ fichesTotal }})</span>
+        </v-tab>
+        <v-tab key="articles" :disabled="postsTotal === 0">
+          <v-icon left>mdi-newspaper-variant-multiple</v-icon>
+          Articles <span v-if="!postsLoading" class="ml-1">({{ postsTotal }})</span>
+        </v-tab>
+      </v-tabs>
+
+      <v-tabs-items v-model="tab">
+        <v-tab-item key="adresses">
+          <v-container class="mt-3">
+            <v-row justify="center">
+              <v-col v-for="fiche in fiches" :key="fiche.id">
+                <FicheCard :fiche="fiche" height="100%"></FicheCard>
+              </v-col>
+              <v-col cols="12">
+                <v-btn v-if="hasMoreFiches" color="primary" block text tag="a" :to="`/fiches/?search=${search}`" nuxt>
+                  Vers toutes les fiches
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-tab-item>
+        <v-tab-item key="articles">
+          <v-container class="mt-3">
+            <v-row>
+              <v-col v-for="post in posts" :key="post.id" cols="6">
+                <PostCard :post="post" large></PostCard>
+              </v-col>
+              <v-col cols="12">
+                <v-btn v-if="hasMorePosts" color="primary" block text tag="a" :to="`/articles/?search=${search}`" nuxt>
+                  Vers tous les articles
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-tab-item>
+      </v-tabs-items>
+    </template>
+    <template v-else>
+      <v-container class="cq-beige">
+        <template v-if="fiches.length">
+          <h2 class="my-3 text-center">Les adresses ({{ fichesTotal }})</h2>
+          <ReponsiveScrollGrid :items="fiches" mobile-only>
+            <template #default="{ item }">
+              <FicheCard :fiche="item" height="100%"></FicheCard>
+            </template>
+            <template #after>
+              <div v-if="hasMoreFiches">
+                <v-btn color="primary" height="100%" tag="a" :to="`/fiches/?search=${search}`" nuxt
+                  >Voir les autres adresses</v-btn
+                >
+              </div>
+            </template>
+          </ReponsiveScrollGrid>
+        </template>
+        <template v-else>Aucune adresse trouvée</template>
+      </v-container>
+      <v-container>
+        <template v-if="posts.length">
+          <h2 class="my-3 text-center">Les articles ({{ postsTotal }})</h2>
+          <ReponsiveScrollGrid :items="posts" mobile-only>
+            <template #default="{ item }">
+              <PostCard :post="item" vertical large></PostCard>
+            </template>
+            <template #after>
+              <div v-if="hasMorePosts">
+                <v-btn color="primary" height="100%" tag="a" :to="`/articles/?search=${search}`" nuxt
+                  >Voir les autres articles</v-btn
+                >
+              </div>
+            </template>
+          </ReponsiveScrollGrid>
+        </template>
+        <template v-else>Aucun article trouvé</template>
+      </v-container>
+    </template>
+  </v-container>
 </template>
 
 <script>
 import gql from 'graphql-tag'
-
-import { directive as SwiperDirective } from 'vue-awesome-swiper'
-import Fiche from '~/components/Fiche'
-import PostCard from '~/components/PostCard'
-import Search from '~/components/Search'
-import Newsletter from '~/components/Newsletter'
-import ScrollTop from '~/components/ScrollTop'
-import FichePlaceholder from '~/components/FichePlaceholder'
-import PostCardPlaceholder from '~/components/PostCardPlaceholder'
-import { fiche as FicheFragments } from '~/apollo/fragments/fiche'
+import { ficheCard as FicheCardFragments } from '~/apollo/fragments/ficheCard'
 import { postCard as PostCardFragments } from '~/apollo/fragments/postCard'
 import graphql from '~/mixins/graphql'
+import FicheCard from '~/components/FicheCard'
+import PostCard from '~/components/PostCard'
+import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
 
 export default {
-  components: { Newsletter, PostCard, Fiche, Search, ScrollTop, FichePlaceholder, PostCardPlaceholder },
-  directives: { swiper: SwiperDirective },
+  components: { ReponsiveScrollGrid, PostCard, FicheCard },
   mixins: [graphql],
-  fetch() {
-    const posts = this.fetchMorePosts()
-    const fiches = this.fetchMoreFiches().then(() => {
-      // change showPosts value if none
-      this.postsShown = !this.fiches.length
-    })
-    return Promise.all([posts, fiches])
-  },
-  fetchOnServer: false,
   data() {
     return {
       search: this.$route.params.search,
+      toggleSearch: false,
+      tab: null,
 
       fiches: [],
       fichesTotal: null,
       fichesPages: null,
-      fichesNextPage: 1,
       fichesLoading: false,
 
       posts: [],
       postsTotal: null,
       postsPages: null,
-      postsNextPage: 1,
       postsLoading: false,
-
-      postsShown: false,
+    }
+  },
+  fetch() {
+    this.toggleSearch = false
+    const posts = this.fetchPosts()
+    const fiches = this.fetchFiches()
+    return Promise.all([posts, fiches])
+  },
+  fetchOnServer: false,
+  head() {
+    return {
+      title: this.title,
+      meta: [{ name: 'robots', content: 'noindex', hid: 'robots' }],
     }
   },
   computed: {
     totalResultCount() {
       return this.fichesTotal + this.postsTotal
     },
-    tooManyResultats() {
-      return this.totalResultCount > 50
-    },
     hasMoreFiches() {
-      return !this.fichesPages || this.fichesNextPage <= this.fichesPages
+      return this.fichesTotal > this.fiches.length
     },
     hasMorePosts() {
-      return !this.postsPages || this.postsNextPage <= this.postsPages
+      return this.postsTotal > this.posts.length
     },
-  },
-  watch: {
-    postsShown() {
-      this.$scrollTo(window)
+    title() {
+      return `${this.totalResultCount} résultats pour "${this.search}"`
     },
   },
   methods: {
-    async fetchMoreFiches() {
-      // stop if last page
-      if (!this.hasMoreFiches) {
-        // eslint-disable-next-line no-console
-        console.warn('no more pages for fiches')
-        return
-      }
-
+    update() {
+      history.pushState(null, null, `/search/${this.search}`)
+      this.$fetch()
+    },
+    async fetchFiches() {
       try {
         this.fichesLoading = true
         const { data } = await this.$apollo.query({
           query: gql`
-            query($text: String!, $page: Int!) {
+            query ($text: String!, $page: Int!) {
               fichesByText(text: $text, page: $page) {
                 fiches {
-                  ...FicheFragments
+                  ...FicheCardFragments
                 }
                 hasMore
                 total
                 totalPages
               }
             }
-            ${FicheFragments}
+            ${FicheCardFragments}
           `,
           variables: {
             text: this.search,
-            page: this.fichesNextPage++,
+            page: 1,
           },
         })
-
         const { fiches, total, totalPages } = data.fichesByText
-        this.fiches.push(...fiches)
+        this.fiches = fiches
         this.fichesTotal = total
         this.fichesPages = totalPages
       } catch (e) {
@@ -193,26 +219,12 @@ export default {
         this.fichesLoading = false
       }
     },
-    lazyLoadFiches(isVisible) {
-      if (isVisible) {
-        if (this.hasMoreFiches) {
-          this.fetchMoreFiches()
-        }
-      }
-    },
-    async fetchMorePosts() {
-      // stop if last page
-      if (!this.hasMorePosts) {
-        // eslint-disable-next-line no-console
-        console.warn('no more pages for posts')
-        return
-      }
-
+    async fetchPosts() {
       try {
         this.postsLoading = true
         const { data } = await this.$apollo.query({
           query: gql`
-            query($text: String!, $page: Int!) {
+            query ($text: String!, $page: Int!) {
               postsByText(text: $text, page: $page) {
                 postCards {
                   ...PostCardFragments
@@ -226,12 +238,11 @@ export default {
           `,
           variables: {
             text: this.search,
-            page: this.postsNextPage++,
+            page: 1,
           },
         })
-
         const { postCards, total, totalPages } = data.postsByText
-        this.posts.push(...postCards)
+        this.posts = postCards
         this.postsTotal = total
         this.postsPages = totalPages
       } catch (e) {
@@ -241,28 +252,8 @@ export default {
         this.postsLoading = false
       }
     },
-    lazyLoadPosts(isVisible) {
-      if (isVisible) {
-        if (this.hasMorePosts) {
-          this.fetchMorePosts()
-        }
-      }
-    },
-    initSearch() {
-      this.$refs.searchBox.formSearch.searchText = this.search
-      this.$refs.searchBox.$refs.textFilter.focus()
-    },
   },
 }
 </script>
 
-<style lang="scss" scoped>
-.search-results {
-  min-height: 50vh;
-}
-
-.swiper-button-prev,
-.swiper-button-next {
-  top: 250px;
-}
-</style>
+<style lang="scss" scoped></style>

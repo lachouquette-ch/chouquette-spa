@@ -2,24 +2,32 @@ import _ from 'lodash'
 
 export const state = () => ({
   all: {},
-  topLevels: {},
+  hierarchy: {},
+  topLevels: [],
 })
+
+export const getters = {
+  getTopLevels: (state) => {
+    return Object.values(state.all).filter((category) => category.parentId === 0)
+  },
+
+  getById: (state) => (id) => {
+    return state.all[id]
+  },
+
+  getBySlug: (state) => (slug) => {
+    return Object.values(state.all).find((category) => category.slug === slug)
+  },
+
+  getChildrenForId: (state) => (parentId) => {
+    return state.hierarchy[parentId]
+  },
+}
 
 export const actions = {
   init({ state, commit, dispatch }, categories) {
     commit('SET_CATEGORIES', categories)
     return categories
-  },
-
-  // TODO keep those methods or use state mapping in vue components ?
-  get({ state }, id) {
-    return state.all[id]
-  },
-  fetchBySlug({ state }, slug) {
-    return Object.values(state.all).find((category) => category.slug === slug)
-  },
-  findChildren({ state }, category) {
-    return state.topLevels[category.id]
   },
 }
 
@@ -27,7 +35,7 @@ export const mutations = {
   SET_CATEGORIES(state, categories) {
     // add top levels
     _.merge(
-      state.topLevels,
+      state.hierarchy,
       categories
         .filter(({ parentId }) => parentId === 0)
         .reduce((acc, category) => {
@@ -42,10 +50,13 @@ export const mutations = {
       // add to all categories
       state.all[category.id] = category
       // setup category if not root category
-      if (category.parentId === 0) continue
-      state.topLevels[category.parentId]
-        ? state.topLevels[category.parentId].push(category)
-        : console.warn(`No parent category for ${category.slug} (${category.id}). 3rd level category ?`)
+      if (category.parentId === 0) {
+        state.topLevels.push(category)
+      } else {
+        state.hierarchy[category.parentId]
+          ? state.hierarchy[category.parentId].push(category)
+          : console.warn(`No parent category for ${category.slug} (${category.id}). 3rd level category ?`)
+      }
     }
   },
 }

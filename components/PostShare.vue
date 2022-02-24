@@ -1,32 +1,38 @@
 <template>
-  <div id="share">
+  <div>
     <template v-if="shareApiAvailable">
-      <a title="Autres" @click.prevent="shareWith('Article de La Chouquette', escapedTitle, currentPage)"
-        ><i class="fas fa-share-alt"></i
-      ></a>
+      <v-btn
+        v-bind="{ ...$props, ...$attrs }"
+        @click.prevent="shareWith('Article sur LaChouquette.ch', post.title, postURL)"
+      >
+        <v-icon :left="!!$slots.default">mdi-share-variant</v-icon>
+        <slot></slot>
+      </v-btn>
     </template>
     <template v-else>
-      Partage sur
-      <a
-        style="color: #4267b2"
-        title="Facebook"
-        target="_blank"
-        :href="`https://www.facebook.com/sharer/sharer.php?u=${currentPage}`"
-        ><i class="fab fa-facebook-square"></i
-      ></a>
-      <a
-        style="color: #38a1f3"
-        title="Twitter"
-        target="_blank"
-        :href="`https://twitter.com/share?text=${escapedTitle}&url=${encodeURI(currentPage)}`"
-        ><i class="fab fa-twitter-square"></i
-      ></a>
-      <a
-        style="color: #b7b7b7"
-        title="Email"
-        :href="`mailto:?subject=${escapedTitle}&amp;body=Je te partage cet article ${currentPage}`"
-        ><i class="fas fa-envelope-square"></i
-      ></a>
+      <v-menu top>
+        <template #activator="{ on, attrs }">
+          <v-btn v-bind="{ ...attrs, ...$props, ...$attrs }" v-on="on">
+            <v-icon :left="!!$slots.default">mdi-share-variant</v-icon>
+            <slot></slot>
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item target="_blank" :to="`https://www.facebook.com/sharer/sharer.php?u=${postURL}`">
+            <v-list-item-title><v-icon color="#4267b2" class="mr-2">mdi-facebook</v-icon>Facebook</v-list-item-title>
+          </v-list-item>
+          <v-list-item target="_blank" :to="`https://twitter.com/share?text=${post.title}&url=${encodeURI(postURL)}`">
+            <v-list-item-title><v-icon color="#38a1f3" class="mr-2">mdi-twitter</v-icon>Twitter</v-list-item-title>
+          </v-list-item>
+          <v-list-item
+            target="_blank"
+            :to="`mailto:?subject=${post.title}&amp;body=Je te partage cet article ${postURL}`"
+          >
+            <v-list-item-title><v-icon color="#b7b7b7" class="mr-2">mdi-at</v-icon> Email</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </template>
   </div>
 </template>
@@ -42,25 +48,12 @@ export default {
       type: Object,
     },
   },
-  data() {
-    return {
-      currentPage: null,
-    }
-  },
   computed: {
-    escapedTitle() {
-      return this.post.title
+    postURL() {
+      return `${this.$config.siteUrl}/${this.post.slug}`
     },
-  },
-  mounted() {
-    this.currentPage = window.location.href
   },
 }
 </script>
 
-<style lang="scss" scoped>
-a {
-  font-size: 1.6rem;
-  margin: 0 3px;
-}
-</style>
+<style scoped></style>

@@ -1,0 +1,16 @@
+.google-map-control {
+  margin: 10px;
+  height: 40px;
+  width: 40px;
+
+  font-size: 16px;
+
+  background-color: #ffffff;
+  border: none;
+
+  box-shadow: $shadow-key-umbra-opacity;
+
+  &:focus {
+    outline: none;
+  }
+}

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <WpPage v-if="pageType === 'page'" :page="page" preview />
-    <WpPost v-else-if="pageType === 'post'" :post="post" preview />
+    <Page v-if="pageType === 'page'" :page="page" preview />
+    <Post v-else-if="pageType === 'post'" :post="post" preview />
     <div v-else-if="pageType === 'fiche'" class="container layout-content mx-auto mt-5">
       <Fiche :fiche="fiche" preview />
     </div>
@@ -9,15 +9,15 @@
 </template>
 
 <script>
-import WpPage from '~/components/WpPage'
-import WpPost from '~/components/WpPost'
+import { mapState } from 'vuex'
+import Page from '~/components/Page'
+import Post from '~/components/Post'
 import Fiche from '~/components/Fiche'
-import {mapState} from "vuex";
 
 export default {
   components: {
-    WpPage,
-    WpPost,
+    Page,
+    Post,
     Fiche,
   },
   data() {
@@ -51,7 +51,7 @@ export default {
       this.pageType = 'page'
     } else if (this.$route.query.type === 'post') {
       const post = await this.$axios.$get(`${this.wordpressUrl}/wp-json/wp/v2/posts/${this.$route.query.id}`, {
-        params: { _embed: true },
+        params: { _embed: 1 },
         withCredentials: true,
         headers: { 'X-WP-Nonce': this.$route.query.nonce },
       })
@@ -63,7 +63,7 @@ export default {
       this.pageType = 'post'
     } else if (this.$route.query.type === 'fiche') {
       const fiche = await this.$axios.$get(`${this.wordpressUrl}/wp-json/wp/v2/fiches/${this.$route.query.id}`, {
-        params: { _embed: true },
+        params: { _embed: 1 },
         withCredentials: true,
         headers: { 'X-WP-Nonce': this.$route.query.nonce },
       })

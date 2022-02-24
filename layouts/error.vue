@@ -1,17 +1,16 @@
 <template>
-  <div class="error layout-content d-flex justify-content-center align-items-center px-3 pb-3">
+  <v-sheet class="error lighten-2 pa-3">
     <component :is="errorComponent" :message="message" />
-  </div>
+  </v-sheet>
 </template>
 
 <script>
-import Search from '~/components/Search'
 import Error from '~/components/Error'
 import Error404 from '~/components/Error404'
 import Error410 from '~/components/Error410'
 
 export default {
-  components: { Search, Error, Error404, Error410 },
+  components: { Error, Error404, Error410 },
   props: {
     error: {
       type: Object,
@@ -25,15 +24,8 @@ export default {
   },
   computed: {
     errorComponent() {
-      const name = 'Error' + this.statusCode
+      const name = 'Error' + this.error.statusCode
       return this.$options.components[name] ? name : 'Error'
-    },
-    statusCode() {
-      if (this.error.isAxiosError) {
-        return this.error.response.status
-      } else {
-        return (this.error && this.error.statusCode) || 500
-      }
     },
     message() {
       return this.error.message
@@ -49,7 +41,7 @@ export default {
 <style lang="scss" scoped>
 .error {
   h1 {
-    font-family: $font-family-heading;
+    font-family: $secondary-font-family;
   }
 }
 </style>

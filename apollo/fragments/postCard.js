@@ -6,7 +6,11 @@ export const postCard = gql`
   fragment PostCardFragments on PostCard {
     id
     slug
+    date
+    modified
+    authorName
     title
+    isTop
     image {
       ...MediaFragments
     }

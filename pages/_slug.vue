@@ -1,7 +1,11 @@
 <template>
   <div>
-    <WpPage v-if="pageType === 'page'" :page="page" />
-    <WpPost v-else-if="pageType === 'post'" :post="post" />
+    <Page v-if="pageType === 'page'" :page="page" class="cq-md-max-width" />
+    <template v-else-if="pageType === 'post'">
+      <PostShare :post="post" class="cq-share-position" fab color="primary"></PostShare>
+      <Post :post="post" />
+    </template>
+    <Newsletter></Newsletter>
   </div>
 </template>
 
@@ -11,13 +15,17 @@ import gql from 'graphql-tag'
 
 import { post as PostFragments } from '@/apollo/fragments/post'
 import { page as PageFragments } from '@/apollo/fragments/page'
-import WpPost from '~/components/WpPost'
-import WpPage from '~/components/WpPage'
+import Post from '~/components/Post'
+import Page from '~/components/Page'
+import PostShare from '~/components/PostShare'
+import Newsletter from '~/components/Newsletter'
 
 export default {
   components: {
-    WpPage,
-    WpPost,
+    Newsletter,
+    PostShare,
+    Page,
+    Post,
   },
   async asyncData(context) {
     const { app, store, params, route, error } = context
@@ -30,7 +38,7 @@ export default {
     const post = await client
       .query({
         query: gql`
-          query($slug: String!) {
+          query ($slug: String!) {
             postBySlug(slug: $slug) {
               ...PostFragments
             }
@@ -51,7 +59,7 @@ export default {
     const page = await client
       .query({
         query: gql`
-          query($slug: String!) {
+          query ($slug: String!) {
             pageBySlug(slug: $slug) {
               ...PageFragments
             }
@@ -64,8 +72,11 @@ export default {
 
     // redirect if not a post neither
     if (_.isEmpty(page)) {
-      await store.dispatch('yoast/redirect', { path: route.path, context })
-      error({ statusCode: '404', message: `'${params.slug}' n'existe pas` })
+      await store.dispatch('yoast/redirect', {
+        path: route.path,
+        context,
+        fallback: { statusCode: 404, message: `'${params.slug}' n'existe pas` },
+      })
     }
 
     return {

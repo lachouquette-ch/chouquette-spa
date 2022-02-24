@@ -1,72 +1,62 @@
 <template>
-  <div class="fiche-page layout-content container my-4">
-    <h1 class="text-center mb-4">{{ fiche.title }}</h1>
-    <main role="main">
-      <Fiche :fiche="fiche" no-ref-link flat-enable />
-    </main>
-    <div class="mt-4">
-      <template v-if="fiche.postCards">
-        <h2 class="text-center mb-4">
-          <span v-if="posts.length === 1">L'article</span>
-          <span v-else>Les articles</span>
-        </h2>
-        <div class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
-          <nuxt-link v-for="post in fiche.postCards" :key="post.id" :to="{ path: `/${post.slug}` }" class="post-card">
-            <PostCard :post="post" class="mx-auto" />
-          </nuxt-link>
-        </div>
-      </template>
-    </div>
-  </div>
+  <v-container>
+    <FicheShare :fiche="fiche" class="cq-share-position" fab color="primary"></FicheShare>
+
+    <Fiche :fiche="fiche" class="cq-md-max-width"></Fiche>
+  </v-container>
 </template>
 
 <script>
 import gql from 'graphql-tag'
 import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
+import { ficheCard as FicheCardFragments } from '@/apollo/fragments/ficheCard'
 import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
-import Fiche from '~/components/Fiche'
-import PostCard from '~/components/PostCard'
 import seo from '~/mixins/seo'
+import FicheShare from '~/components/FicheShare'
+import graphql from '~/mixins/graphql'
+import Fiche from '~/components/Fiche'
 
 export default {
-  components: { Fiche, PostCard },
-  mixins: [seo],
+  components: { Fiche, FicheShare },
+  mixins: [seo, graphql],
   async asyncData(context) {
-    const { app, store, params, route, error } = context
+    const { app, store, params, route } = context
 
     const client = app.apolloProvider.defaultClient
 
     const fiche = await client
       .query({
         query: gql`
-          query($slug: String!) {
+          query ($slug: String!) {
             ficheBySlug(slug: $slug) {
               ...FicheFragments
 
               postCards {
                 ...PostCardFragments
               }
+
+              similarFiches {
+                ...FicheCardFragments
+              }
             }
           }
           ${FicheFragments}
           ${PostCardFragments}
+          ${FicheCardFragments}
         `,
         variables: { slug: params.slug },
       })
       .then(({ data }) => data.ficheBySlug)
     if (!fiche) {
-      await store.dispatch('yoast/redirect', { path: route.path, context })
-      error({ statusCode: '404', message: `'${params.slug}' n'existe pas` })
+      await store.dispatch('yoast/redirect', {
+        path: route.path,
+        context,
+        fallback: { statusCode: 404, message: `'${params.slug}' n'existe pas` },
+      })
     }
 
     return {
       fiche,
-    }
-  },
-  data() {
-    return {
-      fiche: null,
-      posts: [],
     }
   },
   head() {
@@ -77,7 +67,7 @@ export default {
         {
           hid: 'og:image',
           property: 'og:image',
-          content: this.fiche.featured_img,
+          content: this.fiche.image ? this.fiche.image.source : '',
         },
       ],
       script: [
@@ -86,12 +76,12 @@ export default {
           '@type': 'LocalBusiness',
           name: this.fiche.seo.title,
           description: this.seoGetDescription(JSON.parse(this.fiche.seo.metadata)),
-          image: this.fiche.image.source,
+          image: this.fiche.image ? this.fiche.image.source : '',
 
           address: this.fiche.info.address,
           email: this.fiche.info.mail,
           telephone: this.fiche.telephone,
-          photo: this.fiche.image.source,
+          photo: this.fiche.image ? this.fiche.image.source : '',
 
           url: this.currentURL,
           datePublished: this.fiche.date,
@@ -103,10 +93,4 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.fiche-page {
-  h1 {
-    font-family: $font-family-heading;
-  }
-}
-</style>
+<style lang="scss" scoped></style>

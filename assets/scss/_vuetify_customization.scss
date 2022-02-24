@@ -1,0 +1,39 @@
+// Buttons hover
+.v-btn {
+  // COLORED
+  &.cq-yellow, &.cq-blue, &.cq-grey {
+    @include hover-focus-active {
+      background-color: var(--v-cq-red-base) !important;
+    }
+  }
+
+  // OUTLINED
+  &.v-btn--outlined.cq-red--text {
+    @include hover-focus-active {
+      background-color: var(--v-cq-red-base) !important;
+      color: white !important;
+    }
+  }
+
+  // CUSTOM
+  &.btn--hover-yellow {
+    @include hover-focus-active {
+      background-color: var(--v-cq-yellow-base) !important;
+    }
+  }
+  &.btn--hover-white {
+    @include hover-focus-active {
+      background-color: white !important;
+    }
+  }
+}
+
+.v-application h1 {
+  font-weight: 900;
+  margin: 1.5rem 0;
+}
+
+// high z-index for alerts - important for fiche in modal
+.layout-alert {
+  z-index: 1000 !important;
+}

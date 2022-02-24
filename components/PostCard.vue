@@ -1,104 +1,106 @@
 <template>
-  <article class="card shadow-sm position-relative text-black">
-    <div class="card-img-top">
-      <WpMedia v-if="post.image" :media="post.image" size="medium_large" />
-      <div class="card-category rounded-circle bg-white shadow">
-        <WpMediaCategory v-if="topCategory" :category="topCategory" width="35" height="35" color="Black" />
-      </div>
-    </div>
-    <div class="card-body">
-      <p class="card-text text-center">
-        {{ post.title }}
+  <v-card
+    class="d-flex"
+    :class="{ vertical: vertical, horizontal: !vertical, large: large }"
+    dense
+    hover
+    ripple
+    flat
+    :color="transparent ? 'transparent' : 'white'"
+    v-bind="{ ...$props, ...$attrs }"
+    :to="postLink"
+    :nuxt="!disableLink"
+    @click.prevent="$emit('click')"
+  >
+    <Media
+      v-if="post.image"
+      :media="post.image"
+      :size="large ? 'medium_large' : 'medium'"
+      class="rounded-lg flex-shrink-0 flex-grow-0"
+      :class="{ 'rounded-r-0': !transparent }"
+      :aspect-ratio="imgAspectRatio"
+      :width="imgWidth"
+      :max-width="!vertical ? '50%' : 'auto'"
+      position="center top"
+    >
+      <v-card-subtitle v-if="vertical" class="pa-2">
+        <v-chip color="white" small>
+          {{ getCategoryById(post.categoryId).name }}
+        </v-chip>
+      </v-card-subtitle>
+      <v-card-subtitle v-else-if="post.isTop" class="pa-2">
+        <v-chip color="white" small>
+          Top
+          <v-icon right>mdi-trophy-outline</v-icon>
+        </v-chip>
+      </v-card-subtitle>
+    </Media>
+
+    <v-card-text class="pa-2 flex-grow-1">
+      <p v-if="!vertical" class="secondary--text font-weight-bold text-lowercase mb-0">
+        {{ getCategoryById(post.categoryId).name }}
       </p>
-    </div>
-  </article>
+      <h3 class="text-h4 mt-1" :class="{ 'cq-three-line': !vertical && !large }">{{ post.title }}</h3>
+      <p v-if="large && !hideMeta" class="mt-2 ma-0">le {{ postDate | fromISO }} par {{ post.authorName }}</p>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import WpMediaCategory from './WpMediaCategory'
-import WpMedia from '~/components/WpMedia'
+import { mapGetters } from 'vuex'
+import Media from '~/components/Media'
 
 export default {
-  components: { WpMedia, WpMediaCategory },
+  components: { Media },
   props: {
     post: {
       required: true,
       type: Object,
     },
-  },
-  data() {
-    return {
-      topCategory: null,
-      featuredMedia: null,
-    }
+    hideMeta: Boolean,
+    vertical: Boolean,
+    large: Boolean,
+    disableLink: Boolean,
+    transparent: Boolean,
   },
   computed: {
-    ...mapState({
-      categories: (state) => state.categories.all,
-      media: (state) => state.media.all,
+    ...mapGetters('categories', {
+      getCategoryById: 'getById',
     }),
-  },
-  created() {
-    this.topCategory = this.categories[this.post.categoryId]
+    imgAspectRatio() {
+      if (this.vertical) return '1'
+      else return this.large ? '1' : '3 / 2'
+    },
+    imgWidth() {
+      if (this.vertical) return '100%'
+      else return this.large ? '200px' : '150px'
+    },
+    postLink() {
+      return this.disableLink ? null : `/${this.post.slug}`
+    },
+    postDate() {
+      return this.post.modified ? this.post.modified : this.post.date
+    },
   },
 }
 </script>
 
 <style lang="scss" scoped>
-.card {
-  width: 300px;
-  max-width: 100%;
+.horizontal {
+  height: 120px;
 
-  @include hover-focus {
-    box-shadow: $box-shadow !important;
+  &.large {
+    height: 150px;
   }
 }
 
-.card-img-top {
-  width: 100%;
-  padding-top: 100%; /* 1:1 Aspect Ratio */
-  position: relative;
+.vertical {
+  width: 150px;
+  flex-direction: column;
+  flex-shrink: 0;
 
-  > img {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-
-    border: 15px solid $white;
+  &.large {
+    width: 250px;
   }
-}
-
-.card-chouquettise {
-  .card-category {
-    background-color: $chouquette-yellow;
-  }
-}
-
-.card-category {
-  padding: 0.75rem;
-
-  position: absolute;
-  top: 5px;
-  left: 5px;
-
-  transform: rotate(-5deg);
-}
-
-.card-body {
-  padding: 0 10px 5px 10px;
-}
-
-.card-text {
-  font-family: $font-family-heading;
-  font-size: $h5-font-size;
-
-  min-height: $line-height-base * 3rem;
 }
 </style>

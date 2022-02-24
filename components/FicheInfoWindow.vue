@@ -1,26 +1,33 @@
 <template>
-  <div class="fiche-infowindow text-center">
-    <h2 class="h4">{{ fiche.title }}</h2>
-    <WpMedia :media="fiche.image" size="medium" :no-src-set="true" class="fiche-infowindow-img" />
-    <p class="my-2 muted">{{ fiche.poi.address }}</p>
-    <a v-if="fiche.isChouquettise" :href="googleMapsURL" class="" title="Ouvrir avec Google maps" target="_blank">
-      <i class="fas fa-map-marker-alt pr-1"></i> Ouvrir dans google maps
-    </a>
-    <button class="btn btn-sm btn-outline-secondary d-block my-2 mx-auto" @click="showBtnAction">Voir la fiche</button>
-  </div>
+  <v-card class="d-flex flex-row" height="75" width="250" flat tile ripple @click="btnAction">
+    <Media
+      v-if="fiche.image"
+      :media="fiche.image"
+      size="thumbnail"
+      width="75"
+      contain
+      aspect-ratio="1"
+      class="flex-grow-0"
+    ></Media>
+    <v-card-text class="pa-2 flex-grow-1 overflow-hidden">
+      <p class="ma-0 text-body-1 text-truncate">{{ fiche.title }}</p>
+      <p class="ma-0 text-body-2 font-italic">{{ categoryName }}</p>
+      <span class="text-caption text-decoration-underline">Voir +</span>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
-import WpMedia from '~/components/WpMedia'
+import Media from '~/components/Media'
 
 export default {
-  components: { WpMedia },
+  components: { Media },
   props: {
     fiche: {
       type: Object,
       required: true,
     },
-    showBtnAction: {
+    btnAction: {
       type: Function,
       default: () => {
         // eslint-disable-next-line no-console
@@ -32,6 +39,10 @@ export default {
     googleMapsURL() {
       return `https://maps.google.com/?q=${this.fiche.poi.address}`
     },
+    categoryName() {
+      // hack since no $nuxt context attached (component created manually)
+      return this.$nuxt.$store.state.categories.all[this.fiche.principalCategoryId].name
+    },
   },
 }
 </script>
@@ -42,7 +53,7 @@ export default {
   max-width: 100%;
 
   h2 {
-    font-family: $font-family-heading;
+    font-family: $heading-font-family;
   }
 }
 

@@ -1,87 +1,76 @@
 <template>
-  <form class="comment-form" @submit.prevent="postComment">
-    <div class="form-group">
-      <label :for="`comment${_uid}`">Commentaire *</label>
-      <textarea
-        :id="`comment${_uid}`"
-        v-model="formComment.comment"
-        class="form-control"
-        :class="{ 'is-invalid': $v.formComment.comment.$error }"
-        rows="5"
-        aria-required="true"
-        @blur="$v.formComment.comment.$touch"
-      ></textarea>
-      <div v-if="!$v.formComment.comment.required" class="invalid-feedback">Il faut un contenu à ton commentaire</div>
-      <div v-if="!$v.formComment.comment.minText" class="invalid-feedback">
-        Ton commentaire doit avoir un minimum de contenu
-      </div>
-    </div>
-    <div class="form-group row">
-      <label class="col-sm-4 col-form-label" :for="`author${_uid}`">Nom *</label>
-      <div class="col-sm-8">
-        <input
-          :id="`author${_uid}`"
-          v-model.trim="formComment.name"
-          name="name"
-          class="form-control"
-          :class="{ 'is-invalid': $v.formComment.name.$error }"
-          type="text"
-          aria-required="true"
-          @blur="$v.formComment.name.$touch"
-        />
-        <div v-if="!$v.formComment.name.required" class="invalid-feedback">Merci de nous indiquer ton ptit nom</div>
-      </div>
-    </div>
-    <div class="form-group row">
-      <div class="col-sm-4">
-        <label class="col-form-label" :for="`email${_uid}`">Adresse de messagerie *</label>
-        <small class="form-text text-muted"> Ton email ne sera pas publié. Parole de Chouquette ! </small>
-      </div>
-      <div class="col-sm-8">
-        <input
-          :id="`email${_uid}`"
-          v-model.trim="formComment.email"
-          class="form-control"
-          :class="{ 'is-invalid': $v.formComment.email.$error }"
-          type="email"
-          name="email"
-          aria-required="true"
-          @blur="$v.formComment.email.$touch"
-        />
-        <div v-if="!$v.formComment.email.required" class="invalid-feedback">Merci de nous indiquer ton ptit nom</div>
-        <div v-if="!$v.formComment.email.email" class="invalid-feedback">Ton email doit être valide</div>
-      </div>
-    </div>
-    <div class="form-group row">
-      <label class="col-sm-4 col-form-label" :for="`url${_uid}`">Site web</label>
-      <div class="col-sm-8">
-        <input
-          :id="`url${_uid}`"
-          v-model.trim="formComment.webSite"
-          class="form-control"
-          :class="{ 'is-invalid': $v.formComment.webSite.$error }"
-          name="url"
-          type="text"
-          value=""
-          size="30"
-          @blur="$v.formComment.webSite.$touch"
-        />
-        <div v-if="!$v.formComment.webSite.url" class="invalid-feedback">Ton Site web doit être une adresse valide</div>
-      </div>
-    </div>
-    <div class="form-submit">
-      <button class="btn btn-primary" type="submit" :disabled="loading">
-        <b-spinner v-show="loading" small variant="yellow" label="chargement" class="mr-2"></b-spinner>
-        Poster mon commentaire
-      </button>
-    </div>
-  </form>
+  <v-form @submit.prevent="postComment">
+    <v-card>
+      <v-card-text>
+        <v-row>
+          <v-col cols="12">
+            <v-textarea
+              :id="`comment${_uid}`"
+              v-model="formComment.comment"
+              label="Ton commentaire *"
+              rows="4"
+              :error-messages="commentErrors"
+              :counter="true"
+              required
+              class="pt-0"
+              @input="$v.formComment.comment.$touch"
+              @blur="$v.formComment.comment.$touch"
+            ></v-textarea>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              :id="`author${_uid}`"
+              v-model.trim="formComment.name"
+              label="Ton nom *"
+              autocomplete="name"
+              :error-messages="nameErrors"
+              required
+              @input="$v.formComment.name.$touch"
+              @blur="$v.formComment.name.$touch"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              :id="`email${_uid}`"
+              v-model.trim="formComment.email"
+              label="Ton email *"
+              hint="Ton email ne sera pas publié. Parole de Chouquette !"
+              autocomplete="email"
+              :error-messages="emailErrors"
+              required
+              @input="$v.formComment.email.$touch"
+              @blur="$v.formComment.email.$touch"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              :id="`url${_uid}`"
+              v-model.trim="formComment.webSite"
+              label="Ton site web"
+              :error-messages="webSiteErrors"
+              required
+              @input="$v.formComment.webSite.$touch"
+              @blur="$v.formComment.webSite.$touch"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn text @click="clear">Fermer</v-btn>
+        <v-btn color="cq-blue" :loading="loading" type="submit">Envoyer</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-form>
 </template>
 
 <script>
-import { required, email, url, minLength } from 'vuelidate/lib/validators'
+import { email, minLength, required, url } from 'vuelidate/lib/validators'
+import gql from 'graphql-tag'
+import graphql from '~/mixins/graphql'
 
 export default {
+  mixins: [graphql],
   props: {
     post: {
       type: String,
@@ -104,41 +93,73 @@ export default {
     }
   },
   methods: {
+    clear() {
+      this.formComment.name = null
+      this.formComment.email = null
+      this.formComment.webSite = null
+      this.formComment.comment = null
+      this.$v.formComment.$reset()
+      this.$emit('close')
+    },
     async postComment() {
       this.$v.formComment.$touch()
       if (!this.$v.formComment.$invalid) {
         this.loading = true
         // Get recaptcha token
-        await this.$recaptchaLoaded()
-        // Execute reCAPTCHA with action "login".
-        const token = await this.$recaptcha('comment')
+        await this.$recaptcha.init()
+        // Execute reCAPTCHA with action "comment".
+        const token = await this.$recaptcha.execute('comment')
 
-        this.$wpAPI.wp.comments
-          .postComment({
-            post: this.post,
-            parent: this.parent,
-            author_name: this.formComment.name,
-            author_email: this.formComment.email,
-            content: this.formComment.comment,
-            recaptcha: token,
+        const data = {
+          postId: parseInt(this.post),
+          parentId: parseInt(this.parent),
+          authorName: this.formComment.name,
+          authorEmail: this.formComment.email,
+          content: this.formComment.comment,
+          recaptcha: token,
+        }
+
+        try {
+          await this.$apollo.mutate({
+            mutation: gql`
+              mutation commentPost(
+                $postId: Int!
+                $parentId: Int
+                $authorName: String!
+                $authorEmail: String!
+                $content: String!
+                $recaptcha: String!
+              ) {
+                commentPost(
+                  postId: $postId
+                  parentId: $parentId
+                  authorName: $authorName
+                  authorEmail: $authorEmail
+                  content: $content
+                  recaptcha: $recaptcha
+                )
+              }
+            `,
+            variables: {
+              ...data,
+            },
           })
-          .then((result) => {
-            this.$store.dispatch('alerts/addAction', {
-              type: 'success',
-              message:
-                'Ton commentaire nous est bien parvenu : merci :-). Il sera visible dès validation de notre part.',
-            })
-
-            // clear form
-            this.formComment.comment = null
-            this.$v.formComment.$reset()
-
-            this.$emit('done')
+          this.$store.dispatch('alerts/addAction', {
+            type: 'success',
+            message: 'Ton commentaire nous est bien parvenu : merci :-). Il sera visible dès validation de notre part.',
           })
-          .catch((error) =>
-            this.$store.dispatch('alerts/addAction', { type: 'danger', message: error.response.data.message })
-          )
-          .finally(() => (this.loading = false))
+
+          // clear form
+          this.formComment.comment = null
+          this.$v.formComment.$reset()
+
+          this.$emit('close')
+        } catch (e) {
+          this.$sentry.captureException(e)
+          this.handleGQLError(e, "Ton commentaire n'a pas pu être envoyé")
+        } finally {
+          this.loading = false
+        }
       }
     },
   },
@@ -156,8 +177,36 @@ export default {
       },
       comment: {
         required,
-        minText: minLength(10),
+        minText: minLength(30),
       },
+    },
+  },
+  computed: {
+    nameErrors() {
+      const errors = []
+      if (!this.$v.formComment.name.$dirty) return errors
+      !this.$v.formComment.name.required && errors.push("Merci d'inscrire ton nom")
+      return errors
+    },
+    emailErrors() {
+      const errors = []
+      if (!this.$v.formComment.email.$dirty) return errors
+      !this.$v.formComment.email.required && errors.push("Merci d'inscrire ton adresse mail")
+      !this.$v.formComment.email.email && errors.push("Merci d'inscrire une adresse mail valide")
+      return errors
+    },
+    webSiteErrors() {
+      const errors = []
+      if (!this.$v.formComment.webSite.$dirty) return errors
+      !this.$v.formComment.webSite.url && errors.push("Merci d'inscrire un lien valide")
+      return errors
+    },
+    commentErrors() {
+      const errors = []
+      if (!this.$v.formComment.comment.$dirty) return errors
+      !this.$v.formComment.comment.required && errors.push('Il faut du contenu à ton commentaire')
+      !this.$v.formComment.comment.minText && errors.push('Ton commentaire doit avoir un minimum de contenu')
+      return errors
     },
   },
 }

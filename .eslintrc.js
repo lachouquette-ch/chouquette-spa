@@ -6,6 +6,7 @@ module.exports = {
   },
   parserOptions: {
     parser: 'babel-eslint',
+    ecmaVersion: 6,
   },
   extends: [
     '@nuxtjs',
@@ -14,9 +15,7 @@ module.exports = {
     'plugin:prettier-vue/recommended',
     'plugin:nuxt/recommended',
   ],
-  plugins: [
-    "vue"
-  ],
+  plugins: ['vue'],
   // add your custom rules here
   rules: {
     indent: ['error', 2],

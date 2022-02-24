@@ -1,0 +1,25 @@
+@import '~vuetify/src/styles/elements/typography';
+
+h1 {
+  @extend .v-application, .display-4;
+}
+
+h2 {
+  @extend .v-application, .display-3;
+}
+
+h3 {
+  @extend .v-application, .display-2;
+}
+
+h4 {
+  @extend .v-application, .display-1;
+}
+
+h5 {
+  @extend .v-application, .headline;
+}
+
+h6 {
+  @extend .v-application, .title;
+}

@@ -1,177 +1,256 @@
 <template>
   <div>
-    <header class="home-header p-0 container-fluid">
-      <nav class="navbar navbar-chouquette">
-        <button
-          class="navbar-toggler d-inline d-md-none"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarChouquette"
-          aria-controls="navbarChouquette"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <nuxt-link to="/" title="Page d'accueil" class="navbar-brand d-none d-md-inline ml-md-5">
-          <h2 class="home-header-name">{{ name }}</h2>
-        </nuxt-link>
-        <div class="home-header-sn mr-md-5">
-          <a href="https://www.facebook.com/lachouquettelausanne" title="Facebook" target="_blank"
-            ><i class="fab fa-facebook-f"></i
-          ></a>
-          <a href="https://www.instagram.com/lachouquette.ch" title="Instagram" target="_blank"
-            ><i class="fab fa-instagram ml-4"></i
-          ></a>
-          <a href="#newsletter" title="Newsletter"><i class="far fa-envelope ml-4"></i></a>
-        </div>
+    <v-card flat rounded="0">
+      <v-img src="/banner-md.png" height="400" position="top center" class="cq-md-max-width mx-auto">
+        <v-container fluid class="d-flex" style="height: 100%">
+          <v-row align="top" justify="center">
+            <v-col class="text-center" cols="12">
+              <h1 class="primary--text font-weight-black">
+                les meilleures adresses <span id="typed">locales et éco-responsables</span>
+              </h1>
+              <v-container class="cq-sm-max-width">
+                <v-row class="justify-center align-center" no-gutters>
+                  <v-col cols="12" md="6">
+                    <v-select
+                      v-model="selectedLocation"
+                      label="Où veux-tu aller ?"
+                      class="mr-md-3"
+                      hide-details
+                      solo
+                      rounded
+                      color="black"
+                      item-color="black"
+                      item-value="slug"
+                      item-text="name"
+                      :items="locationsPlusAll"
+                    >
+                      <template #item="data">
+                        <span v-if="data.item.level === 0" class="font-weight-bold">{{ data.item.name }} (canton)</span>
+                        <span v-else-if="data.item.slug === ''" class="font-weight-bold">{{ data.item.name }}</span>
+                        <span v-else class="pl-2">{{ data.item.name }}</span>
+                      </template>
+                    </v-select>
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-btn
+                      block
+                      elevation="3"
+                      color="cq-yellow"
+                      class="black--text mt-2 mt-md-0"
+                      x-large
+                      @click="goToLocation(selectedLocation)"
+                      >J'explore</v-btn
+                    >
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-img>
+    </v-card>
 
-        <div id="navbarChouquette" class="collapse navbar-collapse">
-          <ul v-for="category in categories" :key="category.id" class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <nuxt-link
-                :to="{ path: `/category/${category.slug}` }"
-                :title="category.description"
-                class="nav-link text-md-center"
-              >
-                <WpMediaCategory :category="category" color="White" class="d-inline nav-logo ml-lg-3 mr-2" />
-                <span class="text-nowrap text-white">{{ category.name }}</span>
-              </nuxt-link>
-            </li>
-          </ul>
-        </div>
-      </nav>
-
-      <div class="home-header-menu d-flex flex-column justify-content-md-center align-items-center">
-        <div class="text-center w-100">
-          <h1 class="home-header-name d-block d-md-none my-2">{{ name }}</h1>
-          <h3 class="home-header-menu-description mb-3">{{ description }}</h3>
-        </div>
-        <div class="d-none d-md-flex flex-row flex-wrap justify-content-center text-center">
-          <div v-for="category in categories" :key="category.id" class="home-header-category m-4">
-            <nuxt-link :to="{ path: `/category/${category.slug}` }" :title="category.description">
-              <div class="home-header-category-logo p-3 rounded-circle">
-                <WpMediaCategory :category="category" height="60" width="60" color="Yellow" />
-              </div>
-              <h2 class="my-2">{{ category.name }}</h2>
-            </nuxt-link>
-          </div>
-        </div>
-        <Search class="home-header-filters" button-class="home-header-filters-button" />
-        <div
-          class="
-            d-md-none
-            home-header-menu-next
-            d-flex
-            rounded-circle
-            align-items-center
-            justify-content-center
-            text-center
-          "
-        >
-          <a href="#homeContent" class="text-yellow"> <i class="fas fa-chevron-down"></i><br /> </a>
-        </div>
-      </div>
-    </header>
-
-    <div id="homeContent" class="home-content py-5">
-      <div class="home-latest container">
-        <h2 class="text-center mb-4">Nos derniers articles</h2>
-        <main class="post-card-shuffler d-flex flex-wrap align-items-center justify-content-center">
+    <v-sheet class="cq-md-max-width py-5">
+      <h2 class="text-center text-header--secondary my-5">ARTICLES À LA UNE</h2>
+      <v-container v-if="$vuetify.breakpoint.mobile">
+        <v-skeleton-loader
+          v-if="$fetchState.pending"
+          class="mx-auto mb-3"
+          elevation="0"
+          type="card"
+          max-width="400"
+        ></v-skeleton-loader>
+        <v-card v-else class="mx-auto" :to="`/${highlightedPost.slug}`" nuxt ripple elevation="1" max-width="400">
+          <Media
+            v-if="highlightedPost.image"
+            :media="highlightedPost.image"
+            size="medium_large"
+            aspect-ratio="1"
+            height="200"
+            width="100%"
+          >
+            <v-card-subtitle class="pa-2">
+              <v-chip color="white" small>
+                {{ getCategoryById(highlightedPost.categoryId).name }}
+              </v-chip>
+            </v-card-subtitle>
+          </Media>
+          <v-card-text>
+            <v-card-title class="pa-0">
+              <h3>{{ highlightedPost.title }}</h3>
+            </v-card-title>
+          </v-card-text>
+        </v-card>
+      </v-container>
+      <v-container>
+        <v-row>
           <template v-if="$fetchState.pending">
-            <PostCardPlaceholder v-for="p in 4" :key="p" class="post-card" />
+            <v-col v-for="i in 4" :key="i" cols="12" md="6">
+              <v-skeleton-loader
+                class="my-2 mx-auto pa-2"
+                elevation="0"
+                type="list-item-avatar, list-item-three-line"
+                height="150"
+                max-width="400"
+              ></v-skeleton-loader>
+            </v-col>
           </template>
           <template v-else>
-            <nuxt-link v-for="post in latestPosts" :key="post.id" :to="{ path: `/${post.slug}` }" class="post-card">
-              <PostCard :post="post" class="mx-auto" />
-            </nuxt-link>
+            <v-col v-if="!$vuetify.breakpoint.mobile" cols="6">
+              <PostCard :post="highlightedPost" class="my-2 mx-auto" large hide-meta transparent></PostCard>
+            </v-col>
+            <v-col v-for="post in otherPosts" :key="post.id" cols="12" md="6">
+              <PostCard :post="post" class="my-2 mx-auto" large hide-meta transparent></PostCard>
+            </v-col>
           </template>
-        </main>
+        </v-row>
+      </v-container>
+      <div class="text-center mb-3">
+        <v-btn text x-large nuxt to="/articles" class="text-decoration-underline">tous nos articles</v-btn>
       </div>
+    </v-sheet>
 
-      <div class="my-5">
-        <a class="home-newsletter-target" name="newsletter"></a>
-        <Newsletter />
-      </div>
-
-      <div class="home-tops container">
-        <div class="text-center">
-          <h2 class="mb-4">Nos derniers tops...</h2>
-        </div>
-        <div v-swiper="swiperOptions" class="swiper px-md-5">
-          <div class="swiper-wrapper pt-3 pt-md-0">
-            <template v-if="$fetchState.pending">
-              <PostCardPlaceholder v-for="p in 4" :key="p" class="swiper-slide" />
-            </template>
-            <template v-else>
-              <div v-for="post in topPosts" :key="post.id" class="swiper-slide">
-                <nuxt-link :to="{ path: `/${post.slug}` }">
-                  <PostCard :post="post" class="mx-auto" />
-                </nuxt-link>
-              </div>
-            </template>
+    <v-sheet class="cq-yellow py-5">
+      <v-container fluid>
+        <h3 class="text-center font-weight-black text-h1 my-5">Les valeurs de La Chouquette</h3>
+        <v-carousel
+          v-if="$vuetify.breakpoint.mobile"
+          class="valeurs-carousel"
+          height="575"
+          show-arrows-on-hover
+          hide-delimiter-background
+          interval="3000"
+        >
+          <v-carousel-item v-for="value in values" :key="value.id">
+            <Value :value="value"></Value>
+          </v-carousel-item>
+        </v-carousel>
+        <div v-else class="d-flex flex-wrap justify-center">
+          <div v-for="value in values" :key="value.id" class="mx-5">
+            <Value :value="value" class="ma-5"></Value>
           </div>
-          <div slot="pagination" class="swiper-pagination d-block d-md-none" />
-          <div slot="button-prev" class="swiper-button-prev d-none d-md-block"></div>
-          <div slot="button-next" class="swiper-button-next d-none d-md-block"></div>
         </div>
-        <div v-if="!topPosts" class="text-center"><b-spinner variant="yellow" label="Spinning"></b-spinner></div>
+      </v-container>
+    </v-sheet>
+
+    <v-sheet class="cq-md-max-width px-3 py-5">
+      <h2 class="text-center text-header--secondary my-5">Nos derniers tops</h2>
+      <v-skeleton-loader v-if="$fetchState.pending" class="mx-auto" max-width="300" type="card"></v-skeleton-loader>
+      <template v-else>
+        <ReponsiveScrollGrid :items="topPosts" md="4">
+          <template #default="{ item }">
+            <PostCard :post="item" class="mx-auto" vertical large hide-meta transparent></PostCard>
+          </template>
+        </ReponsiveScrollGrid>
+        <div class="text-center my-3">
+          <v-btn text x-large nuxt to="/articles?topOnly=true" class="text-decoration-underline">tous nos tops</v-btn>
+        </div>
+      </template>
+    </v-sheet>
+
+    <div class="cq-beige">
+      <div class="cq-md-max-width pa-3" style="position: relative">
+        <img
+          src="/lachouquette_logo_simple_white.png"
+          alt="Logo La Chouquette"
+          height="120"
+          style="position: absolute; left: 20px; top: -20px; transform: matrix(0.96, -0.29, 0.29, 0.96, 0, 0)"
+        />
+        <div style="position: relative" class="py-5">
+          <div class="text-center">
+            <h2 class="text-header--secondary">Nos Chouquettisés</h2>
+            <p class="text-h5">
+              Tous nos labellisés ont été testés et approuvés par La Chouquette. Ils répondent à nos valeurs et à nos
+              critères. Tu peux y aller les yeux fermés !
+            </p>
+          </div>
+          <v-skeleton-loader v-if="$fetchState.pending" class="mx-auto" max-width="300" type="card"></v-skeleton-loader>
+          <template v-else>
+            <ReponsiveScrollGrid :items="latestChouquettises" md="4">
+              <template #default="{ item }">
+                <FicheCard :fiche="item" class="mx-auto" height="100%"></FicheCard>
+              </template>
+            </ReponsiveScrollGrid>
+            <div class="text-center">
+              <v-btn
+                text
+                x-large
+                nuxt
+                to="/fiches?chouquettiseOnly=true"
+                class="text-decoration-underline btn--hover-yellow"
+                >voir tous nos Chouquettisés
+              </v-btn>
+            </div>
+          </template>
+          <v-divider class="my-5"></v-divider>
+          <div class="text-center">
+            <p class="text-h2 font-weight-black">Notre label t'intéresse ?</p>
+            <p class="text-h5">Tu partages nos valeurs et tu souhaites savoir comment obtenir notre label ?</p>
+            <v-btn
+              :block="$vuetify.breakpoint.mobile"
+              color="cq-yellow"
+              class="black--text mb-3"
+              large
+              :to="labelPage"
+              nuxt
+              >On te dit tout</v-btn
+            >
+          </div>
+        </div>
       </div>
     </div>
+
+    <Newsletter></Newsletter>
   </div>
 </template>
 
 <script>
 import gql from 'graphql-tag'
-import { mapState } from 'vuex'
-import { directive as SwiperDirective } from 'vue-awesome-swiper'
+import { mapGetters, mapState } from 'vuex'
 
 import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
+import { fiche as FicheFragments } from '@/apollo/fragments/fiche'
 import { seo as SeoFragments } from '@/apollo/fragments/seo'
-import WpMediaCategory from '~/components/WpMediaCategory'
-import PostCard from '~/components/PostCard'
-import Search from '~/components/Search'
-import Newsletter from '~/components/Newsletter'
-import PostCardPlaceholder from '~/components/PostCardPlaceholder'
 
-import { AUTO_PLAY, DEFAULT, RESPONSIVE } from '~/constants/swiper'
 import seo from '~/mixins/seo'
 import graphql from '~/mixins/graphql'
+import Media from '~/components/Media'
+import PostCard from '~/components/PostCard'
+import FicheCard from '~/components/FicheCard'
+import Newsletter from '~/components/Newsletter'
+import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
+import Value from '~/components/Value'
 
 export default {
-  components: { PostCard, WpMediaCategory, Search, Newsletter, PostCardPlaceholder },
-  directives: { swiper: SwiperDirective },
+  components: { Value, ReponsiveScrollGrid, Newsletter, FicheCard, PostCard, Media },
   mixins: [seo, graphql],
-  async asyncData({ app }) {
-    const yoast = await app.apolloProvider.defaultClient
-      .query({
-        query: gql`
-          query {
-            home {
-              seo {
-                ...SeoFragments
-              }
+  async asyncData({ store, app }) {
+    // store initialization
+    await store.dispatch('nuxtServerInit')
+
+    const { data } = await app.apolloProvider.defaultClient.query({
+      query: gql`
+        query {
+          home {
+            seo {
+              ...SeoFragments
             }
           }
-          ${SeoFragments}
-        `,
-      })
-      .then(({ data }) => data.home.seo)
+        }
+        ${SeoFragments}
+      `,
+    })
 
     return {
-      yoast,
+      seo: data.home.seo,
     }
   },
   data() {
     return {
+      selectedLocation: '',
       latestPosts: [],
+      latestChouquettises: [],
       topPosts: [],
-
-      swiperOptions: {
-        ...DEFAULT,
-        ...AUTO_PLAY,
-        ...RESPONSIVE,
-      },
     }
   },
   async fetch() {
@@ -183,58 +262,88 @@ export default {
               latestPosts {
                 ...PostCardFragments
               }
+              latestChouquettises {
+                ...FicheFragments
+              }
               topPosts {
                 ...PostCardFragments
               }
             }
           }
           ${PostCardFragments}
+          ${FicheFragments}
         `,
       })
 
-      const { latestPosts, topPosts } = data.home
+      const { latestPosts, latestChouquettises, topPosts } = data.home
       this.latestPosts = latestPosts
+      this.latestChouquettises = latestChouquettises
       this.topPosts = topPosts
     } catch (e) {
       this.$sentry.captureException(e)
       this.$nuxt.error({ statusCode: 500, message: this.parseGQLError(e) })
     }
   },
-  fetchOnServer: false,
+  mounted() {
+    const Typed = require('typed.js')
+    // eslint-disable-next-line no-new
+    new Typed('#typed', {
+      strings: ['éco-responsables', 'culturelles', 'locales', 'insolites'],
+      loop: true,
+      typeSpeed: 100,
+      backSpeed: 50,
+      showCursor: false,
+      onBegin(self) {
+        self.currentElContent = ''
+      },
+    })
+  },
+  methods: {
+    goToLocation(location) {
+      this.$router.push(`/fiches/${location}`)
+    },
+  },
   computed: {
+    ...mapState(['name', 'description', 'labelPage']),
     ...mapState({
       categories: (state) => state.menus.headerCategories,
+      locations: (state) => state.locations.flatSorted,
+      values: (state) => state.values.flat,
     }),
-    ...mapState(['name', 'description', 'wordpressUrl']),
-  },
-  mounted() {
-    // execute anchor fixing
-    const linkAnchorFixedHeader = require('~/assets/scripts/link-anchor-fixed-header')
-    linkAnchorFixedHeader(70)
+    ...mapGetters('categories', { getCategoryById: 'getById' }),
+    highlightedPost() {
+      return this.latestPosts[0]
+    },
+    otherPosts() {
+      return this.latestPosts.slice(1)
+    },
+    locationsPlusAll() {
+      return [{ slug: '', name: 'Partout' }, { divider: true }, ...this.locations]
+    },
   },
   head() {
     return {
-      title: this.yoast.title,
+      title: this.seo.title,
       meta: [
-        ...this.seoMetaProperties(JSON.parse(this.yoast.metadata)),
+        ...this.seoMetaProperties(JSON.parse(this.seo.metadata), true),
         {
           hid: 'og:image',
           property: 'og:image',
-          content: `${this.wordpressUrl}/logo.png`,
+          content: `${this.$config.siteUrl}/logo.png`,
         },
       ],
       script: [
         this.jsonLDScript({
           '@context': 'http://schema.org',
           '@type': 'WebPage',
-          name: this.yoast.title,
-          description: this.seoGetDescription(JSON.parse(this.yoast.metadata)),
+          name: this.seo.title,
+          description: this.seoGetDescription(JSON.parse(this.seo.metadata)),
           publisher: {
             '@type': 'Organization',
             name: 'La Chouquette',
-            logo: `${this.wordpressUrl}/logo.png`,
+            logo: `${this.$config.siteUrl}/logo.png`,
           },
-          url: this.currentURL,
+          url: this.$config.siteUrl,
         }),
       ],
     }
@@ -243,136 +352,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.home-header {
-  height: 100vh;
-  min-height: 500px;
-  background-image: url('/home.jpg');
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-  background-color: $chouquette-grey;
+h1 {
+  margin-top: 50px;
+  margin-bottom: 100px;
+  height: 2rem;
+}
 
-  .home-header-name {
-    line-height: $header-height;
-    font-family: $font-family-brand;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    font-size: 3rem;
-    color: $chouquette-yellow;
-    margin: 0;
-  }
-
-  h3 {
-    font-family: $font-family-heading;
-    font-size: $h2-font-size;
-    color: #f8ef28;
-  }
-
-  .navbar-toggler {
-    @include media-breakpoint-up(md) {
-      visibility: hidden;
-    }
+button.v-btn.cq-yellow {
+  @include hover-focus-active {
+    background-color: var(--v-cq-red-base) !important;
+    color: white !important;
   }
 }
 
-.home-header-menu {
-  height: 100vh;
-  padding-top: 80px; // for menu
-
-  position: relative;
-  top: -1 * $header-height;
-}
-
-h3.home-header-menu-description {
-  @include media-breakpoint-down(sm) {
-    font-size: $h4-font-size;
-  }
-
-  @media (max-height: 450px) {
-    display: none;
-  }
-}
-
-.home-header-sn {
-  font-size: 2rem;
-
-  a {
-    color: $chouquette-yellow;
-    line-height: $header-height;
-  }
-}
-
-.home-header-category {
-  h2 {
-    font-size: $h5-font-size;
-    color: $chouquette-yellow;
-  }
-}
-
-.home-header-category-logo,
-.home-header-menu-next {
-  background-color: rgba($black, 0.5);
-  width: 100px;
-  height: 100px;
-  margin: auto;
-
-  img {
-    max-width: 60px;
-  }
-}
-
-.home-header-menu-next {
-  height: 75px;
-  width: 75px;
-
-  font-size: 2rem;
-  position: absolute;
-  bottom: 20px;
-  right: 0;
-  left: 0;
-  margin: auto;
-}
-
-.home-header-category-icon {
-  color: $white;
-  font-size: 3rem;
-}
-
-.home-header-filters {
-  width: 75%;
-
-  @include media-breakpoint-only(xl) {
-    width: 50%;
-  }
-}
-
-::v-deep .home-header-filters-button {
-  @include media-breakpoint-down(sm) {
-    width: 100%;
-  }
-}
-
-.home-content {
-  h2 {
-    font-family: $font-family-heading;
-    font-size: 2rem;
-
-    @include media-breakpoint-up(lg) {
-      font-size: 3rem;
-    }
-  }
-}
-
-.home-newsletter-target {
-  display: block;
-  position: relative;
-  visibility: hidden;
-}
-
-.home-tops {
-  // do not display category for tops
-  .article-card-category {
-    display: none;
-  }
+.valeur-title {
+  display: inline-block;
+  font-family: $heading-font-family;
+  font-weight: normal;
+  border: 2px solid var(--v-primary-base);
+  padding: 5px 12px;
+  font-size: 1.5rem;
+  letter-spacing: 3px;
 }
 </style>

@@ -16,6 +16,7 @@ export const fiche = gql`
     principalCategoryId
     categoryIds
     locationId
+    valueIds
 
     info {
       mail
@@ -34,7 +35,7 @@ export const fiche = gql`
     image {
       ...MediaFragments
     }
-    criteria {
+    categoryFilters {
       name
       values {
         id

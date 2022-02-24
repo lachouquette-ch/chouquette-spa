@@ -5,12 +5,14 @@ export const state = () => ({
   name: null,
   description: null,
   wordpressUrl: null,
+  loadingPromise: null,
+  labelPage: 'label-la-chouquettisation-ecoresponsable-chouquette-valeurs-suisse-romande-vaud-guide-local-ecologie',
 })
 
 export const actions = {
   async nuxtServerInit({ state, commit, dispatch }) {
     // avoid double initialization
-    if (state.name) return Promise.resolve()
+    if (state.loadingPromise) return state.loadingPromise
 
     // eslint-disable-next-line no-undef
     const client = this.app.apolloProvider.defaultClient
@@ -24,6 +26,9 @@ export const actions = {
                 name
                 description
                 url
+              }
+              theme {
+                systemText
               }
               redirects {
                 from
@@ -64,6 +69,15 @@ export const actions = {
                 slug
                 description
               }
+              values {
+                id
+                name
+                slug
+                description
+                image {
+                  ...MediaFragments
+                }
+              }
             }
           }
           ${MediaFragments}
@@ -71,21 +85,31 @@ export const actions = {
       })
       .then(({ data }) => data.nuxtServerInit)
 
-    return Promise.all([
+    const loadingPromise = Promise.all([
       commit('SET_SETTINGS', nuxtServerInit.settings),
+      commit('SET_THEME', nuxtServerInit.theme),
       /* Init all stores */
       await dispatch('yoast/init', nuxtServerInit.redirects),
       await dispatch('categories/init', nuxtServerInit.categories),
       await dispatch('menus/init', nuxtServerInit.menus),
       await dispatch('locations/init', nuxtServerInit.locations),
+      await dispatch('values/init', nuxtServerInit.values),
     ])
+    commit('SET_LOADING', loadingPromise)
+    return loadingPromise
   },
 }
 
 export const mutations = {
+  SET_LOADING(state, loadingPromise) {
+    state.loadingPromise = loadingPromise
+  },
   SET_SETTINGS(state, { name, description, url, home }) {
     state.name = name
     state.description = description
     state.wordpressUrl = url
+  },
+  SET_THEME(state, { systemText }) {
+    state.systemText = systemText
   },
 }

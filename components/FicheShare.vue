@@ -1,43 +1,49 @@
 <template>
-  <span id="share">
+  <div>
     <template v-if="shareApiAvailable">
-      <button
-        class="btn btn-sm btn-outline-secondary text-black"
-        @click.prevent="shareWith('Fiche sur La Chouquette', escapedTitle, fichePage)"
+      <v-btn
+        v-bind="{ ...$props, ...$attrs }"
+        @click.prevent="shareWith('Adresse sur LaChouquette.ch', fiche.title, ficheURL)"
       >
-        <span class="mx-1"><i class="fas fa-share-alt"></i></span>
-      </button>
+        <v-icon :left="!!$slots.default">mdi-share-variant</v-icon>
+        <slot></slot>
+      </v-btn>
     </template>
     <template v-else>
-      <b-dropdown size="sm" dropup no-caret variant="outline-secondary" toggle-class="text-black">
-        <template #button-content>
-          <span title="Partager" class="mx-1"><i class="fas fa-share-alt"></i></span>
+      <v-menu top>
+        <template #activator="{ on, attrs }">
+          <v-btn v-bind="{ ...attrs, ...$props, ...$attrs }" v-on="on">
+            <v-icon :left="!!$slots.default">mdi-share-variant</v-icon>
+            <slot></slot>
+          </v-btn>
         </template>
-        <template #default>
-          <b-dropdown-item
-            :href="`https://www.facebook.com/sharer/sharer.php?u=${fichePage}`"
+
+        <v-list>
+          <v-list-item target="_blank" :href="`https://www.facebook.com/sharer/sharer.php?u=${ficheURL}`">
+            <v-list-item-title><v-icon color="#4267b2" class="mr-2">mdi-facebook</v-icon>Facebook</v-list-item-title>
+          </v-list-item>
+          <v-list-item
             target="_blank"
-            variant="secondary"
+            :href="`https://twitter.com/share?text=${fiche.title}&url=${encodeURI(ficheURL)}`"
           >
-            <span style="color: #4267b2" class="mr-2"><i class="fab fa-facebook-square"></i></span> Facebook
-          </b-dropdown-item>
-          <b-dropdown-item
-            :href="`https://twitter.com/share?text=${escapedTitle}&url=${encodeURI(fichePage)}`"
+            <v-list-item-title><v-icon color="#38a1f3" class="mr-2">mdi-twitter</v-icon>Twitter</v-list-item-title>
+          </v-list-item>
+          <v-list-item
             target="_blank"
-            variant="secondary"
+            :href="`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURI(ficheURL)}&title=${fiche.title}`"
           >
-            <span style="color: #38a1f3" class="mr-2"><i class="fab fa-twitter-square"></i></span> Twitter
-          </b-dropdown-item>
-          <b-dropdown-item
-            :href="`mailto:?subject=${escapedTitle}&amp;body=Je te partage cet article ${fichePage}`"
-            variant="secondary"
+            <v-list-item-title><v-icon color="#0A66C2" class="mr-2">mdi-linkedin</v-icon>LinkedIn</v-list-item-title>
+          </v-list-item>
+          <v-list-item
+            target="_blank"
+            :href="`mailto:?subject=${fiche.title}&amp;body=Je te partage cette adresse ${ficheURL}`"
           >
-            <span style="color: #b7b7b7" class="mr-2"><i class="fas fa-envelope-square"></i></span> Email
-          </b-dropdown-item>
-        </template>
-      </b-dropdown>
+            <v-list-item-title><v-icon color="#b7b7b7" class="mr-2">mdi-at</v-icon> Email</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </template>
-  </span>
+  </div>
 </template>
 
 <script>
@@ -51,24 +57,12 @@ export default {
       type: Object,
     },
   },
-  data() {
-    return {
-      fichePage: null,
-    }
-  },
   computed: {
-    escapedTitle() {
-      return this.fiche.title
+    ficheURL() {
+      return `${this.$config.siteUrl}/fiche/${this.fiche.slug}`
     },
-  },
-  mounted() {
-    this.fichePage = window.location.origin + `/fiche/${this.fiche.slug}`
   },
 }
 </script>
 
-<style scoped>
-a.dropdown-item span {
-  font-size: 1.2rem;
-}
-</style>
+<style scoped></style>

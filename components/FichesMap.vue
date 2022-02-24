@@ -1,17 +1,25 @@
 <template>
-  <div class="map">
-    <div ref="map" class="h-100 w-100" />
-    <button
-      v-if="!!countNextFiches"
-      class="map-load-more google-map-control bg-yellow w-auto"
-      :disabled="loading || !countNextFiches"
-      title="Afficher plus de fiches"
-      @click="$emit('fetchMoreFiches')"
+  <div class="map" style="position: relative">
+    <v-overlay :value="ficheLoading">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
+    <div ref="map" style="height: 100%; width: 100%" />
+    <span
+      v-if="!preview && hasMoreFiches"
+      :style="`position: absolute; bottom: ${moreButtonOffset}px; left: 50%; transform: translateX(-50%)`"
     >
-      <b-spinner v-show="loading" small variant="grey" label="chargement" class="mr-1"></b-spinner>
-      <strong>+{{ countNextFiches }}</strong>
-      <sub>Fiches</sub>
-    </button>
+      <v-btn
+        :loading="fetchLoading"
+        :small="$vuetify.breakpoint.mobile"
+        rounded
+        color="cq-blue"
+        class="btn--hover-white"
+        @click="$emit('moreFiches')"
+      >
+        + de fiches
+        <v-icon right>mdi-cloud-upload</v-icon>
+      </v-btn>
+    </span>
   </div>
 </template>
 
@@ -19,7 +27,7 @@
 import Vue from 'vue'
 import MarkerClusterer from '@googlemaps/markerclustererplus'
 
-import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS, LAUSANNE_LAT_LNG } from '~/constants/mapSettings'
+import { CLUSTER_STYLES, MAP_OPTIONS, Z_INDEXES, ZOOM_LEVELS } from '~/constants/mapSettings'
 import FicheInfoWindow from '~/components/FicheInfoWindow'
 
 // create classes from components to use it in code
@@ -31,18 +39,11 @@ export default {
       type: Array,
       required: true,
     },
-    selectedFiche: {
-      type: Object,
-      default: null,
-    },
-    countNextFiches: {
-      type: Number,
-      default: 0,
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
+    hasMoreFiches: Boolean,
+    ficheLoading: Boolean,
+    fetchLoading: Boolean,
+    preview: Boolean,
+    footerOffet: Number,
   },
   data() {
     return {
@@ -56,6 +57,11 @@ export default {
       isMapShown: null,
     }
   },
+  computed: {
+    moreButtonOffset() {
+      return this.footerOffet + 15
+    },
+  },
   watch: {
     fiches() {
       this.loadFichesOnMap()
@@ -66,6 +72,9 @@ export default {
     this.google = await this.$googleMaps
     this.map = new this.google.maps.Map(this.$refs.map, {
       ...MAP_OPTIONS,
+      zoomControlOptions: {
+        position: this.google.maps.ControlPosition.TOP_RIGHT,
+      },
     })
 
     // create cluster
@@ -73,7 +82,7 @@ export default {
       averageCenter: true,
       styles: CLUSTER_STYLES,
       calculator: (markers, clusterIconStylesCount) => {
-        const index = markers.find((marker) => marker.isChouquettise) ? 2 : 1
+        const index = markers.find((marker) => marker.chouquettise) ? 2 : 1
         return {
           index,
           text: markers.length,
@@ -81,15 +90,45 @@ export default {
       },
     })
 
-    // create map controls
-    const centerControlButton = document.createElement('button')
-    centerControlButton.className = 'google-map-control'
-    centerControlButton.title = 'Voir toutes les fiches sur la carte'
-    const centerControlButtonContent = document.createElement('i')
-    centerControlButtonContent.className = 'far fa-map'
-    centerControlButton.appendChild(centerControlButtonContent)
-    centerControlButton.addEventListener('click', () => this.resetMap())
-    this.map.controls[this.google.maps.ControlPosition.RIGHT_TOP].push(centerControlButton)
+    // map specificities
+    if (this.preview) {
+      this.map.gestureHandling = 'none'
+      this.map.setOptions({
+        fullscreenControl: true,
+        fullscreenControlOptions: { position: this.google.maps.ControlPosition.TOP_LEFT },
+      })
+    } else {
+      // create map controls
+      const centerControlButton = document.createElement('button')
+      centerControlButton.className = 'google-map-control'
+      centerControlButton.title = 'Voir toutes les fiches sur la carte'
+      const centerControlButtonContent = document.createElement('i')
+      // centerControlButtonContent.className = 'material-icons'
+      centerControlButtonContent.className = 'mdi mdi-arrow-expand-all gm-control-active'
+      centerControlButtonContent.style = 'color: #666666; font-size: 30px; font-weight: bold;'
+      centerControlButton.appendChild(centerControlButtonContent)
+      centerControlButton.addEventListener('click', () => this.resetMap())
+      this.map.controls[this.google.maps.ControlPosition.TOP_LEFT].push(centerControlButton)
+    }
+
+    // fullscreen handler
+    let fullScreen = false
+    document.onfullscreenchange = () => {
+      if (fullScreen) {
+        this.$emit('fullScreenOff')
+        fullScreen = false
+        if (this.preview) {
+          this.map.gestureHandling = 'none'
+          this.resetMap()
+        }
+      } else {
+        this.$emit('fullScreenOn')
+        fullScreen = true
+        if (this.preview) {
+          this.map.gestureHandling = 'greedy'
+        }
+      }
+    }
 
     this.loadFichesOnMap()
   },
@@ -123,17 +162,14 @@ export default {
     resetMap() {
       this.resetMapObjects()
 
-      // need to fit map twice... (magic)
-      if (this.markers.size) {
-        this.$nextTick(() => this.markerClusterer.fitMapToMarkers())
-      } else {
-        this.map.setCenter(LAUSANNE_LAT_LNG)
-      }
-
       this.currentMarker = this.markers.values().next().value
       this.currentInfoWindow = this.infoWindows.values().next().value
 
-      if (this.markers.size === 1) this.currentInfoWindow.open(this.map, this.currentMarker)
+      if (this.markers.size === 1 && this.preview) {
+        this.map.setCenter(this.currentMarker.getPosition())
+      } else {
+        this.markerClusterer.fitMapToMarkers({ top: 5, right: 5, bottom: 64, left: 5 })
+      }
     },
     loadFichesOnMap() {
       this.clear()
@@ -147,8 +183,8 @@ export default {
         const ficheInfoWindow = new FicheInfoWindowClass({
           propsData: {
             fiche,
-            showBtnAction: () => {
-              this.$emit('fichesMapSelection', fiche.id)
+            btnAction: () => {
+              this.$emit('mapSelectFiche', fiche)
             },
           },
         })
@@ -169,15 +205,17 @@ export default {
         marker.defaultZIndex = fiche.isChouquettise ? Z_INDEXES.chouquettise : Z_INDEXES.default
         marker.chouquettise = fiche.isChouquettise
         marker.setZIndex(marker.defaultZIndex)
-        marker.addListener('click', () => {
-          this.resetMapObjects()
+        if (!this.preview) {
+          marker.addListener('click', () => {
+            this.resetMapObjects()
 
-          marker.setZIndex(Z_INDEXES.selected)
-          infoWindow.open(this.map, marker)
+            marker.setZIndex(Z_INDEXES.selected)
+            infoWindow.open(this.map, marker)
 
-          this.currentMarker = marker
-          this.currentInfoWindow = infoWindow
-        })
+            this.currentMarker = marker
+            this.currentInfoWindow = infoWindow
+          })
+        }
         this.markers.set(fiche.id, marker)
       }
 
@@ -192,17 +230,17 @@ export default {
 
 <style lang="scss" scoped>
 .map {
-  position: fixed;
-  bottom: 0;
-  right: 0;
+  height: 100%;
   width: 100%;
-  z-index: $zindex-fixed + 1;
-  height: calc(100% - #{$header-height});
 }
 
-.map-load-more {
-  position: absolute;
-  bottom: 0;
-  left: 0;
+// hack google map style
+
+::v-deep .gm-style-iw.gm-style-iw-c {
+  padding: 0 !important;
+}
+
+::v-deep .gm-style-iw-d {
+  overflow: hidden !important;
 }
 </style>

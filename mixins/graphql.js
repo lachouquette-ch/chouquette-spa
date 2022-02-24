@@ -12,7 +12,7 @@ export default {
     },
     handleGQLError(error, prefix = 'Erreur lors du chargement des données') {
       this.$store.dispatch('alerts/addAction', {
-        type: 'danger',
+        type: 'error',
         message: `${prefix} ${this.parseGQLError(error)}`,
       })
     },
