@@ -2,8 +2,8 @@
   <v-app>
     <LayoutAlert></LayoutAlert>
 
-    <v-system-bar v-if="false" color="primary" class="cq-blue--text justify-center" app height="30">
-      <span>Mon text pour system bar</span>
+    <v-system-bar v-if="showSystemBar" color="primary" class="cq-blue--text justify-center" app height="30">
+      <span v-html="systemText"></span>
     </v-system-bar>
 
     <v-navigation-drawer v-model="toggleMenu" temporary app right touchless width="500">
@@ -229,6 +229,7 @@
 <script>
 import CookieConsent from 'vue-cookieconsent-component'
 import isbot from 'isbot'
+import _ from 'lodash'
 import { mapGetters, mapState } from 'vuex'
 import Footer from '~/components/Footer'
 import LayoutAlert from '~/components/LayoutAlert'
@@ -273,7 +274,10 @@ export default {
     isIndex() {
       return this.$route.name === 'index'
     },
-    ...mapState(['name', 'description']),
+    ...mapState(['name', 'description', 'systemText']),
+    showSystemBar() {
+      return !_.isEmpty(this.systemText)
+    },
   },
   mounted() {
     this.showCookieConsent = !isbot(navigator.userAgent)
