@@ -277,6 +277,13 @@ export default {
   },
   mounted() {
     this.showCookieConsent = !isbot(navigator.userAgent)
+
+    // hack : set class to application wrapper to reposition static elements if system bar is set
+    const applicationElement = document.getElementsByClassName('v-application')[0]
+    const systemBarElement = document.getElementsByClassName('v-system-bar')[0]
+    if (systemBarElement) {
+      applicationElement.classList.add('system-bar-activated')
+    }
   },
 }
 </script>
