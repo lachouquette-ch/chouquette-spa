@@ -22,7 +22,7 @@
       <v-card-subtitle class="px-0 secondary--text">
         <span v-if="fiche.locationId">{{ getLocationById(fiche.locationId).name }} - </span>{{ categories }}
       </v-card-subtitle>
-      <p v-html="fiche.content"></p>
+      <v-card-text v-html="fiche.content" class="pa-0"></v-card-text>
 
       <v-divider class="my-3"></v-divider>
 
