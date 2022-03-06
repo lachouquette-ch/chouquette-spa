@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: chouquette-spa-prod
-          image: docker.lachouquette.ch/chouquette-spa:latest
+          image: docker.lachouquette.ch/chouquette-spa-prod:latest
           ports:
             - name: container-port
               containerPort: 3000

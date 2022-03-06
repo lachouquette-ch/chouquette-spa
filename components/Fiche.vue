@@ -1,7 +1,14 @@
 <template>
   <div>
     <v-card flat>
-      <Media :media="fiche.image" size="medium_large" width="100%" :aspect-ratio="16 / 9" class="rounded-lg">
+      <Media
+        v-if="fiche.image"
+        :media="fiche.image"
+        size="medium_large"
+        width="100%"
+        :aspect-ratio="16 / 9"
+        class="rounded-lg"
+      >
         <v-chip v-if="fiche.isChouquettise" color="cq-yellow" text-color="black" small class="ma-2">
           Testé et Chouquettisé
           <v-icon right>mdi-check</v-icon>
@@ -72,6 +79,18 @@
             </template>
 
             <template v-if="fiche.isChouquettise">
+              <v-list-item
+                @click="
+                  isContactForm = true
+                  showDialog = true
+                "
+              >
+                <v-list-item-avatar size="30"><v-icon>mdi-message</v-icon></v-list-item-avatar>
+                <v-list-item-title>
+                  <span class="">Envoyer un message à cette adresse</span>
+                  <v-list-item-subtitle class="text-caption">Via La Chouquette</v-list-item-subtitle>
+                </v-list-item-title>
+              </v-list-item>
               <v-list-item v-if="fiche.info.telephone" :href="`tel: ${fiche.info.telephone}`">
                 <v-list-item-avatar size="30"><v-icon>mdi-phone</v-icon></v-list-item-avatar>
                 <v-list-item-title>

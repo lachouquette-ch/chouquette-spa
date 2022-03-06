@@ -27,6 +27,9 @@ export const actions = {
                 description
                 url
               }
+              theme {
+                systemText
+              }
               redirects {
                 from
                 to
@@ -84,6 +87,7 @@ export const actions = {
 
     const loadingPromise = Promise.all([
       commit('SET_SETTINGS', nuxtServerInit.settings),
+      commit('SET_THEME', nuxtServerInit.theme),
       /* Init all stores */
       await dispatch('yoast/init', nuxtServerInit.redirects),
       await dispatch('categories/init', nuxtServerInit.categories),
@@ -104,5 +108,8 @@ export const mutations = {
     state.name = name
     state.description = description
     state.wordpressUrl = url
+  },
+  SET_THEME(state, { systemText }) {
+    state.systemText = systemText
   },
 }

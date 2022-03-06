@@ -704,4 +704,11 @@ export default {
     right: calc(50% - #{map-get($grid-breakpoints, 'md') / 2});
   }
 }
+
+// if system bar is on
+.system-bar-activated .map-button {
+  @media #{map-get($display-breakpoints, 'md-and-up')} {
+    transform: translateY(30px);
+  }
+}
 </style>

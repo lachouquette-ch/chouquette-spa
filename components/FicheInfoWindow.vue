@@ -1,6 +1,7 @@
 <template>
   <v-card class="d-flex flex-row" height="75" width="250" flat tile ripple @click="btnAction">
     <Media
+      v-if="fiche.image"
       :media="fiche.image"
       size="thumbnail"
       width="75"
@@ -20,7 +21,7 @@
 import Media from '~/components/Media'
 
 export default {
-  components: {Media},
+  components: { Media },
   props: {
     fiche: {
       type: Object,

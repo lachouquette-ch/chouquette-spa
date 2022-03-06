@@ -135,14 +135,17 @@
 
     <v-sheet class="cq-md-max-width px-3 py-5">
       <h2 class="text-center text-header--secondary my-5">Nos derniers tops</h2>
-      <ReponsiveScrollGrid :items="topPosts" md="4">
-        <template #default="{ item }">
-          <PostCard :post="item" class="mx-auto" vertical large hide-meta transparent></PostCard>
-        </template>
-      </ReponsiveScrollGrid>
-      <div class="text-center my-3">
-        <v-btn text x-large nuxt to="/articles?topOnly=true" class="text-decoration-underline">tous nos tops</v-btn>
-      </div>
+      <v-skeleton-loader v-if="$fetchState.pending" class="mx-auto" max-width="300" type="card"></v-skeleton-loader>
+      <template v-else>
+        <ReponsiveScrollGrid :items="topPosts" md="4">
+          <template #default="{ item }">
+            <PostCard :post="item" class="mx-auto" vertical large hide-meta transparent></PostCard>
+          </template>
+        </ReponsiveScrollGrid>
+        <div class="text-center my-3">
+          <v-btn text x-large nuxt to="/articles?topOnly=true" class="text-decoration-underline">tous nos tops</v-btn>
+        </div>
+      </template>
     </v-sheet>
 
     <div class="cq-beige">
@@ -161,21 +164,24 @@
               critères. Tu peux y aller les yeux fermés !
             </p>
           </div>
-          <ReponsiveScrollGrid :items="latestChouquettises" md="4">
-            <template #default="{ item }">
-              <FicheCard :fiche="item" class="mx-auto" height="100%"></FicheCard>
-            </template>
-          </ReponsiveScrollGrid>
-          <div class="text-center">
-            <v-btn
-              text
-              x-large
-              nuxt
-              to="/fiches?chouquettiseOnly=true"
-              class="text-decoration-underline btn--hover-yellow"
-              >voir tous nos Chouquettisés
-            </v-btn>
-          </div>
+          <v-skeleton-loader v-if="$fetchState.pending" class="mx-auto" max-width="300" type="card"></v-skeleton-loader>
+          <template v-else>
+            <ReponsiveScrollGrid :items="latestChouquettises" md="4">
+              <template #default="{ item }">
+                <FicheCard :fiche="item" class="mx-auto" height="100%"></FicheCard>
+              </template>
+            </ReponsiveScrollGrid>
+            <div class="text-center">
+              <v-btn
+                text
+                x-large
+                nuxt
+                to="/fiches?chouquettiseOnly=true"
+                class="text-decoration-underline btn--hover-yellow"
+                >voir tous nos Chouquettisés
+              </v-btn>
+            </div>
+          </template>
           <v-divider class="my-5"></v-divider>
           <div class="text-center">
             <p class="text-h2 font-weight-black">Notre label t'intéresse ?</p>

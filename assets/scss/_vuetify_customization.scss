@@ -32,3 +32,8 @@
   font-weight: 900;
   margin: 1.5rem 0;
 }
+
+// high z-index for alerts - important for fiche in modal
+.layout-alert {
+  z-index: 1000 !important;
+}

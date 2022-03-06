@@ -1,5 +1,5 @@
 <template>
-  <div class="cq-md-max-width">
+  <v-container fluid class="pa-0 cq-md-max-width">
     <div class="d-flex justify-center align-center my-4">
       <v-text-field
         v-if="toggleSearch"
@@ -45,7 +45,7 @@
       <v-tabs v-model="tab" background-color="transparent" centered grow class="mt-3">
         <v-tab key="adresses" :disabled="fichesTotal === 0">
           <v-icon left>mdi-map-marker-multiple-outline</v-icon>
-          Addresses <span v-if="!fichesLoading" class="ml-1">({{ fichesTotal }})</span>
+          Adresses <span v-if="!fichesLoading" class="ml-1">({{ fichesTotal }})</span>
         </v-tab>
         <v-tab key="articles" :disabled="postsTotal === 0">
           <v-icon left>mdi-newspaper-variant-multiple</v-icon>
@@ -57,7 +57,7 @@
         <v-tab-item key="adresses">
           <v-container class="mt-3">
             <v-row justify="center">
-              <v-col v-for="fiche in fiches" :key="fiche.id" cols="4">
+              <v-col v-for="fiche in fiches" :key="fiche.id">
                 <FicheCard :fiche="fiche" height="100%"></FicheCard>
               </v-col>
               <v-col cols="12">
@@ -122,7 +122,7 @@
         <template v-else>Aucun article trouvé</template>
       </v-container>
     </template>
-  </div>
+  </v-container>
 </template>
 
 <script>

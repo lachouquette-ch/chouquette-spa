@@ -1,10 +1,6 @@
 <template>
   <div>
-    <Page :page="page" class="cq-md-max-width">
-      <template #footer>
-        <TestChouquettisation></TestChouquettisation>
-      </template>
-    </Page>
+    <Page :page="page" class="cq-md-max-width"></Page>
     <Newsletter></Newsletter>
   </div>
 </template>
@@ -16,11 +12,9 @@ import { page as PageFragments } from '@/apollo/fragments/page'
 import Page from '~/components/Page'
 import seo from '~/mixins/seo'
 import Newsletter from '~/components/Newsletter'
-import TestChouquettisation from '~/pages/test-chouquettisation'
 
 export default {
   components: {
-    TestChouquettisation,
     Newsletter,
     Page,
   },

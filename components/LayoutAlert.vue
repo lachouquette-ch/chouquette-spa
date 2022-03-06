@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-alert">
+  <div v-if="alerts.length" class="layout-alert">
     <v-fade-transition group>
       <v-alert
         v-for="alert in alerts"
