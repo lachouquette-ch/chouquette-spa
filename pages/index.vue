@@ -50,6 +50,24 @@
       </v-img>
     </v-card>
 
+    <v-sheet color="cq-red pa-5" class="d-flex flex-column justify-center align-center text-center">
+      <v-img src="/wemakeit.png" alt="crowdfunding lachouquette ecoresponsable" contain></v-img>
+      <h3 class="text-header--secondary mt-0 my-5">
+        La Chouquette lance son crowdfunding pour créer son concept store écoresponsable
+      </h3>
+      <p>
+        <v-btn
+          color="cq-beige"
+          href="https://wemakeit.com/projects/eco-friendly-concept-store?locale=fr"
+          target="_blank"
+          large
+        >
+          Découvre le projet !
+        </v-btn>
+      </p>
+      <p class="display-1">Contribue si tu le souhaites et partage autour de toi. On a besoin de toi, MERCI !</p>
+    </v-sheet>
+
     <v-sheet class="cq-md-max-width py-5">
       <h2 class="text-center text-header--secondary my-5">ARTICLES À LA UNE</h2>
       <v-container v-if="$vuetify.breakpoint.mobile">
