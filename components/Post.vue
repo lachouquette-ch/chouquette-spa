@@ -43,7 +43,8 @@
 
     <v-card flat tile class="mt-5">
       <div style="position: relative; margin-bottom: 35px" class="px-3 px-md-0 cq-md-max-width">
-        <Media :media="post.image" gradient="180deg, transparent 70%, black" class="rounded-xl" />
+        <v-img v-if="preview" :src="post.featured_img" />
+        <Media v-else :media="post.image" gradient="180deg, transparent 70%, black" class="rounded-xl" />
         <v-img
           :src="mainAuthor.avatar"
           :alt="mainAuthor.name"
@@ -61,7 +62,7 @@
           <section class="gutenberg-content" v-html="post.content"></section>
         </ContentFolding>
 
-        <div class="cq-beige">
+        <div v-if="!preview" class="cq-beige">
           <div class="cq-md-max-width px-3 px-md-0">
             <section v-if="ficheCards.length" class="py-5 mt-3">
               <h2 v-if="ficheCards.length > 1" class="text-header--secondary">Adresses associées</h2>
@@ -137,6 +138,7 @@
             </section>
           </div>
         </div>
+        <div v-else class="cq-red--text pa-3 text-center">Pas plus d'informations en prévisualisation</div>
       </v-card-text>
     </v-card>
   </div>
@@ -145,11 +147,11 @@
 <script>
 import _ from 'lodash'
 import gql from 'graphql-tag'
+import isbot from 'isbot'
+import { mapGetters } from 'vuex'
 import { ficheCard as FicheCardFragments } from '@/apollo/fragments/ficheCard'
 import { comment as CommentFragments } from '@/apollo/fragments/comment'
 import { postCard as PostCardFragments } from '@/apollo/fragments/postCard'
-import isbot from 'isbot'
-import { mapGetters } from 'vuex'
 import seo from '~/mixins/seo'
 import gutenberg from '~/mixins/gutenberg'
 import fetchWordpress from '~/mixins/fetch-wp'
@@ -203,6 +205,8 @@ export default {
     }
   },
   async fetch() {
+    if (this.preview) return
+
     try {
       const { data } = await this.$apollo.query({
         query: gql`

@@ -58,6 +58,7 @@ export default {
       // convert to expected page object
       post.title = this.$options.filters.heDecode(post.title.rendered)
       post.content = this.$options.filters.heDecode(post.content.rendered)
+      post.authors = post._embedded.author
 
       this.post = post
       this.pageType = 'post'
