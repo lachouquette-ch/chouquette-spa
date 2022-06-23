@@ -53,7 +53,7 @@
     <v-sheet color="cq-red pa-5" class="d-flex flex-column justify-center align-center text-center">
       <v-img src="/wemakeit.png" alt="crowdfunding lachouquette ecoresponsable" contain></v-img>
       <h3 class="text-header--secondary mt-0 my-5">
-        La Chouquette lance son crowdfunding pour créer son concept store écoresponsable
+        La Chouquette ouvre son Concept Store Éco-Responsable courant août à l'avenue de Rumine 4 - 1005 Lausanne
       </h3>
       <p>
         <v-btn
@@ -65,7 +65,7 @@
           Découvre le projet !
         </v-btn>
       </p>
-      <p class="display-1">Contribue si tu le souhaites et partage autour de toi. On a besoin de toi, MERCI !</p>
+      <p class="display-1">Partage cette information de foufou autour de toi !</p>
     </v-sheet>
 
     <v-sheet class="cq-md-max-width py-5">
