@@ -4,7 +4,7 @@
       <Media
         v-if="fiche.image"
         :media="fiche.image"
-        size="medium_large"
+        size="large"
         width="100%"
         :aspect-ratio="16 / 9"
         class="rounded-lg"
