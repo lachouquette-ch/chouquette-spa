@@ -50,23 +50,6 @@
       </v-img>
     </v-card>
 
-    <v-sheet color="cq-red pa-5" class="d-flex flex-column justify-center align-center text-center">
-      <v-img src="/wemakeit.png" alt="crowdfunding lachouquette ecoresponsable"></v-img>
-      <h3 class="text-header--secondary mt-0 my-5">
-        La Chouquette a ouvert son Concept Store Éco-Responsable à l'avenue de Rumine 4 - 1005 Lausanne
-      </h3>
-      <p>
-        <v-btn
-          color="cq-beige"
-          href="/fiche/la-chouquette-concept-store-eco-responsable-lausanne-rumine-epicerie-idees-cadeaux-seconde-main"
-          large
-        >
-          Découvre cette boutique !
-        </v-btn>
-      </p>
-      <p class="display-1">Partage cette information de foufou autour de toi !</p>
-    </v-sheet>
-
     <v-sheet class="cq-md-max-width py-5">
       <h2 class="text-center text-header--secondary my-5">ARTICLES À LA UNE</h2>
       <v-container v-if="$vuetify.breakpoint.mobile">
