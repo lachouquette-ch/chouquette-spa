@@ -200,8 +200,6 @@
       </div>
     </div>
 
-    <CommercialBanner></CommercialBanner>
-
     <Newsletter></Newsletter>
   </div>
 </template>
@@ -221,11 +219,10 @@ import PostCard from '~/components/PostCard'
 import FicheCard from '~/components/FicheCard'
 import Newsletter from '~/components/Newsletter'
 import ReponsiveScrollGrid from '~/components/ReponsiveScrollGrid'
-import CommercialBanner from '~/components/CommercialBanner'
 import Value from '~/components/Value'
 
 export default {
-  components: { Value, ReponsiveScrollGrid, Newsletter, CommercialBanner, FicheCard, PostCard, Media },
+  components: { Value, ReponsiveScrollGrid, Newsletter, FicheCard, PostCard, Media },
   mixins: [seo, graphql],
   async asyncData({ store, app }) {
     // store initialization
