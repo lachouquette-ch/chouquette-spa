@@ -5,6 +5,7 @@
       <PostShare :post="post" class="cq-share-position" fab color="primary"></PostShare>
       <Post :post="post" />
     </template>
+    <CommercialBanner></CommercialBanner>
     <Newsletter></Newsletter>
   </div>
 </template>
@@ -19,9 +20,11 @@ import Post from '~/components/Post'
 import Page from '~/components/Page'
 import PostShare from '~/components/PostShare'
 import Newsletter from '~/components/Newsletter'
+import CommercialBanner from '~/components/CommercialBanner'
 
 export default {
   components: {
+    CommercialBanner,
     Newsletter,
     PostShare,
     Page,

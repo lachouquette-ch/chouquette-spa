@@ -5,7 +5,13 @@
         <p class="text-h1 primary--text font-weight-black mt-auto">
           Lance-toi dès aujourd'hui dans une démarche durable !
         </p>
-        <v-btn elevation="3" color="cq-blue" class="black--text inline-block" x-large link="https://www.google.com"
+        <v-btn
+          elevation="3"
+          color="cq-blue"
+          class="black--text inline-block"
+          x-large
+          href="https://thepositiveproject.eco/"
+          target="_blank"
           >Je fais un diagnostic gratuit</v-btn
         >
       </div>
