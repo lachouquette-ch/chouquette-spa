@@ -1,3 +1,10 @@
+<!--
+  - Copyright (c) 2023.
+  - This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  - This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+  - You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+  -->
+
 <template>
   <v-container tag="footer" fluid class="footer py-5">
     <!-- Stack the columns on mobile by making one full-width and the other half-width -->
@@ -49,8 +56,7 @@
         <nuxt-link to="/politique-de-confidentialite" class="primary--text text--lighten-5">Politique de confidentialité</nuxt-link>
       </p>
       <p class="text-center text-caption">
-        Copyright 2014-{{ currentYear }} - Tous droits réservés à La Chouquette. Toutes les images et le contenu sont la
-        propriété du site.
+        Ce site internet a été développé par Fabrice Douchant. Il est sous licence AGPL-3.0-or-later <a href="https://github.com/fdouchant/chouquette-spa" target="_blank" class="primary--text text--lighten-5">(lien vers le repo Git officiel)</a>
       </p>
     </div>
   </v-container>
