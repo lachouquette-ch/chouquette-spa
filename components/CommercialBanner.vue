@@ -7,16 +7,17 @@
 
 <template>
   <v-card flat rounded="0">
-    <v-img src="/positive-project_full.png" height="400" position="top center" class="cq-md-max-width mx-auto">
+    <v-img src="/positive-project_bg.png" position="top center" class="cq-md-max-width mx-auto">
+      <v-img class="logo" src="/positive-project_logo.png" contain></v-img>
       <div class="content d-flex flex-column px-5 pb-5">
-        <p class="text-h1 primary--text font-weight-black mt-auto">
+        <p class="text-md-h1 primary--text font-weight-black mt-auto">
           Lance-toi dès aujourd'hui dans une démarche durable !
         </p>
         <v-btn
           elevation="3"
           color="cq-blue"
           class="black--text inline-block"
-          x-large
+          :x-large="$vuetify.breakpoint.mdAndUp"
           href="https://thepositiveproject.eco/"
           target="_blank"
           >Je fais un diagnostic gratuit</v-btn
@@ -30,6 +31,18 @@
 </script>
 
 <style lang="scss" scoped>
+.logo {
+  position: absolute;
+  width: 220px;
+  top: 5px;
+  right: 5px;
+
+  @media #{map-get($display-breakpoints, 'md-and-up')} {
+    width: 500px;
+    top: 40px;
+    right: 10px;
+  }
+}
 .content {
   position: absolute;
   bottom: 0;
