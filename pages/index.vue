@@ -117,6 +117,8 @@
       </div>
     </v-sheet>
 
+    <CommercialBanner class="mb-5"></CommercialBanner>
+
     <v-sheet class="cq-yellow py-5">
       <v-container fluid>
         <h3 class="text-center font-weight-black text-h1 my-5">Les valeurs de La Chouquette</h3>
@@ -206,8 +208,6 @@
         </div>
       </div>
     </div>
-
-    <CommercialBanner></CommercialBanner>
 
     <Newsletter></Newsletter>
   </div>

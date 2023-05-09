@@ -7,7 +7,7 @@
 
 <template>
   <v-card flat rounded="0">
-    <v-img src="/positive-project_bg.png" position="top center" class="cq-md-max-width mx-auto">
+    <v-img src="/positive-project_bg.png" position="top center" class="cq-md-max-width mx-auto" max-height="500px">
       <v-img class="logo" src="/positive-project_logo.png" contain></v-img>
       <div class="content d-flex flex-column px-5 pb-5">
         <p class="text-md-h1 primary--text font-weight-black mt-auto">
