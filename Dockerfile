@@ -18,8 +18,6 @@ RUN npm rebuild node-sass
 # NODE_ENV, GRAPHQL_URI and BROWSER_GRAPHQL_URI cannot be set at runtime because they are used while building (nuxt.config.js)
 ENV NODE_ENV production
 ENV DISABLE_SENTY false
-ENV GRAPHQL_URI http://api-gateway-prod.default.svc.cluster.local:4000/graphql
-ENV BROWSER_GRAPHQL_URI https://api-gateway.lachouquette.ch/graphql
 ENV NUXT_VERSION 2.15.7
 ENV NUXT_HOST 0.0.0.0
 ENV NUXT_PORT 3000
