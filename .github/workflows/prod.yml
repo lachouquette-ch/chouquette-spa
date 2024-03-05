@@ -22,13 +22,3 @@ jobs:
           BROWSER_GRAPHQL_URI: https://api-gateway.lachouquette.ch/graphql
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-      - name: Deploy image to cluster
-        uses: nickgronow/kubectl@master
-        with:
-          config_data: ${{ secrets.KUBE_CONFIG_DATA }}
-          args: set image deployment/chouquette-spa-prod chouquette-spa-prod=docker.lachouquette.ch/chouquette-spa-prod:${{ github.event.release.tag_name }} --record
-      - name: Verify deployment
-        uses: nickgronow/kubectl@master
-        with:
-          config_data: ${{ secrets.KUBE_CONFIG_DATA }}
-          args: '"rollout status deployment/chouquette-spa-prod"'
