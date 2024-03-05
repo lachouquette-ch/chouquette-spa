@@ -24,13 +24,3 @@ jobs:
           SITE_URL: https://uat.lachouquette.ch
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-      - name: Deploy image to cluster
-        uses: nickgronow/kubectl@master
-        with:
-          config_data: ${{ secrets.KUBE_CONFIG_DATA }}
-          args: set image deployment/chouquette-spa-uat chouquette-spa-uat=docker.lachouquette.ch/chouquette-spa-uat:${{ github.sha }} --record
-      - name: Verify deployment
-        uses: nickgronow/kubectl@master
-        with:
-          config_data: ${{ secrets.KUBE_CONFIG_DATA }}
-          args: '"rollout status deployment/chouquette-spa-uat"'
