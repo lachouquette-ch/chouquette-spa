@@ -130,8 +130,8 @@ export default {
     errorHandler: '~/apollo/errorHandler.js',
     clientConfigs: {
       default: {
-        httpEndpoint: process.env.GRAPHQL_URI || 'http://http://195.15.205.224:4000/graphql',
-        browserHttpEndpoint: process.env.BROWSER_GRAPHQL_URI || 'http://http://195.15.205.224:4000/graphql',
+        httpEndpoint: process.env.GRAPHQL_URI || 'http://localhost:4000/graphql',
+        browserHttpEndpoint: process.env.BROWSER_GRAPHQL_URI || 'http://localhost:4000/graphql',
       },
     },
   },

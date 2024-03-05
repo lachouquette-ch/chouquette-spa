@@ -8,6 +8,9 @@ LABEL version="1.0"
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
+# To fix issu gyp cannot find python
+RUN apk add --no-cache --virtual .builds-deps build-base python3
+
 # Install app dependencies
 COPY package.json .
 COPY yarn.lock .

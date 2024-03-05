@@ -18,7 +18,5 @@ jobs:
           tags: docker.lachouquette.ch/chouquette-spa-prod:${{ github.event.release.tag_name }},docker.lachouquette.ch/chouquette-spa-prod:latest
         env:
           NODE_ENV: production
-          GRAPHQL_URI: http://api-gateway-prod.default.svc.cluster.local:4000/graphql
-          BROWSER_GRAPHQL_URI: https://api-gateway.lachouquette.ch/graphql
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
